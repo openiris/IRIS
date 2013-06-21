@@ -2,15 +2,19 @@ IRIS
 ====
 
 This is an Openflow Controller software created by ETRI. 
-It is using Beacon-like NIO-based event handling mechanism, and has many core modules / app modules.
+It is using Beacon-like NIO-based event handling mechanism, 
+and many core modules ported from Floodlight including:
 
-The core modules are basically ported versions of Floodlight core modules. 
-Moving further, IRIS has simplified many of the Floodlight architectural choices,
-to achieve better performance and provide much simpler development model. 
-For example, attaching REST capability to your app modules is very simple with IRIS. 
+1. Mac Learning
+2. Link Discovery
+3. Topology Management
+4. Device Management
+5. State Management
 
-The NB interface is mostly Floodlight-compliant. That means you can safely port your
-Floodlight applications without much pain. 
+Though much of IRIS came from Floodlight and Beacon (especially core modules),
+the architecure of IRIS is much simpler than that of Floodlight,
+which enables easy development of modules and applications. 
+Moreover, IRIS provides much better performance. 
 
 The complete source code of this project will be released at the end of August. 
 
