@@ -16,6 +16,10 @@ the architecure of IRIS is much simpler than that of Floodlight,
 which enables easy development of modules and applications. 
 Moreover, IRIS provides much better performance. 
 
+IRIS is implemented by Java, and providing REST-based programming interface.
+The REST Apis are compliant with that of Floodlight to guarantee the App programmers 
+to easily port their Floodlight modules to IRIS.
+
 The complete source code of this project will be released at the end of August. 
 
 Byungjoon Lee
