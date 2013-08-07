@@ -1,29 +1,25 @@
 IRIS
 ====
+is an Openflow Controller software created by ETRI. It is built on Beacon-like NIO-based event handling mechanism, 
+and has many core modules ported from Floodlight including mac learning, link discovery, topology management, 
+device management, state management, etc.
 
-This is an Openflow Controller software created by ETRI. 
-It is using Beacon-like NIO-based event handling mechanism, 
-and many core modules ported from Floodlight including:
+However, though much of IRIS came from Floodlight and Beacon, IRIS has much simple architecture 
+than that of Floodlight, which enables easy development of modules and applications. 
+Moreover, due to the simplicity, we have observed that IRIS provides much better performance. 
+We also did major re-factoring on the Floodlight UI in creating IRIS UI. 
+In result, the rendering of underlying network dynamics is more compact and beautiful.
 
-1. Mac Learning
-2. Link Discovery
-3. Topology Management
-4. Device Management
-5. State Management
+In creating IRIS, we have lots of re-factoring especially on following area:
 
-Though much of IRIS came from Floodlight and Beacon (especially core modules),
-the architecure of IRIS is much simpler than that of Floodlight,
-which enables easy development of modules and applications. 
-Moreover, IRIS provides much better performance. 
+1. IO Event Handling
+2. Controller & Module Development Architecture
+3. REST API implementation
+4. NoSQL Database Integration
 
-IRIS is implemented by Java, and providing REST-based programming interface.
-The REST Apis are compliant with that of Floodlight to guarantee the App programmers 
-to easily port their Floodlight modules to IRIS.
+One thing you note is that the REST API is fully compliant with that of Floodlight. 
+That means you can safely move your existing REST Openflow applications to IRIS.
 
-The complete source code of this project will be released at the end of August. 
+You can find the document of this project here (https://github.com/bjlee72/IRIS/wiki).
 
-You can find the document of this project here (https://github.com/bjlee72/IRIS/wiki). 
-
-Byungjoon Lee
-
-
+Byungjoon Lee (bjlee@etri.re.kr)
