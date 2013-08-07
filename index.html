@@ -34,30 +34,22 @@
           <h1>
 <a name="iris" class="anchor" href="#iris"><span class="octicon octicon-link"></span></a>IRIS</h1>
 
-<p>is an Openflow Controller software created by ETRI. 
-It is using Beacon-like NIO-based event handling mechanism, 
-and many core modules ported from Floodlight including:</p>
+<p>is an Openflow Controller software created by ETRI. It is built on Beacon-like NIO-based event handling mechanism, and has many core modules ported from Floodlight including mac learning, link discovery, topology management, device management, state management, etc. </p>
+
+<p>However, though much of IRIS came from Floodlight and Beacon, IRIS has much simple architecture than that of Floodlight, which enables easy development of modules and applications. Moreover, due to the simplicity, we have observed that IRIS provides much better performance. We also did major re-factoring on the Floodlight UI in creating IRIS UI. In result, the rendering of underlying network dynamics is more compact and beautiful. </p>
+
+<p>In creating IRIS, we have lots of re-factoring especially on following area:</p>
 
 <ol>
-<li>Mac Learning</li>
-<li>Link Discovery</li>
-<li>Topology Management</li>
-<li>Device Management</li>
-<li>State Management</li>
-</ol><p>Though much of IRIS came from Floodlight and Beacon (especially core modules),
-the architecure of IRIS is much simpler than that of Floodlight,
-which enables easy development of modules and applications. 
-Moreover, IRIS provides much better performance. </p>
-
-<p>IRIS is implemented by Java, and providing REST-based programming interface.
-The REST Apis are compliant with that of Floodlight to guarantee the App programmers 
-to easily port their Floodlight modules to IRIS.</p>
-
-<p>The complete source code of this project will be released at the end of August. </p>
+<li>IO Event Handling</li>
+<li>Controller &amp; Module Development Architecture</li>
+<li>REST API implementation</li>
+<li>NoSQL Database Integration</li>
+</ol><p>One thing you note is that the REST API is fully compliant with that of Floodlight. That means you can safely move your existing REST Openflow applications to IRIS. </p>
 
 <p>You can find the document of this project here (<a href="https://github.com/bjlee72/IRIS/wiki">https://github.com/bjlee72/IRIS/wiki</a>). </p>
 
-<p>Byungjoon Lee</p>
+<p>Byungjoon Lee (<a href="mailto:bjlee@etri.re.kr">bjlee@etri.re.kr</a>) </p>
         </section>
 
         <footer>
