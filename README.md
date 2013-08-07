@@ -22,6 +22,8 @@ to easily port their Floodlight modules to IRIS.
 
 The complete source code of this project will be released at the end of August. 
 
+You can find the document of this project [[https://github.com/bjlee72/IRIS/wiki][here]]. 
+
 Byungjoon Lee
 
 
