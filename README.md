@@ -4,9 +4,9 @@ is an Openflow Controller software created by ETRI. It is built on Beacon-like N
 and has many core modules ported from Floodlight including mac learning, link discovery, topology management, 
 device management, state management, etc.
 
-However, though much of IRIS came from Floodlight and Beacon, IRIS has much simple architecture 
+However, though much of IRIS came from Floodlight and Beacon, IRIS has much simpler architecture 
 than that of Floodlight, which enables easy development of modules and applications. 
-Moreover, due to the simplicity, we have observed that IRIS provides much better performance. 
+Moreover, due to the simplicity, IRIS provides much better performance than other Java-based Openflow Controllers. 
 We also did major re-factoring on the Floodlight UI in creating IRIS UI. 
 In result, the rendering of underlying network dynamics is more compact and beautiful.
 
@@ -17,7 +17,7 @@ In creating IRIS, we have lots of re-factoring especially on following area:
 3. REST API implementation
 4. NoSQL Database Integration
 
-One thing you note is that the REST API is fully compliant with that of Floodlight. 
+One thing you should note is that the REST API is fully compliant with that of Floodlight. 
 That means you can safely move your existing REST Openflow applications to IRIS.
 
 You can find the document of this project here (https://github.com/bjlee72/IRIS/wiki).
