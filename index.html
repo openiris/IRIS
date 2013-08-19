@@ -1,69 +1,116 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <title>IRIS: The Recursive SDN Openflow Controller by ETRI</title>
-  </head>
+	<head>
+		<meta charset='utf-8'>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+		<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="images/favicon.ico" type="image/x-icon">
+		<link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+		<!--[if lt IE 9]>
+		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		<title>IRIS: The Recursive SDN Openflow Controller by ETRI</title>
+	</head>
 
-  <body>
-    <div id="container">
-      <div class="inner">
+	<body>
+		<div id="container">
+			<div class="inner">
 
-        <header>
-          <h1>IRIS:</h1>
-          <h2>The Recursive SDN Openflow Controller by ETRI</h2>
-        </header>
+				<header>
+					<h1>IRIS:</h1>
+					<h2>The Recursive SDN Openflow Controller by ETRI</h2>
+				</header>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/bjlee72/IRIS/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/bjlee72/IRIS/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/bjlee72/IRIS" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
+				<section id="downloads" class="clearfix">
+					<a href="https://github.com/bjlee72/IRIS/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+					<a href="https://github.com/bjlee72/IRIS/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+					<a href="https://github.com/bjlee72/IRIS" id="view-on-github" class="button"><span>View on GitHub</span></a>
+				</section>
 
-        <hr>
+				<hr>
 
-        <section id="main_content">
-          <h1>
-<a name="iris" class="anchor" href="#iris"><span class="octicon octicon-link"></span></a>IRIS</h1>
+				<section id="main_content">
+					<h1><a name="iris" class="anchor" href="#iris"><span class="octicon octicon-link"></span></a>Overview</h1>
 
-<p>is an Openflow Controller software created by ETRI. It is built on Beacon-like NIO-based event handling mechanism, and has many core modules ported from Floodlight including mac learning, link discovery, topology management, device management, state management, etc. </p>
+<p><strong>IRIS</strong> is the name of an Openflow Controller created by ETRI.</p>
 
-<p>However, though much of IRIS came from Floodlight and Beacon, IRIS has much simpler architecture than that of Floodlight, which enables EASY development of modules and applications. Moreover, due to its simplicity, IRIS provides much better performance than other Java-based Openflow controllers. We also did major re-factoring on the Floodlight UI in creating IRIS UI. In result, the rendering of underlying network dynamics is more compact and beautiful. </p>
+<p>In Greek mythodology, IRIS (sounds ai-ri-s) is 
+the goddess of the rainbow as weel as the messenger of the other gods. 
+In developing IRIS, we have focused on creating an control plane architecture 
+that can effectively deliver network adminirator's will 
+to the underlying data plane, just like her.</p>
+
+<p>Technically, IRIS is built on Beacon-like NIO-based event handler.
+On top of the IO engine, we have ported many of Floodlight core/application
+modules, including Learning Switch, Link Discovery, Topology Manager,
+Device Manager, Forwarding, Firewall, and Static Flow Entry Pusher. </p>
+
+<p>Howevery, we do not want to stop there creating a spin-off version of the
+famous open-source controllers like Floodlight or Beacon. 
+Our vision is to create an SDN controller platform, 
+initially based on Openflow Technology,
+with following features:
+<ol>
+	<li>Horizontal Scalability for carrier-grade network</li>
+	<li>High Availability with transparent failover from failure</li>
+	<li>Multi-domain support with recursive network abstraction
+	based on Openflow</li>
+</ol>
+</p>
+
+<p>Our ambition is to satisfy above goals with much more simpler architecture
+that facilitates developers to use and customize IRIS to their needs.
+For that, we have done lots of re-factoring on Floodlight module architecture
+and successfully simplified it to give better performance, 
+and to suggest a very easy-to-learn development model.
+Further, to provide compatibility with Floodlight, IRIS REST API 
+is designed to be fully compliant with that of Floodlight.
+</p>
 
 <img src="images/iris.PNG" />
 <img src="images/iris003.PNG" />
 
-<p>In creating IRIS, we did lots of re-factoring especially on following area:</p>
+<p>Besides, we have modified the basic Floodlight UI to give users 
+a network topology view that can be looked around more easily. 
+Currently, IRIS UI supports the zoom-in/zoom-out/panning of the network topology
+using the 'Touchpad' box located at the bottom-right corner of the topology view. 
+</p>
+
+<h1>Specification</h1>
 
 <ol>
-<li>IO Event Handling</li>
-<li>Controller &amp; Module Development Architecture</li>
-<li>REST API implementation</li>
-<li>NoSQL Database Integration</li>
-</ol><p>One thing you note is that the REST API is fully compliant with that of Floodlight. That means you can safely move your existing REST Openflow applications to IRIS. </p>
+	<li>Supports Openflow 1.0 (1.3 is comming at the end of year 2013)</li>
+	<li>Pure Java-based Implementation</li>
+	<li>Handles 500 million Mac Learning Requestes per second with Commodity HW</li>
+</ol>
 
-<p>You can find the document of this project here (<a href="https://github.com/bjlee72/IRIS/wiki">https://github.com/bjlee72/IRIS/wiki</a>). </p>
+<h1>Documentation</h1>
 
-<p>Byungjoon Lee (<a href="mailto:bjlee@etri.re.kr">bjlee@etri.re.kr</a>) </p>
-        </section>
+<ol>
+	<li>User's Guide: <a href="https://github.com/bjlee72/IRIS/wiki">https://github.com/bjlee72/IRIS/wiki</a>) </li>
+	<li>Javadoc API Reference: <a href="http://openiris.etri.re.kr/javadoc/index.html">http://openiris.etri.re.kr/javadoc/index.html</a></li>
+</ol>
 
-        <footer>
-          Iris is maintained by <a href="https://github.com/bjlee72">bjlee72</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
+<h1>Authors</h1>
 
-        
-      </div>
-    </div>
-  </body>
+<ul>
+<li>Byungjoon Lee (<a href="mailto:bjlee@etri.re.kr">bjlee@etri.re.kr</a>) 
+<li>Jisoo Shin (<a href="mailto:jsshin@etri.re.kr">jsshin@etri.re.kr</a>) 
+<li>Saehyung Park (<a href="mailto:labry@etri.re.kr">labry@etri.re.kr</a>) 
+</ul>
+
+				</section>
+
+				<footer>
+					Iris is maintained by <a href="https://github.com/bjlee72">bjlee72</a><br>
+					This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+				</footer>
+
+				
+			</div>
+		</div>
+	</body>
 </html>
