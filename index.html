@@ -12,7 +12,7 @@
 		<!--[if lt IE 9]>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-		<title>IRIS: The Recursive SDN Openflow Controller by ETRI</title>
+		<title>IRIS: The Recursive SDN-Openflow Controller by ETRI</title>
 	</head>
 
 	<body>
@@ -52,16 +52,17 @@ Device Manager, Forwarding, Firewall, and Static Flow Entry Pusher. </p>
 famous open-source controllers like Floodlight or Beacon. 
 Our vision is to create an SDN controller platform, 
 initially based on Openflow Technology,
-with following features:
+with following features (* not all of these features are to be included in the open source IRIS):
 <ol>
 	<li>Horizontal Scalability for carrier-grade network</li>
 	<li>High Availability with transparent failover from failure</li>
 	<li>Multi-domain support with recursive network abstraction
 	based on Openflow</li>
 </ol>
+
 </p>
 
-<p>Our ambition is to satisfy above goals with much more simpler architecture
+<p>Further, our ambition is to satisfy above goals with much more simpler architecture
 that facilitates developers to use and customize IRIS to their needs.
 For that, we have done lots of re-factoring on Floodlight module architecture
 and successfully simplified it to give better performance, 
@@ -85,6 +86,7 @@ using the 'Touchpad' box located at the bottom-right corner of the topology view
 	<li>Supports Openflow 1.0 (1.3 is comming at the end of year 2013)</li>
 	<li>Pure Java-based Implementation</li>
 	<li>Handles 500 million Mac Learning Requestes per second with Commodity HW</li>
+	<li>Supports about 500 concurrent connections to switches with Commodity HW</li>
 </ol>
 
 <h1>Documentation</h1>
