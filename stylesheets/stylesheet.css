@@ -102,6 +102,19 @@ header h2 {
 	padding: 0;
 }
 
+#main_content div.author img {
+	width: 100px;
+	float: left;
+}
+
+#main_content div.author figcaption {
+	margin-left: 110px;
+}
+
+#main_content div.author {
+	clear: both;
+}
+
 #container {
   background: transparent url(../images/highlight-bg.jpg) 50% 0 no-repeat;
   min-height: 595px;
@@ -334,6 +347,7 @@ footer {
   padding-bottom: 30px;
   font-size: 13px;
   color: #aaa;
+  clear: both;
 }
 
 footer a {
