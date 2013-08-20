@@ -35,24 +35,25 @@
 				<section id="main_content">
 					<h1><a name="iris" class="anchor" href="#iris"><span class="octicon octicon-link"></span></a>Overview</h1>
 
-<p><strong>IRIS</strong> is the name of an Openflow Controller created by ETRI.</p>
+<p><strong>IRIS</strong> (sounds ai-ri-s) is the name of an Openflow Controller created by ETRI.</p>
 
-<p>In Greek mythodology, IRIS (sounds ai-ri-s) is 
-the goddess of the rainbow as well as the messenger of the other gods. 
-In developing IRIS, we have focused on creating an control plane architecture 
-that can effectively deliver network adminirator's will 
-to the underlying data plane, just like her.</p>
+<p>In Greek mythodology, Iris is the goddess of the rainbow 
+as well as the messenger of the other gods. 
+We named our controller after Iris in the hopes of creating a control plane
+architecture that can effectively deliver network policies to the 
+underlying data plane.</p>
 
 <p>Technically, IRIS is built on Beacon-like NIO-based event handler.
 On top of the IO engine, we have ported many of Floodlight core/application
-modules, including Learning Switch, Link Discovery, Topology Manager,
+modules including Learning Switch, Link Discovery, Topology Manager,
 Device Manager, Forwarding, Firewall, and Static Flow Entry Pusher. </p>
 
-<p>However, we do not want to stop there creating a spin-off version of the
-famous open-source controllers like Floodlight or Beacon. 
-Our vision is to create an SDN controller platform, 
-initially based on Openflow Technology,
-with following features (* not all of these features are to be included in the open source IRIS):
+<p>Though a large portion of the IRIS functions take after those of 
+Floodlight and Beacon, we did not want to stop at merely creating an 
+improved version of the famous open-source controllers. 
+Our vision was to create an SDN controller platform with the 
+following features (* not all of these are to be included in the 
+open-source IRIS):
 <ol>
 	<li>Horizontal Scalability for carrier-grade network</li>
 	<li>High Availability with transparent failover from failure</li>
@@ -61,23 +62,23 @@ with following features (* not all of these features are to be included in the o
 </ol>
 </p>
 
-<p>Further, our ambition is to satisfy above goals with much more simpler architecture
-that facilitates developers to use and customize IRIS to their needs.
-For that, we have done lots of re-factoring on Floodlight,
-and successfully simplified it to give better performance 
-and to suggest a very easy-to-learn development model.
-Further, to provide compatibility with Floodlight, IRIS REST API 
-is designed to be fully compliant with that of Floodlight.
+<p>We strived to satisfy above qualities with much simpler architecture
+that facilitates developers to comfortably use and customize.
+To do so, we have re-factored Floodlight a lot, 
+successfully simplifying it to give better performance 
+and maintain an easy-to-learn development model.
+Further, IRIS REST API is designed to be fully compliant with that of 
+Floodlight, so that the current Floodlight applications can be 
+easily transferred to IRIS.
 </p>
 
 <img src="images/iris.PNG" />
 <img src="images/iris003.PNG" />
 
-<p>Besides, we have modified the basic Floodlight UI to give users 
-a network topology view that can be looked around more easily. 
-Currently, IRIS UI supports the zoom-in/zoom-out/panning of the network topology
-using the 'Touchpad' box located at the bottom-right corner of the topology view. 
-</p>
+<p>We have also modified the basic Floodlight UI to give users 
+an easier view of the network topology. 
+Some of its improvements in the IRIS UI enable zoom-in, zoom-out,
+and panning of the network topology.</p>
 
 <h1>Specification</h1>
 
