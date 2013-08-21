@@ -29,7 +29,7 @@ We have also modified the basic Floodlight UI to give users an easier view of th
 Some of its improvements in the IRIS UI enable zoom-in, zoom-out, and panning of the network topology.
 
 Specification
-=============
+-------------
 
 1. Supports Openflow 1.0 (1.3 is comming at the end of year 2013)
 2. Pure Java-based Implementation
@@ -38,7 +38,7 @@ Specification
 5. The same license polity with Floodlight (Apache license)
 
 Authors
-=======
+-------
 Byungjoon Lee (bjlee@etri.re.kr) 
 * GitHub ID: bjlee72 
 * Senior Engineer 
