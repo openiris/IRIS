@@ -102,6 +102,10 @@ header h2 {
 	padding: 0;
 }
 
+#main_content div.author {
+	overflow: hidden;
+}
+
 #main_content div.author img {
 	width: 100px;
 	float: left;
@@ -109,14 +113,6 @@ header h2 {
 
 #main_content div.author figcaption {
 	margin-left: 110px;
-}
-
-#main_content div.author:after {
-	content: "";
-	display: block;
-	clear: both;
-	visibility: hidden;
-	zoom: 1;
 }
 
 #container {
