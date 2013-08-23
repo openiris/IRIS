@@ -111,8 +111,12 @@ header h2 {
 	margin-left: 110px;
 }
 
-#main_content div.author {
+#main_content div.author:after {
+	content: "";
+	display: block;
 	clear: both;
+	visibility: hidden;
+	zoom: 1;
 }
 
 #container {
@@ -279,7 +283,7 @@ h1 {
 h2 {
   font-size: 22px;
   font-weight: bold;
-  color: #303030;
+  /* color: #303030; */
   margin-bottom: 8px;
 } 
 
