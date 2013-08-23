@@ -107,13 +107,13 @@ header h2 {
 }
 
 #main_content div.author img {
-	width: 100px;
+	width: 70px;
 	float: left;
 }
 
 #main_content div.author figcaption {
 	font-size: 0.9em;
-	margin-left: 110px;
+	margin-left: 80px;
 }
 
 #container {
