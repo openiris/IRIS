@@ -95,6 +95,11 @@ header h2 {
   	  			-2px -2px 2px white;
 }
 
+#main_content ol li {
+	list-style: decimal outside;
+	margin-left: 30px;
+}
+
 #main_content img {
 	border: none;
 	margin: 0;
