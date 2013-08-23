@@ -132,11 +132,11 @@ form {
 /* GENERAL ELEMENT TYPE STYLES */
 
 h1 {
-  font-size: 2.8em;
+  font-size: 2.0em;
 } 
 
 h2 {
-  font-size: 22px;
+  font-size: 1.5em;
   font-weight: bold;
   color: #303030;
   margin-bottom: 8px;
@@ -210,6 +210,18 @@ footer {
 
 footer a {
   color: #666;
+}
+
+#main_content img {
+	max-width: 230pt;
+}
+
+div.author {
+	margin-bottom: 10px;
+}
+
+div.author img {
+	display: none;
 }
 
 /* MISC */
