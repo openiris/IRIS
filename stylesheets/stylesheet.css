@@ -98,12 +98,12 @@ header h2 {
 #main_content img {
 	border: none;
 	margin: 0;
-	margin-bottom: 10px;
 	padding: 0;
 }
 
 #main_content div.author {
 	overflow: hidden;
+	margin-bottom: 10px;
 }
 
 #main_content div.author img {
