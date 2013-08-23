@@ -1,4 +1,15 @@
 
-header {
-	background: url(../images/rainbow-circle.png) 110px -100px no-repeat;
+header 
+{
+	background: url(../images/rainbow-circle.png) 130px -100px no-repeat;
 } 
+
+header h1 
+{
+	filter: glow(color=white); 
+}
+
+header h2
+{
+	filter: glow(color=white); 
+}
