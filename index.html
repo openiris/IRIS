@@ -37,7 +37,7 @@
 				<hr>
 
 				<section id="main_content">
-					<h1><a name="iris" class="anchor" href="#iris"><span class="octicon octicon-link"></span></a>Overview</h1>
+					<h1><a name="iris" class="anchor" href="#iris"><span class="octicon octicon-link"></span></a>IRIS project overview</h1>
 
 <p><strong>IRIS</strong> (sounds ai-ri-s) is the name of an Openflow Controller created by ETRI.</p>
 
@@ -71,30 +71,49 @@ that facilitates developers to comfortably use and customize.
 To do so, we have re-factored Floodlight a lot, 
 successfully simplifying it to give better performance 
 and maintain an easy-to-learn development model.
+<!--
 Further, IRIS REST API is designed to be fully compliant with that of 
 Floodlight, so that the current Floodlight applications can be 
 easily transferred to IRIS.
+-->
 </p>
 
 <img src="images/iris.PNG" />
 <img src="images/iris003.PNG" />
 
+<!-- 
 <p>We have also modified the basic Floodlight UI to give users 
 an easier view of the network topology. 
 Some of its improvements in the IRIS UI enable zoom-in, zoom-out,
 and panning of the network topology.</p>
+-->
 
-<h1>Specification</h1>
+<p>
+
+
+<h1>Open-source IRIS</h1>
+
+<p>
+Just like Floodlight, we are now providing an open-source IRIS through GitHub. 
+In this page, you can find various resources about the open-source IRIS.
+</p>
+
+<h2>key features</h2>
 
 <ol>
 	<li>Supports Openflow 1.0 (1.3 is comming at the end of year 2013)</li>
 	<li>Pure Java-based Implementation</li>
 	<li>Handles 5 million Mac Learning Requestes per second with Commodity HW</li>
 	<li>Supports about 500 concurrent connections to switches with Commodity HW</li>
-	<li>The open-source IRIS follows the same license polity with Floodlight (Apache-2.0 license)</li>
+	<li>follows the same license polity with Floodlight (Apache-2.0 license)</li>
+	<li>provides with Learning mac, Link discovery, Topology management,
+		Forwarding, Device manager, Firewall, Static Flow pusher,
+		and State manager modules</li>
+	<li>includes two sample controller implementations, which are 
+		fully functional</li>
 </ol>
 
-<h1>Documentation</h1>
+<h2>Documentation</h2>
 
 <ol>
 	<li>User's Guide: <a href="https://github.com/bjlee72/IRIS/wiki">https://github.com/bjlee72/IRIS/wiki</a> </li>
