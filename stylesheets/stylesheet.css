@@ -102,6 +102,7 @@ header h2 {
 
 #main_content img {
 	border: none;
+	border-radius: 10px;
 	margin: 0;
 	padding: 0;
 }
