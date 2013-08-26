@@ -111,15 +111,22 @@ header h2 {
 }
 
 #main_content div.author {
+	height: 80px;
 	overflow: hidden;
 	margin-bottom: 10px;
 	margin-left: 20px;
 }
 
-#main_content div.author img {
-	border-radius: 10px;
+#main_content div.author figure {
 	width: 70px;
+	height: 80px;
+	overflow: hidden;
+	border-radius: 10px;
 	float: left;
+}
+
+#main_content div.author figure img {
+	width: 70px;
 }
 
 #main_content div.author figcaption {
