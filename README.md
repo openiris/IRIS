@@ -45,7 +45,7 @@ Byungjoon Lee (bjlee@etri.re.kr)
 * SDN Technology Research Devision, ETRI 
 * Key Interests are: Software Engineering, SDN, Network Management, ICN
 
-Jisoo Shin (jsshin@etri.re.kr) 
+Jisoo Shin (jshin@etri.re.kr) 
 * GitHub ID: jsshin 
 * Senior Engineer 
 * SDN Technology Research Devision, ETRI 
