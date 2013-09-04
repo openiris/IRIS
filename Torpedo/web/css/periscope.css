@@ -1,0 +1,238 @@
+html {
+	background-color: #efefef;
+	font-family: 'Courier New';
+}
+
+a {
+	text-decoration:none;
+	color: #006363;
+}
+
+a:hover {
+	color: #5ccccc;
+}
+
+
+.page {
+	width: 1200px; 
+	position; relative;
+	margin: 0 auto;
+	background-color: #fff;
+	box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, .5);
+	font-size: 14px;
+	font-weight: normal;
+}
+
+.header {
+	position: fixed;
+	z-index: 10000; /* always at the top */
+	top: 0px;
+	width: 1200px;
+	padding: 40px 0 0 0;
+	background: #efefef url('/img/rainbow.jpg') no-repeat left 40px;
+}
+
+.header h1 {
+	font-family: Verdana;
+	font-size: 35px;
+	font-weight: 800;
+	color: white;
+	height: 90px;
+	text-shadow: 0px 0px 10px red;
+	padding: 20px 0px 0px 20px;
+}
+
+.header h1 .subtitle {
+	font-size: 0.6em;
+	text-transform: uppercase;
+}
+
+.nav {
+	font-family: Verdana;
+	width: 45%;
+	height: 30px;
+	margin-top: -30px;
+	float: right;
+	overflow: hidden;
+}
+
+.nav ul li {
+	display: block;
+	float: left;
+}
+
+.nav ul li a {
+	display: inline-block;
+	width: 90px;
+	height: 50px;
+	margin: 3px 4px 0 0;
+	padding-top: 5px;
+	border-radius: 7px;
+	text-align: center;
+	vertical-align: text-bottom;
+	color: black;
+	background-color: rgb(80%, 90%, 90%);
+	opacity: 0.8;
+}
+
+.nav ul li a:hover {
+	opacity: 1;
+	margin-top: 0;
+}
+
+.home .nav ul li a.home,
+.switches .nav ul li a.switches,
+.devices .nav ul li a.devices,
+.topology .nav ul li a.topology
+{
+	margin-top: 0;
+	background-color: white;
+	opacity: 1;
+}
+
+.center {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+footer {
+	margin: 0;
+	padding: 5px 20px;
+	color: white;
+	background-color: rgb(40, 40, 60);
+	clear: both;
+}
+
+footer a {
+	text-decoration: none;
+	color: yellow;
+}
+
+.content {
+	padding: 30px 20px;
+	margin-top: 125px;
+	min-height: 740px;
+	border: 1px solid rgb(0, 0, 0, 0);
+	position: relative;
+}
+
+.content .popupPane {
+	position: relative;
+	width: 100%;
+}
+
+.content h1 {
+	font-family: Verdana;
+	float: left;
+	width: 300px;
+	padding: 5px 5px;
+	border-radius : 6px;
+	background-color: rgb(90%, 80%, 90%);
+	text-align: center;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	border-radius: 6px;
+}
+
+.content h1+a {
+	display: inline-block;
+	width: 300px;
+	height: 30px; 
+	padding-left: 40px;
+	padding-top: 5px;
+	vertical-align: bottom;
+	background: url(/img/reload-icon.png) no-repeat 10px 3px;
+	background-size: 20px 20px;
+}
+
+.content table {
+	width: 100%;
+	font-size: 12px;
+	line-height: 16px;
+}
+
+.content div div {
+	clear: both;
+	padding: 10px 20px 30px 20px; 
+}
+
+table caption {
+	color: #006363;
+}
+
+table.vertical_table { 
+}
+table.vertical_table td {
+	padding: 3px 0;
+}
+table.vertical_table tr td:first-child {
+	width: 200px;
+	text-align: right;
+	font-weight: bold;
+	padding-right: 20px;
+}
+
+table.horizontal_table {
+	border-bottom: 1px solid gray;
+	border-top: 1px solid gray;
+}
+
+table.horizontal_table th {
+	text-align: center;
+	font-weight: normal;
+	padding: 0px;
+	line-height: 24px;
+	background-color: #efefef;
+	border-bottom: 1px dashed black;
+}
+
+table.horizontal_table td {
+	text-align: center;
+	padding: 0px;
+	line-height: 24px;
+}
+
+table.mark_4th_row tr:nth-of-type(4n+3) {
+	background-color: #efefef;
+}
+
+table.mark_2th_row tr:nth-of-type(even) {
+	background-color: #efefef;
+}
+
+table.mark_2th_row tr:nth-of-type(odd) {
+	background-color: white;
+}
+
+table.width50 {
+	width:50%;
+}
+
+table.box {
+	border: 1px solid gray;
+}
+
+tr.chosen {
+	border-left: 1px solid red;
+	border-top: 1px solid red;
+	border-right: 1px solid red;
+}
+
+td.chosen {
+	border-left: 1px solid red;
+	border-bottom: 1px solid red;
+	border-right: 1px solid red;
+}
+
+#hiddens {
+	margin: 0;
+}
+
+
+/* 
+ * section-specific definitions 
+ */
+
+div.controller_statistics {
+	margin-bottom: 20px;
+}

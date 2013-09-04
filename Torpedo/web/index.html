@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="cache-control" content="max-age=0" />
+	<meta http-equiv="cache-control" content="no-cache" />
+	<meta http-equiv="expires" content="0" />
+	<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+	<meta http-equiv="pragma" content="no-cache" />
+    <title>IRIS: THE PERISCOPE</title>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <!-- Place this tag in your head or just before your close body tag -->
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="css/reset.css" rel="stylesheet">
+    <link href="css/periscope.css" rel="stylesheet">
+    <link href="css/topology.css" rel="stylesheet">
+
+    <!-- Le fav and touch icons -->
+    <!-- TODO create some icons 
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-touch-icon-114x114.png">
+    -->
+</head>
+
+<body class="home">
+
+<div class="page">
+
+<div class="header">
+	<h1>IRIS: <span class="subtitle">The Recursive SDN Controller</span></h1>
+	<div class="nav">
+		<ul>
+		<li><a class="home">Home</a></li>
+		<li><a class="switches">Switches</a></li>
+		<li><a class="devices">Devices</a></li>
+		<li><a class="topology">Topology</a></li>
+		</ul>
+	</div> <!-- /nav -->
+</div>
+
+<div class="content">
+	
+	<!-- 
+		among below classes, except for last one, the former part of the classes
+		are for identifying blocks that the div belongs to.
+		The last one is the 'real' class that the div represents. 
+		each class is bound to each class callback that handles the drawing 
+		of that div's content.
+	-->
+	<div class="home controller_statistics">
+		<h1>Controller Statistics</h1><a><!-- reload button --></a>
+		<table class="vertical_table" template="controller_statistics">
+		</table>
+	</div>
+	
+	<div class="home switches switches">
+		<h1>Switches(<span id="snum">0</span>)</h1><a><!-- reload button --></a>
+		<div>
+		<table class="horizontal_table mark_4th_row">
+		<colgroup>
+			<col span="3" class="desc">
+			<col span="3" class="stat">
+			<col class="time">
+		</colgroup>
+		<thead>
+		<tr>
+			<th>DPID</th><th>IP Address</th><th>Vendor</th><th>Packets</th><th>Bytes</th><th>Flows</th><th>Connected Since</th>
+		</tr>
+		</thead>
+		<tbody template="switches">
+			<!-- switch items go here -->
+		</tbody>
+		</table>
+		</div>
+	</div>
+	
+	<div class="home devices devices">
+		<h1>Devices(<span id="dnum">0</span>)</h1><a><!-- reload button --></a>
+		<div>
+		<table class="horizontal_table mark_4th_row">
+		<colgroup>
+			<col span="3" class="desc">
+			<col span="3" class="stat">
+			<col class="time">
+		</colgroup>
+		<thead>
+		<tr>
+			<th>MAC Address</th><th>IP Address</th><th>Switch Port</th><th>Last Seen</th>
+		</tr>
+		</thead>
+		<tbody template="devices">
+			<!-- switch items go here -->
+		</tbody>
+		</table>
+		</div>
+	</div>
+	
+	<div class="topology topology">
+		<h1>Topology</h1><a>Layout topology automatically</a>
+		<div template="topology">
+		</div>
+	</div>
+	
+</div> <!-- /content -->
+<div id="hiddens" style="display: none;">
+<div class="home switches flows" style="display: none;">
+	<table class="horizontal_table mark_2th_row">
+	<caption><span>Flow Records:</span><span type="links"></span></caption>
+	<thead>
+	<tr>
+		<th>Cookie</th><th>Priority</th><th>Match</th><th>Action</th><th>Packets</th><th>Bytes</th><th>Age</th><th>Timeout</th>
+	</tr>
+	</thead>
+    <tbody template="switch_flows">
+    </tbody>
+    </table>
+</div>
+<div class="home switches ports" style="display: none;">
+	<table class="horizontal_table mark_2th_row">
+	<caption><span>Ports:</span><span type="links"></span></caption>
+	<thead>
+	<tr>
+		<th>#</th><th>Link Status</th><th>TX Bytes</th><th>RX Bytes</th><th>TX Pkts</th><th>RX Pkts</th><th>Dropped</th><th>Errors</th>
+	</tr>
+	</thead>
+	<tbody template="ports">
+	</tbody>
+	</table>
+</div>
+<div class="home switches switch_desc" style="display: none;">
+	<table class="vertical_table width50 box center mark_2th_row">
+	<caption><span>Switch Desc:</span><span type="links"></span></caption>
+	<tbody template="switch_desc">
+	</tbody>
+	</table>
+</div>
+</div> <!-- hiddens -->
+<footer class="footer">
+Copyright (C) ETRI. 
+Powered by <a href="http://documentcloud.github.com/backbone/">Backbone.js</a>, 
+<a href="http://twitter.github.com/bootstrap/">Bootstrap</a>, 
+<a href="http://jquery.com/">jQuery</a>, 
+<a href="http://mbostock.github.com/d3/">D3.js</a>, etc.</p>
+</footer>
+<script src="lib/jquery.min.js"></script>
+<script src="lib/underscore-min.js"></script>
+<script src="lib/backbone-min.js"></script>
+<script src="lib/d3.v2.min.js"></script>
+
+<script src="lib/bootstrap-dropdown.js"></script>
+<script src="lib/bootstrap-alert.js"></script>
+
+<script src="js/models/portmodel.js"></script>
+<script src="js/models/flowmodel.js"></script>
+<script src="js/models/switchmodel.js"></script>
+<script src="js/models/hostmodel.js"></script>
+<script src="js/models/statusmodel.js"></script>
+<script src="js/models/topologymodel.js"></script>
+
+<script src="js/periscope.js"></script>
+<script src="js/periscope_controller_statistics.js"></script>
+<script src="js/periscope_switches.js"></script>
+<script src="js/periscope_devices.js"></script>
+<script src="js/periscope_topology.js"></script>
+<script src="js/periscope_flows.js"></script>
+<script src="js/periscope_ports.js"></script>
+<script src="js/periscope_switch_desc.js"></script>
+</div> <!-- page -->
+</body>
+</html>
