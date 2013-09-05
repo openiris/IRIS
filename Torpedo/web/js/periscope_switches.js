@@ -15,7 +15,7 @@ iris.switches = function() {
 			return;
 		}
 		
-		// find a space to insert the switch flow information.
+		// find a space to insert the switch desc information.
 		var target = $('tr[ref$="' + id + '"] td');
 		if ( target.find('div').length > 0 ) {
 			return;
@@ -53,7 +53,7 @@ iris.switches = function() {
 			return;
 		}
 		
-		// find a space to insert the switch flow information.
+		// find a space to insert the switch port information.
 		var target = $('tr[ref$="' + id + '"] td');
 		if ( target.find('div').length > 0 ) {
 			return;
