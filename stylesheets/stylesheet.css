@@ -127,6 +127,7 @@ header h2 {
 }
 
 #main_content div.author figure img {
+	border: none;
 	width: 70px;
 }
 
