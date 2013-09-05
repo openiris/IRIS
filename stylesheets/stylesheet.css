@@ -105,8 +105,9 @@ header h2 {
 }
 
 #main_content img {
-	border: none;
+	border: 1px solid gray;
 	margin: 0;
+	margin-bottom: 10px;
 	padding: 0;
 }
 
