@@ -66,10 +66,12 @@ window.Topology = Backbone.Model.extend({
 						value:10});
 				});
 				
+				/*
 				if ( data.length <= 0 ) {
 					self.nodes = [];
 					self.links = [];
 				}
+				*/
 
 				self.trigger('change');
 				//self.set(data);
