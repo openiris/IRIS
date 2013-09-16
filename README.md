@@ -51,7 +51,7 @@ Jisoo Shin (jshin@etri.re.kr)
 * SDN Technology Research Devision, ETRI 
 * Key Interests are: SDN, Network Management
 
-Saehyung Park (labry@etri.re.kr) 
+Sae Hyoung Park (labry@etri.re.kr) 
 * GitHub ID: justin-labry 
 * Engineer 
 * SDN Technology Research Devision, ETRI 
