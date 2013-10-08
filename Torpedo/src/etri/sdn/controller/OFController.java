@@ -441,6 +441,7 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 	 */
 	@Override
 	public final boolean handleDisconnectEvent(Connection conn) {
+		System.out.println("disconnected");
 		if ( conn.getSwitch() != null ) {
 			
 			for (OFModule m: modules) {

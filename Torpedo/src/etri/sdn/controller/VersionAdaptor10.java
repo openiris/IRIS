@@ -209,8 +209,10 @@ public class VersionAdaptor10 extends VersionAdaptor {
 			// send hello in reply.
 			OFHello hello = new OFHello((OFHello)m);
 			conn.write(hello);
-			
 			break;
+		case ERROR:
+			System.err.println("GET ERROR : " + new String(((OFError)m).getData()));
+			return false;
 		case ECHO_REQUEST:
 			// for echo request, we send a echo message with the same XID.
 			Logger.debug("ECHO_REQUEST is received");

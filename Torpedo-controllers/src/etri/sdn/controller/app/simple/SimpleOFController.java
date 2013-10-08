@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.OFPacketIn;
-import org.openflow.protocol.OFType;
+import org.openflow.protocol.ver1_0.messages.OFPacketIn;
+import org.openflow.protocol.ver1_0.types.OFMessageType;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFController;
@@ -134,7 +134,10 @@ public class SimpleOFController extends OFController {
 	 */
 	@Override
 	public boolean handleGeneric(Connection conn, MessageContext context, OFMessage m) {
-		if ( m.getType() == OFType.PORT_STATUS ) {
+		
+		OFMessageType msgType = OFMessageType.valueOf(m.getTypeByte());
+		
+		if ( msgType == OFMessageType.PORT_STATUS ) {
 			List<OFMessage> out = new LinkedList<OFMessage>();
 
 			m_link_discovery.processMessage( conn, context, m, out );
@@ -143,12 +146,12 @@ public class SimpleOFController extends OFController {
 				return true;
 			}
 		}
-		else if ( m.getType() == OFType.FEATURES_REPLY ) {
+		else if ( msgType == OFMessageType.FEATURES_REPLY ) {
 			return m_link_discovery.processHandshakeFinished( conn, context );
 		}
 		else {
 			System.err.println("Unhandled OF message: "
-					+ m.getType() + " from "
+					+ m.getTypeByte() + " from "
 					+ conn.getClient().socket().getInetAddress());
 		}
 		return true;
