@@ -182,6 +182,7 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 
 				VersionAdaptor vadp = version_adaptors.get(m.getVersion());
 				if ( vadp == null ) {
+					Logger.debug("Cannot find suitable version adaptor for version " + m.getVersion());
 					continue;
 				}
 				

@@ -201,12 +201,15 @@ public class VersionAdaptor10 extends VersionAdaptor {
 			// for Hello, we don't do anything.
 			try {
 				System.err.println("GOT HELLO from " + conn.getClient().getRemoteAddress().toString());
-				OFHello hello = new OFHello((OFHello)m);
-				conn.write(hello);
+				
 			} catch (IOException e1) {
 				e1.printStackTrace();
 				return false;
 			}
+			// send hello in reply.
+			OFHello hello = new OFHello((OFHello)m);
+			conn.write(hello);
+			
 			break;
 		case ECHO_REQUEST:
 			// for echo request, we send a echo message with the same XID.
