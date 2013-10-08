@@ -17,16 +17,17 @@
 
 package etri.sdn.controller.protocol.io;
 
-import java.util.Collection;
+//import java.util.Collection;
 import java.util.Date;
-import java.util.List;
+//import java.util.List;
 import java.util.Map;
 
-import org.openflow.protocol.OFFeaturesReply;
-import org.openflow.protocol.OFPhysicalPort;
-import org.openflow.protocol.OFStatisticsRequest;
-import org.openflow.protocol.statistics.OFDescriptionStatistics;
-import org.openflow.protocol.statistics.OFStatistics;
+//import org.openflow.protocol.OFFeaturesReply;
+//import org.openflow.protocol.OFPhysicalPort;
+//import org.openflow.protocol.OFStatisticsRequest;
+//import org.openflow.protocol.statistics.OFDescriptionStatistics;
+//import org.openflow.protocol.statistics.OFStatistics;
+//import org.openflow.util.HexString;
 
 /**
  * This was originally written for Floodlight, but we slightly modified it to 
@@ -55,147 +56,154 @@ public interface IOFSwitch {
     public void setConnection(Connection conn);
 	public Connection getConnection();
 	
-    /**
-     * Returns switch features from features Reply
-     * @return
-     */
-    public int getBuffers();
+//    /**
+//     * Returns switch features from features Reply
+//     * @return
+//     */
+//    public int getBuffers();
+//	public void setBuffers(int buffers);
+//    
+//    /**
+//     * Returns switch features from features Reply
+//     * @return
+//     */
+//    public int getActions();
+//    public void setActions(int actions);
+//    
+//    /**
+//     * Returns switch features from features Reply
+//     * @return
+//     */
+//    public int getCapabilities();
+//    public void setCapabilities(int capabilities);
+//    
+//    /**
+//     * Returns switch features from features Reply
+//     * @return
+//     */
+//    public byte getTables();
+//    public void setTables(byte tables);
     
-    /**
-     * Returns switch features from features Reply
-     * @return
-     */
-    public int getActions();
+	
+	
+//    /**
+//     * Set the OFFeaturesReply message returned by the switch during initial
+//     * handshake.
+//     * @param featuresReply
+//     */
+//    public void setFeaturesReply(OFFeaturesReply featuresReply);
     
-    /**
-     * Returns switch features from features Reply
-     * @return
-     */
-    public int getCapabilities();
-    
-    /**
-     * Returns switch features from features Reply
-     * @return
-     */
-    public byte getTables();
+//    /**
+//     * Set the SwitchProperties based on it's description
+//     * @param description
+//     */
+//    public void setSwitchProperties(OFDescriptionStatistics description);    
 
-    /**
-     * Set the OFFeaturesReply message returned by the switch during initial
-     * handshake.
-     * @param featuresReply
-     */
-    public void setFeaturesReply(OFFeaturesReply featuresReply);
-    
-    /**
-     * Set the SwitchProperties based on it's description
-     * @param description
-     */
-    public void setSwitchProperties(OFDescriptionStatistics description);    
-
-    /**
-     * Get list of all enabled ports. This will typically be different from
-     * the list of ports in the OFFeaturesReply, since that one is a static
-     * snapshot of the ports at the time the switch connected to the controller
-     * whereas this port list also reflects the port status messages that have
-     * been received.
-     * @return Unmodifiable list of ports not backed by the underlying collection
-     */
-    public Collection<OFPhysicalPort> getEnabledPorts();
-    
-    /**
-     * Get list of the port numbers of all enabled ports. This will typically
-     * be different from the list of ports in the OFFeaturesReply, since that
-     * one is a static snapshot of the ports at the time the switch connected 
-     * to the controller whereas this port list also reflects the port status
-     * messages that have been received.
-     * @return Unmodifiable list of ports not backed by the underlying collection
-     */
-    public Collection<Short> getEnabledPortNumbers();
-
-    /**
-     * Retrieve the port object by the port number. The port object
-     * is the one that reflects the port status updates that have been
-     * received, not the one from the features reply.
-     * @param portNumber
-     * @return port object
-     */
-    public OFPhysicalPort getPort(short portNumber);
-    
-    /**
-     * Retrieve the port object by the port name. The port object
-     * is the one that reflects the port status updates that have been
-     * received, not the one from the features reply.
-     * @param portName
-     * @return port object
-     */
-    public OFPhysicalPort getPort(String portName);
-    
-    /**
-     * Add or modify a switch port. This is called by the core controller
-     * code in response to a OFPortStatus message. It should not typically be
-     * called by other floodlight applications.
-     * @param port
-     */
-    public void setPort(OFPhysicalPort port);
-
-    /**
-     * Delete a port for the switch. This is called by the core controller
-     * code in response to a OFPortStatus message. It should not typically be
-     * called by other floodlight applications.
-     * @param portNumber
-     */
-    public void deletePort(short portNumber);
-    
-    /**
-     * Delete a port for the switch. This is called by the core controller
-     * code in response to a OFPortStatus message. It should not typically be
-     * called by other floodlight applications.
-     * @param portName
-     */
-    public void deletePort(String portName);
-    
-    /**
-     * Get list of all ports. This will typically be different from
-     * the list of ports in the OFFeaturesReply, since that one is a static
-     * snapshot of the ports at the time the switch connected to the controller
-     * whereas this port list also reflects the port status messages that have
-     * been received.
-     * @return Unmodifiable list of ports 
-     */
-    public Collection<OFPhysicalPort> getPorts();
-
-    /**
-     * @param portName
-     * @return Whether a port is enabled per latest port status message
-     * (not configured down nor link down nor in spanning tree blocking state)
-     */
-    public boolean portEnabled(short portName);
-    
-    /**
-     * @param portNumber
-     * @return Whether a port is enabled per latest port status message
-     * (not configured down nor link down nor in spanning tree blocking state)
-     */
-    public boolean portEnabled(String portName);
-
-    /**
-     * @param port
-     * @return Whether a port is enabled per latest port status message
-     * (not configured down nor link down nor in spanning tree blocking state)
-     */
-    public boolean portEnabled(OFPhysicalPort port);
+//    /**
+//     * Get list of all enabled ports. This will typically be different from
+//     * the list of ports in the OFFeaturesReply, since that one is a static
+//     * snapshot of the ports at the time the switch connected to the controller
+//     * whereas this port list also reflects the port status messages that have
+//     * been received.
+//     * @return Unmodifiable list of ports not backed by the underlying collection
+//     */
+//    public Collection<OFPhysicalPort> getEnabledPorts();
+//    
+//    /**
+//     * Get list of the port numbers of all enabled ports. This will typically
+//     * be different from the list of ports in the OFFeaturesReply, since that
+//     * one is a static snapshot of the ports at the time the switch connected 
+//     * to the controller whereas this port list also reflects the port status
+//     * messages that have been received.
+//     * @return Unmodifiable list of ports not backed by the underlying collection
+//     */
+//    public Collection<Short> getEnabledPortNumbers();
+//
+//    /**
+//     * Retrieve the port object by the port number. The port object
+//     * is the one that reflects the port status updates that have been
+//     * received, not the one from the features reply.
+//     * @param portNumber
+//     * @return port object
+//     */
+//    public OFPhysicalPort getPort(short portNumber);
+//    
+//    /**
+//     * Retrieve the port object by the port name. The port object
+//     * is the one that reflects the port status updates that have been
+//     * received, not the one from the features reply.
+//     * @param portName
+//     * @return port object
+//     */
+//    public OFPhysicalPort getPort(String portName);
+//    
+//    /**
+//     * Add or modify a switch port. This is called by the core controller
+//     * code in response to a OFPortStatus message. It should not typically be
+//     * called by other floodlight applications.
+//     * @param port
+//     */
+//    public void setPort(OFPhysicalPort port);
+//
+//    /**
+//     * Delete a port for the switch. This is called by the core controller
+//     * code in response to a OFPortStatus message. It should not typically be
+//     * called by other floodlight applications.
+//     * @param portNumber
+//     */
+//    public void deletePort(short portNumber);
+//    
+//    /**
+//     * Delete a port for the switch. This is called by the core controller
+//     * code in response to a OFPortStatus message. It should not typically be
+//     * called by other floodlight applications.
+//     * @param portName
+//     */
+//    public void deletePort(String portName);
+//    
+//    /**
+//     * Get list of all ports. This will typically be different from
+//     * the list of ports in the OFFeaturesReply, since that one is a static
+//     * snapshot of the ports at the time the switch connected to the controller
+//     * whereas this port list also reflects the port status messages that have
+//     * been received.
+//     * @return Unmodifiable list of ports 
+//     */
+//    public Collection<OFPhysicalPort> getPorts();
+//
+//    /**
+//     * @param portName
+//     * @return Whether a port is enabled per latest port status message
+//     * (not configured down nor link down nor in spanning tree blocking state)
+//     */
+//    public boolean portEnabled(short portName);
+//    
+//    /**
+//     * @param portNumber
+//     * @return Whether a port is enabled per latest port status message
+//     * (not configured down nor link down nor in spanning tree blocking state)
+//     */
+//    public boolean portEnabled(String portName);
+//
+//    /**
+//     * @param port
+//     * @return Whether a port is enabled per latest port status message
+//     * (not configured down nor link down nor in spanning tree blocking state)
+//     */
+//    public boolean portEnabled(OFPhysicalPort port);
 
     /**
      * Get the datapathId of the switch
      * @return
      */
     public long getId();
+    public void setId(long id);
     
-    /**
-     * Get the OFDescriptionStatistics object.
-     * @return
-     */
-    public OFDescriptionStatistics getDescription();
+//    /**
+//     * Get the OFDescriptionStatistics object.
+//     * @return
+//     */
+//    public OFDescriptionStatistics getDescription();
 
 
     /**
@@ -270,11 +278,11 @@ public interface IOFSwitch {
      */
     Object removeAttribute(String name);
 
-    /**
-     * Clear all flowmods on this switch
-     * @return 
-     */
-    public boolean clearAllFlowMods();
+//    /**
+//     * Clear all flowmods on this switch
+//     * @return 
+//     */
+//    public boolean clearAllFlowMods();
 
     /**
      * Update broadcast cache
@@ -290,30 +298,30 @@ public interface IOFSwitch {
      */
     public Map<Short, Long> getPortBroadcastHits();
     
-    /**
-     * query statistics to the switch.
-     * @param req
-     * @return
-     */
-	public List<OFStatistics> getSwitchStatistics(OFStatisticsRequest req);
-	
-	/**
-	 * deliver an switch statistics from switch to IOFSwitch object.
-	 * @param xid
-	 * @param m OFStatistics objects
-	 */
-	public void deliverSwitchStatistics(int xid, List<OFStatistics> m);
-	
-	/**
-	 * query FEATURE_REPLY to the switch.
-	 * @return
-	 */
-	public OFFeaturesReply getFeaturesReply();
-	
-	/**
-	 * Deliver a feature reply from switch to IOFSwitch object.
-	 * @param xid
-	 * @param reply
-	 */
-	public void deliverFeaturesReply(int xid, OFFeaturesReply reply);
+//    /**
+//     * query statistics to the switch.
+//     * @param req
+//     * @return
+//     */
+//	public List<OFStatistics> getSwitchStatistics(OFStatisticsRequest req);
+//	
+//	/**
+//	 * deliver an switch statistics from switch to IOFSwitch object.
+//	 * @param xid
+//	 * @param m OFStatistics objects
+//	 */
+//	public void deliverSwitchStatistics(int xid, List<OFStatistics> m);
+//	
+//	/**
+//	 * query FEATURE_REPLY to the switch.
+//	 * @return
+//	 */
+//	public OFFeaturesReply getFeaturesReply();
+//	
+//	/**
+//	 * Deliver a feature reply from switch to IOFSwitch object.
+//	 * @param xid
+//	 * @param reply
+//	 */
+//	public void deliverFeaturesReply(int xid, OFFeaturesReply reply);
 }

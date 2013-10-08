@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.OFPacketIn;
-import org.openflow.protocol.OFType;
+import org.openflow.protocol.ver1_0.messages.OFPacketIn;
+import org.openflow.protocol.ver1_0.types.OFMessageType;
 
 import etri.sdn.controller.IInfoProvider;
 import etri.sdn.controller.IOFTask;
@@ -22,6 +22,7 @@ import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
+import etri.sdn.controller.VersionAdaptor10;
 import etri.sdn.controller.module.flowcache.IFlowReconcileListener;
 import etri.sdn.controller.module.flowcache.OFMatchReconcile;
 import etri.sdn.controller.module.topologymanager.ITopologyListener;
@@ -59,6 +60,8 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 
 	private ITopologyService topology;
 	private IEntityClassifierService entityClassifier;
+	
+	private VersionAdaptor10 version_adaptor_10;
 	
 	/** 
 	 * All the devices that you want.
@@ -116,16 +119,22 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 		this.entityClassifier = getEntityClassifierServiceRef();
 		this.devices = Devices.getInstance(topology, entityClassifier);
 		
+		this.version_adaptor_10 = (VersionAdaptor10) getController().getVersionAdaptor((byte)0x01);
+		
 		// 'classes' now has an entry for the class IPv4,
 		// and this will create an entry within 'secondaryIndexMap' of ClassIndices object.
 //		addIndex(true, EnumSet.of(DeviceField.IPV4));
 
 		registerFilter(
-				OFType.PACKET_IN,
+				OFMessageType.PACKET_IN.getTypeValue(),
+//				OFType.PACKET_IN,
 				new OFMFilter() {
 					@Override
 					public boolean filter(OFMessage m) {
-						return true;
+						if ( m.getVersion() == (byte)0x01 ) {
+							return true;
+						}
+						return false;
 					}
 				}
 		);
@@ -194,12 +203,13 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 		if ( eth == null ) {
 			// parse Ethernet header and put into the context
 			eth = new Ethernet();
-			eth.deserialize(pi.getPacketData(), 0, pi.getPacketData().length);
+//			eth.deserialize(pi.getPacketData(), 0, pi.getPacketData().length);
+			eth.deserialize(pi.getData(), 0, pi.getData().length);
 			cntx.put(MessageContext.ETHER_PAYLOAD, eth);
 		}
 
 		// Extract source entity information
-		Entity srcEntity = getSourceEntityFromPacket(eth, sw.getId(), pi.getInPort());
+		Entity srcEntity = getSourceEntityFromPacket(eth, sw.getId(), pi.getInputPort());
 		if (srcEntity == null)
 			return false;
 
@@ -452,17 +462,17 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 		return "OFMDeviceManager";
 	}
 
-	@Override
-	public boolean isCallbackOrderingPrereq(OFType type, String name) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isCallbackOrderingPostreq(OFType type, String name) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+//	@Override
+//	public boolean isCallbackOrderingPrereq(OFType type, String name) {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
+//
+//	@Override
+//	public boolean isCallbackOrderingPostreq(OFType type, String name) {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
 
 	@Override
 	public etri.sdn.controller.IListener.Command reconcileFlows(

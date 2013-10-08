@@ -16,7 +16,9 @@
 
 package etri.sdn.controller.module.linkdiscovery;
 
-import org.openflow.protocol.OFPhysicalPort.OFPortState;
+//import org.openflow.protocol.OFPhysicalPort.OFPortState;
+
+import org.openflow.protocol.ver1_0.types.OFPortState;
 
 import etri.sdn.controller.module.linkdiscovery.ILinkDiscovery.LinkType;
 
@@ -52,8 +54,8 @@ public class LinkInfo {
      */
 
     public boolean linkStpBlocked() {
-        return ((srcPortState & OFPortState.OFPPS_STP_MASK.getValue()) == OFPortState.OFPPS_STP_BLOCK.getValue()) ||
-            ((dstPortState & OFPortState.OFPPS_STP_MASK.getValue()) == OFPortState.OFPPS_STP_BLOCK.getValue());
+        return ((srcPortState & OFPortState.OFPPS_STP_MASK) == OFPortState.OFPPS_STP_BLOCK) ||
+            ((dstPortState & OFPortState.OFPPS_STP_MASK) == OFPortState.OFPPS_STP_BLOCK);
     }
 
     public Long getFirstSeenTime() {

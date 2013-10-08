@@ -4,8 +4,9 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.openflow.protocol.OFFlowMod;
-		
+import org.openflow.protocol.ver1_0.messages.OFFlowMod;
+
+
 /**
  * This table is of type {@code ConcurrentHashMap<String, Map<String, OFFlowMod>>}.
  * The first key ({@code String}) is DPID, and the second key ({@code String}) is 

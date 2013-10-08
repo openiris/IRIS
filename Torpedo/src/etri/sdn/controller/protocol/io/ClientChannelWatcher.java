@@ -13,7 +13,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.OFType;
+//import org.openflow.protocol.ver1_0.messages.OFHello;
+//import org.openflow.protocol.OFType;
 
 import etri.sdn.controller.util.Logger;
 
@@ -179,8 +180,20 @@ public final class ClientChannelWatcher extends Thread {
 		}
 		
 		List<OFMessage> l = new ArrayList<OFMessage>();
-		l.add(conn.getFactory().getMessage(OFType.HELLO));
-		l.add(conn.getFactory().getMessage(OFType.FEATURES_REQUEST));
+		
+		//
+		// for hello/features_request from controller, we can use version 1.0 
+		//
+		org.openflow.protocol.ver1_0.messages.OFHello hello = 
+			(org.openflow.protocol.ver1_0.messages.OFHello) org.openflow.protocol.ver1_0.types.OFMessageType.HELLO.newInstance();
+		org.openflow.protocol.ver1_0.messages.OFFeaturesRequest features_request = 
+			(org.openflow.protocol.ver1_0.messages.OFFeaturesRequest) org.openflow.protocol.ver1_0.types.OFMessageType.FEATURES_REQUEST.newInstance();
+		
+		l.add(hello);
+		l.add(features_request);
+		
+//		l.add(conn.getFactory().getMessage(OFType.HELLO));
+//		l.add(conn.getFactory().getMessage(OFType.FEATURES_REQUEST));
 		try {
 			conn.getStream().write(l);
 			conn.getStream().flush();

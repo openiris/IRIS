@@ -8,8 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import org.openflow.protocol.OFFlowMod;
 import org.openflow.protocol.OFMessage;
+import org.openflow.protocol.ver1_0.messages.OFFlowMod;
+import org.openflow.protocol.ver1_0.types.OFFlowModCommand;
 import org.openflow.util.HexString;
 import org.openflow.util.U16;
 
@@ -193,7 +194,7 @@ public class OFMStaticFlowEntryPusher extends OFModule implements
 				OFFlowMod newFlowMod = entriesToAdd.get(dpid).get(entry);
 				OFFlowMod oldFlowMod = staticFlowEntryStorage.getFlowModEntryTable().get(dpid).get(entry);
 				if (oldFlowMod != null) { // remove any pre-existing rule
-					oldFlowMod.setCommand(OFFlowMod.OFPFC_DELETE_STRICT);
+					oldFlowMod.setCommand(OFFlowModCommand.OFPFC_DELETE_STRICT);
 					outQueue.add(oldFlowMod);
 				}
 				if (newFlowMod != null) {
@@ -271,7 +272,7 @@ public class OFMStaticFlowEntryPusher extends OFModule implements
 		
 		
 		OFFlowMod flowMod = staticFlowEntryStorage.getFlowModEntryTable().get(dpid).get(flowName);
-		flowMod.setCommand(OFFlowMod.OFPFC_DELETE_STRICT);
+		flowMod.setCommand(OFFlowModCommand.OFPFC_DELETE_STRICT);
 
 		if (staticFlowEntryStorage.getFlowModEntryTable().containsKey(dpid)
 				&& staticFlowEntryStorage.getFlowModEntryTable().get(dpid).containsKey(flowName)) {

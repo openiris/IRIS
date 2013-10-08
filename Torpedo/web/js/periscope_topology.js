@@ -263,6 +263,8 @@ iris.topology = function() {
 			d.group = 1;		/* switch */
 		});
 		
+//		console.log(iris.topologyCollection.nodes);
+		
 		iris.hostCollection.models.forEach(function (d) {
 			// random enables the fast loading of the topology graph because
 			// node positions are probably not colliding. 
@@ -307,7 +309,9 @@ iris.topology = function() {
                 var link = {source:nodes_map[host.id],
                             target:nodes_map[host.attributes['attachmentPoint'][j]['switchDPID']],
                             value:10};
-                
+//                console.log(j);
+//                console.log(host.attributes['attachmentPoint']);
+//                console.log(nodes_map);
                 link.source.weight++;
                 link.target.weight++;
                 

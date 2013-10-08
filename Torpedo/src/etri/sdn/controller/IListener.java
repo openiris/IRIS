@@ -25,7 +25,7 @@ package etri.sdn.controller;
  *
  * @param <T>
  */
-public interface IListener<T> {
+public interface IListener /*<T>*/ {
 	
 	/**
 	 * This class is not used, soon be deprecated out of the source code.
@@ -50,7 +50,7 @@ public interface IListener<T> {
      * @param name the name of the module
      * @return whether name is a prerequisite.
      */
-    public boolean isCallbackOrderingPrereq(T type, String name);
+//    public boolean isCallbackOrderingPrereq(T type, String name);
 
     /**
      * Check if the module called name is a callback ordering post-requisite
@@ -61,5 +61,5 @@ public interface IListener<T> {
      * @param name the name of the module
      * @return whether name is a post-requisite.
      */
-    public boolean isCallbackOrderingPostreq(T type, String name);
+//    public boolean isCallbackOrderingPostreq(T type, String name);
 }

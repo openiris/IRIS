@@ -16,17 +16,17 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.OFPacketIn;
-import org.openflow.protocol.OFPacketOut;
-import org.openflow.protocol.OFPhysicalPort;
-import org.openflow.protocol.OFPhysicalPort.OFPortConfig;
-import org.openflow.protocol.OFPhysicalPort.OFPortState;
-import org.openflow.protocol.OFPort;
-import org.openflow.protocol.OFPortStatus;
-import org.openflow.protocol.OFPortStatus.OFPortReason;
-import org.openflow.protocol.OFType;
-import org.openflow.protocol.action.OFAction;
-import org.openflow.protocol.action.OFActionOutput;
+import org.openflow.protocol.ver1_0.messages.OFAction;
+import org.openflow.protocol.ver1_0.messages.OFActionOutput;
+import org.openflow.protocol.ver1_0.messages.OFPacketIn;
+import org.openflow.protocol.ver1_0.messages.OFPacketOut;
+import org.openflow.protocol.ver1_0.messages.OFPortDesc;
+import org.openflow.protocol.ver1_0.messages.OFPortStatus;
+import org.openflow.protocol.ver1_0.types.OFMessageType;
+import org.openflow.protocol.ver1_0.types.OFPortConfig;
+import org.openflow.protocol.ver1_0.types.OFPortNo;
+import org.openflow.protocol.ver1_0.types.OFPortReason;
+import org.openflow.protocol.ver1_0.types.OFPortState;
 import org.openflow.util.HexString;
 
 import etri.sdn.controller.IOFTask;
@@ -34,6 +34,7 @@ import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
+import etri.sdn.controller.VersionAdaptor10;
 import etri.sdn.controller.module.linkdiscovery.ILinkDiscoveryListener.LDUpdate;
 import etri.sdn.controller.module.linkdiscovery.ILinkDiscoveryListener.UpdateOperation;
 import etri.sdn.controller.protocol.io.Connection;
@@ -146,8 +147,9 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 			this.timestamp = Calendar.getInstance().getTimeInMillis();
 			this.switchId = sw.getId();
 			this.ports = new HashSet<Short>();
-			for ( OFPhysicalPort p : sw.getPorts() ) {
-				this.ports.add(p.getPortNumber());
+//			for ( OFPhysicalPort p : sw.getPorts() ) {
+			for ( OFPortDesc p : version_adaptor_10.getPorts(sw) ) {
+				this.ports.add(p.getPort());
 			}
 		}
 		
@@ -173,6 +175,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	 * Model of this module. initialized within initialize()
 	 */
 	private Links links = null;
+	private VersionAdaptor10 version_adaptor_10;
 	
 	/**
 	 * Constructor that does nothing.
@@ -197,6 +200,8 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		// initialize Links object with proper manager reference.
 		this.links = new Links(this);
 		
+		version_adaptor_10 = (VersionAdaptor10)getController().getVersionAdaptor((byte)0x01);
+		
 		// initialize controller TLV
 		setControllerTLV();
 		
@@ -204,16 +209,19 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 
 		// I will receive PACKET_IN messages selectively.
 		registerFilter(
-				OFType.PACKET_IN, 
+				OFMessageType.PACKET_IN.getTypeValue(), 
 				new OFMFilter() {
 
 					@Override
 					public boolean filter(OFMessage m) {
+						if ( m.getVersion() != (byte)0x01 ) {
+							return false;
+						}
 						OFPacketIn pi = (OFPacketIn) m;
 						
 						// this checks if the Packet-In is for LLDP!
 						// This is very important to guarantee maximum performance. (-_-;)
-						if ( pi.getPacketData()[12] != (byte)0x88 || pi.getPacketData()[13] != (byte)0xcc ) {
+						if ( pi.getData()[12] != (byte)0x88 || pi.getData()[13] != (byte)0xcc ) {
 							// this packet is not mine!
 							return false;
 						}
@@ -225,11 +233,11 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		
 		// I will receive all PORT_STATUS messages.
 		registerFilter(
-				OFType.PORT_STATUS,
+				OFMessageType.PORT_STATUS.getTypeValue(),
 				new OFMFilter() {
 					@Override
 					public boolean filter(OFMessage m) {
-						return true;
+						return m.getVersion() == (byte)0x01;
 					}
 				}
 		);
@@ -322,12 +330,13 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	 * @param port	OFPhysicalPort object
 	 * @return		true(enabled), false(disabled)
 	 */
-	private static boolean portEnabled(OFPhysicalPort port) {
+//	private static boolean portEnabled(OFPhysicalPort port) {
+	private static boolean portEnabled(OFPortDesc port) {
 		if (port == null)
 			return false;
-		if ((OFPortConfig.OFPPC_PORT_DOWN.getValue() & port.getConfig()) > 0)
+		if ((OFPortConfig.OFPPC_PORT_DOWN & port.getConfig()) > 0)
 			return false;
-		if ((OFPortState.OFPPS_LINK_DOWN.getValue() & port.getState()) > 0)
+		if ((OFPortState.OFPPS_LINK_DOWN & port.getState()) > 0)
 			return false;
 		// Port STP state doesn't work with multiple VLANs, so ignore it for now
 		// if ((port.getState() & OFPortState.OFPPS_STP_MASK.getValue()) == OFPortState.OFPPS_STP_BLOCK.getValue())
@@ -465,13 +474,12 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 
 		if (sw == null) return;
 
-		OFPhysicalPort ofp = sw.getPort(port);
+//		OFPhysicalPort ofp = sw.getPort(port);
+		OFPortDesc ofp = version_adaptor_10.getPort(sw, port);
 		if (ofp == null) return;
 
 		int srcPortState = ofp.getState();
-		boolean portUp = ((srcPortState &
-				OFPortState.OFPPS_STP_MASK.getValue()) !=
-					OFPortState.OFPPS_STP_BLOCK.getValue());
+		boolean portUp = ((srcPortState & OFPortState.OFPPS_STP_MASK) != OFPortState.OFPPS_STP_BLOCK);
 
 		if (portUp) operation = UpdateOperation.PORT_UP;
 		else operation = UpdateOperation.PORT_DOWN;
@@ -576,9 +584,8 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	}
 
 	private UpdateOperation getUpdateOperation(int srcPortState) {
-		boolean portUp = ((srcPortState &
-				OFPortState.OFPPS_STP_MASK.getValue()) !=
-					OFPortState.OFPPS_STP_BLOCK.getValue());
+		boolean portUp = ((srcPortState & OFPortState.OFPPS_STP_MASK) !=
+					OFPortState.OFPPS_STP_BLOCK);
 
 		if (portUp) return UpdateOperation.PORT_UP;
 		else return UpdateOperation.PORT_DOWN;
@@ -587,12 +594,8 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	private UpdateOperation getUpdateOperation(int srcPortState,
 			int dstPortState) {
 		boolean added =
-			(((srcPortState &
-					OFPortState.OFPPS_STP_MASK.getValue()) !=
-						OFPortState.OFPPS_STP_BLOCK.getValue()) &&
-						((dstPortState &
-								OFPortState.OFPPS_STP_MASK.getValue()) !=
-									OFPortState.OFPPS_STP_BLOCK.getValue()));
+			(((srcPortState & OFPortState.OFPPS_STP_MASK) != OFPortState.OFPPS_STP_BLOCK) &&
+			 ((dstPortState & OFPortState.OFPPS_STP_MASK) != OFPortState.OFPPS_STP_BLOCK));
 
 		if (added) return UpdateOperation.LINK_UPDATED;
 		return UpdateOperation.LINK_REMOVED;
@@ -606,19 +609,21 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		for ( IOFSwitch sw : controller.getSwitches() ) {
 			if ( sw == null ) continue;
 
-			Collection<OFPhysicalPort> pports = sw.getEnabledPorts();
+//			Collection<OFPhysicalPort> pports = sw.getEnabledPorts();
+			Collection<OFPortDesc> pports = version_adaptor_10.getEnabledPorts(sw);
 
 			//			Logger.stdout("pports.size() == " + pports.size());
 
 			if ( pports != null ) {
 
-				for (OFPhysicalPort ofp: pports ) {
+//				for (OFPhysicalPort ofp: pports ) {
+				for ( OFPortDesc ofp: pports ) {
 
-					sendDiscoveryMessage(sw, ofp.getPortNumber(), true, false);
+					sendDiscoveryMessage(sw, ofp.getPort(), true, false);
 
 					// If the switch port is not already in the maintenance
 					// queue, add it.
-					NodePortTuple npt = new NodePortTuple(sw.getId(), ofp.getPortNumber());
+					NodePortTuple npt = new NodePortTuple(sw.getId(), ofp.getPort());
 					addToMaintenanceQueue(npt);
 				}
 			}
@@ -644,10 +649,11 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 			return true;
 		}
 
-		if (port == OFPort.OFPP_LOCAL.getValue())
+		if (port == OFPortNo.OFPP_LOCAL.getValue())
 			return true;
 
-		OFPhysicalPort ofpPort = sw.getPort(port);
+//		OFPhysicalPort ofpPort = sw.getPort(port);
+		OFPortDesc ofpPort = version_adaptor_10.getPort(sw, port);
 
 		if (ofpPort == null) {
 			return true;
@@ -671,7 +677,8 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 
 		dpidBB.putLong(dpid);
 		// set the ethernet source mac to last 6 bytes of dpid
-		System.arraycopy(dpidArray, 2, ofpPort.getHardwareAddress(), 0, 6);
+//		System.arraycopy(dpidArray, 2, ofpPort.getHardwareAddress(), 0, 6);
+		System.arraycopy(dpidArray, 2, ofpPort.getHwAddr(), 0, 6);
 		// set the chassis id's value to last 6 bytes of dpid
 		System.arraycopy(dpidArray, 2, chassisId, 1, 6);
 		// set the optional tlv to the full dpid
@@ -697,7 +704,8 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		Ethernet ethernet;
 		if (isStandard) {
 			ethernet = new Ethernet()
-			.setSourceMACAddress(ofpPort.getHardwareAddress())
+//			.setSourceMACAddress(ofpPort.getHardwareAddress())
+			.setSourceMACAddress(ofpPort.getHwAddr())
 			.setDestinationMACAddress(LLDP_STANDARD_DST_MAC_STRING)
 			.setEtherType(Ethernet.TYPE_LLDP);
 			ethernet.setPayload(lldp);
@@ -706,7 +714,8 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 			bsn.setPayload(lldp);
 
 			ethernet = new Ethernet()
-			.setSourceMACAddress(ofpPort.getHardwareAddress())
+//			.setSourceMACAddress(ofpPort.getHardwareAddress())
+			.setSourceMACAddress(ofpPort.getHwAddr())
 			.setDestinationMACAddress(LLDP_BSN_DST_MAC_STRING)
 			.setEtherType(Ethernet.TYPE_BSN);
 			ethernet.setPayload(bsn);
@@ -714,19 +723,25 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 
 		// serialize and wrap in a packet out
 		byte[] data = ethernet.serialize();
-		OFPacketOut po = (OFPacketOut) sw.getConnection().getFactory().getMessage(OFType.PACKET_OUT);
-		po.setBufferId(OFPacketOut.BUFFER_ID_NONE);
-		po.setInPort(OFPort.OFPP_NONE);
+//		OFPacketOut po = (OFPacketOut) sw.getConnection().getFactory().getMessage(OFType.PACKET_OUT);
+		OFPacketOut po = (OFPacketOut) OFMessageType.PACKET_OUT.newInstance();
+		
+		po.setBufferId(0xffffffff /* OFPacketOut.BUFFER_ID_NONE */);
+		po.setInputPort(OFPortNo.OFPP_NONE.getValue());
 
 		// set actions
 		List<OFAction> actions = new ArrayList<OFAction>();
-		actions.add(new OFActionOutput(port, (short) 0));
+		OFActionOutput action_output = new OFActionOutput();
+		action_output.setPort(port).setMaxLength((short)0);
+//		actions.add(new OFActionOutput(port, (short) 0));
+		actions.add(action_output);
 		po.setActions(actions);
 		po.setActionsLength((short) OFActionOutput.MINIMUM_LENGTH);
 
 		// set data
 		po.setLengthU(OFPacketOut.MINIMUM_LENGTH + po.getActionsLength() + data.length);
-		po.setPacketData(data);
+//		po.setPacketData(data);
+		po.setData(data);
 
 		return sw.getConnection().write(po);
 	}
@@ -739,8 +754,13 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 			return false;
 		}
 
-		if ( sw.getEnabledPorts() != null) {
-			for (Short p : sw.getEnabledPortNumbers()) {
+//		if ( sw.getEnabledPorts() != null) {
+//			for (Short p : sw.getEnabledPortNumbers()) {
+//				processNewPort(sw, p);
+//			}
+//		}
+		if ( version_adaptor_10.getEnabledPorts(sw) != null ) {
+			for ( Short p : version_adaptor_10.getEnabledPortNumbers(sw) ) {
 				processNewPort(sw, p);
 			}
 		}
@@ -771,7 +791,8 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 
 	@Override
 	protected boolean handleMessage(Connection conn, MessageContext context, OFMessage msg, List<OFMessage> outgoing) {
-		switch (msg.getType()) {
+//		switch (msg.getType()) {
+		switch (OFMessageType.valueOf(msg.getTypeByte())) {
 		case PACKET_IN:
 			return this.handlePacketIn(conn.getSwitch(), context, (OFPacketIn) msg, outgoing);
 		case PORT_STATUS:
@@ -816,7 +837,8 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		if ( eth == null ) {
 			// parse Ethernet header and put into the context
 			eth = new Ethernet();
-			eth.deserialize(pi.getPacketData(), 0, pi.getPacketData().length);
+//			eth.deserialize(pi.getPacketData(), 0, pi.getPacketData().length);
+			eth.deserialize(pi.getData(), 0, pi.getData().length);
 			context.put(MessageContext.ETHER_PAYLOAD, eth);
 		}
 
@@ -842,7 +864,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		}
 
 		// If packet-in is from a quarantine port, stop processing.
-		NodePortTuple npt = new NodePortTuple(sw.getId(), pi.getInPort());
+		NodePortTuple npt = new NodePortTuple(sw.getId(), pi.getInputPort());
 		if (quarantineQueue.contains(npt)) {
 			return false;
 		}
@@ -946,12 +968,14 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 			return false;
 		}
 
-		if (!remoteSwitch.portEnabled(remotePort)) {
+//		if (!remoteSwitch.portEnabled(remotePort)) {
+		if ( !version_adaptor_10.portEnabled(sw, remotePort) ) {
 			// process no further
 			return false;
 		}
 
-		if (!sw.portEnabled(pi.getInPort())) {
+//		if (!sw.portEnabled(pi.getInPort())) {
+		if ( !version_adaptor_10.portEnabled(sw, pi.getInputPort())) {
 			// process no further
 			return false;
 		}
@@ -959,10 +983,12 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		Link lt = this.links.addOrUpdateLink(
 				remoteSwitch.getId(), 				// remote switch id
 				remotePort,							// remote port number
-				remoteSwitch.getPort(remotePort), 	// remote physical port
+//				remoteSwitch.getPort(remotePort), 	// remote physical port
+				version_adaptor_10.getPort(remoteSwitch, remotePort),
 				sw.getId(), 						// local switch id
-				pi.getInPort(),						// remote port number
-				sw.getPort(pi.getInPort()),			// local physical port
+				pi.getInputPort(),						// remote port number
+//				sw.getPort(pi.getInPort()),			// local physical port
+				version_adaptor_10.getPort(sw, pi.getInputPort()),
 				isStandard,
 				isReverse
 		);
@@ -1011,7 +1037,8 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		 * following is the original implementation by Floodlight.
 		 */
 
-		short portnum = ps.getDesc().getPortNumber();
+//		short portnum = ps.getDesc().getPortNumber();
+		short portnum = ps.getDesc().getPort();
 		NodePortTuple npt = new NodePortTuple(sw.getId(), portnum);
 		boolean linkDeleted  = false;
 		boolean linkInfoChanged = false;

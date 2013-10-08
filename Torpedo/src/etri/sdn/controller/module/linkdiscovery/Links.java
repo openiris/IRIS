@@ -14,8 +14,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.openflow.protocol.OFPhysicalPort;
-import org.openflow.protocol.OFPortStatus;
+import org.openflow.protocol.ver1_0.messages.OFPortDesc;
+import org.openflow.protocol.ver1_0.messages.OFPortStatus;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -225,10 +225,12 @@ public class Links extends OFModel {
 	public Link addOrUpdateLink(
 			long remoteSwitchId, 
 			short remotePort,
-			OFPhysicalPort remotePhyPort, 
+//			OFPhysicalPort remotePhyPort, 
+			OFPortDesc remotePhyPort,
 			long localSwitchId, 
 			short localInPort,
-			OFPhysicalPort localInPhyPort,
+//			OFPhysicalPort localInPhyPort,
+			OFPortDesc localInPhyPort,
 			boolean isStandard,
 			boolean isReverse) 
 	{

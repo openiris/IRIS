@@ -8,7 +8,8 @@ import org.codehaus.jackson.Version;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 import org.codehaus.jackson.map.module.SimpleModule;
-import org.openflow.protocol.OFMatch;
+import org.openflow.protocol.ver1_0.messages.OFMatch;
+import org.openflow.protocol.ver1_0.types.OFFlowWildcards;
 import org.openflow.util.HexString;
 
 /**
@@ -29,6 +30,37 @@ final class OFMatchSerializer extends JsonSerializer<OFMatch> {
                ((i >> 16 ) & 0xFF) + "." +
                ((i >>  8 ) & 0xFF) + "." +
                ( i        & 0xFF);
+    }
+    
+    /**
+     * Parse this match's wildcard fields and return the number of significant
+     * bits in the IP destination field.
+     * 
+     * NOTE: this returns the number of bits that are fixed, i.e., like CIDR,
+     * not the number of bits that are free like OpenFlow encodes.
+     * 
+     * @return a number between 0 (matches all IPs) and 63 ( 32>= implies exact
+     *         match)
+     */
+    public int getNetworkDestinationMaskLen(OFMatch match) {
+        return Math
+                .max(32 - ((match.getWildcards() & OFFlowWildcards.OFPFW_NW_DST_MASK) >> OFFlowWildcards.OFPFW_NW_DST_SHIFT),
+                        0);
+    }
+
+    /**
+     * Parse this match's wildcard fields and return the number of significant
+     * bits in the IP destination field.
+     * 
+     * NOTE: this returns the number of bits that are fixed, i.e., like CIDR,
+     * not the number of bits that are free like OpenFlow encodes.
+     * 
+     * @return a number between 0 (matches all IPs) and 32 (exact match)
+     */
+    public int getNetworkSourceMaskLen(OFMatch match) {
+        return Math
+                .max(32 - ((match.getWildcards() & OFFlowWildcards.OFPFW_NW_SRC_MASK) >> OFFlowWildcards.OFPFW_NW_SRC_SHIFT),
+                        0);
     }
 	
     /**
@@ -52,26 +84,17 @@ final class OFMatchSerializer extends JsonSerializer<OFMatch> {
             dataType = "0".concat(dataType);
         }
         jgen.writeStringField("dataLayerType", "0x" + dataType);
-        jgen.writeNumberField("dataLayerVirtualLan", 
-                    match.getDataLayerVirtualLan());
-        jgen.writeNumberField("dataLayerVirtualLanPriorityCodePoint", 
-                    match.getDataLayerVirtualLanPriorityCodePoint());
+        jgen.writeNumberField("dataLayerVirtualLan", match.getDataLayerVirtualLan());
+        jgen.writeNumberField("dataLayerVirtualLanPriorityCodePoint", match.getDataLayerVirtualLanPriorityCodePoint());
         jgen.writeNumberField("inputPort", match.getInputPort());
-        jgen.writeStringField("networkDestination", 
-                    intToIp(match.getNetworkDestination()));
-        jgen.writeNumberField("networkDestinationMaskLen", 
-                    match.getNetworkDestinationMaskLen());
+        jgen.writeStringField("networkDestination", intToIp(match.getNetworkDestination()));
+        jgen.writeNumberField("networkDestinationMaskLen", getNetworkDestinationMaskLen(match));
         jgen.writeNumberField("networkProtocol", match.getNetworkProtocol());
-        jgen.writeStringField("networkSource", 
-                    intToIp(match.getNetworkSource()));
-        jgen.writeNumberField("networkSourceMaskLen", 
-                    match.getNetworkSourceMaskLen());
-        jgen.writeNumberField("networkTypeOfService", 
-                    match.getNetworkTypeOfService());
-        jgen.writeNumberField("transportDestination", 
-                    match.getTransportDestination());
-        jgen.writeNumberField("transportSource", 
-                    match.getTransportSource());
+        jgen.writeStringField("networkSource", intToIp(match.getNetworkSource()));
+        jgen.writeNumberField("networkSourceMaskLen", getNetworkSourceMaskLen(match));
+        jgen.writeNumberField("networkTypeOfService", match.getNetworkTypeOfService());
+        jgen.writeNumberField("transportDestination", match.getTransportDestination());
+        jgen.writeNumberField("transportSource", match.getTransportSource());
         jgen.writeNumberField("wildcards", match.getWildcards());
         jgen.writeEndObject();
 	}

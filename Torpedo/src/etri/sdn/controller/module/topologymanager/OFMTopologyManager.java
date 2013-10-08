@@ -12,18 +12,19 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.OFPacketIn;
-import org.openflow.protocol.OFPacketOut;
-import org.openflow.protocol.OFPort;
-import org.openflow.protocol.OFType;
-import org.openflow.protocol.action.OFAction;
-import org.openflow.protocol.action.OFActionOutput;
+import org.openflow.protocol.ver1_0.messages.OFAction;
+import org.openflow.protocol.ver1_0.messages.OFActionOutput;
+import org.openflow.protocol.ver1_0.messages.OFPacketIn;
+import org.openflow.protocol.ver1_0.messages.OFPacketOut;
+import org.openflow.protocol.ver1_0.types.OFMessageType;
+import org.openflow.protocol.ver1_0.types.OFPortNo;
 
 import etri.sdn.controller.IOFTask;
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
+import etri.sdn.controller.VersionAdaptor10;
 import etri.sdn.controller.module.linkdiscovery.ILinkDiscovery.LinkType;
 import etri.sdn.controller.module.linkdiscovery.ILinkDiscoveryListener;
 import etri.sdn.controller.module.linkdiscovery.ILinkDiscoveryService;
@@ -99,6 +100,8 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	private Date lastUpdateTime;
 	
 	private Topology topologyModel;
+	
+	private VersionAdaptor10 version_adaptor_10;
 
 //	IOFTask updateTask = null;
 
@@ -109,16 +112,21 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		
 		linkDiscovery = (ILinkDiscoveryService) getModule(ILinkDiscoveryService.class);
 		linkDiscovery.addListener(this);
+		
+		version_adaptor_10 = (VersionAdaptor10) getController().getVersionAdaptor((byte)0x01);
 
 		registerModule(ITopologyService.class, this);
 		registerModule(IRoutingService.class, this);
 
 		// I will receive all PACKET_IN messages.
 		registerFilter(
-				OFType.PACKET_IN, new OFMFilter() {
+				OFMessageType.PACKET_IN.getTypeValue(), new OFMFilter() {
 					@Override
 					public boolean filter(OFMessage m) {
-						return true;
+						// currently, we only handle version 1.0
+						if (m.getVersion() == 0x01)
+							return true;
+						return false;
 					}
 				}
 		);
@@ -207,7 +215,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	@Override
 	public boolean handleMessage(Connection conn, MessageContext context, OFMessage msg, List<OFMessage> outgoing) {
 
-		switch (msg.getType()) {
+		switch (OFMessageType.valueOf(msg.getTypeByte())) {
 		case PACKET_IN:
 			return this.processPacketInMessage(conn.getSwitch(), (OFPacketIn) msg, context, outgoing);
 
@@ -259,7 +267,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	 */
 	protected boolean dropFilter(long sw, OFPacketIn pi) {
 		boolean result = true;
-		short port = pi.getInPort();
+		short port = pi.getInputPort();
 
 		// If the input port is not allowed for data traffic, drop everything.
 		// BDDP packets will not reach this stage.
@@ -284,11 +292,15 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		if (ports == null) return;
 		if (packetData == null || packetData.length <= 0) return;
 
-		OFPacketOut po = (OFPacketOut) sw.getConnection().getFactory().getMessage(OFType.PACKET_OUT);
+		OFPacketOut po = (OFPacketOut) OFMessageType.PACKET_OUT.newInstance();
+//		OFPacketOut po = (OFPacketOut) sw.getConnection().getFactory().getMessage(OFType.PACKET_OUT);
 
 		List<OFAction> actions = new ArrayList<OFAction>();
 		for(short p: ports) {
-			actions.add(new OFActionOutput(p, (short) 0));
+			OFActionOutput action_out = new OFActionOutput();
+			action_out.setPort(p);
+			action_out.setMaxLength((short) 0);
+//			actions.add(new OFActionOutput(p, (short) 0));
 		}
 
 		// set actions
@@ -296,12 +308,13 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		// set action length
 		po.setActionsLength((short) (OFActionOutput.MINIMUM_LENGTH * ports.size()));
 		// set buffer-id to BUFFER_ID_NONE
-		po.setBufferId(OFPacketOut.BUFFER_ID_NONE);
+		po.setBufferId(0xffffffff /* BUFFER_ID_NONE */);
 		// set in-port to OFPP_NONE
-		po.setInPort(OFPort.OFPP_NONE.getValue());
+		po.setInputPort(OFPortNo.OFPP_NONE.getValue());
 
 		// set packet data
-		po.setPacketData(packetData);
+//		po.setPacketData(packetData);
+		po.setData(packetData);
 
 		// compute and set packet length.
 		short poLength = (short)(OFPacketOut.MINIMUM_LENGTH + 
@@ -310,9 +323,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 
 		po.setLength(poLength);
 
-
 		sw.getConnection().write(po);
-
 	}
 
 
@@ -326,7 +337,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	 * @param cntx
 	 */
 	protected void doFloodBDDP(long pinSwitch, OFPacketIn pi) {
-
+		
 		TopologyInstance ti = getCurrentInstance(false);
 
 		Set<Long> switches = ti.getSwitchesInOpenflowDomain(pinSwitch);
@@ -341,7 +352,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		for(long sid: switches) {
 			IOFSwitch sw = controller.getSwitch(sid); //floodlightProvider.getSwitches().get(sid);
 			if (sw == null) continue;
-			Collection<Short> enabledPorts = sw.getEnabledPortNumbers();
+			Collection<Short> enabledPorts = version_adaptor_10.getEnabledPortNumbers(sw);
 			if (enabledPorts == null)
 				continue;
 			Set<Short> ports = new HashSet<Short>();
@@ -364,11 +375,12 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 
 			// remove the incoming switch port
 			if (pinSwitch == sid) {
-				ports.remove(pi.getInPort());
+				ports.remove(pi.getInputPort());
 			}
 
 			// we have all the switch ports to which we need to broadcast.
-			doMultiActionPacketOut(pi.getPacketData(), sw, ports);
+//			doMultiActionPacketOut(pi.getPacketData(), sw, ports);
+			doMultiActionPacketOut(pi.getData(), sw, ports);
 		}
 
 	}
@@ -396,7 +408,8 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		if ( eth == null ) {
 			// parse Ethernet header and put into the context
 			eth = new Ethernet();
-			eth.deserialize(pi.getPacketData(), 0, pi.getPacketData().length);
+//			eth.deserialize(pi.getPacketData(), 0, pi.getPacketData().length);
+			eth.deserialize(pi.getData(), 0, pi.getData().length);
 			context.put(MessageContext.ETHER_PAYLOAD, eth);
 		}
 
@@ -715,7 +728,9 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		// Make sure that the port is enabled.
 		IOFSwitch sw =  controller.getSwitch(switchid);
 		if (sw == null) return false;
-		return (sw.portEnabled(port));
+		
+//		return (sw.portEnabled(port));
+		return version_adaptor_10.portEnabled(sw, port);
 	}
 
 	@Override
@@ -933,7 +948,9 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		IOFSwitch iofSwitch = controller.getSwitch(sw);
 		if (iofSwitch == null) return null;
 
-		Collection<Short> ofpList = iofSwitch.getEnabledPortNumbers();
+//		Collection<Short> ofpList = iofSwitch.getEnabledPortNumbers();
+		Collection<Short> ofpList = version_adaptor_10.getEnabledPortNumbers(iofSwitch);
+		
 		if (ofpList == null) return null;
 
 		Set<Short> qPorts = linkDiscovery.getQuarantinedPorts(sw);

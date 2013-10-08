@@ -26,10 +26,10 @@ import java.util.Set;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
-import org.openflow.protocol.OFFlowMod;
-import org.openflow.protocol.OFMatch;
-import org.openflow.protocol.OFType;
-import org.openflow.protocol.factory.BasicFactory;
+//import org.openflow.protocol.factory.BasicFactory;
+import org.openflow.protocol.ver1_0.messages.OFFlowMod;
+import org.openflow.protocol.ver1_0.messages.OFMatch;
+import org.openflow.protocol.ver1_0.types.OFMessageType;
 import org.openflow.util.U16;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -38,6 +38,7 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 
 import etri.sdn.controller.OFModel;
+import etri.sdn.controller.VersionAdaptor10;
 import etri.sdn.controller.util.Logger;
 
 public class StaticFlowEntryStorage extends OFModel  {
@@ -61,12 +62,15 @@ public class StaticFlowEntryStorage extends OFModel  {
 	 */
 	private Map<String, String> entryToDpidMap;
 
-    private BasicFactory ofMessageFactory;
+//    private BasicFactory ofMessageFactory;
+
+	private VersionAdaptor10 version_adaptor_10;
 
 	StaticFlowEntryStorage(OFMStaticFlowEntryPusher manager, String name) {
 		this.manager = manager;
 		this.name = name;
 		flowEntryTable = new FlowEntryTable();
+		this.version_adaptor_10 = (VersionAdaptor10) manager.getController().getVersionAdaptor((byte)0x01);
 	}
 	
 	public OFMStaticFlowEntryPusher getManager() {
@@ -111,11 +115,11 @@ public class StaticFlowEntryStorage extends OFModel  {
         String entryName = null;
 
         StringBuffer matchString = new StringBuffer();
-        if (ofMessageFactory == null) // lazy init
-        	ofMessageFactory = new BasicFactory();
-
-        OFFlowMod flowMod = (OFFlowMod) ofMessageFactory 
-                .getMessage(OFType.FLOW_MOD);
+//        if (ofMessageFactory == null) // lazy init
+//        	ofMessageFactory = new BasicFactory();
+//
+//        OFFlowMod flowMod = (OFFlowMod) ofMessageFactory.getMessage(OFType.FLOW_MOD);
+        OFFlowMod flowMod = (OFFlowMod) OFMessageType.FLOW_MOD.newInstance();
 
         if (!row.containsKey(StaticFlowEntryType.COLUMN_SWITCH) || !row.containsKey(StaticFlowEntryType.COLUMN_NAME)) {
             Logger.debug("skipping entry with missing required 'switch' or 'name' entry");
@@ -177,17 +181,19 @@ public class StaticFlowEntryStorage extends OFModel  {
                         e.getMessage(), e.getStackTrace());
         }
 
-        OFMatch ofMatch = new OFMatch();
-        String match = matchString.toString();
+//        OFMatch ofMatch = new OFMatch();
+//        String match = matchString.toString();
+//        
+//        try {
+//            ofMatch.fromString(match);
+//        } catch (IllegalArgumentException e) {
+//            Logger.debug(
+//                    "ignoring flow entry {} on switch {} with illegal OFMatch() key: "
+//                            + match, entryName, switchName);
+//            return;
+//        }
+        OFMatch ofMatch = version_adaptor_10.loadOFMatchFromString(matchString.toString());
         
-        try {
-            ofMatch.fromString(match);
-        } catch (IllegalArgumentException e) {
-            Logger.debug(
-                    "ignoring flow entry {} on switch {} with illegal OFMatch() key: "
-                            + match, entryName, switchName);
-            return;
-        }
         flowMod.setMatch(ofMatch);
 
         entries.get(switchName).put(entryName, flowMod);

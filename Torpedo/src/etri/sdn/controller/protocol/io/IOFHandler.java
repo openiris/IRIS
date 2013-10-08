@@ -9,6 +9,7 @@ import org.openflow.protocol.OFMessage;
 import etri.sdn.controller.IOFTask;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
+import etri.sdn.controller.VersionAdaptor;
 
 /**
  * This is an interface that every controller instance should implement.
@@ -35,6 +36,8 @@ public interface IOFHandler {
     public abstract Set<Long> getSwitchIdentifiers();
 	public abstract Collection<IOFSwitch> getSwitches();
 	public abstract IOFSwitch getSwitch(long id);
+	public abstract void addSwitch(long id, IOFSwitch sw);
+	public VersionAdaptor getVersionAdaptor(byte version);
 	
 	public abstract void registerProtocolServer(IOFProtocolServer server);
 	

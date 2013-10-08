@@ -2,8 +2,6 @@ package etri.sdn.controller.module.flowcache;
 
 import java.util.ArrayList;
 
-import org.openflow.protocol.OFType;
-
 import etri.sdn.controller.IListener;
 
 /**
@@ -11,7 +9,7 @@ import etri.sdn.controller.IListener;
  *
  * @author subrata
  */
-public interface IFlowReconcileListener extends IListener<OFType> {
+public interface IFlowReconcileListener extends IListener /*<OFType> */ {
     /**
      * Given an input OFMatch, this method applies the policy of the reconciler
      * and returns a the same input OFMatch structure modified. Additional

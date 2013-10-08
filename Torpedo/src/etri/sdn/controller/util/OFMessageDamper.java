@@ -5,11 +5,11 @@
 package etri.sdn.controller.util;
 
 import java.io.IOException;
-import java.util.EnumSet;
+//import java.util.EnumSet;
 import java.util.Set;
 
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.OFType;
+//import org.openflow.protocol.OFType;
 
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
@@ -73,12 +73,11 @@ public final class OFMessageDamper {
             } else if (!sw.equals(other.sw)) return false;
             return true;
         }
-        
-      
     }
     
     private TimedCache<DamperEntry> cache;
-    private EnumSet<OFType> msgTypesToCache;
+//    private EnumSet<OFType> msgTypesToCache;
+    private Set<Byte> msgTypesToCache;
     /**
      * 
      * @param capacity the maximum number of messages that should be 
@@ -90,10 +89,11 @@ public final class OFMessageDamper {
      * timeout ms ago. 
      */
     public OFMessageDamper(int capacity, 
-                           Set<OFType> typesToDampen,  
+                           Set<Byte> typesToDampen,  
                            int timeout) {
         cache = new TimedCache<DamperEntry>(capacity, timeout);
-        msgTypesToCache = EnumSet.copyOf(typesToDampen);
+//        msgTypesToCache = EnumSet.copyOf(typesToDampen);
+        msgTypesToCache = typesToDampen;
     }        
     
     /**
@@ -105,7 +105,7 @@ public final class OFMessageDamper {
      * @throws IOException
      */
     public boolean write(Connection conn, OFMessage msg) throws IOException {
-        if (! msgTypesToCache.contains(msg.getType())) {
+        if (! msgTypesToCache.contains(msg.getTypeByte())) {
             conn.write(msg);
             return true;
         }

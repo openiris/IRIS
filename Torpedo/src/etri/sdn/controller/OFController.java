@@ -1,12 +1,13 @@
 package etri.sdn.controller;
 
-import java.io.IOException;
+//import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -15,21 +16,7 @@ import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TransferQueue;
 
-import org.openflow.protocol.OFEchoReply;
-import org.openflow.protocol.OFEchoRequest;
-import org.openflow.protocol.OFFeaturesReply;
-import org.openflow.protocol.OFHello;
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.OFPacketIn;
-import org.openflow.protocol.OFPhysicalPort;
-import org.openflow.protocol.OFPortStatus;
-import org.openflow.protocol.OFPortStatus.OFPortReason;
-import org.openflow.protocol.OFStatisticsReply;
-import org.openflow.protocol.OFStatisticsRequest;
-import org.openflow.protocol.OFType;
-import org.openflow.protocol.statistics.OFDescriptionStatistics;
-import org.openflow.protocol.statistics.OFStatistics;
-import org.openflow.protocol.statistics.OFStatisticsType;
 
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFHandler;
@@ -179,7 +166,7 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 				return;					// end this controller thread.
 			}
 		}
-
+		
 		/**
 		 * process a list of OFMessage objects received from the connection.
 		 * 
@@ -190,116 +177,20 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 		 */
 		private boolean process(Connection conn, List<OFMessage> msgs) {
 			for (OFMessage m : msgs) {
+				System.out.println(m.toString());
 				context.getStorage().clear();
-				
-				switch (m.getType()) {
-				case PACKET_IN:					
-					if ( ! controller.handlePacketIn(conn, context, (OFPacketIn) m) ) {
-						return false;
-					}
-					break;
-				case HELLO:
-					if ( ! controller.handleHello(conn, context, (OFHello) m) ) {
-						return false;
-					}
-					break;
-				case ECHO_REQUEST:
-					if ( ! controller.handleEchoRequest(conn, context, (OFEchoRequest) m) ) {
-						return false;
-					}
-					break;
-				case FEATURES_REPLY:
-					// we should do basic processing on the reply, and pass the object
-					// to the controller.
 
-					if ( ! processFeaturesReply(conn, context, (OFFeaturesReply) m) ) {
-						return false;
-					}
-
-					// now the handshaking is fully done.
-					// therefore, we can safely register the switch object
-					// into the switches map. This map is used heavily by
-					// link discovery module.
-//					Logger.stdout("adding a switch with id = " + conn.getSwitch().getId());
-					switches.put( conn.getSwitch().getId(), conn.getSwitch() );
-					
-					conn.getSwitch().deliverFeaturesReply( m.getXid(), (OFFeaturesReply) m );
-
-					if ( ! controller.handleGeneric(conn, context, m) ) {
-						return false;
-					}
-					break;
-				case PORT_STATUS:
-					
-					OFPortStatus ps = (OFPortStatus) m;
-					OFPhysicalPort phyport = ps.getDesc();
-					if ( ps.getReason() == OFPortReason.OFPPR_DELETE.ordinal() ) {
-						conn.getSwitch().deletePort( phyport.getPortNumber() );
-					}
-					else if ( ps.getReason() == OFPortReason.OFPPR_MODIFY.ordinal() ) {
-						conn.getSwitch().deletePort( phyport.getPortNumber() );
-						conn.getSwitch().setPort( phyport );
-					}
-					else { /*ps.getReason() == OFPortReason.OFPPR_ADD.ordinal() */ 
-						conn.getSwitch().setPort( phyport );
-					}
-					
-					if ( ! controller.handleGeneric(conn, context, m) ) {
-						return false;
-					}
-					
-					break;
-				case STATS_REPLY:
-					
-					OFStatisticsReply stat = (OFStatisticsReply) m;
-					List<OFStatistics> statistics = stat.getStatistics();
-					if ( ! statistics.isEmpty() ) {
-						if ( stat.getStatisticType() == OFStatisticsType.DESC ) {
-							conn.getSwitch().setSwitchProperties( 
-								(OFDescriptionStatistics) statistics.remove(0) 
-							);
-						}
-						else {
-							conn.getSwitch().deliverSwitchStatistics( m.getXid(), statistics );
-						}
-					
-					}
-					
-					break;
-					
-				default:
-					if ( ! controller.handleGeneric(conn, context, m) ) {
-						return false;
-					}
+				VersionAdaptor vadp = version_adaptors.get(m.getVersion());
+				if ( vadp == null ) {
+					continue;
 				}
+				
+				if ( !vadp.process(conn, context, m) ) {
+					return false;
+				}
+
 			}
 			return true;
-		}
-
-		/**
-		 * This function returns false when there is no switch object in connection.
-		 * 
-		 * @param conn connection that the OFFeaturesReply object is received
-		 * @param context message context object
-		 * @param m OFFeaturesReply object
-		 * @return true if the message m has been correctly processed
-		 */
-		private boolean processFeaturesReply(Connection conn, MessageContext context, OFFeaturesReply m) {
-			IOFSwitch sw = conn.getSwitch();
-			if ( sw != null ) {
-				sw.setFeaturesReply( m );
-				
-				if ( conn.getSwitch().getDescription() == null ) {
-					OFStatisticsRequest req = new OFStatisticsRequest();
-					req.setStatisticType(OFStatisticsType.DESC);
-					req.setLengthU(req.getLengthU());
-					req.setXid(conn.getSwitch().getNextTransactionId());
-					return conn.write(req);
-				}
-				
-				return true;
-			}
-			return false;
 		}
 	}
 
@@ -312,6 +203,8 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 	 * Protocol Server object, which is currently {@link TcpServer}.
 	 */
 	private IOFProtocolServer server = null;
+	
+	private Map<Byte/*version*/, VersionAdaptor> version_adaptors = new ConcurrentHashMap<Byte, VersionAdaptor>();
 
 	/**
 	 * OFController constructor.
@@ -336,6 +229,13 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 		else {
 			this.role = null;
 		}
+		
+		version_adaptors.put(VersionAdaptor10.VERSION, new VersionAdaptor10(this));
+	}
+	
+	@Override
+	public VersionAdaptor getVersionAdaptor(byte version) {
+		return version_adaptors.get(version);
 	}
 	
 	/**
@@ -449,7 +349,7 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 	 * @param m Packet-in message.
 	 * @return returns false when the underling connection caused error.
 	 */
-	public abstract boolean handlePacketIn(Connection conn, MessageContext context, OFPacketIn m);
+	public abstract boolean handlePacketIn(Connection conn, MessageContext context, OFMessage m);
 
 	/**
 	 * handle Hello message.
@@ -458,15 +358,15 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 	 * @param m Hello message.
 	 * @return returns false when the underling connection caused error.
 	 */
-	public boolean handleHello(Connection conn, MessageContext context, OFHello m) {
-		try {
-			System.err.println("GOT HELLO from " + conn.getClient().getRemoteAddress().toString());
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			return false;
-		}
-		return true;
-	}
+//	public boolean handleHello(Connection conn, MessageContext context, OFHello m) {
+//		try {
+//			System.err.println("GOT HELLO from " + conn.getClient().getRemoteAddress().toString());
+//		} catch (IOException e1) {
+//			e1.printStackTrace();
+//			return false;
+//		}
+//		return true;
+//	}
 
 	/**
 	 * handle Echo Request message.
@@ -475,14 +375,14 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 	 * @param m Echo Request message.
 	 * @return returns false when the underling connection caused error.
 	 */
-	public final boolean handleEchoRequest(Connection conn, MessageContext context, OFEchoRequest m) {
-		Logger.debug("ECHO_REQUEST is received");
-		OFEchoReply reply = (OFEchoReply) conn.getFactory().getMessage(OFType.ECHO_REPLY);
-		reply.setXid(m.getXid());
-		conn.write(reply);
-
-		return true;
-	}
+//	public final boolean handleEchoRequest(Connection conn, MessageContext context, OFEchoRequest m) {
+//		Logger.debug("ECHO_REQUEST is received");
+//		OFEchoReply reply = (OFEchoReply) conn.getFactory().getMessage(OFType.ECHO_REPLY);
+//		reply.setXid(m.getXid());
+//		conn.write(reply);
+//
+//		return true;
+//	}
 
 	/**
 	 * handle the other messages.
@@ -528,6 +428,11 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 	@Override
 	public final IOFSwitch getSwitch(long id) {
 		return this.switches.get(id);
+	}
+	
+	@Override
+	public void addSwitch(long id, IOFSwitch sw) {
+		this.switches.put(id, sw);
 	}
 
 	/**

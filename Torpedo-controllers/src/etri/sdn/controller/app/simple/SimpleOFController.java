@@ -86,7 +86,9 @@ public class SimpleOFController extends OFController {
 	 * @param pi		PACKET_IN message
 	 */
 	@Override
-	public boolean handlePacketIn(Connection conn, MessageContext context, OFPacketIn pi) {
+//	public boolean handlePacketIn(Connection conn, MessageContext context, OFPacketIn pi) {
+	public boolean handlePacketIn(Connection conn, MessageContext context, OFMessage m) {
+		OFPacketIn pi = (OFPacketIn) m;
 
 		List<OFMessage> out = new LinkedList<OFMessage>();
 		for ( int i = 0; i < packet_in_pipeline.length; ++i ) {

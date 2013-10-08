@@ -13,23 +13,23 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.MappingJsonFactory;
-import org.openflow.protocol.OFFlowMod;
-import org.openflow.protocol.OFMatch;
-import org.openflow.protocol.OFPacketOut;
-import org.openflow.protocol.OFPort;
-import org.openflow.protocol.action.OFAction;
-import org.openflow.protocol.action.OFActionDataLayerDestination;
-import org.openflow.protocol.action.OFActionDataLayerSource;
-import org.openflow.protocol.action.OFActionEnqueue;
-import org.openflow.protocol.action.OFActionNetworkLayerDestination;
-import org.openflow.protocol.action.OFActionNetworkLayerSource;
-import org.openflow.protocol.action.OFActionNetworkTypeOfService;
-import org.openflow.protocol.action.OFActionOutput;
-import org.openflow.protocol.action.OFActionStripVirtualLan;
-import org.openflow.protocol.action.OFActionTransportLayerDestination;
-import org.openflow.protocol.action.OFActionTransportLayerSource;
-import org.openflow.protocol.action.OFActionVirtualLanIdentifier;
-import org.openflow.protocol.action.OFActionVirtualLanPriorityCodePoint;
+import org.openflow.protocol.ver1_0.messages.OFAction;
+import org.openflow.protocol.ver1_0.messages.OFActionOutput;
+import org.openflow.protocol.ver1_0.messages.OFActionOpaqueEnqueue;
+import org.openflow.protocol.ver1_0.messages.OFActionSetDlDst;
+import org.openflow.protocol.ver1_0.messages.OFActionSetDlSrc;
+import org.openflow.protocol.ver1_0.messages.OFActionSetNwDst;
+import org.openflow.protocol.ver1_0.messages.OFActionSetNwSrc;
+import org.openflow.protocol.ver1_0.messages.OFActionSetNwTos;
+import org.openflow.protocol.ver1_0.messages.OFActionSetTpSrc;
+import org.openflow.protocol.ver1_0.messages.OFActionSetTpDst;
+import org.openflow.protocol.ver1_0.messages.OFActionSetVlanId;
+import org.openflow.protocol.ver1_0.messages.OFActionSetVlanPcp;
+import org.openflow.protocol.ver1_0.messages.OFActionStripVlan;
+import org.openflow.protocol.ver1_0.messages.OFFlowMod;
+import org.openflow.protocol.ver1_0.messages.OFMatch;
+import org.openflow.protocol.ver1_0.types.OFFlowModCommand;
+import org.openflow.protocol.ver1_0.types.OFPortNo;
 import org.openflow.util.HexString;
 import etri.sdn.controller.protocol.packet.IPv4;
 import etri.sdn.controller.util.AppCookie;
@@ -110,10 +110,12 @@ public class StaticFlowEntryType {
     public static void initDefaultFlowMod(OFFlowMod fm, String entryName) {
         fm.setIdleTimeout((short) 0);   // infinite
         fm.setHardTimeout((short) 0);   // infinite
-        fm.setBufferId(OFPacketOut.BUFFER_ID_NONE);
-        fm.setCommand((short) 0);
+        fm.setBufferId(0xffffffff /* OFPacketOut.BUFFER_ID_NONE */);
+//        fm.setCommand((short) 0);
+        fm.setCommand(OFFlowModCommand.valueOf((short)0));
         fm.setFlags((short) 0);
-        fm.setOutPort(OFPort.OFPP_NONE.getValue());
+//        fm.setOutPort(OFPort.OFPP_NONE.getValue());
+        fm.setOutPort(OFPortNo.OFPP_NONE.getValue());
         fm.setCookie(computeEntryCookie(fm, 0, entryName));  
         fm.setPriority(Short.MAX_VALUE);
     }
@@ -233,8 +235,8 @@ public class StaticFlowEntryType {
                     sb.append("output=" + Short.toString(((OFActionOutput)a).getPort()));
                     break;
                 case OPAQUE_ENQUEUE:
-                    int queue = ((OFActionEnqueue)a).getQueueId();
-                    short port = ((OFActionEnqueue)a).getPort();
+                    int queue = ((OFActionOpaqueEnqueue)a).getQueueId();
+                    short port = ((OFActionOpaqueEnqueue)a).getPort();
                     sb.append("enqueue=" + Short.toString(port) + ":0x" + String.format("%02x", queue));
                     break;
                 case STRIP_VLAN:
@@ -242,39 +244,39 @@ public class StaticFlowEntryType {
                     break;
                 case SET_VLAN_ID:
                     sb.append("set-vlan-id=" + 
-                        Short.toString(((OFActionVirtualLanIdentifier)a).getVirtualLanIdentifier()));
+                        Short.toString(((OFActionSetVlanId)a).getVlanId()));
                     break;
                 case SET_VLAN_PCP:
                     sb.append("set-vlan-priority=" +
-                        Byte.toString(((OFActionVirtualLanPriorityCodePoint)a).getVirtualLanPriorityCodePoint()));
+                        Byte.toString(((OFActionSetVlanPcp)a).getVlanPcp()));
                     break;
                 case SET_DL_SRC:
                     sb.append("set-src-mac=" + 
-                        HexString.toHexString(((OFActionDataLayerSource)a).getDataLayerAddress()));
+                        HexString.toHexString(((OFActionSetDlSrc)a).getDlAddr()));
                     break;
                 case SET_DL_DST:
                     sb.append("set-dst-mac=" + 
-                        HexString.toHexString(((OFActionDataLayerDestination)a).getDataLayerAddress()));
+                        HexString.toHexString(((OFActionSetDlDst)a).getDlAddr()));
                     break;
                 case SET_NW_TOS:
                     sb.append("set-tos-bits=" +
-                        Byte.toString(((OFActionNetworkTypeOfService)a).getNetworkTypeOfService()));
+                        Byte.toString(((OFActionSetNwTos)a).getNwTos()));
                     break;
                 case SET_NW_SRC:
                     sb.append("set-src-ip=" +
-                        IPv4.fromIPv4Address(((OFActionNetworkLayerSource)a).getNetworkAddress()));
+                        IPv4.fromIPv4Address(((OFActionSetNwSrc)a).getNwAddr()));
                     break;
                 case SET_NW_DST:
                     sb.append("set-dst-ip=" +
-                        IPv4.fromIPv4Address(((OFActionNetworkLayerDestination)a).getNetworkAddress()));
+                        IPv4.fromIPv4Address(((OFActionSetNwDst)a).getNwAddr()));
                     break;
                 case SET_TP_SRC:
                     sb.append("set-src-port=" +
-                        Short.toString(((OFActionTransportLayerSource)a).getTransportPort()));
+                        Short.toString(((OFActionSetTpSrc)a).getTpPort()));
                     break;
                 case SET_TP_DST:
                     sb.append("set-dst-port=" +
-                        Short.toString(((OFActionTransportLayerDestination)a).getTransportPort()));
+                        Short.toString(((OFActionSetTpDst)a).getTpPort()));
                     break;
                 default:
                     Logger.error("Could not decode action: {}", a);
@@ -464,7 +466,7 @@ public class StaticFlowEntryType {
         if (n.matches()) {
             OFActionOutput action = new OFActionOutput();
             action.setMaxLength((short) Short.MAX_VALUE);
-            short port = OFPort.OFPP_NONE.getValue();
+            short port = OFPortNo.OFPP_NONE.getValue();
             if (n.group(1) != null) {
                 try {
                     port = get_short(n.group(1));
@@ -475,17 +477,17 @@ public class StaticFlowEntryType {
                 }
             }
             else if (n.group(2) != null)
-                port = OFPort.OFPP_ALL.getValue();
+                port = OFPortNo.OFPP_ALL.getValue();
             else if (n.group(3) != null)
-                port = OFPort.OFPP_CONTROLLER.getValue();
+                port = OFPortNo.OFPP_CONTROLLER.getValue();
             else if (n.group(4) != null)
-                port = OFPort.OFPP_LOCAL.getValue();
+                port = OFPortNo.OFPP_LOCAL.getValue();
             else if (n.group(5) != null)
-                port = OFPort.OFPP_IN_PORT.getValue();
+                port = OFPortNo.OFPP_IN_PORT.getValue();
             else if (n.group(6) != null)
-                port = OFPort.OFPP_NORMAL.getValue();
+                port = OFPortNo.OFPP_NORMAL.getValue();
             else if (n.group(7) != null)
-                port = OFPort.OFPP_FLOOD.getValue();
+                port = OFPortNo.OFPP_FLOOD.getValue();
             action.setPort(port);
             Logger.debug("action {}", action);
             
@@ -535,14 +537,14 @@ public class StaticFlowEntryType {
                }
             }
             
-            OFActionEnqueue action = new OFActionEnqueue();
+            OFActionOpaqueEnqueue action = new OFActionOpaqueEnqueue();
             action.setPort(portnum);
             action.setQueueId(queueid);
             Logger.debug("action {}", action);
             
             sa = new SubActionStruct();
             sa.action = action;
-            sa.len = OFActionEnqueue.MINIMUM_LENGTH;
+            sa.len = OFActionOpaqueEnqueue.MINIMUM_LENGTH;
         }
         else {
             Logger.debug("Invalid action: '{}'", subaction);
@@ -563,12 +565,12 @@ public class StaticFlowEntryType {
         Matcher n = Pattern.compile("strip-vlan").matcher(subaction);
         
         if (n.matches()) {
-            OFActionStripVirtualLan action = new OFActionStripVirtualLan();
+        	OFActionStripVlan action = new OFActionStripVlan();
             Logger.debug("action {}", action);
             
             sa = new SubActionStruct();
             sa.action = action;
-            sa.len = OFActionStripVirtualLan.MINIMUM_LENGTH;
+            sa.len = OFActionStripVlan.MINIMUM_LENGTH;
         }
         else {
             Logger.debug("Invalid action: '{}'", subaction);
@@ -592,13 +594,13 @@ public class StaticFlowEntryType {
             if (n.group(1) != null) {
                 try {
                     short vlanid = get_short(n.group(1));
-                    OFActionVirtualLanIdentifier action = new OFActionVirtualLanIdentifier();
-                    action.setVirtualLanIdentifier(vlanid);
+                    OFActionSetVlanId action = new OFActionSetVlanId();
+                    action.setVlanId(vlanid);
                     Logger.debug("  action {}", action);
 
                     sa = new SubActionStruct();
                     sa.action = action;
-                    sa.len = OFActionVirtualLanIdentifier.MINIMUM_LENGTH;
+                    sa.len = OFActionSetVlanId.MINIMUM_LENGTH;
                 }
                 catch (NumberFormatException e) {
                     Logger.debug("Invalid VLAN in: {} (error ignored)", subaction);
@@ -628,13 +630,13 @@ public class StaticFlowEntryType {
             if (n.group(1) != null) {
                 try {
                     byte prior = get_byte(n.group(1));
-                    OFActionVirtualLanPriorityCodePoint action = new OFActionVirtualLanPriorityCodePoint();
-                    action.setVirtualLanPriorityCodePoint(prior);
+                    OFActionSetVlanPcp action = new OFActionSetVlanPcp();
+                    action.setVlanPcp(prior);
                     Logger.debug("  action {}", action);
                     
                     sa = new SubActionStruct();
                     sa.action = action;
-                    sa.len = OFActionVirtualLanPriorityCodePoint.MINIMUM_LENGTH;
+                    sa.len = OFActionSetVlanPcp.MINIMUM_LENGTH;
                 }
                 catch (NumberFormatException e) {
                     Logger.debug("Invalid VLAN priority in: {} (error ignored)", subaction);
@@ -663,13 +665,13 @@ public class StaticFlowEntryType {
         if (n.matches()) {
             byte[] macaddr = get_mac_addr(n, subaction);
             if (macaddr != null) {
-                OFActionDataLayerSource action = new OFActionDataLayerSource();
-                action.setDataLayerAddress(macaddr);
+            	OFActionSetDlSrc action = new OFActionSetDlSrc();
+                action.setDlAddr(macaddr);
                 Logger.debug("action {}", action);
 
                 sa = new SubActionStruct();
                 sa.action = action;
-                sa.len = OFActionDataLayerSource.MINIMUM_LENGTH;
+                sa.len = OFActionSetDlSrc.MINIMUM_LENGTH;
             }            
         }
         else {
@@ -693,13 +695,13 @@ public class StaticFlowEntryType {
         if (n.matches()) {
             byte[] macaddr = get_mac_addr(n, subaction);            
             if (macaddr != null) {
-                OFActionDataLayerDestination action = new OFActionDataLayerDestination();
-                action.setDataLayerAddress(macaddr);
+            	OFActionSetDlDst action = new OFActionSetDlDst();
+                action.setDlAddr(macaddr);
                 Logger.debug("  action {}", action);
                 
                 sa = new SubActionStruct();
                 sa.action = action;
-                sa.len = OFActionDataLayerDestination.MINIMUM_LENGTH;
+                sa.len = OFActionSetDlDst.MINIMUM_LENGTH;
             }
         }
         else {
@@ -724,13 +726,13 @@ public class StaticFlowEntryType {
             if (n.group(1) != null) {
                 try {
                     byte tosbits = get_byte(n.group(1));
-                    OFActionNetworkTypeOfService action = new OFActionNetworkTypeOfService();
-                    action.setNetworkTypeOfService(tosbits);
+                    OFActionSetNwTos action = new OFActionSetNwTos();
+                    action.setNwTos(tosbits);
                     Logger.debug("  action {}", action);
                     
                     sa = new SubActionStruct();
                     sa.action = action;
-                    sa.len = OFActionNetworkTypeOfService.MINIMUM_LENGTH;
+                    sa.len = OFActionSetNwTos.MINIMUM_LENGTH;
                 }
                 catch (NumberFormatException e) {
                     Logger.debug("Invalid dst-port in: {} (error ignored)", subaction);
@@ -758,13 +760,13 @@ public class StaticFlowEntryType {
 
         if (n.matches()) {
             int ipaddr = get_ip_addr(n, subaction);
-            OFActionNetworkLayerSource action = new OFActionNetworkLayerSource();
-            action.setNetworkAddress(ipaddr);
+            OFActionSetNwSrc action = new OFActionSetNwSrc();
+            action.setNwAddr(ipaddr);
             Logger.debug("  action {}", action);
 
             sa = new SubActionStruct();
             sa.action = action;
-            sa.len = OFActionNetworkLayerSource.MINIMUM_LENGTH;
+            sa.len = OFActionSetNwSrc.MINIMUM_LENGTH;
         }
         else {
             Logger.debug("Invalid action: '{}'", subaction);
@@ -786,13 +788,13 @@ public class StaticFlowEntryType {
 
         if (n.matches()) {
             int ipaddr = get_ip_addr(n, subaction);
-            OFActionNetworkLayerDestination action = new OFActionNetworkLayerDestination();
-            action.setNetworkAddress(ipaddr);
+            OFActionSetNwDst action = new OFActionSetNwDst();
+            action.setNwAddr(ipaddr);
             Logger.debug("action {}", action);
  
             sa = new SubActionStruct();
             sa.action = action;
-            sa.len = OFActionNetworkLayerDestination.MINIMUM_LENGTH;
+            sa.len = OFActionSetNwDst.MINIMUM_LENGTH;
         }
         else {
             Logger.debug("Invalid action: '{}'", subaction);
@@ -816,13 +818,13 @@ public class StaticFlowEntryType {
             if (n.group(1) != null) {
                 try {
                     short portnum = get_short(n.group(1));
-                    OFActionTransportLayerSource action = new OFActionTransportLayerSource();
-                    action.setTransportPort(portnum);
+                    OFActionSetTpSrc action = new OFActionSetTpSrc();
+                    action.setTpPort(portnum);
                     Logger.debug("action {}", action);
                     
                     sa = new SubActionStruct();
                     sa.action = action;
-                    sa.len = OFActionTransportLayerSource.MINIMUM_LENGTH;;
+                    sa.len = OFActionSetTpSrc.MINIMUM_LENGTH;;
                 }
                 catch (NumberFormatException e) {
                     Logger.debug("Invalid src-port in: {} (error ignored)", subaction);
@@ -852,13 +854,13 @@ public class StaticFlowEntryType {
             if (n.group(1) != null) {
                 try {
                     short portnum = get_short(n.group(1));
-                    OFActionTransportLayerDestination action = new OFActionTransportLayerDestination();
-                    action.setTransportPort(portnum);
+                    OFActionSetTpDst action = new OFActionSetTpDst();
+                    action.setTpPort(portnum);
                     Logger.debug("action {}", action);
                     
                     sa = new SubActionStruct();
                     sa.action = action;
-                    sa.len = OFActionTransportLayerDestination.MINIMUM_LENGTH;;
+                    sa.len = OFActionSetTpDst.MINIMUM_LENGTH;;
                 }
                 catch (NumberFormatException e) {
                     Logger.debug("Invalid dst-port in: {} (error ignored)", subaction);

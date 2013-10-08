@@ -7,7 +7,7 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.MappingJsonFactory;
-import org.openflow.protocol.OFMatch;
+import org.openflow.protocol.ver1_0.messages.OFMatch;
 import org.openflow.util.HexString;
 
 import etri.sdn.controller.protocol.packet.Ethernet;
@@ -23,6 +23,61 @@ import etri.sdn.controller.protocol.packet.UDP;
  *  
  */
 public class FirewallRule implements Comparable<FirewallRule>, Serializable {
+	
+    // BEGIN WILDCARD RELATED
+    final public static int OFPFW_ALL = ((1 << 22) - 1);
+
+    final public static int OFPFW_IN_PORT = 1 << 0; /* Switch input port. */
+    final public static int OFPFW_DL_VLAN = 1 << 1; /* VLAN id. */
+    final public static int OFPFW_DL_SRC = 1 << 2; /* Ethernet source address. */
+    final public static int OFPFW_DL_DST = 1 << 3; /*
+                                                    * Ethernet destination
+                                                    * address.
+                                                    */
+    final public static int OFPFW_DL_TYPE = 1 << 4; /* Ethernet frame type. */
+    final public static int OFPFW_NW_PROTO = 1 << 5; /* IP protocol. */
+    final public static int OFPFW_TP_SRC = 1 << 6; /* TCP/UDP source port. */
+    final public static int OFPFW_TP_DST = 1 << 7; /* TCP/UDP destination port. */
+
+    /*
+     * IP source address wildcard bit count. 0 is exact match, 1 ignores the
+     * LSB, 2 ignores the 2 least-significant bits, ..., 32 and higher wildcard
+     * the entire field. This is the *opposite* of the usual convention where
+     * e.g. /24 indicates that 8 bits (not 24 bits) are wildcarded.
+     */
+    final public static int OFPFW_NW_SRC_SHIFT = 8;
+    final public static int OFPFW_NW_SRC_BITS = 6;
+    final public static int OFPFW_NW_SRC_MASK = ((1 << OFPFW_NW_SRC_BITS) - 1) << OFPFW_NW_SRC_SHIFT;
+    final public static int OFPFW_NW_SRC_ALL = 32 << OFPFW_NW_SRC_SHIFT;
+
+    /* IP destination address wildcard bit count. Same format as source. */
+    final public static int OFPFW_NW_DST_SHIFT = 14;
+    final public static int OFPFW_NW_DST_BITS = 6;
+    final public static int OFPFW_NW_DST_MASK = ((1 << OFPFW_NW_DST_BITS) - 1) << OFPFW_NW_DST_SHIFT;
+    final public static int OFPFW_NW_DST_ALL = 32 << OFPFW_NW_DST_SHIFT;
+
+    final public static int OFPFW_DL_VLAN_PCP = 1 << 20; /* VLAN priority. */
+    final public static int OFPFW_NW_TOS = 1 << 21; /*
+                                                     * IP ToS (DSCP field, 6
+                                                     * bits).
+                                                     */
+    // END WILDCARD RELATED
+
+    public static final short OFP_VLAN_NONE = (short) 0xffff;
+
+    /* List of Strings for marshalling and unmarshalling to human readable forms */
+    final public static String STR_IN_PORT = "in_port";
+    final public static String STR_DL_DST = "dl_dst";
+    final public static String STR_DL_SRC = "dl_src";
+    final public static String STR_DL_TYPE = "dl_type";
+    final public static String STR_DL_VLAN = "dl_vlan";
+    final public static String STR_DL_VLAN_PCP = "dl_vpcp";
+    final public static String STR_NW_DST = "nw_dst";
+    final public static String STR_NW_SRC = "nw_src";
+    final public static String STR_NW_PROTO = "nw_proto";
+    final public static String STR_NW_TOS = "nw_tos";
+    final public static String STR_TP_DST = "tp_dst";
+    final public static String STR_TP_SRC = "tp_src";
 	
 	private static final long serialVersionUID = 1L;
 
@@ -192,9 +247,9 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 		if (wildcard_in_port == false && in_port != inPort)
 			return false;
 		if (action == FirewallRule.FirewallAction.DENY) {
-			wildcards.drop &= ~OFMatch.OFPFW_IN_PORT;
+			wildcards.drop &= ~OFPFW_IN_PORT;
 		} else {
-			wildcards.allow &= ~OFMatch.OFPFW_IN_PORT;
+			wildcards.allow &= ~OFPFW_IN_PORT;
 		}
 
 		// mac address (src and dst) match?
@@ -202,18 +257,18 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 				&& dl_src != packet.getSourceMAC().toLong())
 			return false;
 		if (action == FirewallRule.FirewallAction.DENY) {
-			wildcards.drop &= ~OFMatch.OFPFW_DL_SRC;
+			wildcards.drop &= ~OFPFW_DL_SRC;
 		} else {
-			wildcards.allow &= ~OFMatch.OFPFW_DL_SRC;
+			wildcards.allow &= ~OFPFW_DL_SRC;
 		}
 
 		if (wildcard_dl_dst == false
 				&& dl_dst != packet.getDestinationMAC().toLong())
 			return false;
 		if (action == FirewallRule.FirewallAction.DENY) {
-			wildcards.drop &= ~OFMatch.OFPFW_DL_DST;
+			wildcards.drop &= ~OFPFW_DL_DST;
 		} else {
-			wildcards.allow &= ~OFMatch.OFPFW_DL_DST;
+			wildcards.allow &= ~OFPFW_DL_DST;
 		}
 
 		// dl_type check: ARP, IP
@@ -226,9 +281,9 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 					return false;
 				else {
 					if (action == FirewallRule.FirewallAction.DENY) {
-						wildcards.drop &= ~OFMatch.OFPFW_DL_TYPE;
+						wildcards.drop &= ~OFPFW_DL_TYPE;
 					} else {
-						wildcards.allow &= ~OFMatch.OFPFW_DL_TYPE;
+						wildcards.allow &= ~OFPFW_DL_TYPE;
 					}
 				}
 			} else if (dl_type == Ethernet.TYPE_IPv4) {
@@ -236,9 +291,9 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 					return false;
 				else {
 					if (action == FirewallRule.FirewallAction.DENY) {
-						wildcards.drop &= ~OFMatch.OFPFW_NW_PROTO;
+						wildcards.drop &= ~OFPFW_NW_PROTO;
 					} else {
-						wildcards.allow &= ~OFMatch.OFPFW_NW_PROTO;
+						wildcards.allow &= ~OFPFW_NW_PROTO;
 					}
 					// IP packets, proceed with ip address check
 					pkt_ip = (IPv4) pkt;
@@ -249,11 +304,11 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 									nw_src_maskbits, pkt_ip.getSourceAddress()) == false)
 						return false;
 					if (action == FirewallRule.FirewallAction.DENY) {
-						wildcards.drop &= ~OFMatch.OFPFW_NW_SRC_ALL;
-						wildcards.drop |= (nw_src_maskbits << OFMatch.OFPFW_NW_SRC_SHIFT);
+						wildcards.drop &= ~OFPFW_NW_SRC_ALL;
+						wildcards.drop |= (nw_src_maskbits << OFPFW_NW_SRC_SHIFT);
 					} else {
-						wildcards.allow &= ~OFMatch.OFPFW_NW_SRC_ALL;
-						wildcards.allow |= (nw_src_maskbits << OFMatch.OFPFW_NW_SRC_SHIFT);
+						wildcards.allow &= ~OFPFW_NW_SRC_ALL;
+						wildcards.allow |= (nw_src_maskbits << OFPFW_NW_SRC_SHIFT);
 					}
 
 					if (wildcard_nw_dst == false
@@ -262,11 +317,11 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 									pkt_ip.getDestinationAddress()) == false)
 						return false;
 					if (action == FirewallRule.FirewallAction.DENY) {
-						wildcards.drop &= ~OFMatch.OFPFW_NW_DST_ALL;
-						wildcards.drop |= (nw_dst_maskbits << OFMatch.OFPFW_NW_DST_SHIFT);
+						wildcards.drop &= ~OFPFW_NW_DST_ALL;
+						wildcards.drop |= (nw_dst_maskbits << OFPFW_NW_DST_SHIFT);
 					} else {
-						wildcards.allow &= ~OFMatch.OFPFW_NW_DST_ALL;
-						wildcards.allow |= (nw_dst_maskbits << OFMatch.OFPFW_NW_DST_SHIFT);
+						wildcards.allow &= ~OFPFW_NW_DST_ALL;
+						wildcards.allow |= (nw_dst_maskbits << OFPFW_NW_DST_SHIFT);
 					}
 
 					// nw_proto check
@@ -295,9 +350,9 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 							}
 						}
 						if (action == FirewallRule.FirewallAction.DENY) {
-							wildcards.drop &= ~OFMatch.OFPFW_NW_PROTO;
+							wildcards.drop &= ~OFPFW_NW_PROTO;
 						} else {
-							wildcards.allow &= ~OFMatch.OFPFW_NW_PROTO;
+							wildcards.allow &= ~OFPFW_NW_PROTO;
 						}
 
 						// TCP/UDP source and destination ports match?
@@ -306,18 +361,18 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 							if (tp_src != 0 && tp_src != pkt_tp_src)
 								return false;
 							if (action == FirewallRule.FirewallAction.DENY) {
-								wildcards.drop &= ~OFMatch.OFPFW_TP_SRC;
+								wildcards.drop &= ~OFPFW_TP_SRC;
 							} else {
-								wildcards.allow &= ~OFMatch.OFPFW_TP_SRC;
+								wildcards.allow &= ~OFPFW_TP_SRC;
 							}
 
 							// does the destination port match?
 							if (tp_dst != 0 && tp_dst != pkt_tp_dst)
 								return false;
 							if (action == FirewallRule.FirewallAction.DENY) {
-								wildcards.drop &= ~OFMatch.OFPFW_TP_DST;
+								wildcards.drop &= ~OFPFW_TP_DST;
 							} else {
-								wildcards.allow &= ~OFMatch.OFPFW_TP_DST;
+								wildcards.allow &= ~OFPFW_TP_DST;
 							}
 						}
 					}
@@ -329,9 +384,9 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 			}
 		}
 		if (action == FirewallRule.FirewallAction.DENY) {
-			wildcards.drop &= ~OFMatch.OFPFW_DL_TYPE;
+			wildcards.drop &= ~OFPFW_DL_TYPE;
 		} else {
-			wildcards.allow &= ~OFMatch.OFPFW_DL_TYPE;
+			wildcards.allow &= ~OFPFW_DL_TYPE;
 		}
 
 		// all applicable checks passed

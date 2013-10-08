@@ -2,7 +2,8 @@ package etri.sdn.controller.module.staticentrypusher;
 
 import java.util.Map;
 
-import org.openflow.protocol.OFFlowMod;
+import org.openflow.protocol.ver1_0.messages.OFFlowMod;
+
 
 import etri.sdn.controller.IService;
 
