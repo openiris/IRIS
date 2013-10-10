@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.openflow.protocol.OFMessage;
 import org.openflow.protocol.factory.OFMessageFactory;
-import org.openflow.protocol.ver1_0.types.OFMessageType;
 import org.openflow.util.U16;
 import org.openflow.util.U32;
 import org.openflow.util.U8;
@@ -89,7 +88,7 @@ class VersionedMessageFactory implements OFMessageFactory {
             data.mark();
             demux.readFrom(data);
             short subtype = 0;
-            if ( data.remaining() > 2 /*sizeof short*/) 
+            if ( data.remaining() >= 2 /*sizeof short*/) 
             	subtype = data.getShort();
             data.reset();
             
@@ -108,9 +107,11 @@ class VersionedMessageFactory implements OFMessageFactory {
             	case STATISTICS_REQUEST:
             	case STATISTICS_REPLY:
             		// read subtype information first.
+            		System.out.println("subtype === " + subtype);
             		org.openflow.protocol.ver1_0.messages.OFMessage sn = 
             			org.openflow.protocol.ver1_0.types.OFStatisticsType.valueOf(subtype, t).newInstance(t);
             		sn.readFrom(data);
+            		System.out.println("reading is done..." + sn.toString());
             		results.add(sn);
             		break;
             	default:

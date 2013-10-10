@@ -105,11 +105,13 @@ public final class Connection {
 
 	public synchronized boolean write(OFMessage fm) {
 		
+		if ( fm.getXid() == 0 ) {
+			fm.setXid(sw.getNextTransactionId());
+		}
+		
 		try {
 			getStream().write( 
-					fm
-					.setLength( fm.computeLength() )
-					.setXid( sw.getNextTransactionId() ) 
+					fm.setLength( fm.computeLength() ) 
 			);
 //			System.err.println("writing >>>>>" + fm.toString());
 		} catch (IOException e) {

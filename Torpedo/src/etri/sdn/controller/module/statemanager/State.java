@@ -158,6 +158,7 @@ public class State extends OFModel {
 	                
 //	                List<OFStatistics> reply = sw.getSwitchStatistics( req );
 					List<OFStatisticsReply> reply = version_adaptor_10.getSwitchStatistics(sw, req);
+					System.out.println(reply.size());
 					
 	                HashMap<String, List<OFStatisticsReply>> output = new HashMap<String, List<OFStatisticsReply>>();
 	                if ( reply != null && ! reply.isEmpty() ) {
@@ -168,7 +169,7 @@ public class State extends OFModel {
 					ObjectMapper om = new ObjectMapper();
 					
 					try {
-						String r = om./*writerWithDefaultPrettyPrinter().*/writeValueAsString(output);
+						String r = om.writerWithDefaultPrettyPrinter().writeValueAsString(output);
 						response.setEntity(r, MediaType.APPLICATION_JSON);
 					} catch (Exception e) {
 						e.printStackTrace();

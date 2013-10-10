@@ -176,14 +176,17 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 		 *              of this function is not used by {@link QP#run()}.
 		 */
 		private boolean process(Connection conn, List<OFMessage> msgs) {
+			VersionAdaptor vadp = null;
 			for (OFMessage m : msgs) {
 //				System.out.println(m.toString());
 				context.getStorage().clear();
 
-				VersionAdaptor vadp = version_adaptors.get(m.getVersion());
 				if ( vadp == null ) {
-					Logger.debug("Cannot find suitable version adaptor for version " + m.getVersion());
-					continue;
+					vadp = version_adaptors.get(m.getVersion());
+					if ( vadp == null ) {
+						Logger.debug("Cannot find suitable version adaptor for version " + m.getVersion());
+						return false;
+					}
 				}
 				
 				if ( !vadp.process(conn, context, m) ) {
