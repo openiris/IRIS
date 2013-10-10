@@ -177,7 +177,7 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 		 */
 		private boolean process(Connection conn, List<OFMessage> msgs) {
 			for (OFMessage m : msgs) {
-				System.out.println(m.toString());
+//				System.out.println(m.toString());
 				context.getStorage().clear();
 
 				VersionAdaptor vadp = version_adaptors.get(m.getVersion());
@@ -206,6 +206,7 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 	private IOFProtocolServer server = null;
 	
 	private Map<Byte/*version*/, VersionAdaptor> version_adaptors = new ConcurrentHashMap<Byte, VersionAdaptor>();
+	private byte max_version = (byte)0x00;
 
 	/**
 	 * OFController constructor.
@@ -231,12 +232,20 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 			this.role = null;
 		}
 		
-		version_adaptors.put(VersionAdaptor10.VERSION, new VersionAdaptor10(this));
+		setVersionAdaptor(VersionAdaptor10.VERSION, new VersionAdaptor10(this));
 	}
 	
 	@Override
 	public VersionAdaptor getVersionAdaptor(byte version) {
 		return version_adaptors.get(version);
+	}
+	
+	@Override
+	public void setVersionAdaptor(byte version, VersionAdaptor adaptor) {
+		if (version > max_version) {
+			max_version = version;
+		}
+		version_adaptors.put(version, adaptor);
 	}
 	
 	/**
@@ -340,7 +349,8 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 	 */
 	@Override
 	public final boolean handleConnectedEvent(Connection conn) {
-		return true;
+		VersionAdaptor va = getVersionAdaptor(this.max_version);
+		return va.handleConnectedEvent(conn);
 	}
 	
 	/**
@@ -351,39 +361,6 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 	 * @return returns false when the underling connection caused error.
 	 */
 	public abstract boolean handlePacketIn(Connection conn, MessageContext context, OFMessage m);
-
-	/**
-	 * handle Hello message.
-	 * @param conn underlying connection
-	 * @param context 
-	 * @param m Hello message.
-	 * @return returns false when the underling connection caused error.
-	 */
-//	public boolean handleHello(Connection conn, MessageContext context, OFHello m) {
-//		try {
-//			System.err.println("GOT HELLO from " + conn.getClient().getRemoteAddress().toString());
-//		} catch (IOException e1) {
-//			e1.printStackTrace();
-//			return false;
-//		}
-//		return true;
-//	}
-
-	/**
-	 * handle Echo Request message.
-	 * @param conn underlying connection
-	 * @param context 
-	 * @param m Echo Request message.
-	 * @return returns false when the underling connection caused error.
-	 */
-//	public final boolean handleEchoRequest(Connection conn, MessageContext context, OFEchoRequest m) {
-//		Logger.debug("ECHO_REQUEST is received");
-//		OFEchoReply reply = (OFEchoReply) conn.getFactory().getMessage(OFType.ECHO_REPLY);
-//		reply.setXid(m.getXid());
-//		conn.write(reply);
-//
-//		return true;
-//	}
 
 	/**
 	 * handle the other messages.

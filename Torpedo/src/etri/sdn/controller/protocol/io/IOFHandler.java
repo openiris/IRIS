@@ -38,6 +38,7 @@ public interface IOFHandler {
 	public abstract IOFSwitch getSwitch(long id);
 	public abstract void addSwitch(long id, IOFSwitch sw);
 	public VersionAdaptor getVersionAdaptor(byte version);
+	public void setVersionAdaptor(byte version, VersionAdaptor adaptor);
 	
 	public abstract void registerProtocolServer(IOFProtocolServer server);
 	

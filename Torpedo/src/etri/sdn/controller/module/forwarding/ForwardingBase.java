@@ -388,8 +388,10 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 //			po.setPacketData(packetData);
 			po.setData(packetData);
 		}
-
+		
 		po.setLength(poLength);
+		
+//		System.err.println ("FB PacketOut XXXXXXXX " + po.toString());
 
 		try {
 //			counterStore.updatePktOutFMCounterStore(sw, po);
@@ -460,6 +462,8 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 		}
 
 		po.setLength(poLength);
+		
+//		System.out.println("FB PacketOut XXXXXXXXXXXXXXX " + po.toString());
 
 		try {
 //			counterStore.updatePktOutFMCounterStore(sw, po);
@@ -518,6 +522,8 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 //		po.setPacketData(packetData);
 		po.setData(packetData);
 		po.setLength(poLength);
+		
+//		System.out.println("FB PacketOut 2 YYYYYYYYYYYYYY " + po.toString());
 
 		try {
 //			counterStore.updatePktOutFMCounterStore(sw, po);

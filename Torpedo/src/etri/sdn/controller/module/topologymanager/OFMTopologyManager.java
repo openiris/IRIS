@@ -301,6 +301,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 			action_out.setPort(p);
 			action_out.setMaxLength((short) 0);
 //			actions.add(new OFActionOutput(p, (short) 0));
+			actions.add(action_out);
 		}
 
 		// set actions

@@ -269,10 +269,12 @@ public final class OFMLearningMac extends OFModule {
 			byte[] packetData = packetInMessage.getData();
 			packetOutMessage.setData(packetData);
 			packetOutLength += (short)packetData.length;
-		}
+		} 
 
 		// finally, set the total length
-		packetOutMessage.setLength(packetOutLength);              
+		packetOutMessage.setLength(packetOutLength);     
+		
+//		System.err.println("FB PacketOut 3 =======" + packetOutMessage.toString());
 
 		// TODO: counter store support
 		//		counterStore.updatePktOutFMCounterStore(sw, packetOutMessage);

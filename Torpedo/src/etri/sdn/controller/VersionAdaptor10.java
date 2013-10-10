@@ -23,7 +23,7 @@ import org.openflow.util.U8;
 
 public class VersionAdaptor10 extends VersionAdaptor {
 	
-	public static byte VERSION = 0x01;						// 1.0
+	public static final byte VERSION = 0x01;						// 1.0
 	
 	private Object portLock = new Object();
 	
@@ -186,11 +186,21 @@ public class VersionAdaptor10 extends VersionAdaptor {
 		rm.remove(new String(sm.get(portNumber).getName()));
 		sm.remove(portNumber);
 	}
+	
+	@Override
+	public boolean handleConnectedEvent(Connection conn) {
+		// when we are connected, we send a HELLO.
+		OFHello hello = (OFHello) OFMessageType.HELLO.newInstance();
+		hello.setVersion((byte)0x01);
+		conn.write(hello);
+		return true;
+	}
 
 	@Override
 	public boolean process(Connection conn, MessageContext context, OFMessage m) {
 		OFMessageType t = OFMessageType.valueOf(m.getTypeByte());
 		
+//		System.out.println("received --" + t);
 		switch (t) {
 		case PACKET_IN:					
 			if ( ! getController().handlePacketIn(conn, context, m) ) {
@@ -198,20 +208,18 @@ public class VersionAdaptor10 extends VersionAdaptor {
 			}
 			break;
 		case HELLO:
-			// for Hello, we don't do anything.
+			// if HELLO received, we send features request.
 			try {
 				System.err.println("GOT HELLO from " + conn.getClient().getRemoteAddress().toString());
-				
 			} catch (IOException e1) {
-				e1.printStackTrace();
 				return false;
 			}
-			// send hello in reply.
-			OFHello hello = new OFHello((OFHello)m);
-			conn.write(hello);
+			// need to send feature request message.
+			OFFeaturesRequest freq = (OFFeaturesRequest) OFMessageType.FEATURES_REQUEST.newInstance();
+			conn.write(freq);
 			break;
 		case ERROR:
-			System.err.println("GET ERROR : " + new String(((OFError)m).getData()));
+			Logger.stderr("GET ERROR : " + new String(((OFError)m).getData()));
 			return false;
 		case ECHO_REQUEST:
 			// for echo request, we send a echo message with the same XID.
@@ -249,7 +257,7 @@ public class VersionAdaptor10 extends VersionAdaptor {
 				OFStatisticsRequest req = 
 					(OFStatisticsRequest) OFStatisticsType.DESC.newInstance(OFMessageType.STATISTICS_REQUEST);
 				req.setXid(conn.getSwitch().getNextTransactionId());
-				return conn.write(req);
+				conn.write(req);
 			}
 			
 			// now the handshaking is fully done.
@@ -291,6 +299,8 @@ public class VersionAdaptor10 extends VersionAdaptor {
 		case STATISTICS_REPLY:
 			
 			OFStatisticsReply stat = (OFStatisticsReply) m;
+			
+//			System.out.println("stat_reply ::::::::::" + m.toString());
 
 			if ( stat.getStatisticsType() == OFStatisticsType.DESC ) {
 				setDescription(conn.getSwitch(), (OFStatisticsDescReply) stat );
@@ -721,4 +731,5 @@ public class VersionAdaptor10 extends VersionAdaptor {
         }
         return ret;
     }
+
 }

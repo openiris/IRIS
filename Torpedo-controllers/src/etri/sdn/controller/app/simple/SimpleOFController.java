@@ -151,7 +151,7 @@ public class SimpleOFController extends OFController {
 		}
 		else {
 			System.err.println("Unhandled OF message: "
-					+ m.getTypeByte() + " from "
+					+ m.toString() + " from "
 					+ conn.getClient().socket().getInetAddress());
 		}
 		return true;

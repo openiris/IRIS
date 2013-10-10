@@ -6,7 +6,6 @@ import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -179,29 +178,6 @@ public final class ClientChannelWatcher extends Thread {
 			// does nothing
 		}
 		
-		List<OFMessage> l = new ArrayList<OFMessage>();
-		
-		//
-		// for hello/features_request from controller, we can use version 1.0 
-		//
-		org.openflow.protocol.ver1_0.messages.OFHello hello = 
-			(org.openflow.protocol.ver1_0.messages.OFHello) org.openflow.protocol.ver1_0.types.OFMessageType.HELLO.newInstance();
-		org.openflow.protocol.ver1_0.messages.OFFeaturesRequest features_request = 
-			(org.openflow.protocol.ver1_0.messages.OFFeaturesRequest) org.openflow.protocol.ver1_0.types.OFMessageType.FEATURES_REQUEST.newInstance();
-		
-		l.add(hello);
-		l.add(features_request);
-		
-//		l.add(conn.getFactory().getMessage(OFType.HELLO));
-//		l.add(conn.getFactory().getMessage(OFType.FEATURES_REQUEST));
-		try {
-			conn.getStream().write(l);
-			conn.getStream().flush();
-		} catch (IOException e) {
-			Logger.stderr("Connection is unable to handshake");
-			return false;
-		}
-		
 		boolean ret = true;
 		Set<IOFHandler> handlers = conn.getHandlers();
 
@@ -217,6 +193,7 @@ public final class ClientChannelWatcher extends Thread {
 			msgs = conn.read();
 			if ( msgs == null ) { return true; }
 		} catch (IOException e) {
+//			e.printStackTrace();
 			return false;
 		}
 
