@@ -49,7 +49,8 @@ public class OFMFirewall extends OFModule implements IFirewallService
     protected boolean enabled;
     protected int subnet_mask = IPv4.toIPv4Address("255.255.255.0");
     
-    private VersionAdaptor10 version_adaptor_10;
+    @SuppressWarnings("unused")
+	private VersionAdaptor10 version_adaptor_10;
 
     // constant strings for storage/parsing
     public static final String TABLE_NAME = "controller_firewallrules";

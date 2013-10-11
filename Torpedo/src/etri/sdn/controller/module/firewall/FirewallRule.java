@@ -7,7 +7,6 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.MappingJsonFactory;
-import org.openflow.protocol.ver1_0.messages.OFMatch;
 import org.openflow.util.HexString;
 
 import etri.sdn.controller.protocol.packet.Ethernet;
