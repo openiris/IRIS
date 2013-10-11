@@ -1,11 +1,12 @@
 
 header 
 {
-	background: url(../images/rainbow-circle.png) 130px -100px no-repeat;
+	background: url(../images/rainbow-circle.png) 120px 0px no-repeat;
 } 
 
 header h1 
 {
+	margin-top: 120px;
 	filter: glow(color=white); 
 }
 
