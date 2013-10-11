@@ -969,7 +969,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		}
 
 //		if (!remoteSwitch.portEnabled(remotePort)) {
-		if ( !version_adaptor_10.portEnabled(sw, remotePort) ) {
+		if ( !version_adaptor_10.portEnabled(remoteSwitch, remotePort) ) {
 			// process no further
 			return false;
 		}

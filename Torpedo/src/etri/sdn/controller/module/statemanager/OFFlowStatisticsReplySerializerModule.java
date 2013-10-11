@@ -8,6 +8,7 @@ import org.codehaus.jackson.Version;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 import org.codehaus.jackson.map.module.SimpleModule;
+import org.openflow.protocol.ver1_0.messages.OFFlowStatsEntry;
 import org.openflow.protocol.ver1_0.messages.OFMatch;
 import org.openflow.protocol.ver1_0.types.OFFlowWildcards;
 import org.openflow.util.HexString;
@@ -100,6 +101,27 @@ final class OFMatchSerializer extends JsonSerializer<OFMatch> {
 	}
 }
 
+final class OFFlowStatsEntrySerializer extends JsonSerializer<OFFlowStatsEntry> {
+
+	@Override
+	public void serialize(OFFlowStatsEntry entry, JsonGenerator jgen, SerializerProvider provider) 
+			throws IOException,	JsonProcessingException {
+		jgen.writeStartObject();
+        jgen.writeNumberField("tableId", entry.getTableId());
+        provider.defaultSerializeField("match", entry.getMatch(), jgen);
+        jgen.writeNumberField("durationSeconds", entry.getDurationSec());
+        jgen.writeNumberField("durationNanoSeconds", entry.getDurationNsec());
+        jgen.writeNumberField("priority", entry.getIdleTimeout());
+        jgen.writeNumberField("idleTimeout", entry.getIdleTimeout());
+        jgen.writeNumberField("hardTimeout", entry.getHardTimeout());
+        jgen.writeNumberField("cookie", entry.getCookie());
+        jgen.writeNumberField("packetCount", entry.getPacketCount());
+        jgen.writeNumberField("byteCount", entry.getByteCount());
+        provider.defaultSerializeField("actions", entry.getActions(), jgen);
+        jgen.writeEndObject();
+	}
+}
+
 /**
  * A Custom Serializer module consists of OFFlowStatisticsReplySerializer
  * 
@@ -113,6 +135,7 @@ public class OFFlowStatisticsReplySerializerModule extends SimpleModule {
 				new Version(1, 0, 0, "OFFlowStatisticsReplySerializerModule"));
 		
 		addSerializer(OFMatch.class, new OFMatchSerializer());
+		addSerializer(OFFlowStatsEntry.class, new OFFlowStatsEntrySerializer());
 	}
 	
 }

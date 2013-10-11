@@ -286,15 +286,18 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 			}
 		} else if (eth.getPayload() instanceof IPv4) {
 			IPv4 ipv4 = (IPv4) eth.getPayload();
-			if (ipv4.getPayload() instanceof UDP) {
-				UDP udp = (UDP)ipv4.getPayload();
-				if (udp.getPayload() instanceof DHCP) {
-					DHCP dhcp = (DHCP)udp.getPayload();
-					if (dhcp.getOpCode() == DHCP.OPCODE_REPLY) {
-						return ipv4.getSourceAddress();
-					}
-				}
-			}
+//			if (ipv4.getPayload() instanceof UDP) {
+//				UDP udp = (UDP)ipv4.getPayload();
+//				if (udp.getPayload() instanceof DHCP) {
+//					DHCP dhcp = (DHCP)udp.getPayload();
+//					if (dhcp.getOpCode() == DHCP.OPCODE_REPLY) {
+//						return ipv4.getSourceAddress();
+//					}
+//				}
+//			}
+			
+			// bjlee - 2013.10.11
+			return ipv4.getSourceAddress();
 		}
 		return 0;
 	}

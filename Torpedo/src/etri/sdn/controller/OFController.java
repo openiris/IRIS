@@ -123,8 +123,6 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 			} while ( false );
 
 			return true;
-
-			//			return process(conn, msgs);
 		}
 
 		/**
@@ -177,6 +175,7 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 		 */
 		private boolean process(Connection conn, List<OFMessage> msgs) {
 			VersionAdaptor vadp = null;
+
 			for (OFMessage m : msgs) {
 //				System.out.println(m.toString());
 				context.getStorage().clear();

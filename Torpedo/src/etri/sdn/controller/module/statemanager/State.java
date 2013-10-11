@@ -158,7 +158,6 @@ public class State extends OFModel {
 	                
 //	                List<OFStatistics> reply = sw.getSwitchStatistics( req );
 					List<OFStatisticsReply> reply = version_adaptor_10.getSwitchStatistics(sw, req);
-					System.out.println(reply.size());
 					
 	                HashMap<String, List<OFStatisticsReply>> output = new HashMap<String, List<OFStatisticsReply>>();
 	                if ( reply != null && ! reply.isEmpty() ) {
@@ -396,6 +395,7 @@ public class State extends OFModel {
 					HashMap<String, List<OFFlowStatsEntry>> result = 
 						new HashMap<String, List<OFFlowStatsEntry>>();
 					List<OFFlowStatsEntry> resultValues = new java.util.LinkedList<OFFlowStatsEntry>();
+					result.put(switchIdStr, resultValues);
 					
 //					OFStatisticsRequest req = new OFStatisticsRequest();
 //					req.setStatisticType(OFStatisticsType.FLOW);
@@ -432,7 +432,7 @@ public class State extends OFModel {
 					om.registerModule(flow_statistics_reply_module);
 					
 					try {
-						String r = om.writerWithDefaultPrettyPrinter().writeValueAsString(result);
+						String r = om/*.writerWithDefaultPrettyPrinter()*/.writeValueAsString(result);
 						response.setEntity(r, MediaType.APPLICATION_JSON);
 					} catch (Exception e) {
 						e.printStackTrace();

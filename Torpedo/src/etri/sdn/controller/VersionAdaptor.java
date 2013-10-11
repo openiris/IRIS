@@ -83,7 +83,7 @@ class VersionedMessageFactory implements OFMessageFactory {
 
         while (limit == 0 || results.size() <= limit) {
             if (data.remaining() < OFHeader.MINIMUM_LENGTH)
-                return results;
+                break;
 
             data.mark();
             demux.readFrom(data);
@@ -93,7 +93,7 @@ class VersionedMessageFactory implements OFMessageFactory {
             data.reset();
             
             if (demux.getLengthU() > data.remaining())
-                return results;
+                break;
             
             switch ( demux.getVersion() ) {
             //
@@ -107,11 +107,9 @@ class VersionedMessageFactory implements OFMessageFactory {
             	case STATISTICS_REQUEST:
             	case STATISTICS_REPLY:
             		// read subtype information first.
-            		System.out.println("subtype === " + subtype);
-            		org.openflow.protocol.ver1_0.messages.OFMessage sn = 
+            		org.openflow.protocol.ver1_0.messages.OFStatistics sn = 
             			org.openflow.protocol.ver1_0.types.OFStatisticsType.valueOf(subtype, t).newInstance(t);
             		sn.readFrom(data);
-            		System.out.println("reading is done..." + sn.toString());
             		results.add(sn);
             		break;
             	default:
@@ -119,11 +117,10 @@ class VersionedMessageFactory implements OFMessageFactory {
                 		org.openflow.protocol.ver1_0.types.OFMessageType.valueOf(demux.getType()).newInstance();
                 	nn.readFrom(data);
                 	results.add(nn);
-            		break;
             	}	
+            	break;
             }
         }
-
         return results;
 	}
 	
@@ -131,7 +128,7 @@ class VersionedMessageFactory implements OFMessageFactory {
 
 public abstract class VersionAdaptor {
 
-	private static VersionedMessageFactory message_factory = new VersionedMessageFactory();
+//	private static VersionedMessageFactory message_factory = new VersionedMessageFactory();
 	
 	private OFController controller;
 	
@@ -145,7 +142,7 @@ public abstract class VersionAdaptor {
 	
 	
 	public static final OFMessageFactory getMessageFactory() {
-		return message_factory;
+		return new VersionedMessageFactory();
 	}
 	
 	public abstract boolean handleConnectedEvent(Connection conn);

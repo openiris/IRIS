@@ -135,7 +135,7 @@ iris.adjustXandY = function(nodes, links) {
 //			console.log('pdeg : ' + parent.degree);
 //			console.log('pwei : ' + parent.weight);
 //			console.log(ns[n].id);
-//			console.log('mdeg : ' + ns[n].degree);
+//			console.log('('+parent.id+','+parent.degree+','+parent.weight+') -- (' + ns[n].id + "," + ns[n].degree + ')');
 			
 			var r = nDistance(parent);
 			var rad = degree[parent.id]*Math.PI/180;

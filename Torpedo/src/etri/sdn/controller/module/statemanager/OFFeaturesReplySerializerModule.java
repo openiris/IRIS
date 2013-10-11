@@ -26,11 +26,9 @@ final class OFFeaturesReplySerializer extends JsonSerializer<OFFeaturesReply> {
 		jgen.writeStartObject();
 		jgen.writeStringField("datapathId", HexString.toHexString(reply.getDatapathId()));
 		jgen.writeNumberField("actions", reply.getActions());
-//		jgen.writeNumberField("buffers", reply.getBuffers());
 		jgen.writeNumberField("buffers", reply.getNBuffers());
 		jgen.writeNumberField("capabilities", reply.getCapabilities());
 		jgen.writeNumberField("length", reply.getLength());
-//		jgen.writeNumberField("tables", reply.getTables());
 		jgen.writeNumberField("tables", reply.getNTables());
         jgen.writeStringField("type", reply.getType().toString());
         jgen.writeNumberField("version", reply.getVersion());
@@ -54,18 +52,11 @@ final class OFPhysicalPortSerializer extends JsonSerializer<OFPortDesc> {
 	throws IOException, JsonProcessingException {
 		
 		jgen.writeStartObject();
-//		jgen.writeNumberField("portNumber", port.getPortNumber());
 		jgen.writeNumberField("portNumber", port.getPort());
-//		jgen.writeStringField("hardwareAddress", HexString.toHexString(port.getHardwareAddress()));
 		jgen.writeStringField("hardwareAddress", HexString.toHexString(port.getHwAddr()));
-//		jgen.writeStringField("name", port.getName());
 		jgen.writeStringField("name", new String(port.getName()));
 		jgen.writeNumberField("config", port.getConfig());
 		jgen.writeNumberField("state", port.getState());
-//		jgen.writeNumberField("currentFeatures", port.getCurrentFeatures());
-//		jgen.writeNumberField("advertisedFeatures", port.getAdvertisedFeatures());
-//		jgen.writeNumberField("supportedFeatures", port.getSupportedFeatures());
-//		jgen.writeNumberField("peerFeatures", port.getPeerFeatures());
 		jgen.writeNumberField("currentFeatures", port.getCurrentFeatures());
 		jgen.writeNumberField("advertisedFeatures", port.getAdvertisedFeatures());
 		jgen.writeNumberField("supportedFeatures", port.getSupportedFeatures());

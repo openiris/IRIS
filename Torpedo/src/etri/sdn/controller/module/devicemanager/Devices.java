@@ -491,6 +491,7 @@ public class Devices extends OFModel implements IDeviceService {
 				Date lastSeen = entity.getLastSeenTimestamp();
 				if (lastSeen == null) lastSeen = new Date();
 				device.entities[entityindex].setLastSeenTimestamp(lastSeen);
+				
 				if (device.entities[entityindex].getSwitchDPID() != null &&
 						device.entities[entityindex].getSwitchPort() != null) {
 					long sw = device.entities[entityindex].getSwitchDPID();
@@ -498,7 +499,7 @@ public class Devices extends OFModel implements IDeviceService {
 
 					// TBD: to analysis
 					boolean moved = device.updateAttachmentPoint(sw, port, lastSeen.getTime());
-
+					
 					if (moved) {
 //						Logger.debug("----DeviceChanged:" + device.toString());
 						sendDeviceMovedNotification(device);

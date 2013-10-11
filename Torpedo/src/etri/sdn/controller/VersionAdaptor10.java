@@ -199,8 +199,7 @@ public class VersionAdaptor10 extends VersionAdaptor {
 	@Override
 	public boolean process(Connection conn, MessageContext context, OFMessage m) {
 		OFMessageType t = OFMessageType.valueOf(m.getTypeByte());
-		
-//		System.out.println("received --" + t);
+
 		switch (t) {
 		case PACKET_IN:					
 			if ( ! getController().handlePacketIn(conn, context, m) ) {
@@ -299,8 +298,6 @@ public class VersionAdaptor10 extends VersionAdaptor {
 		case STATISTICS_REPLY:
 			
 			OFStatisticsReply stat = (OFStatisticsReply) m;
-			
-			System.out.println("stat_reply ::::::::::" + m.toString());
 
 			if ( stat.getStatisticsType() == OFStatisticsType.DESC ) {
 				setDescription(conn.getSwitch(), (OFStatisticsDescReply) stat );
@@ -337,7 +334,7 @@ public class VersionAdaptor10 extends VersionAdaptor {
 		List<OFStatisticsReply> response = new LinkedList<OFStatisticsReply>();
 		int xid = req.getXid();
 		rcache.put( xid, response );
-		System.out.println("xid -- " + xid);
+//		System.out.println("xid -- " + xid);
 		sw.getConnection().write(req);
 		synchronized ( response ) {
 			try {
@@ -348,15 +345,15 @@ public class VersionAdaptor10 extends VersionAdaptor {
 				this.responsesCache.remove( xid );
 			}
 		}
-		System.out.println("a -- " + response.size());
+//		System.out.println("a -- " + response.size());
 		return response;
 	}
 	
 	public void deliverSwitchStatistics(IOFSwitch sw, OFStatisticsReply m) {
-		System.out.println("delivering..." + m.toString());
+//		System.out.println("delivering..." + m.toString());
 		Map<Integer, Object> rcache = this.responsesCache.get(sw);
 		if ( rcache == null ) {
-			System.out.println("returning...");
+//			System.out.println("returning...");
 			return;
 		}
 		Object response = rcache.get( m.getXid() );
@@ -365,7 +362,7 @@ public class VersionAdaptor10 extends VersionAdaptor {
 			List<OFStatisticsReply> rl = (List<OFStatisticsReply>) response;
 			synchronized ( response ) {
 				rl.add( m );
-				System.out.println("added...");
+//				System.out.println("added...");
 				response.notifyAll();
 			}
 		}

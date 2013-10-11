@@ -60,6 +60,7 @@ window.Topology = Backbone.Model.extend({
 				self.nodes = _.map(nl, function (n) {return {name:n}});
 
 				// step 2: build array of links in format D3 expects
+//				console.log(data);
 				_.each(data, function (l) {
 					self.links.push({source:nl.indexOf(l['src-switch']),
 						target:nl.indexOf(l['dst-switch']),
