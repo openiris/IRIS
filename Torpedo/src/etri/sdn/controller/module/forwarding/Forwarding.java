@@ -18,13 +18,11 @@
 package etri.sdn.controller.module.forwarding;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.openflow.protocol.OFMessage;
-//import org.openflow.protocol.OFPort;
 import org.openflow.protocol.ver1_0.messages.OFAction;
 import org.openflow.protocol.ver1_0.messages.OFActionOutput;
 import org.openflow.protocol.ver1_0.messages.OFFlowMod;
@@ -35,24 +33,23 @@ import org.openflow.protocol.ver1_0.types.OFFlowModCommand;
 import org.openflow.protocol.ver1_0.types.OFFlowWildcards;
 import org.openflow.protocol.ver1_0.types.OFMessageType;
 import org.openflow.protocol.ver1_0.types.OFPortNo;
-import org.openflow.util.U8;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.VersionAdaptor10;
 import etri.sdn.controller.module.devicemanager.IDevice;
+import etri.sdn.controller.module.devicemanager.IDeviceService;
 import etri.sdn.controller.module.devicemanager.SwitchPort;
 import etri.sdn.controller.module.routing.IRoutingDecision;
+import etri.sdn.controller.module.routing.IRoutingService;
 import etri.sdn.controller.module.routing.Route;
+import etri.sdn.controller.module.topologymanager.ITopologyService;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.Ethernet;
 import etri.sdn.controller.util.AppCookie;
 import etri.sdn.controller.util.Logger;
-import etri.sdn.controller.module.topologymanager.ITopologyService;
-import etri.sdn.controller.module.routing.IRoutingService;
-import etri.sdn.controller.module.devicemanager.IDeviceService;
 
 /**
  * This class implements the forwarding module.

@@ -3,7 +3,6 @@ package etri.sdn.controller.module.statemanager;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,6 +11,19 @@ import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.Interval;
 import org.joda.time.Period;
+import org.openflow.protocol.ver1_0.messages.OFFeaturesReply;
+import org.openflow.protocol.ver1_0.messages.OFFlowStatsEntry;
+import org.openflow.protocol.ver1_0.messages.OFMatch;
+import org.openflow.protocol.ver1_0.messages.OFPortStatsEntry;
+import org.openflow.protocol.ver1_0.messages.OFStatisticsAggregateReply;
+import org.openflow.protocol.ver1_0.messages.OFStatisticsAggregateRequest;
+import org.openflow.protocol.ver1_0.messages.OFStatisticsDescReply;
+import org.openflow.protocol.ver1_0.messages.OFStatisticsFlowReply;
+import org.openflow.protocol.ver1_0.messages.OFStatisticsFlowRequest;
+import org.openflow.protocol.ver1_0.messages.OFStatisticsPortReply;
+import org.openflow.protocol.ver1_0.messages.OFStatisticsPortRequest;
+import org.openflow.protocol.ver1_0.messages.OFStatisticsReply;
+import org.openflow.protocol.ver1_0.types.OFPortNo;
 import org.openflow.util.HexString;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -21,21 +33,6 @@ import org.restlet.data.MediaType;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.VersionAdaptor10;
 import etri.sdn.controller.protocol.io.IOFSwitch;
-
-import org.openflow.protocol.ver1_0.messages.OFFeaturesReply;
-import org.openflow.protocol.ver1_0.messages.OFFlowStatsEntry;
-import org.openflow.protocol.ver1_0.messages.OFPortStatsEntry;
-import org.openflow.protocol.ver1_0.messages.OFStatistics;
-import org.openflow.protocol.ver1_0.messages.OFStatisticsAggregateRequest;
-import org.openflow.protocol.ver1_0.messages.OFStatisticsAggregateReply;
-import org.openflow.protocol.ver1_0.messages.OFMatch;
-import org.openflow.protocol.ver1_0.messages.OFStatisticsDescReply;
-import org.openflow.protocol.ver1_0.messages.OFStatisticsReply;
-import org.openflow.protocol.ver1_0.messages.OFStatisticsPortRequest;
-import org.openflow.protocol.ver1_0.messages.OFStatisticsPortReply;
-import org.openflow.protocol.ver1_0.messages.OFStatisticsFlowRequest;
-import org.openflow.protocol.ver1_0.messages.OFStatisticsFlowReply;
-import org.openflow.protocol.ver1_0.types.OFPortNo;
 
 /**
  * Model that represents the internal data of {@link OFMStateManager}. 

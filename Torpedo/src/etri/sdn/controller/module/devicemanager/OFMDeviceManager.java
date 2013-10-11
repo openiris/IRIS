@@ -30,10 +30,8 @@ import etri.sdn.controller.module.topologymanager.ITopologyService;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.ARP;
-import etri.sdn.controller.protocol.packet.DHCP;
 import etri.sdn.controller.protocol.packet.Ethernet;
 import etri.sdn.controller.protocol.packet.IPv4;
-import etri.sdn.controller.protocol.packet.UDP;
 import etri.sdn.controller.util.Logger;
 
 /**
@@ -61,6 +59,7 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 	private ITopologyService topology;
 	private IEntityClassifierService entityClassifier;
 	
+	@SuppressWarnings("unused")
 	private VersionAdaptor10 version_adaptor_10;
 	
 	/** 
