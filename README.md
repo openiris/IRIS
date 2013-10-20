@@ -41,19 +41,19 @@ Authors
 -------
 Byungjoon Lee (bjlee@etri.re.kr) 
 * GitHub ID: bjlee72 
-* Senior Engineer 
+* Senior Researcher 
 * SDN Technology Research Devision, ETRI 
 * Key Interests are: Software Engineering, SDN, Network Management, ICN
 
 Jisoo Shin (jshin@etri.re.kr) 
 * GitHub ID: jsshin 
-* Senior Engineer 
+* Senior Researcher 
 * SDN Technology Research Devision, ETRI 
 * Key Interests are: SDN, Network Management
 
 Sae Hyong Park (labry@etri.re.kr) 
 * GitHub ID: justin-labry 
-* Engineer 
+* Researcher 
 * SDN Technology Research Devision, ETRI 
 * Key Interests are: SDN, Network Management
 
