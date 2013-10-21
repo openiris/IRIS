@@ -17,6 +17,7 @@ import etri.sdn.controller.module.linkdiscovery.OFMLinkDiscovery;
 import etri.sdn.controller.module.statemanager.OFMStateManager;
 import etri.sdn.controller.module.staticentrypusher.OFMStaticFlowEntryPusher;
 import etri.sdn.controller.module.storagemanager.OFMStorageManager;
+import etri.sdn.controller.module.storagetest.OFMTestManager;
 import etri.sdn.controller.module.topologymanager.OFMTopologyManager;
 import etri.sdn.controller.module.ui.OFMUserInterface;
 import etri.sdn.controller.protocol.io.Connection;
@@ -47,6 +48,7 @@ public class SimpleOFController extends OFController {
 	private OFMStateManager m_state_manager = new OFMStateManager();
 	private OFMStaticFlowEntryPusher m_static_entry_pusher = new OFMStaticFlowEntryPusher();
 	private OFMStorageManager m_storage_manager = new OFMStorageManager();
+	private OFMTestManager m_test_manager = new OFMTestManager();
 	
 	private OFModule[] packet_in_pipeline = { 
 			m_learning_mac,
@@ -75,6 +77,7 @@ public class SimpleOFController extends OFController {
 		m_static_entry_pusher.init(this);	// this is not a part of the pipeline.
 		m_user_interface.init(this);		// this is not a part of the pipeline.
 		m_storage_manager.init(this);		// this is not a part of the pipeline.
+		m_test_manager.init(this);			// this is not a part of the pipeline.
 	}
 
 	/**
