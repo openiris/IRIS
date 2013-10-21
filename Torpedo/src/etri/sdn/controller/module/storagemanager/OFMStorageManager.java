@@ -30,7 +30,7 @@ import etri.sdn.controller.util.Logger;
  * This class enables a persistent storage for the controller.
  * 
  * Since Aug 11, 2013
- * Last Modified Aug 20, 2013
+ * Last Modified Oct 21, 2013
  * @author SaeHyong Park (labry@etri.re.kr)
  * 
  */
@@ -68,15 +68,15 @@ public class OFMStorageManager extends OFModule implements IStorageService, Stor
 		boolean auth = this.db.authenticate(db, passwd.toCharArray());
 		
 		if(auth) {
-			Logger.stderr("login successful..");
+			Logger.stderr("login successful ...");
 		} else {
-			Logger.stderr("login failed.");
+			Logger.stderr("login failed ...");
 		}
 		
 		om =  new ObjectMapper();
 
 		registerModule(IStorageService.class, this);
-		Logger.stderr("OFMStorageManager initialize");
+		Logger.stderr("OFMStorageManager initialize ...");
 
 	}
 	
@@ -158,7 +158,7 @@ public class OFMStorageManager extends OFModule implements IStorageService, Stor
 
 		this.db = this.mongoClient.getDB(dbName);
 		String s = StorageConverter.replaceDotToDotUtf(r);
-		//System.out.println(r); //for debugging use;
+		
 		TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>(){}; 
 		Map<String, Object> o;
 		try {
@@ -311,7 +311,11 @@ public class OFMStorageManager extends OFModule implements IStorageService, Stor
 		//System.out.println("M " + result);
 		Boolean isInserted = (Boolean)result.getField("updatedExisting");
 		if(isInserted == Boolean.TRUE) { 
-			Logger.stderr("update successful.");
+			Map<String, Integer> matchKey = new HashMap<String, Integer>();
+			for(String op: key.keySet()) {
+				matchKey.put(op, StorageEvent.STORAGE_OPERATION_UPDATE);
+			}
+			setStorageEvent(dbName, collection, matchKey);
 			return true;
 		} 
 
@@ -366,6 +370,11 @@ public class OFMStorageManager extends OFModule implements IStorageService, Stor
 
 		if(isInserted == null) { 
 			Logger.stderr("update successful.");
+			Map<String, Integer> matchKey = new HashMap<String, Integer>();
+			for(String op: dbKey.keySet()) {
+				matchKey.put(op, StorageEvent.STORAGE_OPERATION_UPDATE);
+			}
+			setStorageEvent(dbName, collection, matchKey);
 			return true;
 		}
 		Logger.stderr("error occur during updating procedure.");
@@ -408,6 +417,11 @@ public class OFMStorageManager extends OFModule implements IStorageService, Stor
 		Object isInserted = result.getField("err");
 		if(isInserted == null) { 
 			Logger.stderr("upserted successful.");
+			Map<String, Integer> matchKey = new HashMap<String, Integer>();
+			for(String op: key.keySet()) {
+				matchKey.put(op, StorageEvent.STORAGE_OPERATION_UPDATE);
+			}
+			setStorageEvent(dbName, collection, matchKey);
 			return true;
 		} 
 
@@ -463,6 +477,11 @@ public class OFMStorageManager extends OFModule implements IStorageService, Stor
 
 		if(isInserted == null) { 
 			Logger.stderr("upserted successful.");
+			Map<String, Integer> matchKey = new HashMap<String, Integer>();
+			for(String op: dbKey.keySet()) {
+				matchKey.put(op, StorageEvent.STORAGE_OPERATION_UPDATE);
+			}
+			setStorageEvent(dbName, collection, matchKey);
 			return true;
 		}
 		Logger.stderr("error occur during upserting procedure.");
@@ -496,6 +515,10 @@ public class OFMStorageManager extends OFModule implements IStorageService, Stor
 			// following regex removes every occurrence of the JSON key-value pair of "_id" : { $oid.... } , 
 			r = r.replaceAll("\"_id\"\\s*:\\s*\\{[:$\"\\s0-9a-zA-Z]+\\}\\s*,\\s*", "");
 			resultList.add(r);
+			
+			Map<String, Integer> matchKey = new HashMap<String, Integer>();
+			matchKey.put("all", StorageEvent.STORAGE_OPERATION_RETRIEVE_ALL);
+			setStorageEvent(dbName, collection, matchKey);
 		}
 
 		return resultList;
@@ -518,12 +541,13 @@ public class OFMStorageManager extends OFModule implements IStorageService, Stor
 	public List<String> retrieveAsString(String dbName, String collection, String query) throws StorageException {
 
 		BasicDBObject dbObject = null;
+		Map<String, Object> o = null;
 		this.db = this.mongoClient.getDB(dbName);
 		String s = StorageConverter.replaceDotToDotUtf(query);
 		//System.out.println(s); //for debugging use;
 		TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>(){}; 
 		try {
-			Map<String,Object> o = om.readValue(s, typeRef); 
+			o = om.readValue(s, typeRef); 
 			dbObject = new BasicDBObject(o);
 
 		} catch (IOException e) {
@@ -540,6 +564,12 @@ public class OFMStorageManager extends OFModule implements IStorageService, Stor
 			// following regex removes every occurrence of the JSON key-value pair of "_id" : { $oid.... } , 
 			r = r.replaceAll("\"_id\"\\s*:\\s*\\{[:$\"\\s0-9a-zA-Z]+\\}\\s*,\\s*", "");
 			resultList.add(r);
+			
+			Map<String, Integer> matchKey = new HashMap<String, Integer>();
+			for(String op: o.keySet()) {
+				matchKey.put(op, StorageEvent.STORAGE_OPERATION_RETRIEVE);
+			}
+			setStorageEvent(dbName, collection, matchKey);
 		}
 		return resultList;
 	}
@@ -572,6 +602,12 @@ public class OFMStorageManager extends OFModule implements IStorageService, Stor
 			result = cursor.next();
 			Map<String, Object> m = StorageConverter.DBObjectToMap((BasicDBObject) result);
 			resultList.add(m);
+			
+			Map<String, Integer> matchKey = new HashMap<String, Integer>();
+			for(String op: query.keySet()) {
+				matchKey.put(op, StorageEvent.STORAGE_OPERATION_RETRIEVE);
+			}
+			setStorageEvent(dbName, collection, matchKey);
 		}
 
 		return resultList;
@@ -601,6 +637,10 @@ public class OFMStorageManager extends OFModule implements IStorageService, Stor
 			result = cursor.next();
 			Map<String, Object> m = StorageConverter.DBObjectToMap((BasicDBObject) result);
 			resultList.add(m);
+			
+			Map<String, Integer> matchKey = new HashMap<String, Integer>();
+			matchKey.put("all", StorageEvent.STORAGE_OPERATION_RETRIEVE_ALL);
+			setStorageEvent(dbName, collection, matchKey);
 		}
 
 		return resultList;
@@ -739,6 +779,7 @@ public class OFMStorageManager extends OFModule implements IStorageService, Stor
 			StorageEvent event = storageListeners.get(s);
 			// decides whether this module needs notifying or not.
 			if(event.equals(storageEvent)) {
+				this.storageEvent.setValue(event.getValue());
 				s.storageUpdate(getStorageEvent());
 			}
 		}
