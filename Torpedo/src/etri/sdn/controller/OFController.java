@@ -348,10 +348,12 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 
 	/** 
 	 * This callback is called when a new connection to a new switch is made.
+	 * Internally, the initial HELLO handshaking to the switch is made.
 	 */
 	@Override
 	public final boolean handleConnectedEvent(Connection conn) {
 		VersionAdaptor va = getVersionAdaptor(this.max_version);
+		// This will handle the initial HELLO handshaking to the switch.
 		return va.handleConnectedEvent(conn);
 	}
 	
