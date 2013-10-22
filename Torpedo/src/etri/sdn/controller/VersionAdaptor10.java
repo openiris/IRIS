@@ -4,22 +4,37 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.openflow.protocol.OFMessage;
-import etri.sdn.controller.protocol.io.Connection;
-import etri.sdn.controller.protocol.io.IOFSwitch;
-import etri.sdn.controller.util.Logger;
-
-import org.openflow.protocol.ver1_0.types.*;
-import org.openflow.protocol.ver1_0.messages.*;
+import org.openflow.protocol.ver1_0.messages.OFEchoReply;
+import org.openflow.protocol.ver1_0.messages.OFError;
+import org.openflow.protocol.ver1_0.messages.OFFeaturesReply;
+import org.openflow.protocol.ver1_0.messages.OFFeaturesRequest;
+import org.openflow.protocol.ver1_0.messages.OFHello;
+import org.openflow.protocol.ver1_0.messages.OFMatch;
+import org.openflow.protocol.ver1_0.messages.OFPortDesc;
+import org.openflow.protocol.ver1_0.messages.OFPortStatus;
+import org.openflow.protocol.ver1_0.messages.OFStatisticsDescReply;
+import org.openflow.protocol.ver1_0.messages.OFStatisticsReply;
+import org.openflow.protocol.ver1_0.messages.OFStatisticsRequest;
+import org.openflow.protocol.ver1_0.types.OFFlowWildcards;
+import org.openflow.protocol.ver1_0.types.OFMessageType;
+import org.openflow.protocol.ver1_0.types.OFPortConfig;
+import org.openflow.protocol.ver1_0.types.OFPortNo;
+import org.openflow.protocol.ver1_0.types.OFPortReason;
+import org.openflow.protocol.ver1_0.types.OFPortState;
+import org.openflow.protocol.ver1_0.types.OFStatisticsType;
 import org.openflow.util.HexString;
 import org.openflow.util.U16;
 import org.openflow.util.U8;
+
+import etri.sdn.controller.protocol.io.Connection;
+import etri.sdn.controller.protocol.io.IOFSwitch;
+import etri.sdn.controller.util.Logger;
 
 public class VersionAdaptor10 extends VersionAdaptor {
 	
