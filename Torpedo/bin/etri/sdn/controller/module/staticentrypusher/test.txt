@@ -1,0 +1,2 @@
+>curl -d '{\"switch\":\"00:00:00:00:00:00:00:01\",\"name\":\"flow-mod-1\",\"priority\":\"32768\",\"ingress-port\":\"1\",\"active\":\"true\",\"actions\":\"output=2\"}' http://localhost:8080/wm/staticflowentrypusher/json
+>>curl -X DELETE http://localhost:8080/wm/staticflowentrypusher/json -d '{\"name\":\"flow-mod-1\"}'
