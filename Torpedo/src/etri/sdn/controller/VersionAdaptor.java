@@ -1,134 +1,31 @@
 package etri.sdn.controller;
 
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.openflow.protocol.OFMessage;
 import org.openflow.protocol.factory.OFMessageFactory;
-import org.openflow.util.U16;
-import org.openflow.util.U32;
-import org.openflow.util.U8;
 
 
 import etri.sdn.controller.protocol.io.Connection;
-
-class OFHeader {
-    public static int MINIMUM_LENGTH = 8;
-
-    byte  version;
-	byte  type;
-	short  length;
-	int  xid;
-
-    public OFHeader() {
-    }
-
-	public byte getVersion() {
-		return this.version;
-	}
-			
-	public short getVersionU() {
-		return U8.f(this.version);
-	}
-	
-	public byte getType() {
-		return this.type;
-	}
-			
-	public short getLength() {
-		return this.length;
-	}
-			
-	public int getLengthU() {
-		return U16.f(this.length);
-	}
-	
-	public int getXid() {
-		return this.xid;
-	}
-			
-	public long getXidU() {
-		return U32.f(this.xid);
-	}	
-
-    public void readFrom(ByteBuffer data) {
-    	
-        this.version = data.get();
-		this.type = data.get();
-		this.length = data.getShort();
-		this.xid = data.getInt();
-    }
-
-    public String toString() {
-        return "OFHeader-"+":version=" + U8.f(version) + 
-		":type=" + U8.f(type) + 
-		":length=" + U16.f(length) + 
-		":xid=" + U32.f(xid);
-    }
-}
-
-class VersionedMessageFactory implements OFMessageFactory {
-
-	@Override
-	public List<OFMessage> parseMessages(ByteBuffer data) {
-		return parseMessages(data, 0);
-	}
-
-	@Override
-	public List<OFMessage> parseMessages(ByteBuffer data, int limit) {
-		List<OFMessage> results = new ArrayList<OFMessage>();
-        
-        OFHeader demux = new OFHeader();
-
-        while (limit == 0 || results.size() <= limit) {
-            if (data.remaining() < OFHeader.MINIMUM_LENGTH)
-                break;
-
-            data.mark();
-            demux.readFrom(data);
-            short subtype = 0;
-            if ( data.remaining() >= 2 /*sizeof short*/) 
-            	subtype = data.getShort();
-            data.reset();
-            
-            if (demux.getLengthU() > data.remaining())
-                break;
-            
-            switch ( demux.getVersion() ) {
-            //
-            // FOR VERSION 1.0
-            //
-            case VersionAdaptor10.VERSION:		// 1.0
-            	org.openflow.protocol.ver1_0.types.OFMessageType t = 
-            		org.openflow.protocol.ver1_0.types.OFMessageType.valueOf(demux.getType());
-            	
-            	switch (t) {
-            	case STATISTICS_REQUEST:
-            	case STATISTICS_REPLY:
-            		// read subtype information first.
-            		org.openflow.protocol.ver1_0.messages.OFStatistics sn = 
-            			org.openflow.protocol.ver1_0.types.OFStatisticsType.valueOf(subtype, t).newInstance(t);
-            		sn.readFrom(data);
-            		results.add(sn);
-            		break;
-            	default:
-            		org.openflow.protocol.ver1_0.messages.OFMessage nn = 
-                		org.openflow.protocol.ver1_0.types.OFMessageType.valueOf(demux.getType()).newInstance();
-                	nn.readFrom(data);
-                	results.add(nn);
-            	}	
-            	break;
-            }
-        }
-        return results;
-	}
-	
-}
+import etri.sdn.controller.protocol.io.IOFSwitch;
 
 public abstract class VersionAdaptor {
 
 //	private static VersionedMessageFactory message_factory = new VersionedMessageFactory();
+	
+	/*
+	 * Per-switch data structures
+	 */
+	private Map<IOFSwitch, SwitchInformation> switchInformations = 
+			new ConcurrentHashMap<IOFSwitch, SwitchInformation>();
+	private Map<IOFSwitch, Map<Integer, PortInformation>> portInformations = 
+			new ConcurrentHashMap<IOFSwitch, Map<Integer, PortInformation>>();
+	private Map<IOFSwitch, Map<String, PortInformation>> portInformationsByName = 
+			new ConcurrentHashMap<IOFSwitch, Map<String, PortInformation>>();
 	
 	private OFController controller;
 	
@@ -144,6 +41,81 @@ public abstract class VersionAdaptor {
 	public static final OFMessageFactory getMessageFactory() {
 		return new VersionedMessageFactory();
 	}
+	
+	public SwitchInformation getSwitchInformation(IOFSwitch sw) {
+		SwitchInformation si = this.switchInformations.get(sw);
+		if ( si == null ) {
+			si = new SwitchInformation();
+			this.switchInformations.put(sw, si);
+		}
+		return si;
+	}
+	
+	/**
+	 * Get port information by the port number. 
+	 * If none existent, a new PortInformation object is created and saved automatically.
+	 * @param sw
+	 * @param port
+	 * @return
+	 */
+	public PortInformation getPortInformation(IOFSwitch sw, int port) {
+		Map<Integer, PortInformation> inner = portInformations.get(sw);
+		if ( inner == null ) {
+			inner = new ConcurrentHashMap<Integer, PortInformation>();
+			portInformations.put(sw, inner);
+		}
+		PortInformation pi = inner.get(port);
+		if ( pi == null ) {
+			pi = new PortInformation();
+			pi.setPort(port);
+			inner.put(port, pi);
+		}
+		return pi;
+	}
+	
+	public Collection<PortInformation> getPortInformations(IOFSwitch sw) {
+		Map<Integer, PortInformation> inner = portInformations.get(sw);
+		if ( inner != null ) {
+			return inner.values();
+		}
+		return Collections.emptySet();
+	}
+	
+	public void removePortInformation(IOFSwitch sw, PortInformation pi) {
+		Map<Integer, PortInformation> inner = portInformations.get(sw);
+		if ( inner != null ) {
+			inner.remove(pi.getPort());
+			Map<String, PortInformation> inner2 = portInformationsByName.get(sw);
+			if ( inner2 != null ) {
+				inner2.remove( pi.getNameString() );
+			}
+		}
+	}
+	
+	/**
+	 * This method should be called after port number is correctly set up.
+	 * @param sw
+	 * @param name
+	 * @return	Null can be returned if the item that you looking for is non-existent
+	 */
+	public PortInformation getPortInformationByName(IOFSwitch sw, String name) {
+		Map<String, PortInformation> inner = portInformationsByName.get(sw);
+		if ( inner == null ) {
+			inner = new ConcurrentHashMap<String, PortInformation>();
+			portInformationsByName.put(sw, inner);
+		}
+		return inner.get(name);
+	}
+	
+	public void setPortInformationByName(IOFSwitch sw, String name, PortInformation pi) {
+		Map<String, PortInformation> inner = portInformationsByName.get(sw);
+		if ( inner == null ) {
+			inner = new ConcurrentHashMap<String, PortInformation>();
+			portInformationsByName.put(sw, inner);
+		}
+		inner.put(name, pi);
+	}
+
 	
 	public abstract boolean handleConnectedEvent(Connection conn);
 	

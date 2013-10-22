@@ -44,16 +44,10 @@ public class VersionAdaptor10 extends VersionAdaptor {
 	/*
 	 * Per-switch data structures
 	 */
-	private Map<IOFSwitch, Long> datapathIdMap = new ConcurrentHashMap<IOFSwitch, Long>();
-	private Map<IOFSwitch, String> stringIdMap = new ConcurrentHashMap<IOFSwitch, String>();
-	private Map<IOFSwitch, Integer> capabilitiesMap = new ConcurrentHashMap<IOFSwitch, Integer>();
-	private Map<IOFSwitch, Integer> buffersMap = new ConcurrentHashMap<IOFSwitch, Integer>();
-	private Map<IOFSwitch, Integer> actionsMap = new ConcurrentHashMap<IOFSwitch, Integer>();
-	private Map<IOFSwitch, Byte> tablesMap = new ConcurrentHashMap<IOFSwitch, Byte>();
-	private Map<IOFSwitch, OFStatisticsDescReply> descriptionsMap = new ConcurrentHashMap<IOFSwitch, OFStatisticsDescReply>();
-	
-	private Map<IOFSwitch, Map<Short, OFPortDesc>> portsByNumber = new ConcurrentHashMap<IOFSwitch, Map<Short, OFPortDesc>>();
-	private Map<IOFSwitch, Map<String, OFPortDesc>> portsByName = new ConcurrentHashMap<IOFSwitch, Map<String, OFPortDesc>>();
+//	private Map<IOFSwitch, OFStatisticsDescReply> descriptionsMap = new ConcurrentHashMap<IOFSwitch, OFStatisticsDescReply>();
+//	
+//	private Map<IOFSwitch, Map<Short, OFPortDesc>> portsByNumber = new ConcurrentHashMap<IOFSwitch, Map<Short, OFPortDesc>>();
+//	private Map<IOFSwitch, Map<String, OFPortDesc>> portsByName = new ConcurrentHashMap<IOFSwitch, Map<String, OFPortDesc>>();
 	
 	/**
 	 * This field is used to exchange information with switch.
@@ -68,123 +62,121 @@ public class VersionAdaptor10 extends VersionAdaptor {
 		return VERSION;
 	}
 	
-	public void setId(IOFSwitch sw, long id) {
-		this.datapathIdMap.put(sw, id);
-		this.stringIdMap.put(sw, HexString.toHexString(id));
-	}
-	
-	public long getId(IOFSwitch sw) {
-		Long r = this.datapathIdMap.get(sw);
-		if ( r == null ) {
-			return -1;
-		}
-		return r;
-	}
-	
-	public String getStringId(IOFSwitch sw) {
-		return this.stringIdMap.get(sw);
-	}
-	
-	public void setCapabilities(IOFSwitch sw, int capabilities) {
-		this.capabilitiesMap.put(sw, capabilities);
-	}
-	
-	public int getCapabilities(IOFSwitch sw) {
-		Integer r = this.capabilitiesMap.get(sw);
-		if ( r == null ) {
-			return -1;
-		}
-		return r;
-	}
-
-	public void setBuffers(IOFSwitch sw, int buffers) {
-		this.buffersMap.put(sw, buffers);
-	}
-	
-	public int getBuffers(IOFSwitch sw) {
-		Integer r = this.buffersMap.get(sw);
-		if ( r == null ) {
-			return -1;
-		}
-		return r;
-	}
-	
-	public void setActions(IOFSwitch sw, int actions) {
-		this.actionsMap.put(sw, actions);
-	}
-	
-	public int getActions(IOFSwitch sw) {
-		Integer r = this.actionsMap.get(sw);
-		if ( r == null ) {
-			return -1;
-		}
-		return r;
-	}
-	
-	public void setTables(IOFSwitch sw, byte tables) {
-		this.tablesMap.put(sw, tables);
-	}
-	
-	public byte getTables(IOFSwitch sw) {
-		Byte r = this.tablesMap.get(sw);
-		if ( r == null ) {
-			return -1;
-		}
-		return r;
-	}
-	
 	public void setDescription(IOFSwitch sw, OFStatisticsDescReply r) {
-		this.descriptionsMap.put(sw, r);
+//		this.descriptionsMap.put(sw, r);
+		this.getSwitchInformation(sw)
+		.setDatapathDescription(r.getDatapathDescription())
+		.setHardwareDescription(r.getHardwareDescription())
+		.setSoftwareDescription(r.getSoftwareDescription())
+		.setSerialNumber(r.getSerialNumber())
+		.setDatapathDescription(r.getDatapathDescription());
 	}
 	
 	public OFStatisticsDescReply getDescription(IOFSwitch sw) {
-		return this.descriptionsMap.get(sw);
+//		return this.descriptionsMap.get(sw);
+		SwitchInformation si = this.getSwitchInformation(sw);
+		if ( si == null || si.getManufacturerDescription() == null ) {
+			return null;
+		}
+		
+		OFStatisticsDescReply ret = new OFStatisticsDescReply();
+		ret.setManufacturerDescription(si.getManufacturerDescription());
+		ret.setHardwareDescription(si.getHardwareDescription());
+		ret.setSoftwareDescription(si.getSoftwareDescription());
+		ret.setSerialNumber(si.getSerialNumber());
+		ret.setDatapathDescription(si.getDatapathDescription());
+		
+		return ret;
 	}
 	
 	public Collection<OFPortDesc> getPorts(IOFSwitch sw) {
-		Map<Short, OFPortDesc> sm = portsByNumber.get(sw);
-		if ( sm == null ) {
-			return Collections.emptySet();
+//		Map<Short, OFPortDesc> sm = portsByNumber.get(sw);
+//		if ( sm == null ) {
+//			return Collections.emptySet();
+//		}
+//		return sm.values();
+		List<OFPortDesc> ret = new LinkedList<OFPortDesc>();
+		for ( PortInformation pi : this.getPortInformations(sw) ) {
+			OFPortDesc pd = new OFPortDesc()
+			.setPort((short)pi.getPort())
+			.setHwAddr(pi.getHwAddr())
+			.setName(pi.getName())
+			.setConfig(pi.getConfig())
+			.setState(pi.getState())
+			.setCurrentFeatures(pi.getCurrentFeatures())
+			.setAdvertisedFeatures(pi.getAdvertisedFeatures())
+			.setSupportedFeatures(pi.getSupportedFeatures())
+			.setPeerFeatures(pi.getPeerFeatures());
+			ret.add( pd );
 		}
-		return sm.values();
+		return ret;
 	}
 	
 	public OFPortDesc getPort(IOFSwitch sw, short portNum) {
-		Map<Short, OFPortDesc> sm = portsByNumber.get(sw);
-		if ( sm == null ) {
-			return null;
+//		Map<Short, OFPortDesc> sm = portsByNumber.get(sw);
+//		if ( sm == null ) {
+//			return null;
+//		}
+//		return sm.get(portNum);
+		PortInformation pi = this.getPortInformation(sw,  (int)portNum );
+		if ( pi != null ) {
+			OFPortDesc pd = new OFPortDesc()
+			.setPort(portNum)
+			.setHwAddr(pi.getHwAddr())
+			.setName(pi.getName())
+			.setConfig(pi.getConfig())
+			.setState(pi.getState())
+			.setCurrentFeatures(pi.getCurrentFeatures())
+			.setAdvertisedFeatures(pi.getAdvertisedFeatures())
+			.setSupportedFeatures(pi.getSupportedFeatures())
+			.setPeerFeatures(pi.getPeerFeatures());
+			return pd;
 		}
-		return sm.get(portNum);
+		return null;
 	}
 	
 	public void setPort(IOFSwitch sw, OFPortDesc portDesc) {
-		Map<Short, OFPortDesc> sm = portsByNumber.get(sw);
-		if ( sm == null ) {
-			sm = new ConcurrentHashMap<Short, OFPortDesc>();
-			portsByNumber.put(sw, sm);
-		}
-		Map<String, OFPortDesc> rm = portsByName.get(sw);
-		if ( rm == null ) {
-			rm = new ConcurrentHashMap<String, OFPortDesc>();
-			portsByName.put(sw, rm);
-		}
-		
-		sm.put(portDesc.getPort(), portDesc);
-		rm.put(new String(portDesc.getName()), portDesc);
+//		Map<Short, OFPortDesc> sm = portsByNumber.get(sw);
+//		if ( sm == null ) {
+//			sm = new ConcurrentHashMap<Short, OFPortDesc>();
+//			portsByNumber.put(sw, sm);
+//		}
+//		Map<String, OFPortDesc> rm = portsByName.get(sw);
+//		if ( rm == null ) {
+//			rm = new ConcurrentHashMap<String, OFPortDesc>();
+//			portsByName.put(sw, rm);
+//		}
+//		
+//		sm.put(portDesc.getPort(), portDesc);
+//		rm.put(new String(portDesc.getName()), portDesc);
+		PortInformation pi = this.getPortInformation(sw, (int) portDesc.getPort());
+		pi.setHwAddr(portDesc.getHwAddr())
+		.setName(portDesc.getName())
+		.setConfig(portDesc.getConfig())
+		.setState(portDesc.getState())
+		.setCurrentFeatures(portDesc.getCurrentFeatures())
+		.setAdvertisedFeatures(portDesc.getAdvertisedFeatures())
+		.setSupportedFeatures(portDesc.getSupportedFeatures())
+		.setPeerFeatures(portDesc.getPeerFeatures());
+		this.setPortInformationByName(sw, new String(portDesc.getName()), pi);
 	}
 	
 	public void deletePort(IOFSwitch sw, short portNumber) {
-		Map<Short, OFPortDesc> sm = portsByNumber.get(sw);
-		if ( sm == null ) {
-			return;
+//		Map<Short, OFPortDesc> sm = portsByNumber.get(sw);
+//		if ( sm == null ) {
+//			return;
+//		}
+//		Map<String, OFPortDesc> rm = portsByName.get(sw);
+//		if ( rm == null ) {
+//			return;
+//		}
+//		
+//		rm.remove(new String(sm.get(portNumber).getName()));
+//		sm.remove(portNumber);
+		PortInformation pi = this.getPortInformation(sw, (int)portNumber);
+		if ( pi != null ) {
+			this.removePortInformation(sw, pi);
 		}
-		Map<String, OFPortDesc> rm = portsByName.get(sw);
-		if ( rm == null ) {
-			return;
-		}
-		
-		rm.remove(new String(sm.get(portNumber).getName()));
-		sm.remove(portNumber);
 	}
 	
 	@Override
@@ -239,11 +231,13 @@ public class VersionAdaptor10 extends VersionAdaptor {
 			synchronized ( portLock ) {
 				OFFeaturesReply fr = (OFFeaturesReply) m;
 				sw.setId(fr.getDatapathId());
-				this.setId(sw, fr.getDatapathId());
-				this.setCapabilities(sw, fr.getCapabilities());
-				this.setBuffers(sw, fr.getNBuffers());
-				this.setActions(sw, fr.getActions());
-				this.setTables(sw, fr.getNTables());
+				
+				this.getSwitchInformation(sw)
+				.setId(fr.getDatapathId())
+				.setCapabilities(fr.getCapabilities())
+				.setBuffers(fr.getNBuffers())
+				.setActions(fr.getActions())
+				.setTables(fr.getNTables());
 				
 				// now we must add port information from the features-reply msg.
 				List<OFPortDesc> ports = fr.getPorts();
@@ -414,11 +408,22 @@ public class VersionAdaptor10 extends VersionAdaptor {
 	}
 	
 	public Collection<OFPortDesc> getEnabledPorts(IOFSwitch sw) {
-		List<OFPortDesc> result = new ArrayList<OFPortDesc>();
-		Map<Short, OFPortDesc> map = portsByNumber.get(sw);
-		if ( map == null ) return null;
+//		List<OFPortDesc> result = new ArrayList<OFPortDesc>();
+//		Map<Short, OFPortDesc> map = portsByNumber.get(sw);
+//		if ( map == null ) return null;
+//		
+//		for (OFPortDesc port : map.values()) {
+//			if (portEnabled(port)) {
+//				result.add(port);
+//			}
+//		}
+//		return result;
 		
-		for (OFPortDesc port : map.values()) {
+		List<OFPortDesc> result = new ArrayList<OFPortDesc>();
+		Collection<OFPortDesc> allPorts = this.getPorts(sw);
+		if ( allPorts == null ) return null;
+		
+		for (OFPortDesc port: allPorts) {
 			if (portEnabled(port)) {
 				result.add(port);
 			}
@@ -427,11 +432,21 @@ public class VersionAdaptor10 extends VersionAdaptor {
 	}
 	
 	public Collection<Short> getEnabledPortNumbers(IOFSwitch sw) {
+//		List<Short> result = new ArrayList<Short>();
+//		Map<Short, OFPortDesc> map = portsByNumber.get(sw);
+//		if ( map == null ) return null;
+//		
+//		for (OFPortDesc port : map.values()) {
+//			if (portEnabled(port)) {
+//				result.add(port.getPort());
+//			}
+//		}
+//		return result;
 		List<Short> result = new ArrayList<Short>();
-		Map<Short, OFPortDesc> map = portsByNumber.get(sw);
-		if ( map == null ) return null;
+		Collection<OFPortDesc> allPorts = this.getPorts(sw);
+		if ( allPorts == null ) return null;
 		
-		for (OFPortDesc port : map.values()) {
+		for (OFPortDesc port: allPorts) {
 			if (portEnabled(port)) {
 				result.add(port.getPort());
 			}
@@ -453,15 +468,20 @@ public class VersionAdaptor10 extends VersionAdaptor {
 	}
 	
 	public boolean portEnabled(IOFSwitch sw, short port) {
-		Map<Short, OFPortDesc> map = portsByNumber.get(sw);
-		if ( map == null ) {
+//		Map<Short, OFPortDesc> map = portsByNumber.get(sw);
+//		if ( map == null ) {
+//			return false;
+//		}
+//		OFPortDesc pdesc = map.get(port);
+//		if ( pdesc == null ) {
+//			return false;
+//		}
+//		return portEnabled(pdesc);
+		OFPortDesc desc = this.getPort(sw, port);
+		if ( desc == null ) {
 			return false;
 		}
-		OFPortDesc pdesc = map.get(port);
-		if ( pdesc == null ) {
-			return false;
-		}
-		return portEnabled(pdesc);
+		return portEnabled(desc);
 	}
 	
 	public OFMatch loadOFMatchFromPacket(byte[] packetData, short inputPort) {

@@ -656,6 +656,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		OFPortDesc ofpPort = version_adaptor_10.getPort(sw, port);
 
 		if (ofpPort == null) {
+			Logger.error("sw: %d,  port: %d is null", sw.getId(), port);
 			return true;
 		}
 
@@ -907,8 +908,9 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		}
 
 		// If this is a malformed LLDP, or not from us, exit
-		if (lldp.getPortId() == null || lldp.getPortId().getLength() != 3)
+		if (lldp.getPortId() == null || lldp.getPortId().getLength() != 3) {
 			return true;
+		}
 
 		long myId = ByteBuffer.wrap(controllerTLV.getValue()).getLong();
 		long otherId = 0;

@@ -368,7 +368,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 
 		// If the switch doens't support buffering set the buffer id to be none
 		// otherwise it'll be the the buffer id of the PacketIn
-		if ( version_adaptor_10.getBuffers(conn.getSwitch()) == 0 ) {
+		if ( version_adaptor_10.getSwitchInformation(conn.getSwitch()).getBuffers() == 0 ) {
 //		if (conn.getSwitch().getBuffers() == 0) {
 			// We set the PI buffer id here so we don't have to check again below
 			pi.setBufferId( 0xffffffff /* OFPacketOut.BUFFER_ID_NONE */ );
