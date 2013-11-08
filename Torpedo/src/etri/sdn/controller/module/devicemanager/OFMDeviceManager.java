@@ -22,7 +22,6 @@ import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
-import etri.sdn.controller.VersionAdaptor10;
 import etri.sdn.controller.module.flowcache.IFlowReconcileListener;
 import etri.sdn.controller.module.flowcache.OFMatchReconcile;
 import etri.sdn.controller.module.topologymanager.ITopologyListener;
@@ -32,6 +31,7 @@ import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.ARP;
 import etri.sdn.controller.protocol.packet.Ethernet;
 import etri.sdn.controller.protocol.packet.IPv4;
+import etri.sdn.controller.protocol.version.VersionAdaptor10;
 import etri.sdn.controller.util.Logger;
 
 /**

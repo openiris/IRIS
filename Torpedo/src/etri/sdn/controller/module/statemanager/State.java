@@ -31,8 +31,8 @@ import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 
 import etri.sdn.controller.OFModel;
-import etri.sdn.controller.VersionAdaptor10;
 import etri.sdn.controller.protocol.io.IOFSwitch;
+import etri.sdn.controller.protocol.version.VersionAdaptor10;
 
 /**
  * Model that represents the internal data of {@link OFMStateManager}. 

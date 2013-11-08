@@ -37,7 +37,6 @@ import org.openflow.protocol.ver1_0.types.OFPortNo;
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
 import etri.sdn.controller.OFModel;
-import etri.sdn.controller.VersionAdaptor10;
 import etri.sdn.controller.module.devicemanager.IDevice;
 import etri.sdn.controller.module.devicemanager.IDeviceService;
 import etri.sdn.controller.module.devicemanager.SwitchPort;
@@ -48,6 +47,7 @@ import etri.sdn.controller.module.topologymanager.ITopologyService;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.Ethernet;
+import etri.sdn.controller.protocol.version.VersionAdaptor10;
 import etri.sdn.controller.util.AppCookie;
 import etri.sdn.controller.util.Logger;
 

@@ -1,4 +1,4 @@
-package etri.sdn.controller;
+package etri.sdn.controller.protocol.version;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -32,6 +32,10 @@ import org.openflow.util.HexString;
 import org.openflow.util.U16;
 import org.openflow.util.U8;
 
+import etri.sdn.controller.MessageContext;
+import etri.sdn.controller.OFController;
+import etri.sdn.controller.PortInformation;
+import etri.sdn.controller.SwitchInformation;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.util.Logger;

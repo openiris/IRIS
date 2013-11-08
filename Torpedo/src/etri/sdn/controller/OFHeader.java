@@ -6,7 +6,7 @@ import org.openflow.util.U16;
 import org.openflow.util.U32;
 import org.openflow.util.U8;
 
-class OFHeader {
+public class OFHeader {
     public static int MINIMUM_LENGTH = 8;
 
     byte  version;

@@ -40,7 +40,6 @@ import org.openflow.protocol.ver1_0.types.OFMessageType;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFModule;
-import etri.sdn.controller.VersionAdaptor10;
 import etri.sdn.controller.module.devicemanager.IDevice;
 import etri.sdn.controller.module.devicemanager.IDeviceListener;
 import etri.sdn.controller.module.devicemanager.IDeviceService;
@@ -54,6 +53,7 @@ import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.Ethernet;
 import etri.sdn.controller.protocol.packet.IPacket;
+import etri.sdn.controller.protocol.version.VersionAdaptor10;
 import etri.sdn.controller.util.AppCookie;
 import etri.sdn.controller.util.Logger;
 import etri.sdn.controller.util.OFMessageDamper;

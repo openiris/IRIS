@@ -9,7 +9,7 @@ import org.openflow.protocol.OFMessage;
 import etri.sdn.controller.IOFTask;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
-import etri.sdn.controller.VersionAdaptor;
+import etri.sdn.controller.protocol.version.VersionAdaptor;
 
 /**
  * This is an interface that every controller instance should implement.

@@ -1,4 +1,4 @@
-package etri.sdn.controller;
+package etri.sdn.controller.protocol.version;
 
 
 import java.util.Collection;
@@ -10,6 +10,10 @@ import org.openflow.protocol.OFMessage;
 import org.openflow.protocol.factory.OFMessageFactory;
 
 
+import etri.sdn.controller.MessageContext;
+import etri.sdn.controller.OFController;
+import etri.sdn.controller.PortInformation;
+import etri.sdn.controller.SwitchInformation;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 
@@ -27,6 +31,12 @@ public abstract class VersionAdaptor {
 	private Map<IOFSwitch, Map<String, PortInformation>> portInformationsByName = 
 			new ConcurrentHashMap<IOFSwitch, Map<String, PortInformation>>();
 	
+	/**
+	 * This field is used to exchange information with switch.
+	 */
+	private Map<IOFSwitch, Map<Integer/*xid*/, Object>> responsesCache = 
+			new ConcurrentHashMap<IOFSwitch, Map<Integer, Object>>();
+	
 	private OFController controller;
 	
 	public VersionAdaptor(OFController controller) {
@@ -37,6 +47,30 @@ public abstract class VersionAdaptor {
 		return this.controller;
 	}
 	
+	public void setResponseCacheItem(IOFSwitch sw, int xid, Object item) {
+		Map<Integer, Object> rcache = this.responsesCache.get(sw);
+		if ( rcache == null ) {
+			rcache = new ConcurrentHashMap<Integer, Object>();
+			this.responsesCache.put(sw, rcache);
+		}
+		rcache.put( xid, item );
+	}
+	
+	public Object getResponseCacheItem(IOFSwitch sw, int xid) {
+		Map<Integer, Object> rcache = this.responsesCache.get(sw);
+		if ( rcache == null ) {
+			return null;
+		}
+		return rcache.get(xid);
+	}
+	
+	public void removeResponseCacheItem(IOFSwitch sw, int xid) {
+		Map<Integer, Object> rcache = this.responsesCache.get(sw);
+		if ( rcache == null ) {
+			return;
+		}
+		rcache.remove(xid);
+	}
 	
 	public static final OFMessageFactory getMessageFactory() {
 		return new VersionedMessageFactory();

@@ -17,7 +17,6 @@ import etri.sdn.controller.OFMFilter;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
 import etri.sdn.controller.TorpedoProperties;
-import etri.sdn.controller.VersionAdaptor10;
 import etri.sdn.controller.module.devicemanager.IDevice;
 import etri.sdn.controller.module.routing.IRoutingDecision;
 import etri.sdn.controller.module.routing.RoutingDecision;
@@ -27,6 +26,7 @@ import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.Ethernet;
 import etri.sdn.controller.protocol.packet.IPv4;
+import etri.sdn.controller.protocol.version.VersionAdaptor10;
 import etri.sdn.controller.util.Logger;
 
 /**

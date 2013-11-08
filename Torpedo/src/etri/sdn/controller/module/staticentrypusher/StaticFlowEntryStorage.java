@@ -38,7 +38,7 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 
 import etri.sdn.controller.OFModel;
-import etri.sdn.controller.VersionAdaptor10;
+import etri.sdn.controller.protocol.version.VersionAdaptor10;
 import etri.sdn.controller.util.Logger;
 
 public class StaticFlowEntryStorage extends OFModel  {
