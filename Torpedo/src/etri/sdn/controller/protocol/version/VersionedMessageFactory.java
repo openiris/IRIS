@@ -37,6 +37,7 @@ class VersionedMessageFactory implements OFMessageFactory {
                 break;
             
             switch ( demux.getVersion() ) {
+            
             //
             // FOR VERSION 1.0
             //
@@ -60,6 +61,10 @@ class VersionedMessageFactory implements OFMessageFactory {
                 	results.add(nn);
             	}	
             	break;
+            	
+            //
+            // for VERSION 1.3
+            //
             case VersionAdaptor13.VERSION:
             	org.openflow.protocol.ver1_3.types.OFMessageType t13 =
             		org.openflow.protocol.ver1_3.types.OFMessageType.valueOf(demux.getType());
@@ -80,6 +85,10 @@ class VersionedMessageFactory implements OFMessageFactory {
             	}
             	break;
             }
+            
+            //
+            // and there's no default case.
+            //
         }
         return results;
 	}
