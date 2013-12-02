@@ -2,18 +2,15 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="lib/commons-cli-1.2.jar"/>
-	<classpathentry kind="lib" path="lib/junit-4.8.1.jar"/>
-	<classpathentry kind="lib" path="lib/concurrentlinkedhashmap-lru-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/org.restlet.ext.jackson.jar"/>
 	<classpathentry kind="lib" path="lib/org.restlet.ext.simple.jar"/>
 	<classpathentry kind="lib" path="lib/org.restlet.ext.slf4j.jar"/>
 	<classpathentry kind="lib" path="lib/org.restlet.jar"/>
 	<classpathentry kind="lib" path="lib/org.codehaus.jackson.mapper.jar"/>
 	<classpathentry kind="lib" path="lib/org.codehaus.jackson.core.jar"/>
-	<classpathentry kind="lib" path="lib/joda-time-2.2.jar"/>
-	<classpathentry kind="lib" path="lib/org.simpleframework.jar"/>
 	<classpathentry kind="lib" path="lib/mongo-java-driver-2.11.2.jar"/>
 	<classpathentry kind="lib" path="lib/openflowj-iris.jar"/>
+	<classpathentry kind="lib" path="lib/concurrentlinkedhashmap-lru-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/joda-time-2.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
