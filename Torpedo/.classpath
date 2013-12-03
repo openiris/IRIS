@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="lib/openflowj-iris.jar"/>
 	<classpathentry kind="lib" path="lib/concurrentlinkedhashmap-lru-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-2.2.jar"/>
+	<classpathentry kind="lib" path="lib/org.simpleframework.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
