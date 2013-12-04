@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 
 import java.lang.reflect.Constructor;
 import org.openflow.util.Instantiable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 
 import org.openflow.protocol.ver1_3.messages.*;
@@ -22,7 +24,10 @@ public enum OFMeterBandType {
       return new OFMeterBandExperimenter();
     }});
 
-    static OFMeterBandType[] mapping;
+    // static OFMeterBandType[] mapping;
+    static Map<Short, OFMeterBandType> mapping;
+    static short start_key = 0;
+    static short end_key = 0;
 
     protected Class<? extends OFMeterBand> clazz;
     protected Constructor<? extends OFMeterBand> constructor;
@@ -43,15 +48,28 @@ public enum OFMeterBandType {
     }
 
     static public void addMapping(short i, OFMeterBandType t) {
+    	/*
         if (mapping == null)
             mapping = new OFMeterBandType[3];
         if ( i < 0 ) i = (short)(3 + i);
         OFMeterBandType.mapping[i] = t;
+        */
+        if ( mapping == null )
+        	mapping = new ConcurrentHashMap<Short, OFMeterBandType>();
+        	
+        if ( mapping.isEmpty() ) {
+        	start_key = i;
+        }
+        end_key = i;
+        mapping.put(i, t);
     }
 
     static public OFMeterBandType valueOf(short i) {
+    	/*
         if ( i < 0 ) i = (short)(3 + i);
         return OFMeterBandType.mapping[i];
+        */
+        return mapping.get(i);
     }
     
 	static public short readFrom(ByteBuffer data) {
@@ -59,11 +77,13 @@ public enum OFMeterBandType {
 	}
     
     static public OFMeterBandType first() {
-    	return OFMeterBandType.mapping[0];
+    	// return OFMeterBandType.mapping[0];
+    	return mapping.get(start_key);
     }
     
     static public OFMeterBandType last() {
-    	return OFMeterBandType.mapping[OFMeterBandType.mapping.length - 1];
+    	// return OFMeterBandType.mapping[OFMeterBandType.mapping.length - 1];
+    	return mapping.get(end_key);
     }
     
     static public void parse(List<OFMeterBand> output, ByteBuffer data, int length) {

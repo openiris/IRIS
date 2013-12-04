@@ -238,6 +238,7 @@ class Enum(Type):
     template = Template.get_template('tpl/gen_enum.tpl');
     
     rep = self.get_java_representation()
+    orep = self.get_object_type(rep)
     packagename = self.spec.get_java_packagename(path)
     importname = packagename[:packagename.rfind('.')] + '.messages.*'
     supertype = self.get_java_supertype()
@@ -251,7 +252,7 @@ class Enum(Type):
     result = template.substitute({
       'packagename':packagename, 'importname':importname,
       'typename':self.name,'supertype':supertype,'enumdefs':enumdefs,
-      'rep':rep, 'length':length, 'bytegetname':bytegetname
+      'rep':rep, 'orep':orep, 'length':length, 'bytegetname':bytegetname
     })
     return (self.name, result)
      
@@ -259,6 +260,7 @@ class Enum(Type):
     template = Template.get_template('tpl/gen_enum_rnr.tpl')
   
     rep = self.get_java_representation()             # internal representation type
+    orep = self.get_object_type( rep )
     packagename = self.spec.get_java_packagename(path)
     importname = packagename[:packagename.rfind('.')] + '.messages.*'
     supertype = self.get_java_supertype()
@@ -274,7 +276,7 @@ class Enum(Type):
     enumdefs = self.get_java_generative_rnr_lines()
     result = template.substitute({
       'packagename':packagename,'importname':importname,
-      'typename':self.name,'supertype':supertype,'enumdefs':enumdefs,'rep':rep,
+      'typename':self.name,'supertype':supertype,'enumdefs':enumdefs,'rep':rep, 'orep':orep,
       'length':length, 'ctype':req_t, 'reqv':req_v, 'repv':rep_v,
       'bytegetname':bytegetname
     })

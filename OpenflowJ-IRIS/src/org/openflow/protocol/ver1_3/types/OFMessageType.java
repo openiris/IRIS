@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 
 import java.lang.reflect.Constructor;
 import org.openflow.util.Instantiable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 
 import org.openflow.protocol.ver1_3.messages.*;
@@ -130,7 +132,10 @@ public enum OFMessageType {
       return new OFMeterMod();
     }});
 
-    static OFMessageType[] mapping;
+    // static OFMessageType[] mapping;
+    static Map<Byte, OFMessageType> mapping;
+    static byte start_key = 0;
+    static byte end_key = 0;
 
     protected Class<? extends OFMessage> clazz;
     protected Constructor<? extends OFMessage> constructor;
@@ -151,15 +156,28 @@ public enum OFMessageType {
     }
 
     static public void addMapping(byte i, OFMessageType t) {
+    	/*
         if (mapping == null)
             mapping = new OFMessageType[30];
         if ( i < 0 ) i = (byte)(30 + i);
         OFMessageType.mapping[i] = t;
+        */
+        if ( mapping == null )
+        	mapping = new ConcurrentHashMap<Byte, OFMessageType>();
+        	
+        if ( mapping.isEmpty() ) {
+        	start_key = i;
+        }
+        end_key = i;
+        mapping.put(i, t);
     }
 
     static public OFMessageType valueOf(byte i) {
+    	/*
         if ( i < 0 ) i = (byte)(30 + i);
         return OFMessageType.mapping[i];
+        */
+        return mapping.get(i);
     }
     
 	static public byte readFrom(ByteBuffer data) {
@@ -167,11 +185,13 @@ public enum OFMessageType {
 	}
     
     static public OFMessageType first() {
-    	return OFMessageType.mapping[0];
+    	// return OFMessageType.mapping[0];
+    	return mapping.get(start_key);
     }
     
     static public OFMessageType last() {
-    	return OFMessageType.mapping[OFMessageType.mapping.length - 1];
+    	// return OFMessageType.mapping[OFMessageType.mapping.length - 1];
+    	return mapping.get(end_key);
     }
     
     static public void parse(List<OFMessage> output, ByteBuffer data, int length) {

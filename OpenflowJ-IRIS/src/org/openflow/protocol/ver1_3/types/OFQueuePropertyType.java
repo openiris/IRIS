@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 
 import java.lang.reflect.Constructor;
 import org.openflow.util.Instantiable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 
 import org.openflow.protocol.ver1_3.messages.*;
@@ -22,7 +24,10 @@ public enum OFQueuePropertyType {
       return new OFQueuePropertyExperimenter();
     }});
 
-    static OFQueuePropertyType[] mapping;
+    // static OFQueuePropertyType[] mapping;
+    static Map<Short, OFQueuePropertyType> mapping;
+    static short start_key = 0;
+    static short end_key = 0;
 
     protected Class<? extends OFQueueProperty> clazz;
     protected Constructor<? extends OFQueueProperty> constructor;
@@ -43,15 +48,28 @@ public enum OFQueuePropertyType {
     }
 
     static public void addMapping(short i, OFQueuePropertyType t) {
+    	/*
         if (mapping == null)
             mapping = new OFQueuePropertyType[3];
         if ( i < 0 ) i = (short)(3 + i);
         OFQueuePropertyType.mapping[i] = t;
+        */
+        if ( mapping == null )
+        	mapping = new ConcurrentHashMap<Short, OFQueuePropertyType>();
+        	
+        if ( mapping.isEmpty() ) {
+        	start_key = i;
+        }
+        end_key = i;
+        mapping.put(i, t);
     }
 
     static public OFQueuePropertyType valueOf(short i) {
+    	/*
         if ( i < 0 ) i = (short)(3 + i);
         return OFQueuePropertyType.mapping[i];
+        */
+        return mapping.get(i);
     }
     
 	static public short readFrom(ByteBuffer data) {
@@ -59,11 +77,13 @@ public enum OFQueuePropertyType {
 	}
     
     static public OFQueuePropertyType first() {
-    	return OFQueuePropertyType.mapping[0];
+    	// return OFQueuePropertyType.mapping[0];
+    	return mapping.get(start_key);
     }
     
     static public OFQueuePropertyType last() {
-    	return OFQueuePropertyType.mapping[OFQueuePropertyType.mapping.length - 1];
+    	// return OFQueuePropertyType.mapping[OFQueuePropertyType.mapping.length - 1];
+    	return mapping.get(end_key);
     }
     
     static public void parse(List<OFQueueProperty> output, ByteBuffer data, int length) {

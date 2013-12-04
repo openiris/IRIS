@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 
 import java.lang.reflect.Constructor;
 import org.openflow.util.Instantiable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 
 import org.openflow.protocol.ver1_3.messages.*;
@@ -14,7 +16,10 @@ public enum OFHelloElemType {
       return new OFHelloElemVersionbitmap();
     }});
 
-    static OFHelloElemType[] mapping;
+    // static OFHelloElemType[] mapping;
+    static Map<Short, OFHelloElemType> mapping;
+    static short start_key = 0;
+    static short end_key = 0;
 
     protected Class<? extends OFHelloElem> clazz;
     protected Constructor<? extends OFHelloElem> constructor;
@@ -35,15 +40,28 @@ public enum OFHelloElemType {
     }
 
     static public void addMapping(short i, OFHelloElemType t) {
+    	/*
         if (mapping == null)
             mapping = new OFHelloElemType[1];
         if ( i < 0 ) i = (short)(1 + i);
         OFHelloElemType.mapping[i] = t;
+        */
+        if ( mapping == null )
+        	mapping = new ConcurrentHashMap<Short, OFHelloElemType>();
+        	
+        if ( mapping.isEmpty() ) {
+        	start_key = i;
+        }
+        end_key = i;
+        mapping.put(i, t);
     }
 
     static public OFHelloElemType valueOf(short i) {
+    	/*
         if ( i < 0 ) i = (short)(1 + i);
         return OFHelloElemType.mapping[i];
+        */
+        return mapping.get(i);
     }
     
 	static public short readFrom(ByteBuffer data) {
@@ -51,11 +69,13 @@ public enum OFHelloElemType {
 	}
     
     static public OFHelloElemType first() {
-    	return OFHelloElemType.mapping[0];
+    	// return OFHelloElemType.mapping[0];
+    	return mapping.get(start_key);
     }
     
     static public OFHelloElemType last() {
-    	return OFHelloElemType.mapping[OFHelloElemType.mapping.length - 1];
+    	// return OFHelloElemType.mapping[OFHelloElemType.mapping.length - 1];
+    	return mapping.get(end_key);
     }
     
     static public void parse(List<OFHelloElem> output, ByteBuffer data, int length) {

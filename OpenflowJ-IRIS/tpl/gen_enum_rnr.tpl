@@ -4,14 +4,20 @@ import java.nio.ByteBuffer;
 
 import java.lang.reflect.Constructor;
 import org.openflow.util.Instantiable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import $importname;
 
 public enum $typename {
     $enumdefs;
 
+	/*
     static $typename[] requestMapping;
     static $typename[] replyMapping;
+    */
+    static Map<$orep, $typename> requestMapping;
+    static Map<$orep, $typename> replyMapping;
 
     protected Class<? extends $supertype> requestClass;
     protected Class<? extends $supertype> replyClass;
@@ -48,32 +54,49 @@ public enum $typename {
     static public void addMapping($rep i, $ctype t, $typename st) {
         if ( i < 0 ) i = ($rep)($length + i);
         if (t == $ctype.$reqv) {
+        	/*
             if (requestMapping == null)
                 requestMapping = new $typename[$length];
             $typename.requestMapping[i] = st;
+            */
+            if ( requestMapping == null ) 
+            	requestMapping = new ConcurrentHashMap<$orep, $typename>();
+            requestMapping.put( i, st );
         } else if (t == $ctype.$repv){
+        	/*
             if (replyMapping == null)
                 replyMapping = new $typename[$length];
             $typename.replyMapping[i] = st;
+            */
+            if ( replyMapping == null )
+            	replyMapping = new ConcurrentHashMap<$orep, $typename>();
+            replyMapping.put( i, st );
         } else {
             throw new RuntimeException(t.toString() + " is an invalid $ctype");
         }
     }
     
     static public void addReplyMapping($rep i, $typename t) {
+    	/*
         if (replyMapping == null)
             replyMapping = new $typename[$length];
         if ( i < 0 ) i = ($rep)($length + i);
         $typename.replyMapping[i] = t;
+        */
+        if ( replyMapping == null )
+            replyMapping = new ConcurrentHashMap<$orep, $typename>();
+        replyMapping.put(i, t);
     }
 
     static public $typename valueOf($rep i, $ctype t) {
         if ( i < 0 ) i = ($rep)($length + i);
         if ( t == ${ctype}.$reqv ) {
-          return requestMapping[i];
+          // return requestMapping[i];
+          return requestMapping.get( i );
         }
         else if ( t == ${ctype}.$repv ) {
-          return replyMapping[i];
+          // return replyMapping[i];
+          return replyMapping.get( i );
         }
         else {
           throw new RuntimeException(t.toString() + " is an invalid ${ctype}");

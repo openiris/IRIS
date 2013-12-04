@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 
 import java.lang.reflect.Constructor;
 import org.openflow.util.Instantiable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 
 import org.openflow.protocol.ver1_3.messages.*;
@@ -38,7 +40,10 @@ public enum OFInstructionType {
       return new OFInstructionExperimenter();
     }});
 
-    static OFInstructionType[] mapping;
+    // static OFInstructionType[] mapping;
+    static Map<Short, OFInstructionType> mapping;
+    static short start_key = 0;
+    static short end_key = 0;
 
     protected Class<? extends OFInstruction> clazz;
     protected Constructor<? extends OFInstruction> constructor;
@@ -59,15 +64,28 @@ public enum OFInstructionType {
     }
 
     static public void addMapping(short i, OFInstructionType t) {
+    	/*
         if (mapping == null)
             mapping = new OFInstructionType[7];
         if ( i < 0 ) i = (short)(7 + i);
         OFInstructionType.mapping[i] = t;
+        */
+        if ( mapping == null )
+        	mapping = new ConcurrentHashMap<Short, OFInstructionType>();
+        	
+        if ( mapping.isEmpty() ) {
+        	start_key = i;
+        }
+        end_key = i;
+        mapping.put(i, t);
     }
 
     static public OFInstructionType valueOf(short i) {
+    	/*
         if ( i < 0 ) i = (short)(7 + i);
         return OFInstructionType.mapping[i];
+        */
+        return mapping.get(i);
     }
     
 	static public short readFrom(ByteBuffer data) {
@@ -75,11 +93,13 @@ public enum OFInstructionType {
 	}
     
     static public OFInstructionType first() {
-    	return OFInstructionType.mapping[0];
+    	// return OFInstructionType.mapping[0];
+    	return mapping.get(start_key);
     }
     
     static public OFInstructionType last() {
-    	return OFInstructionType.mapping[OFInstructionType.mapping.length - 1];
+    	// return OFInstructionType.mapping[OFInstructionType.mapping.length - 1];
+    	return mapping.get(end_key);
     }
     
     static public void parse(List<OFInstruction> output, ByteBuffer data, int length) {

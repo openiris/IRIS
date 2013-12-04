@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 
 import java.lang.reflect.Constructor;
 import org.openflow.util.Instantiable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 
 import org.openflow.protocol.ver1_3.messages.*;
@@ -18,7 +20,10 @@ public enum OFMatchType {
       return new OFMatchOxm();
     }});
 
-    static OFMatchType[] mapping;
+    // static OFMatchType[] mapping;
+    static Map<Short, OFMatchType> mapping;
+    static short start_key = 0;
+    static short end_key = 0;
 
     protected Class<? extends OFMatch> clazz;
     protected Constructor<? extends OFMatch> constructor;
@@ -39,15 +44,28 @@ public enum OFMatchType {
     }
 
     static public void addMapping(short i, OFMatchType t) {
+    	/*
         if (mapping == null)
             mapping = new OFMatchType[2];
         if ( i < 0 ) i = (short)(2 + i);
         OFMatchType.mapping[i] = t;
+        */
+        if ( mapping == null )
+        	mapping = new ConcurrentHashMap<Short, OFMatchType>();
+        	
+        if ( mapping.isEmpty() ) {
+        	start_key = i;
+        }
+        end_key = i;
+        mapping.put(i, t);
     }
 
     static public OFMatchType valueOf(short i) {
+    	/*
         if ( i < 0 ) i = (short)(2 + i);
         return OFMatchType.mapping[i];
+        */
+        return mapping.get(i);
     }
     
 	static public short readFrom(ByteBuffer data) {
@@ -55,11 +73,13 @@ public enum OFMatchType {
 	}
     
     static public OFMatchType first() {
-    	return OFMatchType.mapping[0];
+    	// return OFMatchType.mapping[0];
+    	return mapping.get(start_key);
     }
     
     static public OFMatchType last() {
-    	return OFMatchType.mapping[OFMatchType.mapping.length - 1];
+    	// return OFMatchType.mapping[OFMatchType.mapping.length - 1];
+    	return mapping.get(end_key);
     }
     
     static public void parse(List<OFMatch> output, ByteBuffer data, int length) {

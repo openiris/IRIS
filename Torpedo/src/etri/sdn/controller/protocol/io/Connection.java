@@ -10,8 +10,6 @@ import org.openflow.io.OFMessageAsyncStream;
 import org.openflow.protocol.OFMessage;
 //import org.openflow.protocol.factory.BasicFactory;
 
-import etri.sdn.controller.protocol.version.VersionAdaptor;
-
 public final class Connection {
 	public enum STATUS { CONNECTED, RUNNING, CLOSED };
 
@@ -31,7 +29,7 @@ public final class Connection {
 //		this.factory = new BasicFactory();
 		this.client_status = STATUS.CONNECTED;
 		try {
-			this.stream = new OFMessageAsyncStream( client, VersionAdaptor.getMessageFactory() );
+			this.stream = new OFMessageAsyncStream( client /*, VersionAdaptor.getMessageFactory() */ );
 		} catch (IOException e) {
 			this.stream = null;
 		}

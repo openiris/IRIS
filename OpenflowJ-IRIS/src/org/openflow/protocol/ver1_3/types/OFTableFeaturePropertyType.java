@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 
 import java.lang.reflect.Constructor;
 import org.openflow.util.Instantiable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 
 import org.openflow.protocol.ver1_3.messages.*;
@@ -74,7 +76,10 @@ public enum OFTableFeaturePropertyType {
       return new OFTableFeaturePropertyExperimenterMiss();
     }});
 
-    static OFTableFeaturePropertyType[] mapping;
+    // static OFTableFeaturePropertyType[] mapping;
+    static Map<Short, OFTableFeaturePropertyType> mapping;
+    static short start_key = 0;
+    static short end_key = 0;
 
     protected Class<? extends OFTableFeatureProperty> clazz;
     protected Constructor<? extends OFTableFeatureProperty> constructor;
@@ -95,15 +100,28 @@ public enum OFTableFeaturePropertyType {
     }
 
     static public void addMapping(short i, OFTableFeaturePropertyType t) {
+    	/*
         if (mapping == null)
             mapping = new OFTableFeaturePropertyType[16];
         if ( i < 0 ) i = (short)(16 + i);
         OFTableFeaturePropertyType.mapping[i] = t;
+        */
+        if ( mapping == null )
+        	mapping = new ConcurrentHashMap<Short, OFTableFeaturePropertyType>();
+        	
+        if ( mapping.isEmpty() ) {
+        	start_key = i;
+        }
+        end_key = i;
+        mapping.put(i, t);
     }
 
     static public OFTableFeaturePropertyType valueOf(short i) {
+    	/*
         if ( i < 0 ) i = (short)(16 + i);
         return OFTableFeaturePropertyType.mapping[i];
+        */
+        return mapping.get(i);
     }
     
 	static public short readFrom(ByteBuffer data) {
@@ -111,11 +129,13 @@ public enum OFTableFeaturePropertyType {
 	}
     
     static public OFTableFeaturePropertyType first() {
-    	return OFTableFeaturePropertyType.mapping[0];
+    	// return OFTableFeaturePropertyType.mapping[0];
+    	return mapping.get(start_key);
     }
     
     static public OFTableFeaturePropertyType last() {
-    	return OFTableFeaturePropertyType.mapping[OFTableFeaturePropertyType.mapping.length - 1];
+    	// return OFTableFeaturePropertyType.mapping[OFTableFeaturePropertyType.mapping.length - 1];
+    	return mapping.get(end_key);
     }
     
     static public void parse(List<OFTableFeatureProperty> output, ByteBuffer data, int length) {

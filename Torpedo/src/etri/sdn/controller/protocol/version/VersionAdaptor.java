@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.factory.OFMessageFactory;
-
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFController;
@@ -72,9 +70,11 @@ public abstract class VersionAdaptor {
 		rcache.remove(xid);
 	}
 	
+	/*
 	public static final OFMessageFactory getMessageFactory() {
 		return new VersionedMessageFactory();
 	}
+	*/
 	
 	public SwitchInformation getSwitchInformation(IOFSwitch sw) {
 		SwitchInformation si = this.switchInformations.get(sw);

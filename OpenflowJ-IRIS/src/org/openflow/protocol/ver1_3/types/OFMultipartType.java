@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 
 import java.lang.reflect.Constructor;
 import org.openflow.util.Instantiable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.openflow.protocol.ver1_3.messages.*;
 
@@ -174,8 +176,12 @@ public enum OFMultipartType {
 	      }
     	});
 
+	/*
     static OFMultipartType[] requestMapping;
     static OFMultipartType[] replyMapping;
+    */
+    static Map<Short, OFMultipartType> requestMapping;
+    static Map<Short, OFMultipartType> replyMapping;
 
     protected Class<? extends OFMultipart> requestClass;
     protected Class<? extends OFMultipart> replyClass;
@@ -212,32 +218,49 @@ public enum OFMultipartType {
     static public void addMapping(short i, OFMessageType t, OFMultipartType st) {
         if ( i < 0 ) i = (short)(15 + i);
         if (t == OFMessageType.MULTIPART_REQUEST) {
+        	/*
             if (requestMapping == null)
                 requestMapping = new OFMultipartType[15];
             OFMultipartType.requestMapping[i] = st;
+            */
+            if ( requestMapping == null ) 
+            	requestMapping = new ConcurrentHashMap<Short, OFMultipartType>();
+            requestMapping.put( i, st );
         } else if (t == OFMessageType.MULTIPART_REPLY){
+        	/*
             if (replyMapping == null)
                 replyMapping = new OFMultipartType[15];
             OFMultipartType.replyMapping[i] = st;
+            */
+            if ( replyMapping == null )
+            	replyMapping = new ConcurrentHashMap<Short, OFMultipartType>();
+            replyMapping.put( i, st );
         } else {
             throw new RuntimeException(t.toString() + " is an invalid OFMessageType");
         }
     }
     
     static public void addReplyMapping(short i, OFMultipartType t) {
+    	/*
         if (replyMapping == null)
             replyMapping = new OFMultipartType[15];
         if ( i < 0 ) i = (short)(15 + i);
         OFMultipartType.replyMapping[i] = t;
+        */
+        if ( replyMapping == null )
+            replyMapping = new ConcurrentHashMap<Short, OFMultipartType>();
+        replyMapping.put(i, t);
     }
 
     static public OFMultipartType valueOf(short i, OFMessageType t) {
         if ( i < 0 ) i = (short)(15 + i);
         if ( t == OFMessageType.MULTIPART_REQUEST ) {
-          return requestMapping[i];
+          // return requestMapping[i];
+          return requestMapping.get( i );
         }
         else if ( t == OFMessageType.MULTIPART_REPLY ) {
-          return replyMapping[i];
+          // return replyMapping[i];
+          return replyMapping.get( i );
         }
         else {
           throw new RuntimeException(t.toString() + " is an invalid OFMessageType");

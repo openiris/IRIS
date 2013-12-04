@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.openflow.protocol.OFMessage;
 import org.openflow.protocol.factory.OFMessageFactory;
+import org.openflow.protocol.factory.VersionedMessageFactory;
 
 /**
  * Asynchronous OpenFlow message marshalling and unmarshalling stream wrapped
@@ -28,12 +29,12 @@ OFMessageOutStream {
     protected SocketChannel sock;
     protected int partialReadCount = 0;
 
-    public OFMessageAsyncStream(SocketChannel sock,
-            OFMessageFactory messageFactory) throws IOException {
+    public OFMessageAsyncStream(SocketChannel sock /*,
+            OFMessageFactory messageFactory */) throws IOException {
         inBuf = ByteBuffer.allocateDirect(OFMessageAsyncStream.defaultBufferSize);
         outBuf = ByteBuffer.allocateDirect(OFMessageAsyncStream.defaultBufferSize);
         this.sock = sock;
-        this.messageFactory = messageFactory;
+        this.messageFactory = new VersionedMessageFactory();
         // this.sock.configureBlocking(false);
     }
 

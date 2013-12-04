@@ -1,15 +1,18 @@
-package etri.sdn.controller.protocol.version;
+package org.openflow.protocol.factory;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.openflow.protocol.OFMessage;
+import org.openflow.protocol.OFHeader;
 import org.openflow.protocol.factory.OFMessageFactory;
 
-import etri.sdn.controller.OFHeader;
 
-class VersionedMessageFactory implements OFMessageFactory {
+public class VersionedMessageFactory implements OFMessageFactory {
+	
+	public static final byte VERSION10 = 0x01;
+	public static final byte VERSION13 = 0x04;
 
 	@Override
 	public List<OFMessage> parseMessages(ByteBuffer data) {
@@ -41,7 +44,7 @@ class VersionedMessageFactory implements OFMessageFactory {
             //
             // FOR VERSION 1.0
             //
-            case VersionAdaptor10.VERSION:		// 1.0
+            case VERSION10:		// 1.0
             	org.openflow.protocol.ver1_0.types.OFMessageType t10 = 
             		org.openflow.protocol.ver1_0.types.OFMessageType.valueOf(demux.getType());
             	
@@ -65,7 +68,7 @@ class VersionedMessageFactory implements OFMessageFactory {
             //
             // for VERSION 1.3
             //
-            case VersionAdaptor13.VERSION:
+            case VERSION13:
             	org.openflow.protocol.ver1_3.types.OFMessageType t13 =
             		org.openflow.protocol.ver1_3.types.OFMessageType.valueOf(demux.getType());
             	

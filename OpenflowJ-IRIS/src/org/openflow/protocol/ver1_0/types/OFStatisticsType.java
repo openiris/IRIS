@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 
 import java.lang.reflect.Constructor;
 import org.openflow.util.Instantiable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.openflow.protocol.ver1_0.messages.*;
 
@@ -86,8 +88,12 @@ public enum OFStatisticsType {
 	      }
     	});
 
+	/*
     static OFStatisticsType[] requestMapping;
     static OFStatisticsType[] replyMapping;
+    */
+    static Map<Short, OFStatisticsType> requestMapping;
+    static Map<Short, OFStatisticsType> replyMapping;
 
     protected Class<? extends OFStatistics> requestClass;
     protected Class<? extends OFStatistics> replyClass;
@@ -124,32 +130,49 @@ public enum OFStatisticsType {
     static public void addMapping(short i, OFMessageType t, OFStatisticsType st) {
         if ( i < 0 ) i = (short)(7 + i);
         if (t == OFMessageType.STATISTICS_REQUEST) {
+        	/*
             if (requestMapping == null)
                 requestMapping = new OFStatisticsType[7];
             OFStatisticsType.requestMapping[i] = st;
+            */
+            if ( requestMapping == null ) 
+            	requestMapping = new ConcurrentHashMap<Short, OFStatisticsType>();
+            requestMapping.put( i, st );
         } else if (t == OFMessageType.STATISTICS_REPLY){
+        	/*
             if (replyMapping == null)
                 replyMapping = new OFStatisticsType[7];
             OFStatisticsType.replyMapping[i] = st;
+            */
+            if ( replyMapping == null )
+            	replyMapping = new ConcurrentHashMap<Short, OFStatisticsType>();
+            replyMapping.put( i, st );
         } else {
             throw new RuntimeException(t.toString() + " is an invalid OFMessageType");
         }
     }
     
     static public void addReplyMapping(short i, OFStatisticsType t) {
+    	/*
         if (replyMapping == null)
             replyMapping = new OFStatisticsType[7];
         if ( i < 0 ) i = (short)(7 + i);
         OFStatisticsType.replyMapping[i] = t;
+        */
+        if ( replyMapping == null )
+            replyMapping = new ConcurrentHashMap<Short, OFStatisticsType>();
+        replyMapping.put(i, t);
     }
 
     static public OFStatisticsType valueOf(short i, OFMessageType t) {
         if ( i < 0 ) i = (short)(7 + i);
         if ( t == OFMessageType.STATISTICS_REQUEST ) {
-          return requestMapping[i];
+          // return requestMapping[i];
+          return requestMapping.get( i );
         }
         else if ( t == OFMessageType.STATISTICS_REPLY ) {
-          return replyMapping[i];
+          // return replyMapping[i];
+          return replyMapping.get( i );
         }
         else {
           throw new RuntimeException(t.toString() + " is an invalid OFMessageType");

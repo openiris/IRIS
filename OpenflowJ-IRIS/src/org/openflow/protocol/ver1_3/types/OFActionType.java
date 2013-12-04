@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 
 import java.lang.reflect.Constructor;
 import org.openflow.util.Instantiable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 
 import org.openflow.protocol.ver1_3.messages.*;
@@ -78,7 +80,10 @@ public enum OFActionType {
       return new OFActionExperimenter();
     }});
 
-    static OFActionType[] mapping;
+    // static OFActionType[] mapping;
+    static Map<Short, OFActionType> mapping;
+    static short start_key = 0;
+    static short end_key = 0;
 
     protected Class<? extends OFAction> clazz;
     protected Constructor<? extends OFAction> constructor;
@@ -99,15 +104,28 @@ public enum OFActionType {
     }
 
     static public void addMapping(short i, OFActionType t) {
+    	/*
         if (mapping == null)
             mapping = new OFActionType[17];
         if ( i < 0 ) i = (short)(17 + i);
         OFActionType.mapping[i] = t;
+        */
+        if ( mapping == null )
+        	mapping = new ConcurrentHashMap<Short, OFActionType>();
+        	
+        if ( mapping.isEmpty() ) {
+        	start_key = i;
+        }
+        end_key = i;
+        mapping.put(i, t);
     }
 
     static public OFActionType valueOf(short i) {
+    	/*
         if ( i < 0 ) i = (short)(17 + i);
         return OFActionType.mapping[i];
+        */
+        return mapping.get(i);
     }
     
 	static public short readFrom(ByteBuffer data) {
@@ -115,11 +133,13 @@ public enum OFActionType {
 	}
     
     static public OFActionType first() {
-    	return OFActionType.mapping[0];
+    	// return OFActionType.mapping[0];
+    	return mapping.get(start_key);
     }
     
     static public OFActionType last() {
-    	return OFActionType.mapping[OFActionType.mapping.length - 1];
+    	// return OFActionType.mapping[OFActionType.mapping.length - 1];
+    	return mapping.get(end_key);
     }
     
     static public void parse(List<OFAction> output, ByteBuffer data, int length) {

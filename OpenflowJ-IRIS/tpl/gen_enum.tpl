@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 
 import java.lang.reflect.Constructor;
 import org.openflow.util.Instantiable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 
 import $importname;
@@ -11,7 +13,10 @@ import $importname;
 public enum $typename {
     $enumdefs;
 
-    static $typename[] mapping;
+    // static $typename[] mapping;
+    static Map<$orep, $typename> mapping;
+    static $rep start_key = 0;
+    static $rep end_key = 0;
 
     protected Class<? extends $supertype> clazz;
     protected Constructor<? extends $supertype> constructor;
@@ -32,15 +37,28 @@ public enum $typename {
     }
 
     static public void addMapping($rep i, $typename t) {
+    	/*
         if (mapping == null)
             mapping = new $typename[$length];
         if ( i < 0 ) i = ($rep)($length + i);
         $typename.mapping[i] = t;
+        */
+        if ( mapping == null )
+        	mapping = new ConcurrentHashMap<$orep, $typename>();
+        	
+        if ( mapping.isEmpty() ) {
+        	start_key = i;
+        }
+        end_key = i;
+        mapping.put(i, t);
     }
 
     static public $typename valueOf($rep i) {
+    	/*
         if ( i < 0 ) i = ($rep)($length + i);
         return $typename.mapping[i];
+        */
+        return mapping.get(i);
     }
     
 	static public $rep readFrom(ByteBuffer data) {
@@ -48,11 +66,13 @@ public enum $typename {
 	}
     
     static public $typename first() {
-    	return $typename.mapping[0];
+    	// return $typename.mapping[0];
+    	return mapping.get(start_key);
     }
     
     static public $typename last() {
-    	return $typename.mapping[$typename.mapping.length - 1];
+    	// return $typename.mapping[$typename.mapping.length - 1];
+    	return mapping.get(end_key);
     }
     
     static public void parse(List<$supertype> output, ByteBuffer data, int length) {
