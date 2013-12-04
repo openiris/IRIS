@@ -1,0 +1,95 @@
+package org.openflow.protocol.ver1_0.messages;
+
+import java.nio.ByteBuffer;
+import org.openflow.util.*;
+
+import org.openflow.protocol.ver1_0.types.*;
+
+public class OFQueueProperty    {
+    public static int MINIMUM_LENGTH = 8;
+
+    OFQueuePropertyType  type;
+	short  length;
+	int pad_1th;
+
+    public OFQueueProperty() {
+        
+    }
+    
+    public OFQueueProperty(OFQueueProperty other) {
+    	this.type = other.type;
+		this.length = other.length;
+    }
+
+	public OFQueuePropertyType getType() {
+		return this.type;
+	}
+	
+	public OFQueueProperty setType(OFQueuePropertyType type) {
+		this.type = type;
+		return this;
+	}
+			
+	public short getLength() {
+		return this.length;
+	}
+	
+	public OFQueueProperty setLength(short length) {
+		this.length = length;
+		return this;
+	}
+			
+
+    public void readFrom(ByteBuffer data) {
+        this.type = OFQueuePropertyType.valueOf(OFQueuePropertyType.readFrom(data));
+		this.length = data.getShort();
+		this.pad_1th = data.getInt();
+    }
+
+    public void writeTo(ByteBuffer data) {
+    	
+        data.putInt(this.type.getTypeValue());
+		data.putShort(this.length);
+		data.putInt(this.pad_1th);
+    }
+
+    public String toString() {
+        return  ":OFQueueProperty-"+":type=" + type.toString() + 
+		":length=" + U16.f(length);
+    }
+    
+    public short computeLength() {
+    	short len = (short)MINIMUM_LENGTH;
+    	
+    	return len;
+    }
+
+    @Override
+    public int hashCode() {
+        		
+		final int prime = 2521;
+		int result = super.hashCode() * prime;
+		result = prime * result + ((type == null)?0:type.hashCode());
+		result = prime * result + (int) length;
+		return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        
+		if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof OFQueueProperty)) {
+            return false;
+        }
+        OFQueueProperty other = (OFQueueProperty) obj;
+		if ( type == null && other.type != null ) { return false; }
+		else if ( !type.equals(other.type) ) { return false; }
+		if ( length != other.length ) return false;
+        return true;
+    }
+}

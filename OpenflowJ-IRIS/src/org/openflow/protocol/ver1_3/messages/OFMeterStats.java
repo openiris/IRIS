@@ -1,0 +1,200 @@
+package org.openflow.protocol.ver1_3.messages;
+
+import java.nio.ByteBuffer;
+import org.openflow.util.*;
+
+import java.util.List;
+import java.util.LinkedList;
+import org.openflow.protocol.ver1_3.types.*;
+
+public class OFMeterStats    {
+    public static int MINIMUM_LENGTH = 40;
+
+    int  meter_id;
+	short  length;
+	int pad_1th;
+	short pad_2th;
+	int  flow_count;
+	long  packet_in_count;
+	long  byte_in_count;
+	int  duration_sec;
+	int  duration_nsec;
+	List<OFMeterBandStats>  band_stats;
+
+    public OFMeterStats() {
+        this.band_stats = new LinkedList<OFMeterBandStats>();
+    }
+    
+    public OFMeterStats(OFMeterStats other) {
+    	this.meter_id = other.meter_id;
+		this.length = other.length;
+		this.flow_count = other.flow_count;
+		this.packet_in_count = other.packet_in_count;
+		this.byte_in_count = other.byte_in_count;
+		this.duration_sec = other.duration_sec;
+		this.duration_nsec = other.duration_nsec;
+		this.band_stats = (other.band_stats == null)? null: new LinkedList<OFMeterBandStats>();
+		for ( OFMeterBandStats i : other.band_stats ) { this.band_stats.add( new OFMeterBandStats(i) ); }
+    }
+
+	public int getMeterId() {
+		return this.meter_id;
+	}
+	
+	public OFMeterStats setMeterId(int meter_id) {
+		this.meter_id = meter_id;
+		return this;
+	}
+			
+	public short getLength() {
+		return this.length;
+	}
+	
+	public OFMeterStats setLength(short length) {
+		this.length = length;
+		return this;
+	}
+			
+	public int getFlowCount() {
+		return this.flow_count;
+	}
+	
+	public OFMeterStats setFlowCount(int flow_count) {
+		this.flow_count = flow_count;
+		return this;
+	}
+			
+	public long getPacketInCount() {
+		return this.packet_in_count;
+	}
+	
+	public OFMeterStats setPacketInCount(long packet_in_count) {
+		this.packet_in_count = packet_in_count;
+		return this;
+	}
+			
+	public long getByteInCount() {
+		return this.byte_in_count;
+	}
+	
+	public OFMeterStats setByteInCount(long byte_in_count) {
+		this.byte_in_count = byte_in_count;
+		return this;
+	}
+			
+	public int getDurationSec() {
+		return this.duration_sec;
+	}
+	
+	public OFMeterStats setDurationSec(int duration_sec) {
+		this.duration_sec = duration_sec;
+		return this;
+	}
+			
+	public int getDurationNsec() {
+		return this.duration_nsec;
+	}
+	
+	public OFMeterStats setDurationNsec(int duration_nsec) {
+		this.duration_nsec = duration_nsec;
+		return this;
+	}
+			
+	public List<OFMeterBandStats> getBandStats() {
+		return this.band_stats;
+	}
+	
+	public OFMeterStats setBandStats(List<OFMeterBandStats> band_stats) {
+		this.band_stats = band_stats;
+		return this;
+	}
+			
+
+    public void readFrom(ByteBuffer data) {
+        int mark = data.position();
+		this.meter_id = data.getInt();
+		this.length = data.getShort();
+		this.pad_1th = data.getInt();
+		this.pad_2th = data.getShort();
+		this.flow_count = data.getInt();
+		this.packet_in_count = data.getLong();
+		this.byte_in_count = data.getLong();
+		this.duration_sec = data.getInt();
+		this.duration_nsec = data.getInt();
+		if (this.band_stats == null) this.band_stats = new LinkedList<OFMeterBandStats>();
+		int __cnt = ((int)getLength() - (data.position() - mark));
+		while (__cnt > 0) { OFMeterBandStats t = new OFMeterBandStats(); t.readFrom(data); this.band_stats.add(t); __cnt -= OFMeterBandStats.MINIMUM_LENGTH; }
+    }
+
+    public void writeTo(ByteBuffer data) {
+    	
+        data.putInt(this.meter_id);
+		data.putShort(this.length);
+		data.putInt(this.pad_1th);
+		data.putShort(this.pad_2th);
+		data.putInt(this.flow_count);
+		data.putLong(this.packet_in_count);
+		data.putLong(this.byte_in_count);
+		data.putInt(this.duration_sec);
+		data.putInt(this.duration_nsec);
+		if (this.band_stats != null ) for (OFMeterBandStats t: this.band_stats) { t.writeTo(data); }
+    }
+
+    public String toString() {
+        return  ":OFMeterStats-"+":meter_id=" + U32.f(meter_id) + 
+		":length=" + U16.f(length) + 
+		":flow_count=" + U32.f(flow_count) + 
+		":packet_in_count=" + U64.f(packet_in_count) + 
+		":byte_in_count=" + U64.f(byte_in_count) + 
+		":duration_sec=" + U32.f(duration_sec) + 
+		":duration_nsec=" + U32.f(duration_nsec) + 
+		":band_stats=" + band_stats.toString();
+    }
+    
+    public short computeLength() {
+    	short len = (short)MINIMUM_LENGTH;
+    	for ( OFMeterBandStats i : this.band_stats ) { len += i.computeLength(); }
+    	return len;
+    }
+
+    @Override
+    public int hashCode() {
+        		
+		final int prime = 1571;
+		int result = super.hashCode() * prime;
+		result = prime * result + (int) meter_id;
+		result = prime * result + (int) length;
+		result = prime * result + (int) flow_count;
+		result = prime * result + (int) packet_in_count;
+		result = prime * result + (int) byte_in_count;
+		result = prime * result + (int) duration_sec;
+		result = prime * result + (int) duration_nsec;
+		result = prime * result + ((band_stats == null)?0:band_stats.hashCode());
+		return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        
+		if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof OFMeterStats)) {
+            return false;
+        }
+        OFMeterStats other = (OFMeterStats) obj;
+		if ( meter_id != other.meter_id ) return false;
+		if ( length != other.length ) return false;
+		if ( flow_count != other.flow_count ) return false;
+		if ( packet_in_count != other.packet_in_count ) return false;
+		if ( byte_in_count != other.byte_in_count ) return false;
+		if ( duration_sec != other.duration_sec ) return false;
+		if ( duration_nsec != other.duration_nsec ) return false;
+		if ( band_stats == null && other.band_stats != null ) { return false; }
+		else if ( !band_stats.equals(other.band_stats) ) { return false; }
+        return true;
+    }
+}

@@ -1,0 +1,82 @@
+package org.openflow.protocol.ver1_3.messages;
+
+import java.nio.ByteBuffer;
+import org.openflow.util.*;
+
+import org.openflow.protocol.ver1_3.types.*;
+
+public class OFQueueGetConfigRequest extends OFMessage  {
+    public static int MINIMUM_LENGTH = 16;
+
+    int  port;
+	int pad_1th;
+
+    public OFQueueGetConfigRequest() {
+        super();
+		setLength(U16.t(MINIMUM_LENGTH));
+		setType(OFMessageType.valueOf((byte)22));
+    }
+    
+    public OFQueueGetConfigRequest(OFQueueGetConfigRequest other) {
+    	super(other);
+		this.port = other.port;
+    }
+
+	public int getPort() {
+		return this.port;
+	}
+	
+	public OFQueueGetConfigRequest setPort(int port) {
+		this.port = port;
+		return this;
+	}
+			
+
+    public void readFrom(ByteBuffer data) {
+        super.readFrom(data);
+		this.port = data.getInt();
+		this.pad_1th = data.getInt();
+    }
+
+    public void writeTo(ByteBuffer data) {
+    	super.writeTo(data);
+        data.putInt(this.port);
+		data.putInt(this.pad_1th);
+    }
+
+    public String toString() {
+        return super.toString() +  ":OFQueueGetConfigRequest-"+":port=" + U32.f(port);
+    }
+    
+    public short computeLength() {
+    	short len = (short)MINIMUM_LENGTH;
+    	
+    	return len;
+    }
+
+    @Override
+    public int hashCode() {
+        		
+		final int prime = 1453;
+		int result = super.hashCode() * prime;
+		result = prime * result + (int) port;
+		return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        
+		if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof OFQueueGetConfigRequest)) {
+            return false;
+        }
+        OFQueueGetConfigRequest other = (OFQueueGetConfigRequest) obj;
+		if ( port != other.port ) return false;
+        return true;
+    }
+}

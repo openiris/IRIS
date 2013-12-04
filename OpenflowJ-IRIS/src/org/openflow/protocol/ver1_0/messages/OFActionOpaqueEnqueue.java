@@ -1,0 +1,101 @@
+package org.openflow.protocol.ver1_0.messages;
+
+import java.nio.ByteBuffer;
+import org.openflow.util.*;
+
+import org.openflow.protocol.ver1_0.types.*;
+
+public class OFActionOpaqueEnqueue extends OFAction  {
+    public static int MINIMUM_LENGTH = 16;
+
+    short  port;
+	int pad_1th;
+	short pad_2th;
+	int  queue_id;
+
+    public OFActionOpaqueEnqueue() {
+        super();
+		setLength(U16.t(MINIMUM_LENGTH));
+		setType(OFActionType.valueOf((short)11));
+    }
+    
+    public OFActionOpaqueEnqueue(OFActionOpaqueEnqueue other) {
+    	super(other);
+		this.port = other.port;
+		this.queue_id = other.queue_id;
+    }
+
+	public short getPort() {
+		return this.port;
+	}
+	
+	public OFActionOpaqueEnqueue setPort(short port) {
+		this.port = port;
+		return this;
+	}
+			
+	public int getQueueId() {
+		return this.queue_id;
+	}
+	
+	public OFActionOpaqueEnqueue setQueueId(int queue_id) {
+		this.queue_id = queue_id;
+		return this;
+	}
+			
+
+    public void readFrom(ByteBuffer data) {
+        super.readFrom(data);
+		this.port = data.getShort();
+		this.pad_1th = data.getInt();
+		this.pad_2th = data.getShort();
+		this.queue_id = data.getInt();
+    }
+
+    public void writeTo(ByteBuffer data) {
+    	super.writeTo(data);
+        data.putShort(this.port);
+		data.putInt(this.pad_1th);
+		data.putShort(this.pad_2th);
+		data.putInt(this.queue_id);
+    }
+
+    public String toString() {
+        return super.toString() +  ":OFActionOpaqueEnqueue-"+":port=" + U16.f(port) + 
+		":queue_id=" + U32.f(queue_id);
+    }
+    
+    public short computeLength() {
+    	short len = (short)MINIMUM_LENGTH;
+    	
+    	return len;
+    }
+
+    @Override
+    public int hashCode() {
+        		
+		final int prime = 2749;
+		int result = super.hashCode() * prime;
+		result = prime * result + (int) port;
+		result = prime * result + (int) queue_id;
+		return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        
+		if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof OFActionOpaqueEnqueue)) {
+            return false;
+        }
+        OFActionOpaqueEnqueue other = (OFActionOpaqueEnqueue) obj;
+		if ( port != other.port ) return false;
+		if ( queue_id != other.queue_id ) return false;
+        return true;
+    }
+}
