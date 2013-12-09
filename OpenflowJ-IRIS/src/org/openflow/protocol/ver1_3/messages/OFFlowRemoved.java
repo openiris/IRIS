@@ -18,13 +18,13 @@ public class OFFlowRemoved extends OFMessage  {
 	short  hard_timeout;
 	long  packet_count;
 	long  byte_count;
-	OFMatch  match;
+	OFMatchOxm  match;
 
     public OFFlowRemoved() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)11));
-		this.match = new OFMatch();
+		this.match = new OFMatchOxm();
     }
     
     public OFFlowRemoved(OFFlowRemoved other) {
@@ -39,7 +39,7 @@ public class OFFlowRemoved extends OFMessage  {
 		this.hard_timeout = other.hard_timeout;
 		this.packet_count = other.packet_count;
 		this.byte_count = other.byte_count;
-		this.match = new OFMatch(other.match);
+		this.match = new OFMatchOxm(other.match);
     }
 
 	public long getCookie() {
@@ -132,11 +132,11 @@ public class OFFlowRemoved extends OFMessage  {
 		return this;
 	}
 			
-	public OFMatch getMatch() {
+	public OFMatchOxm getMatch() {
 		return this.match;
 	}
 	
-	public OFFlowRemoved setMatch(OFMatch match) {
+	public OFFlowRemoved setMatch(OFMatchOxm match) {
 		this.match = match;
 		return this;
 	}
@@ -154,7 +154,7 @@ public class OFFlowRemoved extends OFMessage  {
 		this.hard_timeout = data.getShort();
 		this.packet_count = data.getLong();
 		this.byte_count = data.getLong();
-		if (this.match == null) this.match = new OFMatch();
+		if (this.match == null) this.match = new OFMatchOxm();
 		this.match.readFrom(data);
     }
 

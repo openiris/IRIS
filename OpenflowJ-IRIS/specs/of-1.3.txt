@@ -988,7 +988,7 @@ struct of_flow_mod : of_header {
     uint32_t out_group;
     uint16_t flags;
     pad(2);
-    of_match_t match;
+    of_match_oxm_t match;
     list(of_instruction_t) instructions;
 };
 
@@ -1011,7 +1011,7 @@ struct of_flow_add : of_flow_mod {
     uint32_t out_group;
     uint16_t flags;
     pad(2);
-    of_match_t match;
+    of_match_oxm_t match;
     list(of_instruction_t) instructions;
 };
 
@@ -1034,7 +1034,7 @@ struct of_flow_modify : of_flow_mod {
     uint32_t out_group;
     uint16_t flags;
     pad(2);
-    of_match_t match;
+    of_match_oxm_t match;
     list(of_instruction_t) instructions;
 };
 
@@ -1057,7 +1057,7 @@ struct of_flow_modify_strict : of_flow_mod {
     uint32_t out_group;
     uint16_t flags;
     pad(2);
-    of_match_t match;
+    of_match_oxm_t match;
     list(of_instruction_t) instructions;
 };
 
@@ -1080,7 +1080,7 @@ struct of_flow_delete : of_flow_mod {
     uint32_t out_group;
     uint16_t flags;
     pad(2);
-    of_match_t match;
+    of_match_oxm_t match;
     list(of_instruction_t) instructions;
 };
 
@@ -1103,7 +1103,7 @@ struct of_flow_delete_strict : of_flow_mod {
     uint32_t out_group;
     uint16_t flags;
     pad(2);
-    of_match_t match;
+    of_match_oxm_t match;
     list(of_instruction_t) instructions;
 };
 
@@ -1153,7 +1153,7 @@ struct of_packet_in : of_header {
     uint8_t reason;
     uint8_t table_id;
     uint64_t cookie;
-    of_match_t match;
+    of_match_oxm_t match;
     pad(2);
     of_octets_t data; 
 };
@@ -1173,7 +1173,7 @@ struct of_flow_removed : of_header {
     uint16_t hard_timeout;
     uint64_t packet_count;
     uint64_t byte_count;
-    of_match_t match;
+    of_match_oxm_t match;
 };
 
 // rate and burst_size is removed from this struct because this is a header
@@ -1246,7 +1246,7 @@ struct of_flow_stats_entry {
     uint64_t cookie;
     uint64_t packet_count;
     uint64_t byte_count;
-    of_match_t match;
+    of_match_oxm_t match;
     list(of_instruction_t) instructions;
 };
 
@@ -1390,7 +1390,7 @@ struct of_multipart_flow_request : of_multipart_request {
     pad(4);
     uint64_t cookie;
     uint64_t cookie_mask;
-    of_match_t match;
+    of_match_oxm_t match;
 };
 
 struct of_multipart_flow_reply : of_multipart_reply {
@@ -1420,7 +1420,7 @@ struct of_multipart_aggregate_request : of_multipart_request {
     pad(4);
     uint64_t cookie;
     uint64_t cookie_mask;
-    of_match_t match;
+    of_match_oxm_t match;
 };
 
 struct of_multipart_aggregate_reply : of_multipart_reply {

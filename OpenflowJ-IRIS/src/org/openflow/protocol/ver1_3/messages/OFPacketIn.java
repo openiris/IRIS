@@ -13,7 +13,7 @@ public class OFPacketIn extends OFMessage  {
 	OFPacketInReason  reason;
 	byte  table_id;
 	long  cookie;
-	OFMatch  match;
+	OFMatchOxm  match;
 	short pad_1th;
 	byte[]  data;
 
@@ -21,7 +21,7 @@ public class OFPacketIn extends OFMessage  {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)10));
-		this.match = new OFMatch();
+		this.match = new OFMatchOxm();
     }
     
     public OFPacketIn(OFPacketIn other) {
@@ -31,7 +31,7 @@ public class OFPacketIn extends OFMessage  {
 		this.reason = other.reason;
 		this.table_id = other.table_id;
 		this.cookie = other.cookie;
-		this.match = new OFMatch(other.match);
+		this.match = new OFMatchOxm(other.match);
 		if (other.data != null) { this.data = java.util.Arrays.copyOf(other.data, other.data.length); }
     }
 
@@ -80,11 +80,11 @@ public class OFPacketIn extends OFMessage  {
 		return this;
 	}
 			
-	public OFMatch getMatch() {
+	public OFMatchOxm getMatch() {
 		return this.match;
 	}
 	
-	public OFPacketIn setMatch(OFMatch match) {
+	public OFPacketIn setMatch(OFMatchOxm match) {
 		this.match = match;
 		return this;
 	}
@@ -107,7 +107,7 @@ public class OFPacketIn extends OFMessage  {
 		this.reason = OFPacketInReason.valueOf(OFPacketInReason.readFrom(data));
 		this.table_id = data.get();
 		this.cookie = data.getLong();
-		if (this.match == null) this.match = new OFMatch();
+		if (this.match == null) this.match = new OFMatchOxm();
 		this.match.readFrom(data);
 		this.pad_1th = data.getShort();
 		if ( this.data == null ) this.data = new byte[(getLength() - (data.position() - mark))];

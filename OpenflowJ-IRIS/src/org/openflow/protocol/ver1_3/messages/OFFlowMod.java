@@ -22,14 +22,14 @@ public class OFFlowMod extends OFMessage  {
 	int  out_group;
 	OFFlowModFlags  flags;
 	short pad_1th;
-	OFMatch  match;
+	OFMatchOxm  match;
 	List<OFInstruction>  instructions;
 
     public OFFlowMod() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)14));
-		this.match = new OFMatch();
+		this.match = new OFMatchOxm();
 		this.instructions = new LinkedList<OFInstruction>();
     }
     
@@ -46,7 +46,7 @@ public class OFFlowMod extends OFMessage  {
 		this.out_port = other.out_port;
 		this.out_group = other.out_group;
 		this.flags = other.flags;
-		this.match = new OFMatch(other.match);
+		this.match = new OFMatchOxm(other.match);
 		this.instructions = (other.instructions == null)? null: new LinkedList<OFInstruction>();
 		for ( OFInstruction i : other.instructions ) { this.instructions.add( new OFInstruction(i) ); }
     }
@@ -150,11 +150,11 @@ public class OFFlowMod extends OFMessage  {
 		this.flags.setValue( flags );
 		return this;
 	}
-	public OFMatch getMatch() {
+	public OFMatchOxm getMatch() {
 		return this.match;
 	}
 	
-	public OFFlowMod setMatch(OFMatch match) {
+	public OFFlowMod setMatch(OFMatchOxm match) {
 		this.match = match;
 		return this;
 	}
@@ -185,7 +185,7 @@ public class OFFlowMod extends OFMessage  {
 		if (this.flags == null) this.flags = new OFFlowModFlags();
 		this.flags.setValue( OFFlowModFlags.readFrom(data) );
 		this.pad_1th = data.getShort();
-		if (this.match == null) this.match = new OFMatch();
+		if (this.match == null) this.match = new OFMatchOxm();
 		this.match.readFrom(data);
 		if (this.instructions == null) this.instructions = new LinkedList<OFInstruction>();
 		int __cnt = ((int)getLength() - (data.position() - mark));

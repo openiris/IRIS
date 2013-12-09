@@ -16,14 +16,14 @@ public class OFMultipartFlowRequest extends OFMultipartRequest  {
 	int pad_3th;
 	long  cookie;
 	long  cookie_mask;
-	OFMatch  match;
+	OFMatchOxm  match;
 
     public OFMultipartFlowRequest() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)18));
 		setMultipartType(OFMultipartType.valueOf((short)1, getType()));
-		this.match = new OFMatch();
+		this.match = new OFMatchOxm();
     }
     
     public OFMultipartFlowRequest(OFMultipartFlowRequest other) {
@@ -33,7 +33,7 @@ public class OFMultipartFlowRequest extends OFMultipartRequest  {
 		this.out_group = other.out_group;
 		this.cookie = other.cookie;
 		this.cookie_mask = other.cookie_mask;
-		this.match = new OFMatch(other.match);
+		this.match = new OFMatchOxm(other.match);
     }
 
 	public byte getTableId() {
@@ -81,11 +81,11 @@ public class OFMultipartFlowRequest extends OFMultipartRequest  {
 		return this;
 	}
 			
-	public OFMatch getMatch() {
+	public OFMatchOxm getMatch() {
 		return this.match;
 	}
 	
-	public OFMultipartFlowRequest setMatch(OFMatch match) {
+	public OFMultipartFlowRequest setMatch(OFMatchOxm match) {
 		this.match = match;
 		return this;
 	}
@@ -101,7 +101,7 @@ public class OFMultipartFlowRequest extends OFMultipartRequest  {
 		this.pad_3th = data.getInt();
 		this.cookie = data.getLong();
 		this.cookie_mask = data.getLong();
-		if (this.match == null) this.match = new OFMatch();
+		if (this.match == null) this.match = new OFMatchOxm();
 		this.match.readFrom(data);
     }
 

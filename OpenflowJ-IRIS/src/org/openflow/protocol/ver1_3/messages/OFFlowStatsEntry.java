@@ -23,11 +23,11 @@ public class OFFlowStatsEntry    {
 	long  cookie;
 	long  packet_count;
 	long  byte_count;
-	OFMatch  match;
+	OFMatchOxm  match;
 	List<OFInstruction>  instructions;
 
     public OFFlowStatsEntry() {
-        this.match = new OFMatch();
+        this.match = new OFMatchOxm();
 		this.instructions = new LinkedList<OFInstruction>();
     }
     
@@ -43,7 +43,7 @@ public class OFFlowStatsEntry    {
 		this.cookie = other.cookie;
 		this.packet_count = other.packet_count;
 		this.byte_count = other.byte_count;
-		this.match = new OFMatch(other.match);
+		this.match = new OFMatchOxm(other.match);
 		this.instructions = (other.instructions == null)? null: new LinkedList<OFInstruction>();
 		for ( OFInstruction i : other.instructions ) { this.instructions.add( new OFInstruction(i) ); }
     }
@@ -147,11 +147,11 @@ public class OFFlowStatsEntry    {
 		return this;
 	}
 			
-	public OFMatch getMatch() {
+	public OFMatchOxm getMatch() {
 		return this.match;
 	}
 	
-	public OFFlowStatsEntry setMatch(OFMatch match) {
+	public OFFlowStatsEntry setMatch(OFMatchOxm match) {
 		this.match = match;
 		return this;
 	}
@@ -181,7 +181,7 @@ public class OFFlowStatsEntry    {
 		this.cookie = data.getLong();
 		this.packet_count = data.getLong();
 		this.byte_count = data.getLong();
-		if (this.match == null) this.match = new OFMatch();
+		if (this.match == null) this.match = new OFMatchOxm();
 		this.match.readFrom(data);
 		if (this.instructions == null) this.instructions = new LinkedList<OFInstruction>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
