@@ -100,11 +100,24 @@ public class OFMeterFeatures    {
 		":max_bands=" + U8.f(max_bands) + 
 		":max_color=" + U8.f(max_color);
     }
-    
+
+	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
     	
     	return len;
+    }
+    
+    // calculate the amount that will be increased by the alignment requirement.
+    public short alignment(short req) {
+    	short l = (short)(computeLength() % req);
+    	if ( l == 0 ) { return 0; }
+    	return (short)( req - l );
+    }
+    
+    // compute the difference with MINIMUM_LENGTH (with alignment)
+    public short lengthDiff() {
+    	return (short)(computeLength() - (short)MINIMUM_LENGTH + alignment((short)0));
     }
 
     @Override

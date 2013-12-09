@@ -51,11 +51,24 @@ public class OFHelloElemVersionbitmap extends OFHelloElem  {
     public String toString() {
         return super.toString() +  ":OFHelloElemVersionbitmap-"+":bitmaps=" + bitmaps.toString();
     }
-    
+
+	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
     	if ( this.bitmaps != null ) { len += 4 * this.bitmaps.size(); }
     	return len;
+    }
+    
+    // calculate the amount that will be increased by the alignment requirement.
+    public short alignment(short req) {
+    	short l = (short)(computeLength() % req);
+    	if ( l == 0 ) { return 0; }
+    	return (short)( req - l );
+    }
+    
+    // compute the difference with MINIMUM_LENGTH (with alignment)
+    public short lengthDiff() {
+    	return (short)(computeLength() - (short)MINIMUM_LENGTH + alignment((short)0));
     }
 
     @Override

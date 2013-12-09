@@ -189,12 +189,25 @@ public class OFPortDesc    {
 		":curr_speed=" + U32.f(curr_speed) + 
 		":max_speed=" + U32.f(max_speed);
     }
-    
+
+	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
     	if ( this.hw_addr != null ) { len += this.hw_addr.length; } 
 		if ( this.name != null ) { len += this.name.length; } 
     	return len;
+    }
+    
+    // calculate the amount that will be increased by the alignment requirement.
+    public short alignment(short req) {
+    	short l = (short)(computeLength() % req);
+    	if ( l == 0 ) { return 0; }
+    	return (short)( req - l );
+    }
+    
+    // compute the difference with MINIMUM_LENGTH (with alignment)
+    public short lengthDiff() {
+    	return (short)(computeLength() - (short)MINIMUM_LENGTH + alignment((short)0));
     }
 
     @Override

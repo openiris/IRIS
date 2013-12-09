@@ -74,11 +74,24 @@ public class OFTableFeaturePropertyExperimenter extends OFTableFeatureProperty  
 		":subtype=" + U32.f(subtype) + 
 		":experimenter_data=" + java.util.Arrays.toString(experimenter_data);
     }
-    
+
+	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
     	if ( this.experimenter_data != null ) { len += this.experimenter_data.length; } 
     	return len;
+    }
+    
+    // calculate the amount that will be increased by the alignment requirement.
+    public short alignment(short req) {
+    	short l = (short)(computeLength() % req);
+    	if ( l == 0 ) { return 0; }
+    	return (short)( req - l );
+    }
+    
+    // compute the difference with MINIMUM_LENGTH (with alignment)
+    public short lengthDiff() {
+    	return (short)(computeLength() - (short)MINIMUM_LENGTH + alignment((short)0));
     }
 
     @Override

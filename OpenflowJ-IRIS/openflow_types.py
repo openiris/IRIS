@@ -715,6 +715,8 @@ class Struct(Type):
           computelengths.append(clen);
         elif variable_type == 'byte[]':
           computelengths.append('if ( this.%s != null ) { len += this.%s.length; } ' % (variable_name, variable_name))
+        elif variable_type == 'OFMatch':
+          computelengths.append('len += %s.lengthDiff();' % variable_name)
         
         #
         # toString
@@ -901,13 +903,13 @@ class Struct(Type):
     # add readfrom lines if there is alignment considerations such as 
     # align(8) at the end of struct.
     if self.align > 0: 
-        readfroms.append('int __align = getLength() %s %d;' % ('%', self.align))
+        readfroms.append('int __align = alignment((short)%d);' % self.align)
         readfroms.append('while (__align > 0 && %d - __align > 0) { data.get(); __align += 1; }' % self.align)
         
     # add writeto lines if there is alignment considerations such as 
     # align(8) at the end of struct.
     if self.align > 0:
-        writetos.append('int __align = computeLength() %s %d;' % ('%', self.align))
+        writetos.append('int __align = alignment((short)%d);' % self.align)
         writetos.append('while (__align > 0 && %d - __align > 0) { data.put((byte)0); __align += 1; }' % self.align)
     
     # build hashcode lines
@@ -1003,6 +1005,7 @@ class Struct(Type):
       'inherit_method':inherit_method, 'supertype':supername, 
       'superwriteto':superwriteto,
       'implements':component_map['implements'],
-      'computelength':component_map['computelength']
+      'computelength':component_map['computelength'],
+      'align': self.align
     })
     return (self.name, result)
