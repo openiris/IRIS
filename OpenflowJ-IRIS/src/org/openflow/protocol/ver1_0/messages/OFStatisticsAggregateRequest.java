@@ -82,7 +82,7 @@ public class OFStatisticsAggregateRequest extends OFStatisticsRequest  {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	len += match.lengthDiff();
+    	
     	return len;
     }
     

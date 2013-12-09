@@ -716,7 +716,7 @@ class Struct(Type):
         elif variable_type == 'byte[]':
           if not variable_length:
             computelengths.append('if ( this.%s != null ) { len += this.%s.length; } ' % (variable_name, variable_name))
-        elif variable_type == 'OFMatch':
+        elif variable_type == 'OFMatch' and self.spec.get_version() == '1.3':
           computelengths.append('len += %s.lengthDiff();' % variable_name)
         
         #

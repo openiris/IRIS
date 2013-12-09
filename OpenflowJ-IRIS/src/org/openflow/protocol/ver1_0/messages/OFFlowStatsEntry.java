@@ -222,8 +222,7 @@ public class OFFlowStatsEntry    {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	len += match.lengthDiff();
-		for ( OFAction i : this.actions ) { len += i.computeLength(); }
+    	for ( OFAction i : this.actions ) { len += i.computeLength(); }
     	return len;
     }
     
