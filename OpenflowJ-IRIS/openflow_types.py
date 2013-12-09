@@ -859,7 +859,10 @@ class Struct(Type):
                   if isinstance(itype, Struct) and itype.has_field('length'):
                     rline = 'while (__cnt > 0) { %s t = new %s(); t.readFrom(data); this.%s.add(t); __cnt -= t.getLength(); }' % (inner, inner, variable_name)
                   else:
-                    rline = 'while (__cnt > 0) { %s t = new %s(); t.readFrom(data); this.%s.add(t); __cnt -= %s.MINIMUM_LENGTH; }' % (inner, inner, variable_name, inner)
+                    if inner == 'OFOxm':
+                      rline = 'while (__cnt > 0) { %s t = new %s(); t.readFrom(data); this.%s.add(t); __cnt -= (%s.MINIMUM_LENGTH + t.getPayloadLength()); }' % (inner, inner, variable_name, inner)
+                    else:
+                      rline = 'while (__cnt > 0) { %s t = new %s(); t.readFrom(data); this.%s.add(t); __cnt -= %s.MINIMUM_LENGTH; }' % (inner, inner, variable_name, inner)
           else:
             rline = 'if (this.%s == null) this.%s = new %s();' % (variable_name, variable_name, variable_type)
             readfroms.append(rline)
