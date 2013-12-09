@@ -73,15 +73,13 @@ public class VersionAdaptor10 extends VersionAdaptor {
 		return VERSION;
 	}
 	
-	public void setDescription(IOFSwitch sw, OFStatisticsDescReply r) {
-		System.out.println("XXXXXXXXXXXXX:" + r.toString());
-		
+	public void setDescription(IOFSwitch sw, OFStatisticsDescReply r) {		
 		this.getSwitchInformation(sw)
+		.setManufacturerDescription(r.getManufacturerDescription())
 		.setDatapathDescription(r.getDatapathDescription())
 		.setHardwareDescription(r.getHardwareDescription())
 		.setSoftwareDescription(r.getSoftwareDescription())
-		.setSerialNumber(r.getSerialNumber())
-		.setDatapathDescription(r.getDatapathDescription());
+		.setSerialNumber(r.getSerialNumber());
 	}
 	
 	public OFStatisticsDescReply getDescription(IOFSwitch sw) {
@@ -92,10 +90,10 @@ public class VersionAdaptor10 extends VersionAdaptor {
 		
 		OFStatisticsDescReply ret = new OFStatisticsDescReply();
 		ret.setManufacturerDescription(si.getManufacturerDescription());
+		ret.setDatapathDescription(si.getDatapathDescription());
 		ret.setHardwareDescription(si.getHardwareDescription());
 		ret.setSoftwareDescription(si.getSoftwareDescription());
 		ret.setSerialNumber(si.getSerialNumber());
-		ret.setDatapathDescription(si.getDatapathDescription());
 		
 		return ret;
 	}
