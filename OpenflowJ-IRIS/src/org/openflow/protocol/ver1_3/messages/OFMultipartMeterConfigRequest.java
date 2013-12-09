@@ -58,6 +58,7 @@ public class OFMultipartMeterConfigRequest extends OFMultipartRequest  {
     
     // calculate the amount that will be increased by the alignment requirement.
     public short alignment(short req) {
+    	if (req == 0) return 0;
     	short l = (short)(computeLength() % req);
     	if ( l == 0 ) { return 0; }
     	return (short)( req - l );

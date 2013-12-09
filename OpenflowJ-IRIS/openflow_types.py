@@ -714,7 +714,8 @@ class Struct(Type):
             clen = 'for ( %s i : this.%s ) { len += i.computeLength(); }' % (inner, variable_name)
           computelengths.append(clen);
         elif variable_type == 'byte[]':
-          computelengths.append('if ( this.%s != null ) { len += this.%s.length; } ' % (variable_name, variable_name))
+          if not variable_length:
+            computelengths.append('if ( this.%s != null ) { len += this.%s.length; } ' % (variable_name, variable_name))
         elif variable_type == 'OFMatch':
           computelengths.append('len += %s.lengthDiff();' % variable_name)
         

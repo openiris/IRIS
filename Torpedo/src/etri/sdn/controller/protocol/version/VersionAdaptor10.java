@@ -74,6 +74,8 @@ public class VersionAdaptor10 extends VersionAdaptor {
 	}
 	
 	public void setDescription(IOFSwitch sw, OFStatisticsDescReply r) {
+		System.out.println("XXXXXXXXXXXXX:" + r.toString());
+		
 		this.getSwitchInformation(sw)
 		.setDatapathDescription(r.getDatapathDescription())
 		.setHardwareDescription(r.getHardwareDescription())
