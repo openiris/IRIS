@@ -780,12 +780,13 @@ struct of_match_standard : of_match {
   uint16_t length;
 };
 
-// now we should use this
+// now we should use this.
+// at the end of the of_match_oxm, there is a alignment requirement to 8-byte boundary.
 struct of_match_oxm : of_match {
     uint16_t type == 1;
     uint16_t length;
     list(of_oxm_t) oxm_fields;
-};
+} align(8);
 
 // This looks like an action header, but is standalone.  See 
 // ofp_table_features_prop_actions

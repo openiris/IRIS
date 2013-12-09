@@ -317,6 +317,7 @@ class Struct(Type):
     self.supertype = definition.get('supertype', None)
     self.body = definition['body']
     self.constructor = []
+    self.align = int(definition['align'])
     
   def __repr__(self):
     return '<Struct name:%s, supertype:%s, body:%s>' % (self.name, self.supertype, self.body)
@@ -896,6 +897,18 @@ class Struct(Type):
         prev_var = variable_name
         
     # end of for 
+    
+    # add readfrom lines if there is alignment considerations such as 
+    # align(8) at the end of struct.
+    if self.align > 0: 
+        readfroms.append('int __align = getLength() %s %d;' % ('%', self.align))
+        readfroms.append('while (__align > 0 && %d - __align > 0) { data.get(); __align += 1; }' % self.align)
+        
+    # add writeto lines if there is alignment considerations such as 
+    # align(8) at the end of struct.
+    if self.align > 0:
+        writetos.append('int __align = computeLength() %s %d;' % ('%', self.align))
+        writetos.append('while (__align > 0 && %d - __align > 0) { data.put((byte)0); __align += 1; }' % self.align)
     
     # build hashcode lines
     htpl = Template.get_template('tpl/struct_hashcode.tpl')

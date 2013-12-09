@@ -41,11 +41,15 @@ public class OFMatchOxm extends OFMatch  {
 		if (this.oxm_fields == null) this.oxm_fields = new LinkedList<OFOxm>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) { OFOxm t = new OFOxm(); t.readFrom(data); this.oxm_fields.add(t); __cnt -= t.getLength(); }
+		int __align = getLength() % 8;
+		while (__align > 0 && 8 - __align > 0) { data.get(); __align += 1; }
     }
 
     public void writeTo(ByteBuffer data) {
     	super.writeTo(data);
         if (this.oxm_fields != null ) for (OFOxm t: this.oxm_fields) { t.writeTo(data); }
+		int __align = computeLength() % 8;
+		while (__align > 0 && 8 - __align > 0) { data.put((byte)0); __align += 1; }
     }
 
     public String toString() {

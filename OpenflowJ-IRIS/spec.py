@@ -12,7 +12,7 @@ class Spec:
   '''
   
   BLOCK_PATTERN = re.compile(
-    r'(?P<type>struct|enum)\s+(?P<name>\w+)(?P<enum_arg>\([\w\,\=\.\s]+\)){0,1}\s*(:\s*(?P<supertype>\w+)){0,1}\s*\{(?P<body>[\w\s\=\?\,:;\(\)]+)\};'
+    r'(?P<type>struct|enum)\s+(?P<name>\w+)(?P<enum_arg>\([\w\,\=\.\s]+\)){0,1}\s*(:\s*(?P<supertype>\w+)){0,1}\s*\{(?P<body>[\w\s\=\?\,:;\(\)]+)\}(\s*align\((?P<align>[0-9]+)\)){0,1}\s*;'
   )
   
   @staticmethod
@@ -354,6 +354,8 @@ class Spec:
         if s == 'header': s = 'message'
         s = Spec.get_java_classname(s)
         b = item.group('body')
+        a = item.group('align')
+        if not a: a = 0
   
         if e:
           e = Spec.parse_enum_args(e)
@@ -366,7 +368,8 @@ class Spec:
           'name': n,
           'enum_args': e,
           'supertype': s,
-          'body': b
+          'body': b,
+          'align': a
         }
         
 #         print new_item
