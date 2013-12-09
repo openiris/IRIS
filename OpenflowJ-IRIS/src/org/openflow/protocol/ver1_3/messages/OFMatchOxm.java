@@ -40,7 +40,7 @@ public class OFMatchOxm extends OFMatch  {
 		super.readFrom(data);
 		if (this.oxm_fields == null) this.oxm_fields = new LinkedList<OFOxm>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
-		while (__cnt > 0) { OFOxm t = new OFOxm(); t.readFrom(data); this.oxm_fields.add(t); __cnt -= t.getLength(); }
+		while (__cnt > 0) { OFOxm t = new OFOxm(); t.readFrom(data); this.oxm_fields.add(t); __cnt -= OFOxm.MINIMUM_LENGTH; }
 		int __align = alignment((short)8);
 		while (__align > 0 && 8 - __align > 0) { data.get(); __align += 1; }
     }

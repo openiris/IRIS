@@ -762,7 +762,7 @@ struct of_port_mod : of_header {
 struct of_oxm {
   of_oxm_class_t  oxm_class;
   uint8_t         field:7 bitmask:1;
-  uint8_t         length;
+  uint8_t         payload_length;
   of_octets_t     data;
 };
 

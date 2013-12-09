@@ -740,18 +740,27 @@ class Struct(Type):
           else:
             rline = 'this.%s = data.get%s();' % (variable_name, self.spec.convert_to_camel(variable_type))
         elif variable_type == 'byte[]':
+          if self.name == 'OFOxm' and prev_var and prev_var.endswith("length"):
+            rline = 'if ( this.%s > 0 ) {' % prev_var
+            readfroms.append(rline)
+            rline = '\tif ( this.%s == null ) this.%s = new byte[this.%s];' % (variable_name, variable_name, prev_var)
+            readfroms.append(rline)
+            rline = '\tdata.get(this.%s);' % variable_name
+            readfroms.append(rline)
+            rline = '}'
+          else:
 #           sz =  self.spec.get_type_size(variable_type)
-          sz = variable_length
-          if sz == None or sz == 0:
-            sz =  self.spec.get_type_size(variable_type)
-          if sz == None or sz == 0:
-            if not mark_added:
-              readfroms.insert(0, 'int mark = data.position();')
-              mark_added = True
-            sz = '(getLength() - (data.position() - mark))'
-          rline = 'if ( this.%s == null ) this.%s = new byte[%s];' % (variable_name, variable_name, sz)
-          readfroms.append(rline)
-          rline = 'data.get(this.%s);' % variable_name
+            sz = variable_length
+            if sz == None or sz == 0:
+              sz =  self.spec.get_type_size(variable_type)
+            if sz == None or sz == 0:
+              if not mark_added:
+                readfroms.insert(0, 'int mark = data.position();')
+                mark_added = True
+              sz = '(getLength() - (data.position() - mark))'
+            rline = 'if ( this.%s == null ) this.%s = new byte[%s];' % (variable_name, variable_name, sz)
+            readfroms.append(rline)
+            rline = 'data.get(this.%s);' % variable_name
         elif variable_type == ('String'):
 #           limit = 256
 #           if variable_name.find('serial') >= 0 :

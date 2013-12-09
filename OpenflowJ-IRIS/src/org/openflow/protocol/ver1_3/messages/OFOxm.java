@@ -10,7 +10,7 @@ public class OFOxm    {
 
     OFOxmClass  oxm_class;
 	byte  field_bitmask;
-	byte  length;
+	byte  payload_length;
 	byte[]  data;
 
     public OFOxm() {
@@ -20,7 +20,7 @@ public class OFOxm    {
     public OFOxm(OFOxm other) {
     	this.oxm_class = other.oxm_class;
 		this.field_bitmask = other.field_bitmask;
-		this.length = other.length;
+		this.payload_length = other.payload_length;
 		if (other.data != null) { this.data = java.util.Arrays.copyOf(other.data, other.data.length); }
     }
 
@@ -53,12 +53,12 @@ public class OFOxm    {
 		return this;
 	}
 			
-	public byte getLength() {
-		return this.length;
+	public byte getPayloadLength() {
+		return this.payload_length;
 	}
 	
-	public OFOxm setLength(byte length) {
-		this.length = length;
+	public OFOxm setPayloadLength(byte payload_length) {
+		this.payload_length = payload_length;
 		return this;
 	}
 			
@@ -73,26 +73,27 @@ public class OFOxm    {
 			
 
     public void readFrom(ByteBuffer data) {
-        int mark = data.position();
-		this.oxm_class = OFOxmClass.valueOf(OFOxmClass.readFrom(data));
+        this.oxm_class = OFOxmClass.valueOf(OFOxmClass.readFrom(data));
 		this.field_bitmask = data.get();
-		this.length = data.get();
-		if ( this.data == null ) this.data = new byte[(getLength() - (data.position() - mark))];
-		data.get(this.data);
+		this.payload_length = data.get();
+		if ( this.payload_length > 0 ) {
+			if ( this.data == null ) this.data = new byte[this.payload_length];
+			data.get(this.data);
+		}
     }
 
     public void writeTo(ByteBuffer data) {
     	
         data.putShort(this.oxm_class.getValue());
 		data.put(this.field_bitmask);
-		data.put(this.length);
+		data.put(this.payload_length);
 		if ( this.data != null ) { data.put(this.data); }
     }
 
     public String toString() {
         return  ":OFOxm-"+":oxm_class=" + oxm_class.toString() + 
 		":field_bitmask=" + U8.f(field_bitmask) + 
-		":length=" + U8.f(length) + 
+		":payload_length=" + U8.f(payload_length) + 
 		":data=" + java.util.Arrays.toString(data);
     }
 
@@ -123,7 +124,7 @@ public class OFOxm    {
 		int result = super.hashCode() * prime;
 		result = prime * result + ((oxm_class == null)?0:oxm_class.hashCode());
 		result = prime * result + (int) field_bitmask;
-		result = prime * result + (int) length;
+		result = prime * result + (int) payload_length;
 		result = prime * result + ((data == null)?0:java.util.Arrays.hashCode(data));
 		return result;
     }
@@ -144,7 +145,7 @@ public class OFOxm    {
 		if ( oxm_class == null && other.oxm_class != null ) { return false; }
 		else if ( !oxm_class.equals(other.oxm_class) ) { return false; }
 		if ( field_bitmask != other.field_bitmask ) return false;
-		if ( length != other.length ) return false;
+		if ( payload_length != other.payload_length ) return false;
 		if ( data == null && other.data != null ) { return false; }
 		else if ( !java.util.Arrays.equals(data, other.data) ) { return false; }
         return true;
