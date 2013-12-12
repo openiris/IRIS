@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.ver1_0.messages.OFPacketIn;
-import org.openflow.protocol.ver1_0.types.OFMessageType;
+import org.openflow.protocol.ver1_3.messages.OFPacketIn;
+import org.openflow.protocol.ver1_3.types.OFMessageType;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFController;
@@ -13,6 +13,7 @@ import etri.sdn.controller.OFModule;
 import etri.sdn.controller.module.devicemanager.OFMDefaultEntityClassifier;
 import etri.sdn.controller.module.devicemanager.OFMDeviceManager;
 import etri.sdn.controller.module.learningmac.OFMLearningMac;
+import etri.sdn.controller.module.learningmac.OFMLearningMac13;
 import etri.sdn.controller.module.linkdiscovery.OFMLinkDiscovery;
 import etri.sdn.controller.module.statemanager.OFMStateManager;
 import etri.sdn.controller.module.staticentrypusher.OFMStaticFlowEntryPusher;
@@ -40,6 +41,7 @@ public class SimpleOFController extends OFController {
 
 	private OFMUserInterface m_user_interface = new OFMUserInterface();
 	private OFMLearningMac m_learning_mac = new OFMLearningMac();
+	private OFMLearningMac13 m_learning_mac13 = new OFMLearningMac13();
 	private OFMLinkDiscovery m_link_discovery = new OFMLinkDiscovery();
 	private OFMTopologyManager m_topology_manager = new OFMTopologyManager();
 	private OFMDefaultEntityClassifier m_entity_classifier = new OFMDefaultEntityClassifier();
@@ -50,6 +52,7 @@ public class SimpleOFController extends OFController {
 	
 	private OFModule[] packet_in_pipeline = { 
 			m_learning_mac,
+			m_learning_mac13,
 			m_link_discovery, 
 			m_topology_manager,
 			m_entity_classifier, 
@@ -67,6 +70,7 @@ public class SimpleOFController extends OFController {
 	@Override
 	public void init() {
 		m_learning_mac.init(this);
+		m_learning_mac13.init(this);
 		m_link_discovery.init(this);
 		m_topology_manager.init(this);
 		m_entity_classifier.init(this);
@@ -88,11 +92,14 @@ public class SimpleOFController extends OFController {
 	@Override
 //	public boolean handlePacketIn(Connection conn, MessageContext context, OFPacketIn pi) {
 	public boolean handlePacketIn(Connection conn, MessageContext context, OFMessage m) {
+		
+		//m.getVersion(); //labry 
+		
 		OFPacketIn pi = (OFPacketIn) m;
 
 		List<OFMessage> out = new LinkedList<OFMessage>();
 		for ( int i = 0; i < packet_in_pipeline.length; ++i ) {
-			boolean cont = packet_in_pipeline[i].processMessage( conn, context, pi, out );
+			boolean cont = packet_in_pipeline[i].processMessage( conn, context, m, out );
 			if ( !conn.write(out) ) {
 				return false;
 			}
