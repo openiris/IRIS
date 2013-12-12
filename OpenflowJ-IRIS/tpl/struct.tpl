@@ -41,16 +41,14 @@ $accessors
     }
     
     // calculate the amount that will be increased by the alignment requirement.
-    public short alignment(short req) {
-    	if (req == 0) return 0;
-    	short l = (short)(computeLength() % req);
-    	if ( l == 0 ) { return 0; }
-    	return (short)( req - l );
+    public short alignment(int total, int req) {
+    	return (short)((total + (req-1))/req*req - total);
     }
     
     // compute the difference with MINIMUM_LENGTH (with alignment)
     public short lengthDiff() {
-    	return (short)(computeLength() - (short)MINIMUM_LENGTH + alignment((short)$align));
+    	short total = computeLength();
+    	return (short)(total - (short)MINIMUM_LENGTH + alignment(total, $align));
     }
 
     @Override

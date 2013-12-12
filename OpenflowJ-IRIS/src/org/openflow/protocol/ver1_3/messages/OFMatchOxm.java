@@ -41,14 +41,14 @@ public class OFMatchOxm extends OFMatch  {
 		if (this.oxm_fields == null) this.oxm_fields = new LinkedList<OFOxm>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) { OFOxm t = new OFOxm(); t.readFrom(data); this.oxm_fields.add(t); __cnt -= (OFOxm.MINIMUM_LENGTH + t.getPayloadLength()); }
-		int __align = alignment((short)8);
+		int __align = alignment(getLength(), 8);
 		while (__align > 0 && 8 - __align > 0) { data.get(); __align += 1; }
     }
 
     public void writeTo(ByteBuffer data) {
     	super.writeTo(data);
         if (this.oxm_fields != null ) for (OFOxm t: this.oxm_fields) { t.writeTo(data); }
-		int __align = alignment((short)8);
+		int __align = alignment(computeLength(), 8);
 		while (__align > 0 && 8 - __align > 0) { data.put((byte)0); __align += 1; }
     }
 
@@ -64,16 +64,14 @@ public class OFMatchOxm extends OFMatch  {
     }
     
     // calculate the amount that will be increased by the alignment requirement.
-    public short alignment(short req) {
-    	if (req == 0) return 0;
-    	short l = (short)(computeLength() % req);
-    	if ( l == 0 ) { return 0; }
-    	return (short)( req - l );
+    public short alignment(int total, int req) {
+    	return (short)((total + (req-1))/req*req - total);
     }
     
     // compute the difference with MINIMUM_LENGTH (with alignment)
     public short lengthDiff() {
-    	return (short)(computeLength() - (short)MINIMUM_LENGTH + alignment((short)8));
+    	short total = computeLength();
+    	return (short)(total - (short)MINIMUM_LENGTH + alignment(total, 8));
     }
 
     @Override
