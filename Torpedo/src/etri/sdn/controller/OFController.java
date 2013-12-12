@@ -24,6 +24,7 @@ import etri.sdn.controller.protocol.io.IOFProtocolServer;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.version.VersionAdaptor;
 import etri.sdn.controller.protocol.version.VersionAdaptor10;
+import etri.sdn.controller.protocol.version.VersionAdaptor13;
 import etri.sdn.controller.util.Logger;
 
 /**
@@ -237,6 +238,7 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 		}
 		
 		setVersionAdaptor(VersionAdaptor10.VERSION, new VersionAdaptor10(this));
+		setVersionAdaptor(VersionAdaptor13.VERSION, new VersionAdaptor13(this));
 	}
 	
 	@Override
