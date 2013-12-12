@@ -917,13 +917,13 @@ class Struct(Type):
     # align(8) at the end of struct.
     if self.align > 0: 
         readfroms.append('int __align = alignment(getLength(), %d);' % self.align)
-        readfroms.append('while (__align > 0 && %d - __align > 0) { data.get(); __align += 1; }' % self.align)
+        readfroms.append('for (int i = 0; i < __align; ++i ) { data.get(); }')
         
     # add writeto lines if there is alignment considerations such as 
     # align(8) at the end of struct.
     if self.align > 0:
         writetos.append('int __align = alignment(computeLength(), %d);' % self.align)
-        writetos.append('while (__align > 0 && %d - __align > 0) { data.put((byte)0); __align += 1; }' % self.align)
+        writetos.append('for (int i = 0; i < __align; ++i ) { data.put((byte)0); }')
     
     # build hashcode lines
     htpl = Template.get_template('tpl/struct_hashcode.tpl')
