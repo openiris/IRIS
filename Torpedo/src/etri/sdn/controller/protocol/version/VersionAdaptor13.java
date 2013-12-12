@@ -20,7 +20,9 @@ import org.openflow.protocol.ver1_3.messages.OFInstruction;
 import org.openflow.protocol.ver1_3.messages.OFInstructionApplyActions;
 import org.openflow.protocol.ver1_3.messages.OFMatchOxm;
 import org.openflow.protocol.ver1_3.messages.OFMultipartDescReply;
+import org.openflow.protocol.ver1_3.messages.OFMultipartDescRequest;
 import org.openflow.protocol.ver1_3.messages.OFMultipartPortDescReply;
+import org.openflow.protocol.ver1_3.messages.OFMultipartPortDescRequest;
 import org.openflow.protocol.ver1_3.messages.OFMultipartReply;
 import org.openflow.protocol.ver1_3.messages.OFMultipartRequest;
 import org.openflow.protocol.ver1_3.messages.OFPortDesc;
@@ -167,59 +169,21 @@ public class VersionAdaptor13 extends VersionAdaptor {
 			// send feature request message.
 			OFFeaturesRequest freq = (OFFeaturesRequest) OFMessageType.FEATURES_REQUEST.newInstance();
 			conn.write(freq);
-			// send port desc request message to retrieve all port list.
-/*			OFMultipartPortDescRequest preq = (OFMultipartPortDescRequest) OFMultipartType.PORT_DESC.newInstance(OFMessageType.MULTIPART_REQUEST);
-			conn.write(preq);
-			// send switch description request message.
-			OFMultipartDescRequest req = 
-					(OFMultipartDescRequest) OFMultipartType.DESC.newInstance(OFMessageType.MULTIPART_REQUEST);
-			conn.write(req); */
+			
 			// set configuration parameters in the switch.
 			// The switch does not reply to a request to set the configuration.
 			// The flags indicate whether IP fragments should be threated normally, dropped, or reassembled. [jshin]
 			OFSetConfig sc = (OFSetConfig) OFMessageType.SET_CONFIG.newInstance();
 			sc.setFlags((short) 0).setMissSendLength((short) 128);
 			conn.write(sc);
-			
-			// send flow_mod to process table miss packets [jshin]
-			OFInstructionApplyActions instruction = new OFInstructionApplyActions();
-			List<OFInstruction> instructions = new LinkedList<OFInstruction>();
-			OFMatchOxm match = new OFMatchOxm();
-			OFActionOutput action = new OFActionOutput();
-			List<OFAction> actions = new LinkedList<OFAction>();
-			
-			OFFlowMod fm = (OFFlowMod) OFMessageType.FLOW_MOD.newInstance();
-			action.setType(OFActionType.OUTPUT);
-			action.setPort(0xfffffffd).setMaxLength((short) 0);		//OFPP_CONTROLLER
-			action.setMaxLength((short) 0x0);
-			action.setLength(action.computeLength());
-			actions.add(action);
-			instruction.setActions(actions);
-			instruction.setType(OFInstructionType.APPLY_ACTIONS); //labry added
-			instruction.setLength(instruction.computeLength());//labry added
-			instructions.clear();
-			instructions.add(instruction);
-
-			fm.setTableId((byte) 0x0)						//the table which the flow entry should be inserted
-			.setCommand(OFFlowModCommand.OFPFC_ADD)
-			.setIdleTimeout((short) 0)
-			.setHardTimeout((short) 0)					//permanent if idle and hard timeout are zero
-			.setPriority((short) 0)
-			.setBufferId(0x00000000)					//refers to a packet buffered at the switch and sent to the controller
-			.setOutGroup(0xffffffff)					//OFPP_ANY
-			.setOutPort(0xffffffff)
-			.setMatch(match)
-			.setInstructions(instructions)
-			.setFlags((short) 0x0001);					//send flow removed message when flow expires or is deleted
-			
-			conn.write(fm);
-			try {
-				Thread.sleep(1500);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			conn.write(fm);
+						
+//			try {
+//				Thread.sleep(2500);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			conn.write(fm);
 			break;
 			
 		case ERROR:
@@ -282,6 +246,52 @@ public class VersionAdaptor13 extends VersionAdaptor {
 			if ( !getController().handleGeneric(conn, context, m) ) {
 				return false;
 			}
+			
+			// send port desc request message to retrieve all port list.
+			OFMultipartPortDescRequest preq = (OFMultipartPortDescRequest) OFMultipartType.PORT_DESC.newInstance(OFMessageType.MULTIPART_REQUEST);
+//			System.out.println(preq);
+			conn.write(preq);
+			
+			// send switch description request message.
+			OFMultipartDescRequest req = 
+					(OFMultipartDescRequest) OFMultipartType.DESC.newInstance(OFMessageType.MULTIPART_REQUEST);
+//			System.out.println(req);
+			conn.write(req);
+			
+						
+			// send flow_mod to process table miss packets [jshin]
+			OFInstructionApplyActions instruction = new OFInstructionApplyActions();
+			List<OFInstruction> instructions = new LinkedList<OFInstruction>();
+			OFMatchOxm match = new OFMatchOxm();
+			OFActionOutput action = new OFActionOutput();
+			List<OFAction> actions = new LinkedList<OFAction>();
+			
+			OFFlowMod fm = (OFFlowMod) OFMessageType.FLOW_MOD.newInstance();
+			action.setType(OFActionType.OUTPUT);
+			action.setPort(0xfffffffd).setMaxLength((short) 0);		//OFPP_CONTROLLER
+			action.setMaxLength((short) 0x0);
+			action.setLength(action.computeLength());
+			actions.add(action);
+			instruction.setActions(actions);
+			instruction.setType(OFInstructionType.APPLY_ACTIONS); //labry added
+			instruction.setLength(instruction.computeLength());//labry added
+			instructions.clear();
+			instructions.add(instruction);
+
+			fm.setTableId((byte) 0x0)						//the table which the flow entry should be inserted
+			.setCommand(OFFlowModCommand.OFPFC_ADD)
+			.setIdleTimeout((short) 0)
+			.setHardTimeout((short) 0)					//permanent if idle and hard timeout are zero
+			.setPriority((short) 0)
+			.setBufferId(0x00000000)					//refers to a packet buffered at the switch and sent to the controller
+			.setOutGroup(0xffffffff)					//OFPP_ANY
+			.setOutPort(0xffffffff)
+			.setMatch(match)
+			.setInstructions(instructions)
+			.setFlags((short) 0x0001);					//send flow removed message when flow expires or is deleted
+			
+			conn.write(fm);			
+			
 			break; //was missing ... labry
 		case PORT_STATUS:
 			if ( sw == null ) return false;
