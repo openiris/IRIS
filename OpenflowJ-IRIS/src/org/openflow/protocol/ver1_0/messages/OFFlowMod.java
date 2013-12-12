@@ -18,7 +18,7 @@ public class OFFlowMod extends OFMessage  {
 	short  priority;
 	int  buffer_id;
 	short  out_port;
-	OFFlowModFlags  flags;
+	short  flags;
 	List<OFAction>  actions;
 
     public OFFlowMod() {
@@ -117,14 +117,14 @@ public class OFFlowMod extends OFMessage  {
 	}
 			
 	public short getFlags() {
-		return this.flags.getValue();
+		return this.flags;
 	}
 	
 	public OFFlowMod setFlags(short flags) {
-		if (this.flags == null) this.flags = new OFFlowModFlags();
-		this.flags.setValue( flags );
+		this.flags = flags;
 		return this;
 	}
+			
 	public List<OFAction> getActions() {
 		return this.actions;
 	}
@@ -147,8 +147,7 @@ public class OFFlowMod extends OFMessage  {
 		this.priority = data.getShort();
 		this.buffer_id = data.getInt();
 		this.out_port = data.getShort();
-		if (this.flags == null) this.flags = new OFFlowModFlags();
-		this.flags.setValue( OFFlowModFlags.readFrom(data) );
+		this.flags = data.getShort();
 		if (this.actions == null) this.actions = new LinkedList<OFAction>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) {
@@ -171,7 +170,7 @@ public class OFFlowMod extends OFMessage  {
 		data.putShort(this.priority);
 		data.putInt(this.buffer_id);
 		data.putShort(this.out_port);
-		data.putShort(this.flags.getValue());
+		data.putShort(this.flags);
 		if (this.actions != null ) for (OFAction t: this.actions) { t.writeTo(data); }
     }
 
@@ -184,7 +183,7 @@ public class OFFlowMod extends OFMessage  {
 		":priority=" + U16.f(priority) + 
 		":buffer_id=" + U32.f(buffer_id) + 
 		":out_port=" + U16.f(out_port) + 
-		":flags=" + flags.toString() + 
+		":flags=" + U16.f(flags) + 
 		":actions=" + actions.toString();
     }
 
@@ -219,7 +218,7 @@ public class OFFlowMod extends OFMessage  {
 		result = prime * result + (int) priority;
 		result = prime * result + (int) buffer_id;
 		result = prime * result + (int) out_port;
-		result = prime * result + ((flags == null)?0:flags.hashCode());
+		result = prime * result + (int) flags;
 		result = prime * result + ((actions == null)?0:actions.hashCode());
 		return result;
     }
@@ -247,8 +246,7 @@ public class OFFlowMod extends OFMessage  {
 		if ( priority != other.priority ) return false;
 		if ( buffer_id != other.buffer_id ) return false;
 		if ( out_port != other.out_port ) return false;
-		if ( flags == null && other.flags != null ) { return false; }
-		else if ( !flags.equals(other.flags) ) { return false; }
+		if ( flags != other.flags ) return false;
 		if ( actions == null && other.actions != null ) { return false; }
 		else if ( !actions.equals(other.actions) ) { return false; }
         return true;

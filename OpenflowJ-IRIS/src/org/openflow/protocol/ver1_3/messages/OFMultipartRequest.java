@@ -9,13 +9,14 @@ public class OFMultipartRequest extends OFMultipart  {
     public static int MINIMUM_LENGTH = 16;
 
     OFMultipartType  multipart_type;
-	OFMultipartRequestFlags  flags;
+	short  flags;
 	int pad_1th;
 
     public OFMultipartRequest() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)18));
+		this.flags = (short)0;
     }
     
     public OFMultipartRequest(OFMultipartRequest other) {
@@ -34,33 +35,32 @@ public class OFMultipartRequest extends OFMultipart  {
 	}
 			
 	public short getFlags() {
-		return this.flags.getValue();
+		return this.flags;
 	}
 	
 	public OFMultipartRequest setFlags(short flags) {
-		if (this.flags == null) this.flags = new OFMultipartRequestFlags();
-		this.flags.setValue( flags );
+		this.flags = flags;
 		return this;
 	}
+			
 
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.multipart_type = OFMultipartType.valueOf(OFMultipartType.readFrom(data), super.getType());
-		if (this.flags == null) this.flags = new OFMultipartRequestFlags();
-		this.flags.setValue( OFMultipartRequestFlags.readFrom(data) );
+		this.flags = data.getShort();
 		this.pad_1th = data.getInt();
     }
 
     public void writeTo(ByteBuffer data) {
     	super.writeTo(data);
         data.putShort(this.multipart_type.getTypeValue());
-		data.putShort(this.flags.getValue());
+		data.putShort(this.flags);
 		data.putInt(this.pad_1th);
     }
 
     public String toString() {
         return super.toString() +  ":OFMultipartRequest-"+":multipart_type=" + multipart_type.toString() + 
-		":flags=" + flags.toString();
+		":flags=" + U16.f(flags);
     }
 
 	// compute length (without final alignment)    
@@ -87,7 +87,7 @@ public class OFMultipartRequest extends OFMultipart  {
 		final int prime = 1879;
 		int result = super.hashCode() * prime;
 		result = prime * result + ((multipart_type == null)?0:multipart_type.hashCode());
-		result = prime * result + ((flags == null)?0:flags.hashCode());
+		result = prime * result + (int) flags;
 		return result;
     }
 
@@ -106,8 +106,7 @@ public class OFMultipartRequest extends OFMultipart  {
         OFMultipartRequest other = (OFMultipartRequest) obj;
 		if ( multipart_type == null && other.multipart_type != null ) { return false; }
 		else if ( !multipart_type.equals(other.multipart_type) ) { return false; }
-		if ( flags == null && other.flags != null ) { return false; }
-		else if ( !flags.equals(other.flags) ) { return false; }
+		if ( flags != other.flags ) return false;
         return true;
     }
 }

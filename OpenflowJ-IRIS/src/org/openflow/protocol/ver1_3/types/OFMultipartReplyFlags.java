@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 public class OFMultipartReplyFlags {
 	private short value;
 	
+	public static short	OFPMPF_REPLY_NONE	=	0x0;
 	public static short	OFPMPF_REPLY_MORE	=	0x1;
 	
 	

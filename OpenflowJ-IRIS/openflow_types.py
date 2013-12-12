@@ -560,9 +560,13 @@ class Struct(Type):
         
         # see if we can change the default java type name
         for ns in [prefixed_variable_name, variable_type, self.spec.get_java_classname(variable_name)]:
-          if self.spec.get_type(ns):
-            variable_type = ns
-            break
+          tmp = self.spec.get_type(ns)
+          if tmp:
+            if isinstance(tmp, Enum) and tmp.is_bitmask_enum():
+              continue
+            else:
+              variable_type = ns
+              break
           
         if variable_type == 'List':
           declarations.append('%s<%s>  %s;' % ( variable_type, i['inner'], variable_name))

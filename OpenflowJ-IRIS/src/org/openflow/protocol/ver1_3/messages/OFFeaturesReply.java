@@ -13,7 +13,7 @@ public class OFFeaturesReply extends OFMessage  {
 	byte  n_tables;
 	byte  auxiliary_id;
 	short pad_1th;
-	OFCapabilities  capabilities;
+	int  capabilities;
 	int  reserved;
 
     public OFFeaturesReply() {
@@ -69,14 +69,14 @@ public class OFFeaturesReply extends OFMessage  {
 	}
 			
 	public int getCapabilities() {
-		return this.capabilities.getValue();
+		return this.capabilities;
 	}
 	
 	public OFFeaturesReply setCapabilities(int capabilities) {
-		if (this.capabilities == null) this.capabilities = new OFCapabilities();
-		this.capabilities.setValue( capabilities );
+		this.capabilities = capabilities;
 		return this;
 	}
+			
 	public int getReserved() {
 		return this.reserved;
 	}
@@ -94,8 +94,7 @@ public class OFFeaturesReply extends OFMessage  {
 		this.n_tables = data.get();
 		this.auxiliary_id = data.get();
 		this.pad_1th = data.getShort();
-		if (this.capabilities == null) this.capabilities = new OFCapabilities();
-		this.capabilities.setValue( OFCapabilities.readFrom(data) );
+		this.capabilities = data.getInt();
 		this.reserved = data.getInt();
     }
 
@@ -106,7 +105,7 @@ public class OFFeaturesReply extends OFMessage  {
 		data.put(this.n_tables);
 		data.put(this.auxiliary_id);
 		data.putShort(this.pad_1th);
-		data.putInt(this.capabilities.getValue());
+		data.putInt(this.capabilities);
 		data.putInt(this.reserved);
     }
 
@@ -115,7 +114,7 @@ public class OFFeaturesReply extends OFMessage  {
 		":n_buffers=" + U32.f(n_buffers) + 
 		":n_tables=" + U8.f(n_tables) + 
 		":auxiliary_id=" + U8.f(auxiliary_id) + 
-		":capabilities=" + capabilities.toString() + 
+		":capabilities=" + U32.f(capabilities) + 
 		":reserved=" + U32.f(reserved);
     }
 
@@ -146,7 +145,7 @@ public class OFFeaturesReply extends OFMessage  {
 		result = prime * result + (int) n_buffers;
 		result = prime * result + (int) n_tables;
 		result = prime * result + (int) auxiliary_id;
-		result = prime * result + ((capabilities == null)?0:capabilities.hashCode());
+		result = prime * result + (int) capabilities;
 		result = prime * result + (int) reserved;
 		return result;
     }
@@ -168,8 +167,7 @@ public class OFFeaturesReply extends OFMessage  {
 		if ( n_buffers != other.n_buffers ) return false;
 		if ( n_tables != other.n_tables ) return false;
 		if ( auxiliary_id != other.auxiliary_id ) return false;
-		if ( capabilities == null && other.capabilities != null ) { return false; }
-		else if ( !capabilities.equals(other.capabilities) ) { return false; }
+		if ( capabilities != other.capabilities ) return false;
 		if ( reserved != other.reserved ) return false;
         return true;
     }

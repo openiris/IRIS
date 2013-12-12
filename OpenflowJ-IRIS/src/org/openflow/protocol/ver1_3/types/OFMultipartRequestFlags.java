@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 public class OFMultipartRequestFlags {
 	private short value;
 	
+	public static short	OFPMPF_REQ_NONE	=	0x0;
 	public static short	OFPMPF_REQ_MORE	=	0x1;
 	
 	

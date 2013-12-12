@@ -9,7 +9,7 @@ public class OFMultipartGroupFeaturesReply extends OFMultipartReply  {
     public static int MINIMUM_LENGTH = 56;
 
     int  types;
-	OFCapabilities  capabilities;
+	int  capabilities;
 	int  max_groups_all;
 	int  max_groups_select;
 	int  max_groups_indirect;
@@ -50,14 +50,14 @@ public class OFMultipartGroupFeaturesReply extends OFMultipartReply  {
 	}
 			
 	public int getCapabilities() {
-		return this.capabilities.getValue();
+		return this.capabilities;
 	}
 	
 	public OFMultipartGroupFeaturesReply setCapabilities(int capabilities) {
-		if (this.capabilities == null) this.capabilities = new OFCapabilities();
-		this.capabilities.setValue( capabilities );
+		this.capabilities = capabilities;
 		return this;
 	}
+			
 	public int getMaxGroupsAll() {
 		return this.max_groups_all;
 	}
@@ -134,8 +134,7 @@ public class OFMultipartGroupFeaturesReply extends OFMultipartReply  {
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.types = data.getInt();
-		if (this.capabilities == null) this.capabilities = new OFCapabilities();
-		this.capabilities.setValue( OFCapabilities.readFrom(data) );
+		this.capabilities = data.getInt();
 		this.max_groups_all = data.getInt();
 		this.max_groups_select = data.getInt();
 		this.max_groups_indirect = data.getInt();
@@ -149,7 +148,7 @@ public class OFMultipartGroupFeaturesReply extends OFMultipartReply  {
     public void writeTo(ByteBuffer data) {
     	super.writeTo(data);
         data.putInt(this.types);
-		data.putInt(this.capabilities.getValue());
+		data.putInt(this.capabilities);
 		data.putInt(this.max_groups_all);
 		data.putInt(this.max_groups_select);
 		data.putInt(this.max_groups_indirect);
@@ -162,7 +161,7 @@ public class OFMultipartGroupFeaturesReply extends OFMultipartReply  {
 
     public String toString() {
         return super.toString() +  ":OFMultipartGroupFeaturesReply-"+":types=" + U32.f(types) + 
-		":capabilities=" + capabilities.toString() + 
+		":capabilities=" + U32.f(capabilities) + 
 		":max_groups_all=" + U32.f(max_groups_all) + 
 		":max_groups_select=" + U32.f(max_groups_select) + 
 		":max_groups_indirect=" + U32.f(max_groups_indirect) + 
@@ -197,7 +196,7 @@ public class OFMultipartGroupFeaturesReply extends OFMultipartReply  {
 		final int prime = 1597;
 		int result = super.hashCode() * prime;
 		result = prime * result + (int) types;
-		result = prime * result + ((capabilities == null)?0:capabilities.hashCode());
+		result = prime * result + (int) capabilities;
 		result = prime * result + (int) max_groups_all;
 		result = prime * result + (int) max_groups_select;
 		result = prime * result + (int) max_groups_indirect;
@@ -223,8 +222,7 @@ public class OFMultipartGroupFeaturesReply extends OFMultipartReply  {
         }
         OFMultipartGroupFeaturesReply other = (OFMultipartGroupFeaturesReply) obj;
 		if ( types != other.types ) return false;
-		if ( capabilities == null && other.capabilities != null ) { return false; }
-		else if ( !capabilities.equals(other.capabilities) ) { return false; }
+		if ( capabilities != other.capabilities ) return false;
 		if ( max_groups_all != other.max_groups_all ) return false;
 		if ( max_groups_select != other.max_groups_select ) return false;
 		if ( max_groups_indirect != other.max_groups_indirect ) return false;

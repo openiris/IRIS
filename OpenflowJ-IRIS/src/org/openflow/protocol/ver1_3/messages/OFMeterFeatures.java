@@ -10,7 +10,7 @@ public class OFMeterFeatures    {
 
     int  max_meter;
 	int  band_types;
-	OFCapabilities  capabilities;
+	int  capabilities;
 	byte  max_bands;
 	byte  max_color;
 	short pad_1th;
@@ -46,14 +46,14 @@ public class OFMeterFeatures    {
 	}
 			
 	public int getCapabilities() {
-		return this.capabilities.getValue();
+		return this.capabilities;
 	}
 	
 	public OFMeterFeatures setCapabilities(int capabilities) {
-		if (this.capabilities == null) this.capabilities = new OFCapabilities();
-		this.capabilities.setValue( capabilities );
+		this.capabilities = capabilities;
 		return this;
 	}
+			
 	public byte getMaxBands() {
 		return this.max_bands;
 	}
@@ -76,8 +76,7 @@ public class OFMeterFeatures    {
     public void readFrom(ByteBuffer data) {
         this.max_meter = data.getInt();
 		this.band_types = data.getInt();
-		if (this.capabilities == null) this.capabilities = new OFCapabilities();
-		this.capabilities.setValue( OFCapabilities.readFrom(data) );
+		this.capabilities = data.getInt();
 		this.max_bands = data.get();
 		this.max_color = data.get();
 		this.pad_1th = data.getShort();
@@ -87,7 +86,7 @@ public class OFMeterFeatures    {
     	
         data.putInt(this.max_meter);
 		data.putInt(this.band_types);
-		data.putInt(this.capabilities.getValue());
+		data.putInt(this.capabilities);
 		data.put(this.max_bands);
 		data.put(this.max_color);
 		data.putShort(this.pad_1th);
@@ -96,7 +95,7 @@ public class OFMeterFeatures    {
     public String toString() {
         return  ":OFMeterFeatures-"+":max_meter=" + U32.f(max_meter) + 
 		":band_types=" + U32.f(band_types) + 
-		":capabilities=" + capabilities.toString() + 
+		":capabilities=" + U32.f(capabilities) + 
 		":max_bands=" + U8.f(max_bands) + 
 		":max_color=" + U8.f(max_color);
     }
@@ -126,7 +125,7 @@ public class OFMeterFeatures    {
 		int result = super.hashCode() * prime;
 		result = prime * result + (int) max_meter;
 		result = prime * result + (int) band_types;
-		result = prime * result + ((capabilities == null)?0:capabilities.hashCode());
+		result = prime * result + (int) capabilities;
 		result = prime * result + (int) max_bands;
 		result = prime * result + (int) max_color;
 		return result;
@@ -147,8 +146,7 @@ public class OFMeterFeatures    {
         OFMeterFeatures other = (OFMeterFeatures) obj;
 		if ( max_meter != other.max_meter ) return false;
 		if ( band_types != other.band_types ) return false;
-		if ( capabilities == null && other.capabilities != null ) { return false; }
-		else if ( !capabilities.equals(other.capabilities) ) { return false; }
+		if ( capabilities != other.capabilities ) return false;
 		if ( max_bands != other.max_bands ) return false;
 		if ( max_color != other.max_color ) return false;
         return true;

@@ -543,10 +543,12 @@ enum ofp_multipart_type(wire_type=uint16_t, request=ofp_message_type.OFPT_MULTIP
 };
 
 enum ofp_multipart_request_flags(wire_type=uint16_t, bitmask=True) {
+	OFPMPF_REQ_NONE = 0x0,
     OFPMPF_REQ_MORE = 0x1,
 };
 
 enum ofp_multipart_reply_flags(wire_type=uint16_t, bitmask=True) {
+	OFPMPF_REPLY_NONE = 0x0,
     OFPMPF_REPLY_MORE = 0x1,
 };
 
@@ -1335,7 +1337,7 @@ struct of_multipart_request : of_multipart {
     uint16_t length;
     uint32_t xid;
     uint16_t multipart_type == ?;
-    uint16_t flags;
+    uint16_t flags == 0;
     pad(4);
 };
 
@@ -1345,7 +1347,7 @@ struct of_multipart_reply : of_multipart {
     uint16_t length;
     uint32_t xid;
     uint16_t multipart_type == ?;
-    uint16_t flags;
+    uint16_t flags == 0;
     pad(4);
 };
 

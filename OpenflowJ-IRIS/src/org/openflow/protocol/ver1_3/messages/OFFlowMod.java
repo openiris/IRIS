@@ -20,7 +20,7 @@ public class OFFlowMod extends OFMessage  {
 	int  buffer_id;
 	int  out_port;
 	int  out_group;
-	OFFlowModFlags  flags;
+	short  flags;
 	short pad_1th;
 	OFMatchOxm  match;
 	List<OFInstruction>  instructions;
@@ -142,14 +142,14 @@ public class OFFlowMod extends OFMessage  {
 	}
 			
 	public short getFlags() {
-		return this.flags.getValue();
+		return this.flags;
 	}
 	
 	public OFFlowMod setFlags(short flags) {
-		if (this.flags == null) this.flags = new OFFlowModFlags();
-		this.flags.setValue( flags );
+		this.flags = flags;
 		return this;
 	}
+			
 	public OFMatchOxm getMatch() {
 		return this.match;
 	}
@@ -182,8 +182,7 @@ public class OFFlowMod extends OFMessage  {
 		this.buffer_id = data.getInt();
 		this.out_port = data.getInt();
 		this.out_group = data.getInt();
-		if (this.flags == null) this.flags = new OFFlowModFlags();
-		this.flags.setValue( OFFlowModFlags.readFrom(data) );
+		this.flags = data.getShort();
 		this.pad_1th = data.getShort();
 		if (this.match == null) this.match = new OFMatchOxm();
 		this.match.readFrom(data);
@@ -211,7 +210,7 @@ public class OFFlowMod extends OFMessage  {
 		data.putInt(this.buffer_id);
 		data.putInt(this.out_port);
 		data.putInt(this.out_group);
-		data.putShort(this.flags.getValue());
+		data.putShort(this.flags);
 		data.putShort(this.pad_1th);
 		match.writeTo(data);
 		if (this.instructions != null ) for (OFInstruction t: this.instructions) { t.writeTo(data); }
@@ -228,7 +227,7 @@ public class OFFlowMod extends OFMessage  {
 		":buffer_id=" + U32.f(buffer_id) + 
 		":out_port=" + U32.f(out_port) + 
 		":out_group=" + U32.f(out_group) + 
-		":flags=" + flags.toString() + 
+		":flags=" + U16.f(flags) + 
 		":match=" + match.toString() + 
 		":instructions=" + instructions.toString();
     }
@@ -267,7 +266,7 @@ public class OFFlowMod extends OFMessage  {
 		result = prime * result + (int) buffer_id;
 		result = prime * result + (int) out_port;
 		result = prime * result + (int) out_group;
-		result = prime * result + ((flags == null)?0:flags.hashCode());
+		result = prime * result + (int) flags;
 		result = prime * result + ((match == null)?0:match.hashCode());
 		result = prime * result + ((instructions == null)?0:instructions.hashCode());
 		return result;
@@ -297,8 +296,7 @@ public class OFFlowMod extends OFMessage  {
 		if ( buffer_id != other.buffer_id ) return false;
 		if ( out_port != other.out_port ) return false;
 		if ( out_group != other.out_group ) return false;
-		if ( flags == null && other.flags != null ) { return false; }
-		else if ( !flags.equals(other.flags) ) { return false; }
+		if ( flags != other.flags ) return false;
 		if ( match == null && other.match != null ) { return false; }
 		else if ( !match.equals(other.match) ) { return false; }
 		if ( instructions == null && other.instructions != null ) { return false; }

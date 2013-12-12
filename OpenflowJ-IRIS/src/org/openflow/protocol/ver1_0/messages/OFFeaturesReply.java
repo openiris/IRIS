@@ -15,7 +15,7 @@ public class OFFeaturesReply extends OFMessage  {
 	byte  n_tables;
 	short pad_1th;
 	byte pad_2th;
-	OFCapabilities  capabilities;
+	int  capabilities;
 	int  actions;
 	List<OFPortDesc>  ports;
 
@@ -65,14 +65,14 @@ public class OFFeaturesReply extends OFMessage  {
 	}
 			
 	public int getCapabilities() {
-		return this.capabilities.getValue();
+		return this.capabilities;
 	}
 	
 	public OFFeaturesReply setCapabilities(int capabilities) {
-		if (this.capabilities == null) this.capabilities = new OFCapabilities();
-		this.capabilities.setValue( capabilities );
+		this.capabilities = capabilities;
 		return this;
 	}
+			
 	public int getActions() {
 		return this.actions;
 	}
@@ -100,8 +100,7 @@ public class OFFeaturesReply extends OFMessage  {
 		this.n_tables = data.get();
 		this.pad_1th = data.getShort();
 		this.pad_2th = data.get();
-		if (this.capabilities == null) this.capabilities = new OFCapabilities();
-		this.capabilities.setValue( OFCapabilities.readFrom(data) );
+		this.capabilities = data.getInt();
 		this.actions = data.getInt();
 		if (this.ports == null) this.ports = new LinkedList<OFPortDesc>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
@@ -115,7 +114,7 @@ public class OFFeaturesReply extends OFMessage  {
 		data.put(this.n_tables);
 		data.putShort(this.pad_1th);
 		data.put(this.pad_2th);
-		data.putInt(this.capabilities.getValue());
+		data.putInt(this.capabilities);
 		data.putInt(this.actions);
 		if (this.ports != null ) for (OFPortDesc t: this.ports) { t.writeTo(data); }
     }
@@ -124,7 +123,7 @@ public class OFFeaturesReply extends OFMessage  {
         return super.toString() +  ":OFFeaturesReply-"+":datapath_id=" + U64.f(datapath_id) + 
 		":n_buffers=" + U32.f(n_buffers) + 
 		":n_tables=" + U8.f(n_tables) + 
-		":capabilities=" + capabilities.toString() + 
+		":capabilities=" + U32.f(capabilities) + 
 		":actions=" + U32.f(actions) + 
 		":ports=" + ports.toString();
     }
@@ -155,7 +154,7 @@ public class OFFeaturesReply extends OFMessage  {
 		result = prime * result + (int) datapath_id;
 		result = prime * result + (int) n_buffers;
 		result = prime * result + (int) n_tables;
-		result = prime * result + ((capabilities == null)?0:capabilities.hashCode());
+		result = prime * result + (int) capabilities;
 		result = prime * result + (int) actions;
 		result = prime * result + ((ports == null)?0:ports.hashCode());
 		return result;
@@ -177,8 +176,7 @@ public class OFFeaturesReply extends OFMessage  {
 		if ( datapath_id != other.datapath_id ) return false;
 		if ( n_buffers != other.n_buffers ) return false;
 		if ( n_tables != other.n_tables ) return false;
-		if ( capabilities == null && other.capabilities != null ) { return false; }
-		else if ( !capabilities.equals(other.capabilities) ) { return false; }
+		if ( capabilities != other.capabilities ) return false;
 		if ( actions != other.actions ) return false;
 		if ( ports == null && other.ports != null ) { return false; }
 		else if ( !ports.equals(other.ports) ) { return false; }
