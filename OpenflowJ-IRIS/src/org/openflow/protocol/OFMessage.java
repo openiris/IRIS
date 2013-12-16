@@ -3,6 +3,9 @@ package org.openflow.protocol;
 import java.nio.ByteBuffer;
 
 public interface OFMessage {
+	public static final byte VERSION10 = 0x01;
+	public static final byte VERSION13 = 0x04;
+	
 	public byte getVersion();
 	public OFMessage setLength(short len);
 	public int getLengthU();
