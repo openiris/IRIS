@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFStatisticsDescReply extends OFStatisticsReply  {
+public class OFStatisticsDescReply extends OFStatisticsReply implements org.openflow.protocol.ver1_0.interfaces.OFStatisticsDescReply {
     public static int MINIMUM_LENGTH = 1068;
 
     String  manufacturer_description;

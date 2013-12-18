@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFBucketCounter    {
+public class OFBucketCounter   implements org.openflow.protocol.ver1_3.interfaces.OFBucketCounter {
     public static int MINIMUM_LENGTH = 16;
 
     long  packet_count;

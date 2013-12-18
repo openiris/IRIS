@@ -115,6 +115,9 @@ class Spec:
   def get_version(self):
     return self.version
   
+  def get_version_string(self):
+    return self.version.replace('.', '_')
+  
   def get_definition(self, str):
     ''' 
     This method search through the OFDefinitions to lookup the value assigned to a given name.

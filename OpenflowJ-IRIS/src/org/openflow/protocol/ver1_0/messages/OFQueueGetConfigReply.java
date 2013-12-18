@@ -7,26 +7,26 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFQueueGetConfigReply extends OFMessage  {
+public class OFQueueGetConfigReply extends OFMessage implements org.openflow.protocol.ver1_0.interfaces.OFQueueGetConfigReply {
     public static int MINIMUM_LENGTH = 16;
 
     short  port;
 	int pad_1th;
 	short pad_2th;
-	List<OFPacketQueue>  queues;
+	List<org.openflow.protocol.ver1_0.interfaces.OFPacketQueue>  queues;
 
     public OFQueueGetConfigReply() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)21));
-		this.queues = new LinkedList<OFPacketQueue>();
+		this.queues = new LinkedList<org.openflow.protocol.ver1_0.interfaces.OFPacketQueue>();
     }
     
     public OFQueueGetConfigReply(OFQueueGetConfigReply other) {
     	super(other);
 		this.port = other.port;
-		this.queues = (other.queues == null)? null: new LinkedList<OFPacketQueue>();
-		for ( OFPacketQueue i : other.queues ) { this.queues.add( new OFPacketQueue(i) ); }
+		this.queues = (other.queues == null)? null: new LinkedList<org.openflow.protocol.ver1_0.interfaces.OFPacketQueue>();
+		for ( org.openflow.protocol.ver1_0.interfaces.OFPacketQueue i : other.queues ) { this.queues.add( new OFPacketQueue((OFPacketQueue)i) ); }
     }
 
 	public short getPort() {
@@ -38,11 +38,11 @@ public class OFQueueGetConfigReply extends OFMessage  {
 		return this;
 	}
 			
-	public List<OFPacketQueue> getQueues() {
+	public List<org.openflow.protocol.ver1_0.interfaces.OFPacketQueue> getQueues() {
 		return this.queues;
 	}
 	
-	public OFQueueGetConfigReply setQueues(List<OFPacketQueue> queues) {
+	public OFQueueGetConfigReply setQueues(List<org.openflow.protocol.ver1_0.interfaces.OFPacketQueue> queues) {
 		this.queues = queues;
 		return this;
 	}
@@ -54,7 +54,7 @@ public class OFQueueGetConfigReply extends OFMessage  {
 		this.port = data.getShort();
 		this.pad_1th = data.getInt();
 		this.pad_2th = data.getShort();
-		if (this.queues == null) this.queues = new LinkedList<OFPacketQueue>();
+		if (this.queues == null) this.queues = new LinkedList<org.openflow.protocol.ver1_0.interfaces.OFPacketQueue>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) { OFPacketQueue t = new OFPacketQueue(); t.readFrom(data); this.queues.add(t); __cnt -= t.getLength(); }
     }
@@ -64,7 +64,7 @@ public class OFQueueGetConfigReply extends OFMessage  {
         data.putShort(this.port);
 		data.putInt(this.pad_1th);
 		data.putShort(this.pad_2th);
-		if (this.queues != null ) for (OFPacketQueue t: this.queues) { t.writeTo(data); }
+		if (this.queues != null ) for (org.openflow.protocol.ver1_0.interfaces.OFPacketQueue t: this.queues) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -75,7 +75,7 @@ public class OFQueueGetConfigReply extends OFMessage  {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( OFPacketQueue i : this.queues ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.ver1_0.interfaces.OFPacketQueue i : this.queues ) { len += i.computeLength(); }
     	return len;
     }
     

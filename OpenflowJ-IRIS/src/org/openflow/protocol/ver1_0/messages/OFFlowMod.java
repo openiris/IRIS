@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFFlowMod extends OFMessage  {
+public class OFFlowMod extends OFMessage implements org.openflow.protocol.ver1_0.interfaces.OFFlowMod {
     public static int MINIMUM_LENGTH = 72;
 
-    OFMatch  match;
+    org.openflow.protocol.ver1_0.interfaces.OFMatch  match;
 	long  cookie;
 	OFFlowModCommand  command;
 	short  idle_timeout;
@@ -19,19 +19,19 @@ public class OFFlowMod extends OFMessage  {
 	int  buffer_id;
 	short  out_port;
 	short  flags;
-	List<OFAction>  actions;
+	List<org.openflow.protocol.ver1_0.interfaces.OFAction>  actions;
 
     public OFFlowMod() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)14));
 		this.match = new OFMatch();
-		this.actions = new LinkedList<OFAction>();
+		this.actions = new LinkedList<org.openflow.protocol.ver1_0.interfaces.OFAction>();
     }
     
     public OFFlowMod(OFFlowMod other) {
     	super(other);
-		this.match = new OFMatch(other.match);
+		this.match = new OFMatch((OFMatch)other.match);
 		this.cookie = other.cookie;
 		this.command = other.command;
 		this.idle_timeout = other.idle_timeout;
@@ -40,15 +40,15 @@ public class OFFlowMod extends OFMessage  {
 		this.buffer_id = other.buffer_id;
 		this.out_port = other.out_port;
 		this.flags = other.flags;
-		this.actions = (other.actions == null)? null: new LinkedList<OFAction>();
-		for ( OFAction i : other.actions ) { this.actions.add( new OFAction(i) ); }
+		this.actions = (other.actions == null)? null: new LinkedList<org.openflow.protocol.ver1_0.interfaces.OFAction>();
+		for ( org.openflow.protocol.ver1_0.interfaces.OFAction i : other.actions ) { this.actions.add( new OFAction((OFAction)i) ); }
     }
 
-	public OFMatch getMatch() {
+	public org.openflow.protocol.ver1_0.interfaces.OFMatch getMatch() {
 		return this.match;
 	}
 	
-	public OFFlowMod setMatch(OFMatch match) {
+	public OFFlowMod setMatch(org.openflow.protocol.ver1_0.interfaces.OFMatch match) {
 		this.match = match;
 		return this;
 	}
@@ -125,11 +125,11 @@ public class OFFlowMod extends OFMessage  {
 		return this;
 	}
 			
-	public List<OFAction> getActions() {
+	public List<org.openflow.protocol.ver1_0.interfaces.OFAction> getActions() {
 		return this.actions;
 	}
 	
-	public OFFlowMod setActions(List<OFAction> actions) {
+	public OFFlowMod setActions(List<org.openflow.protocol.ver1_0.interfaces.OFAction> actions) {
 		this.actions = actions;
 		return this;
 	}
@@ -148,7 +148,7 @@ public class OFFlowMod extends OFMessage  {
 		this.buffer_id = data.getInt();
 		this.out_port = data.getShort();
 		this.flags = data.getShort();
-		if (this.actions == null) this.actions = new LinkedList<OFAction>();
+		if (this.actions == null) this.actions = new LinkedList<org.openflow.protocol.ver1_0.interfaces.OFAction>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) {
 		  data.mark();
@@ -171,7 +171,7 @@ public class OFFlowMod extends OFMessage  {
 		data.putInt(this.buffer_id);
 		data.putShort(this.out_port);
 		data.putShort(this.flags);
-		if (this.actions != null ) for (OFAction t: this.actions) { t.writeTo(data); }
+		if (this.actions != null ) for (org.openflow.protocol.ver1_0.interfaces.OFAction t: this.actions) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -190,7 +190,7 @@ public class OFFlowMod extends OFMessage  {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( OFAction i : this.actions ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.ver1_0.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
     	return len;
     }
     

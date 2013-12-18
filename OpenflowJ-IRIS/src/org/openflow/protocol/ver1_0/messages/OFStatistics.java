@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFStatistics extends OFMessage  {
+public class OFStatistics extends OFMessage implements org.openflow.protocol.ver1_0.interfaces.OFStatistics {
     public static int MINIMUM_LENGTH = 8;
 
     

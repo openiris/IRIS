@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFActionSetDlSrc extends OFAction  {
+public class OFActionSetDlSrc extends OFAction implements org.openflow.protocol.ver1_0.interfaces.OFActionSetDlSrc {
     public static int MINIMUM_LENGTH = 16;
 
     byte[]  dl_addr;

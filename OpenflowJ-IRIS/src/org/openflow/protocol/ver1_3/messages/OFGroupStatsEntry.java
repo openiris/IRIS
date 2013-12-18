@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFGroupStatsEntry    {
+public class OFGroupStatsEntry   implements org.openflow.protocol.ver1_3.interfaces.OFGroupStatsEntry {
     public static int MINIMUM_LENGTH = 40;
 
     short  length;
@@ -19,10 +19,10 @@ public class OFGroupStatsEntry    {
 	long  byte_count;
 	int  duration_sec;
 	int  duration_nsec;
-	List<OFBucketCounter>  bucket_stats;
+	List<org.openflow.protocol.ver1_3.interfaces.OFBucketCounter>  bucket_stats;
 
     public OFGroupStatsEntry() {
-        this.bucket_stats = new LinkedList<OFBucketCounter>();
+        this.bucket_stats = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFBucketCounter>();
     }
     
     public OFGroupStatsEntry(OFGroupStatsEntry other) {
@@ -33,8 +33,8 @@ public class OFGroupStatsEntry    {
 		this.byte_count = other.byte_count;
 		this.duration_sec = other.duration_sec;
 		this.duration_nsec = other.duration_nsec;
-		this.bucket_stats = (other.bucket_stats == null)? null: new LinkedList<OFBucketCounter>();
-		for ( OFBucketCounter i : other.bucket_stats ) { this.bucket_stats.add( new OFBucketCounter(i) ); }
+		this.bucket_stats = (other.bucket_stats == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFBucketCounter>();
+		for ( org.openflow.protocol.ver1_3.interfaces.OFBucketCounter i : other.bucket_stats ) { this.bucket_stats.add( new OFBucketCounter((OFBucketCounter)i) ); }
     }
 
 	public short getLength() {
@@ -100,11 +100,11 @@ public class OFGroupStatsEntry    {
 		return this;
 	}
 			
-	public List<OFBucketCounter> getBucketStats() {
+	public List<org.openflow.protocol.ver1_3.interfaces.OFBucketCounter> getBucketStats() {
 		return this.bucket_stats;
 	}
 	
-	public OFGroupStatsEntry setBucketStats(List<OFBucketCounter> bucket_stats) {
+	public OFGroupStatsEntry setBucketStats(List<org.openflow.protocol.ver1_3.interfaces.OFBucketCounter> bucket_stats) {
 		this.bucket_stats = bucket_stats;
 		return this;
 	}
@@ -121,7 +121,7 @@ public class OFGroupStatsEntry    {
 		this.byte_count = data.getLong();
 		this.duration_sec = data.getInt();
 		this.duration_nsec = data.getInt();
-		if (this.bucket_stats == null) this.bucket_stats = new LinkedList<OFBucketCounter>();
+		if (this.bucket_stats == null) this.bucket_stats = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFBucketCounter>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) { OFBucketCounter t = new OFBucketCounter(); t.readFrom(data); this.bucket_stats.add(t); __cnt -= OFBucketCounter.MINIMUM_LENGTH; }
     }
@@ -137,7 +137,7 @@ public class OFGroupStatsEntry    {
 		data.putLong(this.byte_count);
 		data.putInt(this.duration_sec);
 		data.putInt(this.duration_nsec);
-		if (this.bucket_stats != null ) for (OFBucketCounter t: this.bucket_stats) { t.writeTo(data); }
+		if (this.bucket_stats != null ) for (org.openflow.protocol.ver1_3.interfaces.OFBucketCounter t: this.bucket_stats) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -154,7 +154,7 @@ public class OFGroupStatsEntry    {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( OFBucketCounter i : this.bucket_stats ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.ver1_3.interfaces.OFBucketCounter i : this.bucket_stats ) { len += i.computeLength(); }
     	return len;
     }
     

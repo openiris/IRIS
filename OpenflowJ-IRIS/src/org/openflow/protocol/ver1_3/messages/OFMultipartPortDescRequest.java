@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMultipartPortDescRequest extends OFMultipartRequest  {
+public class OFMultipartPortDescRequest extends OFMultipartRequest implements org.openflow.protocol.ver1_3.interfaces.OFMultipartPortDescRequest {
     public static int MINIMUM_LENGTH = 16;
 
     

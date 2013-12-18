@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFError extends OFMessage  {
+public class OFError extends OFMessage implements org.openflow.protocol.ver1_0.interfaces.OFError {
     public static int MINIMUM_LENGTH = 12;
 
     OFErrorCode  error_code;

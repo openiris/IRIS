@@ -7,19 +7,19 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMeterMod extends OFMessage  {
+public class OFMeterMod extends OFMessage implements org.openflow.protocol.ver1_3.interfaces.OFMeterMod {
     public static int MINIMUM_LENGTH = 16;
 
     OFMeterModCommand  command;
 	short  flags;
 	int  meter_id;
-	List<OFMeterBand>  meters;
+	List<org.openflow.protocol.ver1_3.interfaces.OFMeterBand>  meters;
 
     public OFMeterMod() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)29));
-		this.meters = new LinkedList<OFMeterBand>();
+		this.meters = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFMeterBand>();
     }
     
     public OFMeterMod(OFMeterMod other) {
@@ -27,8 +27,8 @@ public class OFMeterMod extends OFMessage  {
 		this.command = other.command;
 		this.flags = other.flags;
 		this.meter_id = other.meter_id;
-		this.meters = (other.meters == null)? null: new LinkedList<OFMeterBand>();
-		for ( OFMeterBand i : other.meters ) { this.meters.add( new OFMeterBand(i) ); }
+		this.meters = (other.meters == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFMeterBand>();
+		for ( org.openflow.protocol.ver1_3.interfaces.OFMeterBand i : other.meters ) { this.meters.add( new OFMeterBand((OFMeterBand)i) ); }
     }
 
 	public OFMeterModCommand getCommand() {
@@ -58,11 +58,11 @@ public class OFMeterMod extends OFMessage  {
 		return this;
 	}
 			
-	public List<OFMeterBand> getMeters() {
+	public List<org.openflow.protocol.ver1_3.interfaces.OFMeterBand> getMeters() {
 		return this.meters;
 	}
 	
-	public OFMeterMod setMeters(List<OFMeterBand> meters) {
+	public OFMeterMod setMeters(List<org.openflow.protocol.ver1_3.interfaces.OFMeterBand> meters) {
 		this.meters = meters;
 		return this;
 	}
@@ -74,7 +74,7 @@ public class OFMeterMod extends OFMessage  {
 		this.command = OFMeterModCommand.valueOf(OFMeterModCommand.readFrom(data));
 		this.flags = data.getShort();
 		this.meter_id = data.getInt();
-		if (this.meters == null) this.meters = new LinkedList<OFMeterBand>();
+		if (this.meters == null) this.meters = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFMeterBand>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) {
 		  data.mark();
@@ -91,7 +91,7 @@ public class OFMeterMod extends OFMessage  {
         data.putShort(this.command.getValue());
 		data.putShort(this.flags);
 		data.putInt(this.meter_id);
-		if (this.meters != null ) for (OFMeterBand t: this.meters) { t.writeTo(data); }
+		if (this.meters != null ) for (org.openflow.protocol.ver1_3.interfaces.OFMeterBand t: this.meters) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -104,7 +104,7 @@ public class OFMeterMod extends OFMessage  {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( OFMeterBand i : this.meters ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.ver1_3.interfaces.OFMeterBand i : this.meters ) { len += i.computeLength(); }
     	return len;
     }
     

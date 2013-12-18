@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFTableFeatures    {
+public class OFTableFeatures   implements org.openflow.protocol.ver1_3.interfaces.OFTableFeatures {
     public static int MINIMUM_LENGTH = 64;
 
     short  length;
@@ -19,11 +19,11 @@ public class OFTableFeatures    {
 	long  metadata_write;
 	int  config;
 	int  max_entries;
-	List<OFTableFeatureProperty>  properties;
+	List<org.openflow.protocol.ver1_3.interfaces.OFTableFeatureProperty>  properties;
 
     public OFTableFeatures() {
         name = new byte[32];
-		this.properties = new LinkedList<OFTableFeatureProperty>();
+		this.properties = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFTableFeatureProperty>();
     }
     
     public OFTableFeatures(OFTableFeatures other) {
@@ -34,8 +34,8 @@ public class OFTableFeatures    {
 		this.metadata_write = other.metadata_write;
 		this.config = other.config;
 		this.max_entries = other.max_entries;
-		this.properties = (other.properties == null)? null: new LinkedList<OFTableFeatureProperty>();
-		for ( OFTableFeatureProperty i : other.properties ) { this.properties.add( new OFTableFeatureProperty(i) ); }
+		this.properties = (other.properties == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFTableFeatureProperty>();
+		for ( org.openflow.protocol.ver1_3.interfaces.OFTableFeatureProperty i : other.properties ) { this.properties.add( new OFTableFeatureProperty((OFTableFeatureProperty)i) ); }
     }
 
 	public short getLength() {
@@ -101,11 +101,11 @@ public class OFTableFeatures    {
 		return this;
 	}
 			
-	public List<OFTableFeatureProperty> getProperties() {
+	public List<org.openflow.protocol.ver1_3.interfaces.OFTableFeatureProperty> getProperties() {
 		return this.properties;
 	}
 	
-	public OFTableFeatures setProperties(List<OFTableFeatureProperty> properties) {
+	public OFTableFeatures setProperties(List<org.openflow.protocol.ver1_3.interfaces.OFTableFeatureProperty> properties) {
 		this.properties = properties;
 		return this;
 	}
@@ -123,7 +123,7 @@ public class OFTableFeatures    {
 		this.metadata_write = data.getLong();
 		this.config = data.getInt();
 		this.max_entries = data.getInt();
-		if (this.properties == null) this.properties = new LinkedList<OFTableFeatureProperty>();
+		if (this.properties == null) this.properties = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFTableFeatureProperty>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) {
 		  data.mark();
@@ -146,7 +146,7 @@ public class OFTableFeatures    {
 		data.putLong(this.metadata_write);
 		data.putInt(this.config);
 		data.putInt(this.max_entries);
-		if (this.properties != null ) for (OFTableFeatureProperty t: this.properties) { t.writeTo(data); }
+		if (this.properties != null ) for (org.openflow.protocol.ver1_3.interfaces.OFTableFeatureProperty t: this.properties) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -163,7 +163,7 @@ public class OFTableFeatures    {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( OFTableFeatureProperty i : this.properties ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.ver1_3.interfaces.OFTableFeatureProperty i : this.properties ) { len += i.computeLength(); }
     	return len;
     }
     

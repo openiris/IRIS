@@ -7,30 +7,30 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMultipartMeterReply extends OFMultipartReply  {
+public class OFMultipartMeterReply extends OFMultipartReply implements org.openflow.protocol.ver1_3.interfaces.OFMultipartMeterReply {
     public static int MINIMUM_LENGTH = 16;
 
-    List<OFMeterStats>  entries;
+    List<org.openflow.protocol.ver1_3.interfaces.OFMeterStats>  entries;
 
     public OFMultipartMeterReply() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)19));
 		setMultipartType(OFMultipartType.valueOf((short)9, getType()));
-		this.entries = new LinkedList<OFMeterStats>();
+		this.entries = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFMeterStats>();
     }
     
     public OFMultipartMeterReply(OFMultipartMeterReply other) {
     	super(other);
-		this.entries = (other.entries == null)? null: new LinkedList<OFMeterStats>();
-		for ( OFMeterStats i : other.entries ) { this.entries.add( new OFMeterStats(i) ); }
+		this.entries = (other.entries == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFMeterStats>();
+		for ( org.openflow.protocol.ver1_3.interfaces.OFMeterStats i : other.entries ) { this.entries.add( new OFMeterStats((OFMeterStats)i) ); }
     }
 
-	public List<OFMeterStats> getEntries() {
+	public List<org.openflow.protocol.ver1_3.interfaces.OFMeterStats> getEntries() {
 		return this.entries;
 	}
 	
-	public OFMultipartMeterReply setEntries(List<OFMeterStats> entries) {
+	public OFMultipartMeterReply setEntries(List<org.openflow.protocol.ver1_3.interfaces.OFMeterStats> entries) {
 		this.entries = entries;
 		return this;
 	}
@@ -39,14 +39,14 @@ public class OFMultipartMeterReply extends OFMultipartReply  {
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);
-		if (this.entries == null) this.entries = new LinkedList<OFMeterStats>();
+		if (this.entries == null) this.entries = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFMeterStats>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) { OFMeterStats t = new OFMeterStats(); t.readFrom(data); this.entries.add(t); __cnt -= t.getLength(); }
     }
 
     public void writeTo(ByteBuffer data) {
     	super.writeTo(data);
-        if (this.entries != null ) for (OFMeterStats t: this.entries) { t.writeTo(data); }
+        if (this.entries != null ) for (org.openflow.protocol.ver1_3.interfaces.OFMeterStats t: this.entries) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -56,7 +56,7 @@ public class OFMultipartMeterReply extends OFMultipartReply  {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( OFMeterStats i : this.entries ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.ver1_3.interfaces.OFMeterStats i : this.entries ) { len += i.computeLength(); }
     	return len;
     }
     

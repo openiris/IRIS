@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 $imports
 
-public class $typename $inherit_method $supertype $implements {
+public class $typename $inherit_method $supertype implements $implements {
     public static int MINIMUM_LENGTH = $minimumlength;
 
     $declarations

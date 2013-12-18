@@ -5,10 +5,10 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMultipartMeterFeaturesReply extends OFMultipartReply  {
+public class OFMultipartMeterFeaturesReply extends OFMultipartReply implements org.openflow.protocol.ver1_3.interfaces.OFMultipartMeterFeaturesReply {
     public static int MINIMUM_LENGTH = 32;
 
-    OFMeterFeatures  features;
+    org.openflow.protocol.ver1_3.interfaces.OFMeterFeatures  features;
 
     public OFMultipartMeterFeaturesReply() {
         super();
@@ -20,14 +20,14 @@ public class OFMultipartMeterFeaturesReply extends OFMultipartReply  {
     
     public OFMultipartMeterFeaturesReply(OFMultipartMeterFeaturesReply other) {
     	super(other);
-		this.features = new OFMeterFeatures(other.features);
+		this.features = new OFMeterFeatures((OFMeterFeatures)other.features);
     }
 
-	public OFMeterFeatures getFeatures() {
+	public org.openflow.protocol.ver1_3.interfaces.OFMeterFeatures getFeatures() {
 		return this.features;
 	}
 	
-	public OFMultipartMeterFeaturesReply setFeatures(OFMeterFeatures features) {
+	public OFMultipartMeterFeaturesReply setFeatures(org.openflow.protocol.ver1_3.interfaces.OFMeterFeatures features) {
 		this.features = features;
 		return this;
 	}

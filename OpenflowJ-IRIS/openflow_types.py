@@ -487,6 +487,11 @@ class Struct(Type):
         
     return ret
   
+  def convert_to_interface_if_possible(self, typename):
+    xtype = self.spec.get_type(typename)
+    if isinstance(xtype, Struct):
+      return ('org.openflow.protocol.ver%s.interfaces.' % self.spec.get_version_string()) + typename
+    return typename
   
   def get_struct_components(self):
     '''
@@ -510,10 +515,12 @@ class Struct(Type):
     computelengths = []
     
     if self.name == 'OFMessage':
-      ret['implements'] = 'implements org.openflow.protocol.OFMessage'
+#       ret['implements'] = 'implements org.openflow.protocol.OFMessage'
       accessors.append('\tpublic byte getTypeByte() { return this.type.getTypeValue(); }\n')
-    else:
-      ret['implements'] = ''
+#     else:
+#       ret['implements'] = ''
+      
+    ret['implements'] = 'org.'
 
     if self.supertype:
       copyconstructor.append("super(other);");
@@ -569,9 +576,9 @@ class Struct(Type):
               break
           
         if variable_type == 'List':
-          declarations.append('%s<%s>  %s;' % ( variable_type, i['inner'], variable_name))
+          declarations.append('%s<%s>  %s;' % ( variable_type, self.convert_to_interface_if_possible(i['inner']), variable_name))
         else:
-          declarations.append('%s  %s;' % ( variable_type, variable_name ))
+          declarations.append('%s  %s;' % ( self.convert_to_interface_if_possible(variable_type), variable_name ))
         
         #
         # process imports
@@ -595,13 +602,13 @@ class Struct(Type):
           if isinstance(t,Enum):
             copyconstructor.append('this.%s = other.%s;' % (variable_name, variable_name))
           else:
-            copyconstructor.append('this.%s = new %s(other.%s);' % (variable_name, variable_type, variable_name))
+            copyconstructor.append('this.%s = new %s((%s)other.%s);' % (variable_name, variable_type, variable_type, variable_name))
         elif variable_type.startswith('List'):
           inner = i['inner']
           copyconstructor.append('this.%s = (other.%s == null)? null: new Linked%s<%s>();' 
-                                 % (variable_name, variable_name, variable_type, i['inner']))  
-          copyconstructor.append('for ( %s i : other.%s ) { this.%s.add( new %s(i) ); }' 
-                                 % (inner, variable_name, variable_name, inner))
+                                 % (variable_name, variable_name, variable_type, self.convert_to_interface_if_possible(i['inner'])))  
+          copyconstructor.append('for ( %s i : other.%s ) { this.%s.add( new %s((%s)i) ); }' 
+                                 % (self.convert_to_interface_if_possible(inner), variable_name, variable_name, inner, inner))
         else:
           copyconstructor.append('this.%s = other.%s;' % (variable_name, variable_name))
         
@@ -621,7 +628,7 @@ class Struct(Type):
           if isinstance(t, Struct):
             constructor.append('this.%s = new %s();' % (variable_name, variable_type))              
         elif variable_type.startswith('List'):
-          constructor.append('this.%s = new Linked%s<%s>();' % (variable_name, variable_type, i['inner']))  
+          constructor.append('this.%s = new Linked%s<%s>();' % (variable_name, variable_type, self.convert_to_interface_if_possible(i['inner'])))  
           
         # 
         # now we build accessors 
@@ -659,10 +666,10 @@ class Struct(Type):
             tpl = Template.get_template('tpl/accessor_primitive_type.tpl')
             return_type = variable_type
             if return_type == 'List':
-              return_type = 'List<%s>' % i['inner']
+              return_type = 'List<%s>' % (self.convert_to_interface_if_possible(i['inner']))
             method_name = self.spec.convert_to_camel(variable_name)
             accessor = tpl.safe_substitute({'class_name':self.name, 
-                                            'return_type':return_type,
+                                            'return_type':self.convert_to_interface_if_possible(return_type),
                                             'variable_name':variable_name, 
                                             'method_name':method_name })
             accessors.append(accessor)
@@ -715,7 +722,7 @@ class Struct(Type):
             type_size = self.spec.get_type_size(inner)
             clen = 'if ( this.%s != null ) { len += %s * this.%s.size(); }' % (variable_name, type_size, variable_name)
           else:
-            clen = 'for ( %s i : this.%s ) { len += i.computeLength(); }' % (inner, variable_name)
+            clen = 'for ( %s i : this.%s ) { len += i.computeLength(); }' % (self.convert_to_interface_if_possible(inner), variable_name)
           computelengths.append(clen);
         elif variable_type == 'byte[]':
           if not variable_length:
@@ -785,7 +792,7 @@ class Struct(Type):
             inner = i['inner']
             itype = self.spec.get_type(inner)
             iitype = self.spec.get_type(inner + 'Type')
-            rline = 'if (this.%s == null) this.%s = new Linked%s<%s>();' % (variable_name, variable_name, variable_type, inner)
+            rline = 'if (this.%s == null) this.%s = new Linked%s<%s>();' % (variable_name, variable_name, variable_type, self.convert_to_interface_if_possible(inner))
             readfroms.append(rline)
             if isinstance(itype, Enum) and itype.is_generative_enum():
               if not mark_added:
@@ -884,9 +891,6 @@ class Struct(Type):
         elif variable_type == 'byte[]':
           rline = 'if ( this.%s != null ) { data.put(this.%s); }' % (variable_name, variable_name)
         elif variable_type == 'String':
-#           limit = 256
-#           if variable_name.find('serial') >= 0:
-#             limit = 32
           rline = 'StringByteSerializer.writeTo(data, %d, %s);' % (variable_length, variable_name)
         elif isinstance(self.spec.get_type(variable_type), Enum):
           etype = self.spec.get_type(variable_type)
@@ -906,9 +910,9 @@ class Struct(Type):
               method_name = inner;
               if method_name == 'Byte': method_name = ''
               elif method_name == 'Integer': method_name = 'Int'
-              rline = 'if ( this.%s != null ) for (%s t: this.%s) { data.put%s(t); }' % (variable_name, inner, variable_name, method_name)
+              rline = 'if ( this.%s != null ) for (%s t: this.%s) { data.put%s(t); }' % (variable_name, self.convert_to_interface_if_possible(inner), variable_name, method_name)
             else:
-              rline = 'if (this.%s != null ) for (%s t: this.%s) { t.writeTo(data); }' % (variable_name, inner, variable_name)
+              rline = 'if (this.%s != null ) for (%s t: this.%s) { t.writeTo(data); }' % (variable_name, self.convert_to_interface_if_possible(inner), variable_name)
           else:
             rline = '%s.writeTo(data);' % variable_name
         writetos.append(rline)
@@ -977,8 +981,7 @@ class Struct(Type):
     
     return ret
     
-  
-  def convert(self, path):
+  def convert_struct(self, path):
     '''
     This function processes struct and creates Java code for each.
     '''
@@ -998,6 +1001,9 @@ class Struct(Type):
       self.reduce()
       superwriteto = 'super.writeTo(data);'
       
+    #
+    # write struct definition into file 
+    #
     template = Template.get_template('tpl/struct.tpl')
  
     packagename = self.spec.get_java_packagename(path)
@@ -1010,6 +1016,8 @@ class Struct(Type):
     imports.append(importname)
     imports = '\n'.join(imports)
     
+    implements = packagename[:packagename.rfind('.')] + '.interfaces.' + self.name
+    
     result = template.safe_substitute({
       'typename':typename, 'packagename':packagename, 'imports':imports,
       'minimumlength':minimumlength, 'declarations':component_map['declarations'],
@@ -1021,8 +1029,109 @@ class Struct(Type):
       'writeto':component_map['writeto'],
       'inherit_method':inherit_method, 'supertype':supername, 
       'superwriteto':superwriteto,
-      'implements':component_map['implements'],
+      'implements':implements,
       'computelength':component_map['computelength'],
       'align': self.align
     })
+    
     return (self.name, result)
+    
+  def convert_interfaces(self, path):
+    '''
+    This method creates interface definitions.
+    '''
+    template = Template.get_template('tpl/interface.tpl')
+    packagename = self.spec.get_java_packagename(path)
+    typename = self.name
+    
+    if not self.is_topmost_struct():              # there's supertype. 
+      inherit = 'extends ' + self.get_supertype().name
+    else:
+      if typename == 'OFMessage':
+        inherit = 'extends org.openflow.protocol.OFMessage'
+      else:
+        inherit = ''
+      
+    accessors = []
+    imports = []
+    
+    import_of_types = False
+    
+    for i in self.body:
+      if i['type'] == 'pad':
+        continue
+      else:
+        variable_type = i['type']
+        variable_name = i['name']
+        
+        prefixed_variable_name = ''.join([self.name, self.spec.convert_to_camel(variable_name)])
+        for ns in [prefixed_variable_name, variable_type, self.spec.get_java_classname(variable_name)]:
+          tmp = self.spec.get_type(ns)
+          if tmp:
+            if isinstance(tmp, Enum) and tmp.is_bitmask_enum():
+              continue
+            else:
+              variable_type = ns
+              break
+        
+        if variable_type.startswith('OF') and variable_type != self.name:
+          import_of_types = True
+          
+        etype = self.spec.get_type(variable_type)
+        if isinstance(etype, Enum) and etype.is_bitmask_enum():
+          tpl = Template.get_template('tpl/accessor_interface_plain.tpl')
+          return_type = etype.get_java_representation()
+          method_name = self.spec.convert_to_camel(variable_name)
+          accessor = tpl.safe_substitute({'class_name':self.name, 
+                                          'return_type':return_type,
+                                          'method_name':method_name })
+          accessors.append(accessor)
+        else:
+          if i.get('bitfields', None):
+            tpl = Template.get_template('tpl/accessor_interface_plain.tpl')
+            bitfields = i['bitfields']
+            return_type = variable_type
+            for bitfield in bitfields:
+              method_name = self.spec.convert_to_camel(bitfield[0])
+              accessor = tpl.safe_substitute({'class_name':self.name, 
+                                              'return_type':return_type,
+                                              'method_name':method_name})
+              accessors.append(accessor)
+          else:
+            tpl = Template.get_template('tpl/accessor_interface_plain.tpl')
+            return_type = variable_type
+            if return_type == 'List':
+              imports.append('import java.util.List;')
+              return_type = 'List<%s>' % i['inner']
+            method_name = self.spec.convert_to_camel(variable_name)
+            accessor = tpl.safe_substitute({'class_name':self.name, 
+                                            'return_type':return_type,
+                                            'method_name':method_name })
+            accessors.append(accessor)
+          
+            if self.name == 'OFMessage' and Type.is_primitive_java_type(variable_type) and Type.has_longer_java_type(variable_type):
+              longer_type = Type.get_longer_java_type(variable_type)
+              tpl = Template.get_template('tpl/accessor_interface_larger.tpl')
+              accessor = tpl.safe_substitute({'class_name':self.name, 
+                                              'method_name':method_name, 
+                                              'longer_type':longer_type})
+              accessors.append(accessor)
+      
+
+    if import_of_types: 
+      imports.append('import ' + packagename[:packagename.rfind('.')] + '.types.*;')
+    
+    accessor_list = '\n'.join(accessors)
+    import_list = '\n'.join(imports)
+    result = template.safe_substitute({
+      'typename':typename, 'packagename':packagename, 'imports':import_list,
+      'accessors':accessor_list, 'inherit':inherit
+    })
+    return (self.name, result)
+  
+  def convert(self, path):
+    if path.find('interfaces') < 0:
+      return self.convert_struct(path)
+    else:
+      return self.convert_interfaces(path)
+    

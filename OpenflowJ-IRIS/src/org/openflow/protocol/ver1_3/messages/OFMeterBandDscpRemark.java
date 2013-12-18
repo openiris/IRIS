@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMeterBandDscpRemark extends OFMeterBand  {
+public class OFMeterBandDscpRemark extends OFMeterBand implements org.openflow.protocol.ver1_3.interfaces.OFMeterBandDscpRemark {
     public static int MINIMUM_LENGTH = 16;
 
     byte  prec_level;

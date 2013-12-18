@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFGetConfigReply extends OFMessage  {
+public class OFGetConfigReply extends OFMessage implements org.openflow.protocol.ver1_0.interfaces.OFGetConfigReply {
     public static int MINIMUM_LENGTH = 12;
 
     short  flags;

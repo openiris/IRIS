@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFInstructionGotoTable extends OFInstruction  {
+public class OFInstructionGotoTable extends OFInstruction implements org.openflow.protocol.ver1_3.interfaces.OFInstructionGotoTable {
     public static int MINIMUM_LENGTH = 8;
 
     byte  table_id;

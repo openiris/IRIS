@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFQueueProperty    {
+public class OFQueueProperty   implements org.openflow.protocol.ver1_3.interfaces.OFQueueProperty {
     public static int MINIMUM_LENGTH = 8;
 
     OFQueuePropertyType  type;

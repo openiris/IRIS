@@ -7,20 +7,20 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFGroupMod extends OFMessage  {
+public class OFGroupMod extends OFMessage implements org.openflow.protocol.ver1_3.interfaces.OFGroupMod {
     public static int MINIMUM_LENGTH = 16;
 
     OFGroupModCommand  command;
 	OFGroupCategory  group_category;
 	byte pad_1th;
 	int  group_id;
-	List<OFBucket>  buckets;
+	List<org.openflow.protocol.ver1_3.interfaces.OFBucket>  buckets;
 
     public OFGroupMod() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)15));
-		this.buckets = new LinkedList<OFBucket>();
+		this.buckets = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFBucket>();
     }
     
     public OFGroupMod(OFGroupMod other) {
@@ -28,8 +28,8 @@ public class OFGroupMod extends OFMessage  {
 		this.command = other.command;
 		this.group_category = other.group_category;
 		this.group_id = other.group_id;
-		this.buckets = (other.buckets == null)? null: new LinkedList<OFBucket>();
-		for ( OFBucket i : other.buckets ) { this.buckets.add( new OFBucket(i) ); }
+		this.buckets = (other.buckets == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFBucket>();
+		for ( org.openflow.protocol.ver1_3.interfaces.OFBucket i : other.buckets ) { this.buckets.add( new OFBucket((OFBucket)i) ); }
     }
 
 	public OFGroupModCommand getCommand() {
@@ -59,11 +59,11 @@ public class OFGroupMod extends OFMessage  {
 		return this;
 	}
 			
-	public List<OFBucket> getBuckets() {
+	public List<org.openflow.protocol.ver1_3.interfaces.OFBucket> getBuckets() {
 		return this.buckets;
 	}
 	
-	public OFGroupMod setBuckets(List<OFBucket> buckets) {
+	public OFGroupMod setBuckets(List<org.openflow.protocol.ver1_3.interfaces.OFBucket> buckets) {
 		this.buckets = buckets;
 		return this;
 	}
@@ -76,7 +76,7 @@ public class OFGroupMod extends OFMessage  {
 		this.group_category = OFGroupCategory.valueOf(OFGroupCategory.readFrom(data));
 		this.pad_1th = data.get();
 		this.group_id = data.getInt();
-		if (this.buckets == null) this.buckets = new LinkedList<OFBucket>();
+		if (this.buckets == null) this.buckets = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFBucket>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) { OFBucket t = new OFBucket(); t.readFrom(data); this.buckets.add(t); __cnt -= t.getLength(); }
     }
@@ -87,7 +87,7 @@ public class OFGroupMod extends OFMessage  {
 		data.put(this.group_category.getValue());
 		data.put(this.pad_1th);
 		data.putInt(this.group_id);
-		if (this.buckets != null ) for (OFBucket t: this.buckets) { t.writeTo(data); }
+		if (this.buckets != null ) for (org.openflow.protocol.ver1_3.interfaces.OFBucket t: this.buckets) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -100,7 +100,7 @@ public class OFGroupMod extends OFMessage  {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( OFBucket i : this.buckets ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.ver1_3.interfaces.OFBucket i : this.buckets ) { len += i.computeLength(); }
     	return len;
     }
     

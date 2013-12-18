@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFActionCopyTtlIn extends OFAction  {
+public class OFActionCopyTtlIn extends OFAction implements org.openflow.protocol.ver1_3.interfaces.OFActionCopyTtlIn {
     public static int MINIMUM_LENGTH = 8;
 
     int pad_1th;

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFFlowStatsEntry    {
+public class OFFlowStatsEntry   implements org.openflow.protocol.ver1_3.interfaces.OFFlowStatsEntry {
     public static int MINIMUM_LENGTH = 52;
 
     short  length;
@@ -23,12 +23,12 @@ public class OFFlowStatsEntry    {
 	long  cookie;
 	long  packet_count;
 	long  byte_count;
-	OFMatchOxm  match;
-	List<OFInstruction>  instructions;
+	org.openflow.protocol.ver1_3.interfaces.OFMatchOxm  match;
+	List<org.openflow.protocol.ver1_3.interfaces.OFInstruction>  instructions;
 
     public OFFlowStatsEntry() {
         this.match = new OFMatchOxm();
-		this.instructions = new LinkedList<OFInstruction>();
+		this.instructions = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFInstruction>();
     }
     
     public OFFlowStatsEntry(OFFlowStatsEntry other) {
@@ -43,9 +43,9 @@ public class OFFlowStatsEntry    {
 		this.cookie = other.cookie;
 		this.packet_count = other.packet_count;
 		this.byte_count = other.byte_count;
-		this.match = new OFMatchOxm(other.match);
-		this.instructions = (other.instructions == null)? null: new LinkedList<OFInstruction>();
-		for ( OFInstruction i : other.instructions ) { this.instructions.add( new OFInstruction(i) ); }
+		this.match = new OFMatchOxm((OFMatchOxm)other.match);
+		this.instructions = (other.instructions == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFInstruction>();
+		for ( org.openflow.protocol.ver1_3.interfaces.OFInstruction i : other.instructions ) { this.instructions.add( new OFInstruction((OFInstruction)i) ); }
     }
 
 	public short getLength() {
@@ -147,20 +147,20 @@ public class OFFlowStatsEntry    {
 		return this;
 	}
 			
-	public OFMatchOxm getMatch() {
+	public org.openflow.protocol.ver1_3.interfaces.OFMatchOxm getMatch() {
 		return this.match;
 	}
 	
-	public OFFlowStatsEntry setMatch(OFMatchOxm match) {
+	public OFFlowStatsEntry setMatch(org.openflow.protocol.ver1_3.interfaces.OFMatchOxm match) {
 		this.match = match;
 		return this;
 	}
 			
-	public List<OFInstruction> getInstructions() {
+	public List<org.openflow.protocol.ver1_3.interfaces.OFInstruction> getInstructions() {
 		return this.instructions;
 	}
 	
-	public OFFlowStatsEntry setInstructions(List<OFInstruction> instructions) {
+	public OFFlowStatsEntry setInstructions(List<org.openflow.protocol.ver1_3.interfaces.OFInstruction> instructions) {
 		this.instructions = instructions;
 		return this;
 	}
@@ -183,7 +183,7 @@ public class OFFlowStatsEntry    {
 		this.byte_count = data.getLong();
 		if (this.match == null) this.match = new OFMatchOxm();
 		this.match.readFrom(data);
-		if (this.instructions == null) this.instructions = new LinkedList<OFInstruction>();
+		if (this.instructions == null) this.instructions = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFInstruction>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) {
 		  data.mark();
@@ -211,7 +211,7 @@ public class OFFlowStatsEntry    {
 		data.putLong(this.packet_count);
 		data.putLong(this.byte_count);
 		match.writeTo(data);
-		if (this.instructions != null ) for (OFInstruction t: this.instructions) { t.writeTo(data); }
+		if (this.instructions != null ) for (org.openflow.protocol.ver1_3.interfaces.OFInstruction t: this.instructions) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -234,7 +234,7 @@ public class OFFlowStatsEntry    {
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
     	len += match.lengthDiff();
-		for ( OFInstruction i : this.instructions ) { len += i.computeLength(); }
+		for ( org.openflow.protocol.ver1_3.interfaces.OFInstruction i : this.instructions ) { len += i.computeLength(); }
     	return len;
     }
     

@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFSetAsync extends OFMessage  {
+public class OFSetAsync extends OFMessage implements org.openflow.protocol.ver1_3.interfaces.OFSetAsync {
     public static int MINIMUM_LENGTH = 32;
 
     int  packet_in_mask_equal_master;

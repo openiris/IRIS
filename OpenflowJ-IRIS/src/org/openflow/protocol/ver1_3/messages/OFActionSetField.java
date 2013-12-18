@@ -5,10 +5,10 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFActionSetField extends OFAction  {
+public class OFActionSetField extends OFAction implements org.openflow.protocol.ver1_3.interfaces.OFActionSetField {
     public static int MINIMUM_LENGTH = 8;
 
-    OFOxm  field;
+    org.openflow.protocol.ver1_3.interfaces.OFOxm  field;
 
     public OFActionSetField() {
         super();
@@ -19,14 +19,14 @@ public class OFActionSetField extends OFAction  {
     
     public OFActionSetField(OFActionSetField other) {
     	super(other);
-		this.field = new OFOxm(other.field);
+		this.field = new OFOxm((OFOxm)other.field);
     }
 
-	public OFOxm getField() {
+	public org.openflow.protocol.ver1_3.interfaces.OFOxm getField() {
 		return this.field;
 	}
 	
-	public OFActionSetField setField(OFOxm field) {
+	public OFActionSetField setField(org.openflow.protocol.ver1_3.interfaces.OFOxm field) {
 		this.field = field;
 		return this;
 	}

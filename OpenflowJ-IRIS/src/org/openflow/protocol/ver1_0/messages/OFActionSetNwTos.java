@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFActionSetNwTos extends OFAction  {
+public class OFActionSetNwTos extends OFAction implements org.openflow.protocol.ver1_0.interfaces.OFActionSetNwTos {
     public static int MINIMUM_LENGTH = 8;
 
     byte  nw_tos;

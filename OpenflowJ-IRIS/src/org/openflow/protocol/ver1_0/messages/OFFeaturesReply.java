@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFFeaturesReply extends OFMessage  {
+public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.ver1_0.interfaces.OFFeaturesReply {
     public static int MINIMUM_LENGTH = 32;
 
     long  datapath_id;
@@ -17,13 +17,13 @@ public class OFFeaturesReply extends OFMessage  {
 	byte pad_2th;
 	int  capabilities;
 	int  actions;
-	List<OFPortDesc>  ports;
+	List<org.openflow.protocol.ver1_0.interfaces.OFPortDesc>  ports;
 
     public OFFeaturesReply() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)6));
-		this.ports = new LinkedList<OFPortDesc>();
+		this.ports = new LinkedList<org.openflow.protocol.ver1_0.interfaces.OFPortDesc>();
     }
     
     public OFFeaturesReply(OFFeaturesReply other) {
@@ -33,8 +33,8 @@ public class OFFeaturesReply extends OFMessage  {
 		this.n_tables = other.n_tables;
 		this.capabilities = other.capabilities;
 		this.actions = other.actions;
-		this.ports = (other.ports == null)? null: new LinkedList<OFPortDesc>();
-		for ( OFPortDesc i : other.ports ) { this.ports.add( new OFPortDesc(i) ); }
+		this.ports = (other.ports == null)? null: new LinkedList<org.openflow.protocol.ver1_0.interfaces.OFPortDesc>();
+		for ( org.openflow.protocol.ver1_0.interfaces.OFPortDesc i : other.ports ) { this.ports.add( new OFPortDesc((OFPortDesc)i) ); }
     }
 
 	public long getDatapathId() {
@@ -82,11 +82,11 @@ public class OFFeaturesReply extends OFMessage  {
 		return this;
 	}
 			
-	public List<OFPortDesc> getPorts() {
+	public List<org.openflow.protocol.ver1_0.interfaces.OFPortDesc> getPorts() {
 		return this.ports;
 	}
 	
-	public OFFeaturesReply setPorts(List<OFPortDesc> ports) {
+	public OFFeaturesReply setPorts(List<org.openflow.protocol.ver1_0.interfaces.OFPortDesc> ports) {
 		this.ports = ports;
 		return this;
 	}
@@ -102,7 +102,7 @@ public class OFFeaturesReply extends OFMessage  {
 		this.pad_2th = data.get();
 		this.capabilities = data.getInt();
 		this.actions = data.getInt();
-		if (this.ports == null) this.ports = new LinkedList<OFPortDesc>();
+		if (this.ports == null) this.ports = new LinkedList<org.openflow.protocol.ver1_0.interfaces.OFPortDesc>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) { OFPortDesc t = new OFPortDesc(); t.readFrom(data); this.ports.add(t); __cnt -= OFPortDesc.MINIMUM_LENGTH; }
     }
@@ -116,7 +116,7 @@ public class OFFeaturesReply extends OFMessage  {
 		data.put(this.pad_2th);
 		data.putInt(this.capabilities);
 		data.putInt(this.actions);
-		if (this.ports != null ) for (OFPortDesc t: this.ports) { t.writeTo(data); }
+		if (this.ports != null ) for (org.openflow.protocol.ver1_0.interfaces.OFPortDesc t: this.ports) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -131,7 +131,7 @@ public class OFFeaturesReply extends OFMessage  {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( OFPortDesc i : this.ports ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.ver1_0.interfaces.OFPortDesc i : this.ports ) { len += i.computeLength(); }
     	return len;
     }
     

@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFActionSetTpSrc extends OFAction  {
+public class OFActionSetTpSrc extends OFAction implements org.openflow.protocol.ver1_0.interfaces.OFActionSetTpSrc {
     public static int MINIMUM_LENGTH = 8;
 
     short  tp_port;

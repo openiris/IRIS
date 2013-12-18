@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFSetConfig extends OFMessage  {
+public class OFSetConfig extends OFMessage implements org.openflow.protocol.ver1_0.interfaces.OFSetConfig {
     public static int MINIMUM_LENGTH = 12;
 
     short  flags;

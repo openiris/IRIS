@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFBarrierRequest extends OFMessage  {
+public class OFBarrierRequest extends OFMessage implements org.openflow.protocol.ver1_3.interfaces.OFBarrierRequest {
     public static int MINIMUM_LENGTH = 8;
 
     

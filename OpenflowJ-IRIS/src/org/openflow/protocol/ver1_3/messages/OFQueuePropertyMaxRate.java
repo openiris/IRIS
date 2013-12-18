@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFQueuePropertyMaxRate extends OFQueueProperty  {
+public class OFQueuePropertyMaxRate extends OFQueueProperty implements org.openflow.protocol.ver1_3.interfaces.OFQueuePropertyMaxRate {
     public static int MINIMUM_LENGTH = 16;
 
     short  rate;

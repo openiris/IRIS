@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFInstructionWriteMetadata extends OFInstruction  {
+public class OFInstructionWriteMetadata extends OFInstruction implements org.openflow.protocol.ver1_3.interfaces.OFInstructionWriteMetadata {
     public static int MINIMUM_LENGTH = 24;
 
     int pad_1th;

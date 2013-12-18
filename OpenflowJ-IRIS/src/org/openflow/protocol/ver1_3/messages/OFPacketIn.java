@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFPacketIn extends OFMessage  {
+public class OFPacketIn extends OFMessage implements org.openflow.protocol.ver1_3.interfaces.OFPacketIn {
     public static int MINIMUM_LENGTH = 30;
 
     int  buffer_id;
@@ -13,7 +13,7 @@ public class OFPacketIn extends OFMessage  {
 	OFPacketInReason  reason;
 	byte  table_id;
 	long  cookie;
-	OFMatchOxm  match;
+	org.openflow.protocol.ver1_3.interfaces.OFMatchOxm  match;
 	short pad_1th;
 	byte[]  data;
 
@@ -31,7 +31,7 @@ public class OFPacketIn extends OFMessage  {
 		this.reason = other.reason;
 		this.table_id = other.table_id;
 		this.cookie = other.cookie;
-		this.match = new OFMatchOxm(other.match);
+		this.match = new OFMatchOxm((OFMatchOxm)other.match);
 		if (other.data != null) { this.data = java.util.Arrays.copyOf(other.data, other.data.length); }
     }
 
@@ -80,11 +80,11 @@ public class OFPacketIn extends OFMessage  {
 		return this;
 	}
 			
-	public OFMatchOxm getMatch() {
+	public org.openflow.protocol.ver1_3.interfaces.OFMatchOxm getMatch() {
 		return this.match;
 	}
 	
-	public OFPacketIn setMatch(OFMatchOxm match) {
+	public OFPacketIn setMatch(org.openflow.protocol.ver1_3.interfaces.OFMatchOxm match) {
 		this.match = match;
 		return this;
 	}

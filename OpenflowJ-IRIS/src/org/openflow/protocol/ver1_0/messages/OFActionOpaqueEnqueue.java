@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFActionOpaqueEnqueue extends OFAction  {
+public class OFActionOpaqueEnqueue extends OFAction implements org.openflow.protocol.ver1_0.interfaces.OFActionOpaqueEnqueue {
     public static int MINIMUM_LENGTH = 16;
 
     short  port;

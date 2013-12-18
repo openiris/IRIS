@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMultipartGroupFeaturesReply extends OFMultipartReply  {
+public class OFMultipartGroupFeaturesReply extends OFMultipartReply implements org.openflow.protocol.ver1_3.interfaces.OFMultipartGroupFeaturesReply {
     public static int MINIMUM_LENGTH = 56;
 
     int  types;

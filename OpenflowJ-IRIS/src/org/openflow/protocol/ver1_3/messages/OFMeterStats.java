@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMeterStats    {
+public class OFMeterStats   implements org.openflow.protocol.ver1_3.interfaces.OFMeterStats {
     public static int MINIMUM_LENGTH = 40;
 
     int  meter_id;
@@ -19,10 +19,10 @@ public class OFMeterStats    {
 	long  byte_in_count;
 	int  duration_sec;
 	int  duration_nsec;
-	List<OFMeterBandStats>  band_stats;
+	List<org.openflow.protocol.ver1_3.interfaces.OFMeterBandStats>  band_stats;
 
     public OFMeterStats() {
-        this.band_stats = new LinkedList<OFMeterBandStats>();
+        this.band_stats = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFMeterBandStats>();
     }
     
     public OFMeterStats(OFMeterStats other) {
@@ -33,8 +33,8 @@ public class OFMeterStats    {
 		this.byte_in_count = other.byte_in_count;
 		this.duration_sec = other.duration_sec;
 		this.duration_nsec = other.duration_nsec;
-		this.band_stats = (other.band_stats == null)? null: new LinkedList<OFMeterBandStats>();
-		for ( OFMeterBandStats i : other.band_stats ) { this.band_stats.add( new OFMeterBandStats(i) ); }
+		this.band_stats = (other.band_stats == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFMeterBandStats>();
+		for ( org.openflow.protocol.ver1_3.interfaces.OFMeterBandStats i : other.band_stats ) { this.band_stats.add( new OFMeterBandStats((OFMeterBandStats)i) ); }
     }
 
 	public int getMeterId() {
@@ -100,11 +100,11 @@ public class OFMeterStats    {
 		return this;
 	}
 			
-	public List<OFMeterBandStats> getBandStats() {
+	public List<org.openflow.protocol.ver1_3.interfaces.OFMeterBandStats> getBandStats() {
 		return this.band_stats;
 	}
 	
-	public OFMeterStats setBandStats(List<OFMeterBandStats> band_stats) {
+	public OFMeterStats setBandStats(List<org.openflow.protocol.ver1_3.interfaces.OFMeterBandStats> band_stats) {
 		this.band_stats = band_stats;
 		return this;
 	}
@@ -121,7 +121,7 @@ public class OFMeterStats    {
 		this.byte_in_count = data.getLong();
 		this.duration_sec = data.getInt();
 		this.duration_nsec = data.getInt();
-		if (this.band_stats == null) this.band_stats = new LinkedList<OFMeterBandStats>();
+		if (this.band_stats == null) this.band_stats = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFMeterBandStats>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) { OFMeterBandStats t = new OFMeterBandStats(); t.readFrom(data); this.band_stats.add(t); __cnt -= OFMeterBandStats.MINIMUM_LENGTH; }
     }
@@ -137,7 +137,7 @@ public class OFMeterStats    {
 		data.putLong(this.byte_in_count);
 		data.putInt(this.duration_sec);
 		data.putInt(this.duration_nsec);
-		if (this.band_stats != null ) for (OFMeterBandStats t: this.band_stats) { t.writeTo(data); }
+		if (this.band_stats != null ) for (org.openflow.protocol.ver1_3.interfaces.OFMeterBandStats t: this.band_stats) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -154,7 +154,7 @@ public class OFMeterStats    {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( OFMeterBandStats i : this.band_stats ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.ver1_3.interfaces.OFMeterBandStats i : this.band_stats ) { len += i.computeLength(); }
     	return len;
     }
     

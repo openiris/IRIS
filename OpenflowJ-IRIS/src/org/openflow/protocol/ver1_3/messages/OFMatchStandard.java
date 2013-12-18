@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMatchStandard extends OFMatch  {
+public class OFMatchStandard extends OFMatch implements org.openflow.protocol.ver1_3.interfaces.OFMatchStandard {
     public static int MINIMUM_LENGTH = 4;
 
     

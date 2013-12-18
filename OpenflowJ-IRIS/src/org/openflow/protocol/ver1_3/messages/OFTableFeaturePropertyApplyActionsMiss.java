@@ -7,29 +7,29 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFTableFeaturePropertyApplyActionsMiss extends OFTableFeatureProperty  {
+public class OFTableFeaturePropertyApplyActionsMiss extends OFTableFeatureProperty implements org.openflow.protocol.ver1_3.interfaces.OFTableFeaturePropertyApplyActionsMiss {
     public static int MINIMUM_LENGTH = 4;
 
-    List<OFActionId>  action_ids;
+    List<org.openflow.protocol.ver1_3.interfaces.OFActionId>  action_ids;
 
     public OFTableFeaturePropertyApplyActionsMiss() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFTableFeaturePropertyType.valueOf((short)7));
-		this.action_ids = new LinkedList<OFActionId>();
+		this.action_ids = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFActionId>();
     }
     
     public OFTableFeaturePropertyApplyActionsMiss(OFTableFeaturePropertyApplyActionsMiss other) {
     	super(other);
-		this.action_ids = (other.action_ids == null)? null: new LinkedList<OFActionId>();
-		for ( OFActionId i : other.action_ids ) { this.action_ids.add( new OFActionId(i) ); }
+		this.action_ids = (other.action_ids == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFActionId>();
+		for ( org.openflow.protocol.ver1_3.interfaces.OFActionId i : other.action_ids ) { this.action_ids.add( new OFActionId((OFActionId)i) ); }
     }
 
-	public List<OFActionId> getActionIds() {
+	public List<org.openflow.protocol.ver1_3.interfaces.OFActionId> getActionIds() {
 		return this.action_ids;
 	}
 	
-	public OFTableFeaturePropertyApplyActionsMiss setActionIds(List<OFActionId> action_ids) {
+	public OFTableFeaturePropertyApplyActionsMiss setActionIds(List<org.openflow.protocol.ver1_3.interfaces.OFActionId> action_ids) {
 		this.action_ids = action_ids;
 		return this;
 	}
@@ -38,14 +38,14 @@ public class OFTableFeaturePropertyApplyActionsMiss extends OFTableFeatureProper
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);
-		if (this.action_ids == null) this.action_ids = new LinkedList<OFActionId>();
+		if (this.action_ids == null) this.action_ids = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFActionId>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) { OFActionId t = new OFActionId(); t.readFrom(data); this.action_ids.add(t); __cnt -= t.getLength(); }
     }
 
     public void writeTo(ByteBuffer data) {
     	super.writeTo(data);
-        if (this.action_ids != null ) for (OFActionId t: this.action_ids) { t.writeTo(data); }
+        if (this.action_ids != null ) for (org.openflow.protocol.ver1_3.interfaces.OFActionId t: this.action_ids) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -55,7 +55,7 @@ public class OFTableFeaturePropertyApplyActionsMiss extends OFTableFeatureProper
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( OFActionId i : this.action_ids ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.ver1_3.interfaces.OFActionId i : this.action_ids ) { len += i.computeLength(); }
     	return len;
     }
     

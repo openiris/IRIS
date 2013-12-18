@@ -7,30 +7,30 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMultipartPortStatsReply extends OFMultipartReply  {
+public class OFMultipartPortStatsReply extends OFMultipartReply implements org.openflow.protocol.ver1_3.interfaces.OFMultipartPortStatsReply {
     public static int MINIMUM_LENGTH = 16;
 
-    List<OFPortStatsEntry>  entries;
+    List<org.openflow.protocol.ver1_3.interfaces.OFPortStatsEntry>  entries;
 
     public OFMultipartPortStatsReply() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)19));
 		setMultipartType(OFMultipartType.valueOf((short)4, getType()));
-		this.entries = new LinkedList<OFPortStatsEntry>();
+		this.entries = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFPortStatsEntry>();
     }
     
     public OFMultipartPortStatsReply(OFMultipartPortStatsReply other) {
     	super(other);
-		this.entries = (other.entries == null)? null: new LinkedList<OFPortStatsEntry>();
-		for ( OFPortStatsEntry i : other.entries ) { this.entries.add( new OFPortStatsEntry(i) ); }
+		this.entries = (other.entries == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFPortStatsEntry>();
+		for ( org.openflow.protocol.ver1_3.interfaces.OFPortStatsEntry i : other.entries ) { this.entries.add( new OFPortStatsEntry((OFPortStatsEntry)i) ); }
     }
 
-	public List<OFPortStatsEntry> getEntries() {
+	public List<org.openflow.protocol.ver1_3.interfaces.OFPortStatsEntry> getEntries() {
 		return this.entries;
 	}
 	
-	public OFMultipartPortStatsReply setEntries(List<OFPortStatsEntry> entries) {
+	public OFMultipartPortStatsReply setEntries(List<org.openflow.protocol.ver1_3.interfaces.OFPortStatsEntry> entries) {
 		this.entries = entries;
 		return this;
 	}
@@ -39,14 +39,14 @@ public class OFMultipartPortStatsReply extends OFMultipartReply  {
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);
-		if (this.entries == null) this.entries = new LinkedList<OFPortStatsEntry>();
+		if (this.entries == null) this.entries = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFPortStatsEntry>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) { OFPortStatsEntry t = new OFPortStatsEntry(); t.readFrom(data); this.entries.add(t); __cnt -= OFPortStatsEntry.MINIMUM_LENGTH; }
     }
 
     public void writeTo(ByteBuffer data) {
     	super.writeTo(data);
-        if (this.entries != null ) for (OFPortStatsEntry t: this.entries) { t.writeTo(data); }
+        if (this.entries != null ) for (org.openflow.protocol.ver1_3.interfaces.OFPortStatsEntry t: this.entries) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -56,7 +56,7 @@ public class OFMultipartPortStatsReply extends OFMultipartReply  {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( OFPortStatsEntry i : this.entries ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.ver1_3.interfaces.OFPortStatsEntry i : this.entries ) { len += i.computeLength(); }
     	return len;
     }
     

@@ -1,0 +1,41 @@
+package org.openflow.protocol.ver1_3.interfaces;
+
+import java.nio.ByteBuffer;
+
+import org.openflow.protocol.ver1_3.types.*;
+
+public interface OFPortMod extends OFMessage {
+
+	public OFPortNo getPortNo();
+	
+	public OFPortMod setPortNo(OFPortNo value);
+	
+	public byte[] getHwAddr();
+	
+	public OFPortMod setHwAddr(byte[] value);
+	
+	public int getConfig();
+	
+	public OFPortMod setConfig(int value);
+	
+	public int getMask();
+	
+	public OFPortMod setMask(int value);
+	
+	public int getAdvertise();
+	
+	public OFPortMod setAdvertise(int value);
+	
+
+    public void readFrom(ByteBuffer data);
+
+    public void writeTo(ByteBuffer data);
+
+    public short computeLength();
+
+    // calculate the amount that will be increased by the alignment requirement.
+    public short alignment(int total, int req);
+    
+    // compute the difference with MINIMUM_LENGTH (with alignment)
+    public short lengthDiff();
+}

@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMessage   implements org.openflow.protocol.OFMessage {
+public class OFMessage   implements org.openflow.protocol.ver1_3.interfaces.OFMessage {
     public static int MINIMUM_LENGTH = 8;
 
     byte  version;

@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFInstructionMeter extends OFInstruction  {
+public class OFInstructionMeter extends OFInstruction implements org.openflow.protocol.ver1_3.interfaces.OFInstructionMeter {
     public static int MINIMUM_LENGTH = 8;
 
     int  meter_id;

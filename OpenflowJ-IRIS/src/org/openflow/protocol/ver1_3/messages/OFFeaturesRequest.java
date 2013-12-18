@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFFeaturesRequest extends OFMessage  {
+public class OFFeaturesRequest extends OFMessage implements org.openflow.protocol.ver1_3.interfaces.OFFeaturesRequest {
     public static int MINIMUM_LENGTH = 8;
 
     

@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMultipartAggregateRequest extends OFMultipartRequest  {
+public class OFMultipartAggregateRequest extends OFMultipartRequest implements org.openflow.protocol.ver1_3.interfaces.OFMultipartAggregateRequest {
     public static int MINIMUM_LENGTH = 52;
 
     byte  table_id;
@@ -16,7 +16,7 @@ public class OFMultipartAggregateRequest extends OFMultipartRequest  {
 	int pad_3th;
 	long  cookie;
 	long  cookie_mask;
-	OFMatchOxm  match;
+	org.openflow.protocol.ver1_3.interfaces.OFMatchOxm  match;
 
     public OFMultipartAggregateRequest() {
         super();
@@ -33,7 +33,7 @@ public class OFMultipartAggregateRequest extends OFMultipartRequest  {
 		this.out_group = other.out_group;
 		this.cookie = other.cookie;
 		this.cookie_mask = other.cookie_mask;
-		this.match = new OFMatchOxm(other.match);
+		this.match = new OFMatchOxm((OFMatchOxm)other.match);
     }
 
 	public byte getTableId() {
@@ -81,11 +81,11 @@ public class OFMultipartAggregateRequest extends OFMultipartRequest  {
 		return this;
 	}
 			
-	public OFMatchOxm getMatch() {
+	public org.openflow.protocol.ver1_3.interfaces.OFMatchOxm getMatch() {
 		return this.match;
 	}
 	
-	public OFMultipartAggregateRequest setMatch(OFMatchOxm match) {
+	public OFMultipartAggregateRequest setMatch(org.openflow.protocol.ver1_3.interfaces.OFMatchOxm match) {
 		this.match = match;
 		return this;
 	}

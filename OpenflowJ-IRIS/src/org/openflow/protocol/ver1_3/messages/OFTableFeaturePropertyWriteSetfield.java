@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFTableFeaturePropertyWriteSetfield extends OFTableFeatureProperty  {
+public class OFTableFeaturePropertyWriteSetfield extends OFTableFeatureProperty implements org.openflow.protocol.ver1_3.interfaces.OFTableFeaturePropertyWriteSetfield {
     public static int MINIMUM_LENGTH = 4;
 
     List<Integer>  oxm_ids;
@@ -22,7 +22,7 @@ public class OFTableFeaturePropertyWriteSetfield extends OFTableFeatureProperty 
     public OFTableFeaturePropertyWriteSetfield(OFTableFeaturePropertyWriteSetfield other) {
     	super(other);
 		this.oxm_ids = (other.oxm_ids == null)? null: new LinkedList<Integer>();
-		for ( Integer i : other.oxm_ids ) { this.oxm_ids.add( new Integer(i) ); }
+		for ( Integer i : other.oxm_ids ) { this.oxm_ids.add( new Integer((Integer)i) ); }
     }
 
 	public List<Integer> getOxmIds() {

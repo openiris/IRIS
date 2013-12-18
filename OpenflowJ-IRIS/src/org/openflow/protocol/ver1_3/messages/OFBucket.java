@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFBucket    {
+public class OFBucket   implements org.openflow.protocol.ver1_3.interfaces.OFBucket {
     public static int MINIMUM_LENGTH = 16;
 
     short  length;
@@ -15,10 +15,10 @@ public class OFBucket    {
 	int  watch_port;
 	int  watch_group;
 	int pad_1th;
-	List<OFAction>  actions;
+	List<org.openflow.protocol.ver1_3.interfaces.OFAction>  actions;
 
     public OFBucket() {
-        this.actions = new LinkedList<OFAction>();
+        this.actions = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFAction>();
     }
     
     public OFBucket(OFBucket other) {
@@ -26,8 +26,8 @@ public class OFBucket    {
 		this.weight = other.weight;
 		this.watch_port = other.watch_port;
 		this.watch_group = other.watch_group;
-		this.actions = (other.actions == null)? null: new LinkedList<OFAction>();
-		for ( OFAction i : other.actions ) { this.actions.add( new OFAction(i) ); }
+		this.actions = (other.actions == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFAction>();
+		for ( org.openflow.protocol.ver1_3.interfaces.OFAction i : other.actions ) { this.actions.add( new OFAction((OFAction)i) ); }
     }
 
 	public short getLength() {
@@ -66,11 +66,11 @@ public class OFBucket    {
 		return this;
 	}
 			
-	public List<OFAction> getActions() {
+	public List<org.openflow.protocol.ver1_3.interfaces.OFAction> getActions() {
 		return this.actions;
 	}
 	
-	public OFBucket setActions(List<OFAction> actions) {
+	public OFBucket setActions(List<org.openflow.protocol.ver1_3.interfaces.OFAction> actions) {
 		this.actions = actions;
 		return this;
 	}
@@ -83,7 +83,7 @@ public class OFBucket    {
 		this.watch_port = data.getInt();
 		this.watch_group = data.getInt();
 		this.pad_1th = data.getInt();
-		if (this.actions == null) this.actions = new LinkedList<OFAction>();
+		if (this.actions == null) this.actions = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFAction>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) {
 		  data.mark();
@@ -102,7 +102,7 @@ public class OFBucket    {
 		data.putInt(this.watch_port);
 		data.putInt(this.watch_group);
 		data.putInt(this.pad_1th);
-		if (this.actions != null ) for (OFAction t: this.actions) { t.writeTo(data); }
+		if (this.actions != null ) for (org.openflow.protocol.ver1_3.interfaces.OFAction t: this.actions) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -116,7 +116,7 @@ public class OFBucket    {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( OFAction i : this.actions ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.ver1_3.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
     	return len;
     }
     

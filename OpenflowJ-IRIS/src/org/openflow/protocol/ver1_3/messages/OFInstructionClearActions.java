@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFInstructionClearActions extends OFInstruction  {
+public class OFInstructionClearActions extends OFInstruction implements org.openflow.protocol.ver1_3.interfaces.OFInstructionClearActions {
     public static int MINIMUM_LENGTH = 8;
 
     int pad_1th;

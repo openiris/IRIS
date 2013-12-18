@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMultipartAggregateReply extends OFMultipartReply  {
+public class OFMultipartAggregateReply extends OFMultipartReply implements org.openflow.protocol.ver1_3.interfaces.OFMultipartAggregateReply {
     public static int MINIMUM_LENGTH = 40;
 
     long  packet_count;

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFPacketOut extends OFMessage  {
+public class OFPacketOut extends OFMessage implements org.openflow.protocol.ver1_3.interfaces.OFPacketOut {
     public static int MINIMUM_LENGTH = 24;
 
     int  buffer_id;
@@ -15,14 +15,14 @@ public class OFPacketOut extends OFMessage  {
 	short  actions_length;
 	int pad_1th;
 	short pad_2th;
-	List<OFAction>  actions;
+	List<org.openflow.protocol.ver1_3.interfaces.OFAction>  actions;
 	byte[]  data;
 
     public OFPacketOut() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)13));
-		this.actions = new LinkedList<OFAction>();
+		this.actions = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFAction>();
     }
     
     public OFPacketOut(OFPacketOut other) {
@@ -30,8 +30,8 @@ public class OFPacketOut extends OFMessage  {
 		this.buffer_id = other.buffer_id;
 		this.in_port = other.in_port;
 		this.actions_length = other.actions_length;
-		this.actions = (other.actions == null)? null: new LinkedList<OFAction>();
-		for ( OFAction i : other.actions ) { this.actions.add( new OFAction(i) ); }
+		this.actions = (other.actions == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFAction>();
+		for ( org.openflow.protocol.ver1_3.interfaces.OFAction i : other.actions ) { this.actions.add( new OFAction((OFAction)i) ); }
 		if (other.data != null) { this.data = java.util.Arrays.copyOf(other.data, other.data.length); }
     }
 
@@ -62,11 +62,11 @@ public class OFPacketOut extends OFMessage  {
 		return this;
 	}
 			
-	public List<OFAction> getActions() {
+	public List<org.openflow.protocol.ver1_3.interfaces.OFAction> getActions() {
 		return this.actions;
 	}
 	
-	public OFPacketOut setActions(List<OFAction> actions) {
+	public OFPacketOut setActions(List<org.openflow.protocol.ver1_3.interfaces.OFAction> actions) {
 		this.actions = actions;
 		return this;
 	}
@@ -89,7 +89,7 @@ public class OFPacketOut extends OFMessage  {
 		this.actions_length = data.getShort();
 		this.pad_1th = data.getInt();
 		this.pad_2th = data.getShort();
-		if (this.actions == null) this.actions = new LinkedList<OFAction>();
+		if (this.actions == null) this.actions = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFAction>();
 		for (int i = 0; i < this.actions_length; ) {
 		  data.mark();
 		  short __t = data.getShort();
@@ -110,7 +110,7 @@ public class OFPacketOut extends OFMessage  {
 		data.putShort(this.actions_length);
 		data.putInt(this.pad_1th);
 		data.putShort(this.pad_2th);
-		if (this.actions != null ) for (OFAction t: this.actions) { t.writeTo(data); }
+		if (this.actions != null ) for (org.openflow.protocol.ver1_3.interfaces.OFAction t: this.actions) { t.writeTo(data); }
 		if ( this.data != null ) { data.put(this.data); }
     }
 
@@ -125,7 +125,7 @@ public class OFPacketOut extends OFMessage  {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( OFAction i : this.actions ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.ver1_3.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
 		if ( this.data != null ) { len += this.data.length; } 
     	return len;
     }

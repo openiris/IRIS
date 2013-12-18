@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFVendor extends OFMessage  {
+public class OFVendor extends OFMessage implements org.openflow.protocol.ver1_0.interfaces.OFVendor {
     public static int MINIMUM_LENGTH = 16;
 
     int  vendor_id;

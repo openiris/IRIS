@@ -7,23 +7,23 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFPacketQueue    {
+public class OFPacketQueue   implements org.openflow.protocol.ver1_0.interfaces.OFPacketQueue {
     public static int MINIMUM_LENGTH = 8;
 
     int  queue_id;
 	short  length;
 	short pad_1th;
-	List<OFQueueProperty>  properties;
+	List<org.openflow.protocol.ver1_0.interfaces.OFQueueProperty>  properties;
 
     public OFPacketQueue() {
-        this.properties = new LinkedList<OFQueueProperty>();
+        this.properties = new LinkedList<org.openflow.protocol.ver1_0.interfaces.OFQueueProperty>();
     }
     
     public OFPacketQueue(OFPacketQueue other) {
     	this.queue_id = other.queue_id;
 		this.length = other.length;
-		this.properties = (other.properties == null)? null: new LinkedList<OFQueueProperty>();
-		for ( OFQueueProperty i : other.properties ) { this.properties.add( new OFQueueProperty(i) ); }
+		this.properties = (other.properties == null)? null: new LinkedList<org.openflow.protocol.ver1_0.interfaces.OFQueueProperty>();
+		for ( org.openflow.protocol.ver1_0.interfaces.OFQueueProperty i : other.properties ) { this.properties.add( new OFQueueProperty((OFQueueProperty)i) ); }
     }
 
 	public int getQueueId() {
@@ -44,11 +44,11 @@ public class OFPacketQueue    {
 		return this;
 	}
 			
-	public List<OFQueueProperty> getProperties() {
+	public List<org.openflow.protocol.ver1_0.interfaces.OFQueueProperty> getProperties() {
 		return this.properties;
 	}
 	
-	public OFPacketQueue setProperties(List<OFQueueProperty> properties) {
+	public OFPacketQueue setProperties(List<org.openflow.protocol.ver1_0.interfaces.OFQueueProperty> properties) {
 		this.properties = properties;
 		return this;
 	}
@@ -59,7 +59,7 @@ public class OFPacketQueue    {
 		this.queue_id = data.getInt();
 		this.length = data.getShort();
 		this.pad_1th = data.getShort();
-		if (this.properties == null) this.properties = new LinkedList<OFQueueProperty>();
+		if (this.properties == null) this.properties = new LinkedList<org.openflow.protocol.ver1_0.interfaces.OFQueueProperty>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) {
 		  data.mark();
@@ -76,7 +76,7 @@ public class OFPacketQueue    {
         data.putInt(this.queue_id);
 		data.putShort(this.length);
 		data.putShort(this.pad_1th);
-		if (this.properties != null ) for (OFQueueProperty t: this.properties) { t.writeTo(data); }
+		if (this.properties != null ) for (org.openflow.protocol.ver1_0.interfaces.OFQueueProperty t: this.properties) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -88,7 +88,7 @@ public class OFPacketQueue    {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( OFQueueProperty i : this.properties ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.ver1_0.interfaces.OFQueueProperty i : this.properties ) { len += i.computeLength(); }
     	return len;
     }
     

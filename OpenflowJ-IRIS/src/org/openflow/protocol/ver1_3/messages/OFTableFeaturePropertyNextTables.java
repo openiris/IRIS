@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFTableFeaturePropertyNextTables extends OFTableFeatureProperty  {
+public class OFTableFeaturePropertyNextTables extends OFTableFeatureProperty implements org.openflow.protocol.ver1_3.interfaces.OFTableFeaturePropertyNextTables {
     public static int MINIMUM_LENGTH = 4;
 
     List<Byte>  next_table_ids;
@@ -22,7 +22,7 @@ public class OFTableFeaturePropertyNextTables extends OFTableFeatureProperty  {
     public OFTableFeaturePropertyNextTables(OFTableFeaturePropertyNextTables other) {
     	super(other);
 		this.next_table_ids = (other.next_table_ids == null)? null: new LinkedList<Byte>();
-		for ( Byte i : other.next_table_ids ) { this.next_table_ids.add( new Byte(i) ); }
+		for ( Byte i : other.next_table_ids ) { this.next_table_ids.add( new Byte((Byte)i) ); }
     }
 
 	public List<Byte> getNextTableIds() {

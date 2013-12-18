@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFInstruction    {
+public class OFInstruction   implements org.openflow.protocol.ver1_3.interfaces.OFInstruction {
     public static int MINIMUM_LENGTH = 4;
 
     OFInstructionType  type;

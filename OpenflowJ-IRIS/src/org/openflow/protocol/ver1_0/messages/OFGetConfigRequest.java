@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFGetConfigRequest extends OFMessage  {
+public class OFGetConfigRequest extends OFMessage implements org.openflow.protocol.ver1_0.interfaces.OFGetConfigRequest {
     public static int MINIMUM_LENGTH = 8;
 
     

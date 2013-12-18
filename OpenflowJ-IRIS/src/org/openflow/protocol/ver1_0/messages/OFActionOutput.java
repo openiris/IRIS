@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFActionOutput extends OFAction  {
+public class OFActionOutput extends OFAction implements org.openflow.protocol.ver1_0.interfaces.OFActionOutput {
     public static int MINIMUM_LENGTH = 8;
 
     short  port;

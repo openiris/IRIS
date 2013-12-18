@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMeterBandExperimenter extends OFMeterBand  {
+public class OFMeterBandExperimenter extends OFMeterBand implements org.openflow.protocol.ver1_3.interfaces.OFMeterBandExperimenter {
     public static int MINIMUM_LENGTH = 16;
 
     int  experimenter_id;

@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFActionStripVlan extends OFAction  {
+public class OFActionStripVlan extends OFAction implements org.openflow.protocol.ver1_0.interfaces.OFActionStripVlan {
     public static int MINIMUM_LENGTH = 8;
 
     int pad_1th;

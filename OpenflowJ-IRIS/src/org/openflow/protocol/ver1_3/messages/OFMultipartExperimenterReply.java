@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMultipartExperimenterReply extends OFMultipartReply  {
+public class OFMultipartExperimenterReply extends OFMultipartReply implements org.openflow.protocol.ver1_3.interfaces.OFMultipartExperimenterReply {
     public static int MINIMUM_LENGTH = 24;
 
     int  experimenter_id;

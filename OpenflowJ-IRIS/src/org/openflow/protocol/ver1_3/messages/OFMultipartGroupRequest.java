@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMultipartGroupRequest extends OFMultipartRequest  {
+public class OFMultipartGroupRequest extends OFMultipartRequest implements org.openflow.protocol.ver1_3.interfaces.OFMultipartGroupRequest {
     public static int MINIMUM_LENGTH = 24;
 
     int  group_id;

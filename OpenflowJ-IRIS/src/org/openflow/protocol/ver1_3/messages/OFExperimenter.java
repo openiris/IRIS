@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFExperimenter extends OFMessage  {
+public class OFExperimenter extends OFMessage implements org.openflow.protocol.ver1_3.interfaces.OFExperimenter {
     public static int MINIMUM_LENGTH = 16;
 
     int  experimenter_id;

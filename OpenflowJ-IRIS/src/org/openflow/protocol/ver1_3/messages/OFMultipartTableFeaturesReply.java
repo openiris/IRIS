@@ -7,30 +7,30 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMultipartTableFeaturesReply extends OFMultipartReply  {
+public class OFMultipartTableFeaturesReply extends OFMultipartReply implements org.openflow.protocol.ver1_3.interfaces.OFMultipartTableFeaturesReply {
     public static int MINIMUM_LENGTH = 16;
 
-    List<OFTableFeatures>  entries;
+    List<org.openflow.protocol.ver1_3.interfaces.OFTableFeatures>  entries;
 
     public OFMultipartTableFeaturesReply() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)19));
 		setMultipartType(OFMultipartType.valueOf((short)12, getType()));
-		this.entries = new LinkedList<OFTableFeatures>();
+		this.entries = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFTableFeatures>();
     }
     
     public OFMultipartTableFeaturesReply(OFMultipartTableFeaturesReply other) {
     	super(other);
-		this.entries = (other.entries == null)? null: new LinkedList<OFTableFeatures>();
-		for ( OFTableFeatures i : other.entries ) { this.entries.add( new OFTableFeatures(i) ); }
+		this.entries = (other.entries == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFTableFeatures>();
+		for ( org.openflow.protocol.ver1_3.interfaces.OFTableFeatures i : other.entries ) { this.entries.add( new OFTableFeatures((OFTableFeatures)i) ); }
     }
 
-	public List<OFTableFeatures> getEntries() {
+	public List<org.openflow.protocol.ver1_3.interfaces.OFTableFeatures> getEntries() {
 		return this.entries;
 	}
 	
-	public OFMultipartTableFeaturesReply setEntries(List<OFTableFeatures> entries) {
+	public OFMultipartTableFeaturesReply setEntries(List<org.openflow.protocol.ver1_3.interfaces.OFTableFeatures> entries) {
 		this.entries = entries;
 		return this;
 	}
@@ -39,14 +39,14 @@ public class OFMultipartTableFeaturesReply extends OFMultipartReply  {
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);
-		if (this.entries == null) this.entries = new LinkedList<OFTableFeatures>();
+		if (this.entries == null) this.entries = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFTableFeatures>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) { OFTableFeatures t = new OFTableFeatures(); t.readFrom(data); this.entries.add(t); __cnt -= t.getLength(); }
     }
 
     public void writeTo(ByteBuffer data) {
     	super.writeTo(data);
-        if (this.entries != null ) for (OFTableFeatures t: this.entries) { t.writeTo(data); }
+        if (this.entries != null ) for (org.openflow.protocol.ver1_3.interfaces.OFTableFeatures t: this.entries) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -56,7 +56,7 @@ public class OFMultipartTableFeaturesReply extends OFMultipartReply  {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( OFTableFeatures i : this.entries ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.ver1_3.interfaces.OFTableFeatures i : this.entries ) { len += i.computeLength(); }
     	return len;
     }
     

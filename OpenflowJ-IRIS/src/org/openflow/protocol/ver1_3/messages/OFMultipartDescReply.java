@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMultipartDescReply extends OFMultipartReply  {
+public class OFMultipartDescReply extends OFMultipartReply implements org.openflow.protocol.ver1_3.interfaces.OFMultipartDescReply {
     public static int MINIMUM_LENGTH = 1072;
 
     String  manufacturer_description;

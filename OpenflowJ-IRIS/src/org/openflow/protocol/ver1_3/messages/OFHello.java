@@ -7,29 +7,29 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFHello extends OFMessage  {
+public class OFHello extends OFMessage implements org.openflow.protocol.ver1_3.interfaces.OFHello {
     public static int MINIMUM_LENGTH = 8;
 
-    List<OFHelloElem>  elements;
+    List<org.openflow.protocol.ver1_3.interfaces.OFHelloElem>  elements;
 
     public OFHello() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)0));
-		this.elements = new LinkedList<OFHelloElem>();
+		this.elements = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFHelloElem>();
     }
     
     public OFHello(OFHello other) {
     	super(other);
-		this.elements = (other.elements == null)? null: new LinkedList<OFHelloElem>();
-		for ( OFHelloElem i : other.elements ) { this.elements.add( new OFHelloElem(i) ); }
+		this.elements = (other.elements == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFHelloElem>();
+		for ( org.openflow.protocol.ver1_3.interfaces.OFHelloElem i : other.elements ) { this.elements.add( new OFHelloElem((OFHelloElem)i) ); }
     }
 
-	public List<OFHelloElem> getElements() {
+	public List<org.openflow.protocol.ver1_3.interfaces.OFHelloElem> getElements() {
 		return this.elements;
 	}
 	
-	public OFHello setElements(List<OFHelloElem> elements) {
+	public OFHello setElements(List<org.openflow.protocol.ver1_3.interfaces.OFHelloElem> elements) {
 		this.elements = elements;
 		return this;
 	}
@@ -38,7 +38,7 @@ public class OFHello extends OFMessage  {
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);
-		if (this.elements == null) this.elements = new LinkedList<OFHelloElem>();
+		if (this.elements == null) this.elements = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFHelloElem>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) {
 		  data.mark();
@@ -52,7 +52,7 @@ public class OFHello extends OFMessage  {
 
     public void writeTo(ByteBuffer data) {
     	super.writeTo(data);
-        if (this.elements != null ) for (OFHelloElem t: this.elements) { t.writeTo(data); }
+        if (this.elements != null ) for (org.openflow.protocol.ver1_3.interfaces.OFHelloElem t: this.elements) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -62,7 +62,7 @@ public class OFHello extends OFMessage  {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( OFHelloElem i : this.elements ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.ver1_3.interfaces.OFHelloElem i : this.elements ) { len += i.computeLength(); }
     	return len;
     }
     

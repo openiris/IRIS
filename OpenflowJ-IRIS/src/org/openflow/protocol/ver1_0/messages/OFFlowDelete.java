@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFFlowDelete extends OFFlowMod  {
+public class OFFlowDelete extends OFFlowMod implements org.openflow.protocol.ver1_0.interfaces.OFFlowDelete {
     public static int MINIMUM_LENGTH = 72;
 
     
