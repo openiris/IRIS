@@ -69,11 +69,11 @@ public class BasicOFController extends OFController {
 	@Override
 //	public boolean handlePacketIn(Connection conn, MessageContext context, OFPacketIn pi) {
 	public boolean handlePacketIn(Connection conn, MessageContext context, OFMessage m) {
-		OFPacketIn pi = (OFPacketIn) m;	
+//		OFPacketIn pi = (OFPacketIn) m;	
 
 		List<OFMessage> out = new LinkedList<OFMessage>();
 		for ( int i = 0; i < packet_in_pipeline.length; ++i ) {
-			boolean cont = packet_in_pipeline[i].processMessage( conn, context, pi, out );
+			boolean cont = packet_in_pipeline[i].processMessage( conn, context, m, out );
 			if ( !conn.write(out) ) {
 				return false;
 			}
