@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMeterBand   implements org.openflow.protocol.ver1_3.interfaces.OFMeterBand {
+public class OFMeterBand   implements org.openflow.protocol.interfaces.OFMeterBand {
     public static int MINIMUM_LENGTH = 12;
 
     OFMeterBandType  type;

@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFRoleRequest extends OFMessage implements org.openflow.protocol.ver1_3.interfaces.OFRoleRequest {
+public class OFRoleRequest extends OFMessage implements org.openflow.protocol.interfaces.OFRoleRequest {
     public static int MINIMUM_LENGTH = 24;
 
     int  role;

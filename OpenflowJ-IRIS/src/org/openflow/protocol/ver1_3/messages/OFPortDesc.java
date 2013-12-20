@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFPortDesc   implements org.openflow.protocol.ver1_3.interfaces.OFPortDesc {
+public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc {
     public static int MINIMUM_LENGTH = 64;
 
     int  port;

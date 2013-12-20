@@ -7,25 +7,25 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFGroupDescStatsEntry   implements org.openflow.protocol.ver1_3.interfaces.OFGroupDescStatsEntry {
+public class OFGroupDescStatsEntry   implements org.openflow.protocol.interfaces.OFGroupDescStatsEntry {
     public static int MINIMUM_LENGTH = 8;
 
     short  length;
 	byte  type;
 	byte pad_1th;
 	int  group_id;
-	List<org.openflow.protocol.ver1_3.interfaces.OFBucket>  buckets;
+	List<org.openflow.protocol.interfaces.OFBucket>  buckets;
 
     public OFGroupDescStatsEntry() {
-        this.buckets = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFBucket>();
+        this.buckets = new LinkedList<org.openflow.protocol.interfaces.OFBucket>();
     }
     
     public OFGroupDescStatsEntry(OFGroupDescStatsEntry other) {
     	this.length = other.length;
 		this.type = other.type;
 		this.group_id = other.group_id;
-		this.buckets = (other.buckets == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFBucket>();
-		for ( org.openflow.protocol.ver1_3.interfaces.OFBucket i : other.buckets ) { this.buckets.add( new OFBucket((OFBucket)i) ); }
+		this.buckets = (other.buckets == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFBucket>();
+		for ( org.openflow.protocol.interfaces.OFBucket i : other.buckets ) { this.buckets.add( new OFBucket((OFBucket)i) ); }
     }
 
 	public short getLength() {
@@ -55,11 +55,11 @@ public class OFGroupDescStatsEntry   implements org.openflow.protocol.ver1_3.int
 		return this;
 	}
 			
-	public List<org.openflow.protocol.ver1_3.interfaces.OFBucket> getBuckets() {
+	public List<org.openflow.protocol.interfaces.OFBucket> getBuckets() {
 		return this.buckets;
 	}
 	
-	public OFGroupDescStatsEntry setBuckets(List<org.openflow.protocol.ver1_3.interfaces.OFBucket> buckets) {
+	public OFGroupDescStatsEntry setBuckets(List<org.openflow.protocol.interfaces.OFBucket> buckets) {
 		this.buckets = buckets;
 		return this;
 	}
@@ -71,7 +71,7 @@ public class OFGroupDescStatsEntry   implements org.openflow.protocol.ver1_3.int
 		this.type = data.get();
 		this.pad_1th = data.get();
 		this.group_id = data.getInt();
-		if (this.buckets == null) this.buckets = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFBucket>();
+		if (this.buckets == null) this.buckets = new LinkedList<org.openflow.protocol.interfaces.OFBucket>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) { OFBucket t = new OFBucket(); t.readFrom(data); this.buckets.add(t); __cnt -= t.getLength(); }
     }
@@ -82,7 +82,7 @@ public class OFGroupDescStatsEntry   implements org.openflow.protocol.ver1_3.int
 		data.put(this.type);
 		data.put(this.pad_1th);
 		data.putInt(this.group_id);
-		if (this.buckets != null ) for (org.openflow.protocol.ver1_3.interfaces.OFBucket t: this.buckets) { t.writeTo(data); }
+		if (this.buckets != null ) for (org.openflow.protocol.interfaces.OFBucket t: this.buckets) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -95,7 +95,7 @@ public class OFGroupDescStatsEntry   implements org.openflow.protocol.ver1_3.int
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.ver1_3.interfaces.OFBucket i : this.buckets ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.interfaces.OFBucket i : this.buckets ) { len += i.computeLength(); }
     	return len;
     }
     

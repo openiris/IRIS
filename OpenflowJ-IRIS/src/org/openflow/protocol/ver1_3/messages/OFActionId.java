@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFActionId   implements org.openflow.protocol.ver1_3.interfaces.OFActionId {
+public class OFActionId   implements org.openflow.protocol.interfaces.OFActionId {
     public static int MINIMUM_LENGTH = 8;
 
     short  type;

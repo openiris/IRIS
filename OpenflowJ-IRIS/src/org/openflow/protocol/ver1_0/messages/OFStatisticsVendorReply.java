@@ -5,10 +5,10 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFStatisticsVendorReply extends OFStatisticsReply implements org.openflow.protocol.ver1_0.interfaces.OFStatisticsVendorReply {
+public class OFStatisticsVendorReply extends OFStatisticsReply implements org.openflow.protocol.interfaces.OFStatisticsVendorReply {
     public static int MINIMUM_LENGTH = 16;
 
-    org.openflow.protocol.ver1_0.interfaces.OFVendor  vendor;
+    org.openflow.protocol.interfaces.OFVendor  vendor;
 	byte[]  data;
 
     public OFStatisticsVendorReply() {
@@ -25,11 +25,11 @@ public class OFStatisticsVendorReply extends OFStatisticsReply implements org.op
 		if (other.data != null) { this.data = java.util.Arrays.copyOf(other.data, other.data.length); }
     }
 
-	public org.openflow.protocol.ver1_0.interfaces.OFVendor getVendor() {
+	public org.openflow.protocol.interfaces.OFVendor getVendor() {
 		return this.vendor;
 	}
 	
-	public OFStatisticsVendorReply setVendor(org.openflow.protocol.ver1_0.interfaces.OFVendor vendor) {
+	public OFStatisticsVendorReply setVendor(org.openflow.protocol.interfaces.OFVendor vendor) {
 		this.vendor = vendor;
 		return this;
 	}

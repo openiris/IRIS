@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFActionDecNwTtl extends OFAction implements org.openflow.protocol.ver1_3.interfaces.OFActionDecNwTtl {
+public class OFActionDecNwTtl extends OFAction implements org.openflow.protocol.interfaces.OFActionDecNwTtl {
     public static int MINIMUM_LENGTH = 8;
 
     int pad_1th;

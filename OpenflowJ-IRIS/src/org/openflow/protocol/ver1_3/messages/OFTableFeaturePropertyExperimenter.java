@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFTableFeaturePropertyExperimenter extends OFTableFeatureProperty implements org.openflow.protocol.ver1_3.interfaces.OFTableFeaturePropertyExperimenter {
+public class OFTableFeaturePropertyExperimenter extends OFTableFeatureProperty implements org.openflow.protocol.interfaces.OFTableFeaturePropertyExperimenter {
     public static int MINIMUM_LENGTH = 12;
 
     int  experimenter_id;

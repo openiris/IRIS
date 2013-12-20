@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFTableFeaturePropertyApplySetfieldMiss extends OFTableFeatureProperty implements org.openflow.protocol.ver1_3.interfaces.OFTableFeaturePropertyApplySetfieldMiss {
+public class OFTableFeaturePropertyApplySetfieldMiss extends OFTableFeatureProperty implements org.openflow.protocol.interfaces.OFTableFeaturePropertyApplySetfieldMiss {
     public static int MINIMUM_LENGTH = 4;
 
     List<Integer>  oxm_ids;

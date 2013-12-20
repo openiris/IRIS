@@ -5,10 +5,10 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.ver1_0.interfaces.OFFlowRemoved {
+public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.interfaces.OFFlowRemoved {
     public static int MINIMUM_LENGTH = 88;
 
-    org.openflow.protocol.ver1_0.interfaces.OFMatch  match;
+    org.openflow.protocol.interfaces.OFMatch  match;
 	long  cookie;
 	short  priority;
 	OFFlowRemovedReason  reason;
@@ -40,11 +40,11 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.ve
 		this.byte_count = other.byte_count;
     }
 
-	public org.openflow.protocol.ver1_0.interfaces.OFMatch getMatch() {
+	public org.openflow.protocol.interfaces.OFMatch getMatch() {
 		return this.match;
 	}
 	
-	public OFFlowRemoved setMatch(org.openflow.protocol.ver1_0.interfaces.OFMatch match) {
+	public OFFlowRemoved setMatch(org.openflow.protocol.interfaces.OFMatch match) {
 		this.match = match;
 		return this;
 	}

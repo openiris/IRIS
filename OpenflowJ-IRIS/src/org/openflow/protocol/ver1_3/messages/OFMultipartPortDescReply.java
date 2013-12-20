@@ -7,30 +7,30 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMultipartPortDescReply extends OFMultipartReply implements org.openflow.protocol.ver1_3.interfaces.OFMultipartPortDescReply {
+public class OFMultipartPortDescReply extends OFMultipartReply implements org.openflow.protocol.interfaces.OFMultipartPortDescReply {
     public static int MINIMUM_LENGTH = 16;
 
-    List<org.openflow.protocol.ver1_3.interfaces.OFPortDesc>  entries;
+    List<org.openflow.protocol.interfaces.OFPortDesc>  entries;
 
     public OFMultipartPortDescReply() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)19));
 		setMultipartType(OFMultipartType.valueOf((short)13, getType()));
-		this.entries = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFPortDesc>();
+		this.entries = new LinkedList<org.openflow.protocol.interfaces.OFPortDesc>();
     }
     
     public OFMultipartPortDescReply(OFMultipartPortDescReply other) {
     	super(other);
-		this.entries = (other.entries == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFPortDesc>();
-		for ( org.openflow.protocol.ver1_3.interfaces.OFPortDesc i : other.entries ) { this.entries.add( new OFPortDesc((OFPortDesc)i) ); }
+		this.entries = (other.entries == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFPortDesc>();
+		for ( org.openflow.protocol.interfaces.OFPortDesc i : other.entries ) { this.entries.add( new OFPortDesc((OFPortDesc)i) ); }
     }
 
-	public List<org.openflow.protocol.ver1_3.interfaces.OFPortDesc> getEntries() {
+	public List<org.openflow.protocol.interfaces.OFPortDesc> getEntries() {
 		return this.entries;
 	}
 	
-	public OFMultipartPortDescReply setEntries(List<org.openflow.protocol.ver1_3.interfaces.OFPortDesc> entries) {
+	public OFMultipartPortDescReply setEntries(List<org.openflow.protocol.interfaces.OFPortDesc> entries) {
 		this.entries = entries;
 		return this;
 	}
@@ -39,14 +39,14 @@ public class OFMultipartPortDescReply extends OFMultipartReply implements org.op
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);
-		if (this.entries == null) this.entries = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFPortDesc>();
+		if (this.entries == null) this.entries = new LinkedList<org.openflow.protocol.interfaces.OFPortDesc>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) { OFPortDesc t = new OFPortDesc(); t.readFrom(data); this.entries.add(t); __cnt -= OFPortDesc.MINIMUM_LENGTH; }
     }
 
     public void writeTo(ByteBuffer data) {
     	super.writeTo(data);
-        if (this.entries != null ) for (org.openflow.protocol.ver1_3.interfaces.OFPortDesc t: this.entries) { t.writeTo(data); }
+        if (this.entries != null ) for (org.openflow.protocol.interfaces.OFPortDesc t: this.entries) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -56,7 +56,7 @@ public class OFMultipartPortDescReply extends OFMultipartReply implements org.op
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.ver1_3.interfaces.OFPortDesc i : this.entries ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.interfaces.OFPortDesc i : this.entries ) { len += i.computeLength(); }
     	return len;
     }
     

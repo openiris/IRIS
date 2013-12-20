@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMultipartMeterConfigRequest extends OFMultipartRequest implements org.openflow.protocol.ver1_3.interfaces.OFMultipartMeterConfigRequest {
+public class OFMultipartMeterConfigRequest extends OFMultipartRequest implements org.openflow.protocol.interfaces.OFMultipartMeterConfigRequest {
     public static int MINIMUM_LENGTH = 24;
 
     int  meter_id;

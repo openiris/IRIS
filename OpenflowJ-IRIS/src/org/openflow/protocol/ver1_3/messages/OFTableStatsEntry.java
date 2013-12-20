@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFTableStatsEntry   implements org.openflow.protocol.ver1_3.interfaces.OFTableStatsEntry {
+public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFTableStatsEntry {
     public static int MINIMUM_LENGTH = 24;
 
     byte  table_id;

@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFActionVendor extends OFAction implements org.openflow.protocol.ver1_0.interfaces.OFActionVendor {
+public class OFActionVendor extends OFAction implements org.openflow.protocol.interfaces.OFActionVendor {
     public static int MINIMUM_LENGTH = 8;
 
     int  vendor_id;

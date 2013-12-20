@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFFlowStatsEntry   implements org.openflow.protocol.ver1_0.interfaces.OFFlowStatsEntry {
+public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFlowStatsEntry {
     public static int MINIMUM_LENGTH = 88;
 
     short  length;
 	byte  table_id;
 	byte pad_1th;
-	org.openflow.protocol.ver1_0.interfaces.OFMatch  match;
+	org.openflow.protocol.interfaces.OFMatch  match;
 	int  duration_sec;
 	int  duration_nsec;
 	short  priority;
@@ -24,11 +24,11 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.ver1_0.interfac
 	long  cookie;
 	long  packet_count;
 	long  byte_count;
-	List<org.openflow.protocol.ver1_0.interfaces.OFAction>  actions;
+	List<org.openflow.protocol.interfaces.OFAction>  actions;
 
     public OFFlowStatsEntry() {
         this.match = new OFMatch();
-		this.actions = new LinkedList<org.openflow.protocol.ver1_0.interfaces.OFAction>();
+		this.actions = new LinkedList<org.openflow.protocol.interfaces.OFAction>();
     }
     
     public OFFlowStatsEntry(OFFlowStatsEntry other) {
@@ -43,8 +43,8 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.ver1_0.interfac
 		this.cookie = other.cookie;
 		this.packet_count = other.packet_count;
 		this.byte_count = other.byte_count;
-		this.actions = (other.actions == null)? null: new LinkedList<org.openflow.protocol.ver1_0.interfaces.OFAction>();
-		for ( org.openflow.protocol.ver1_0.interfaces.OFAction i : other.actions ) { this.actions.add( new OFAction((OFAction)i) ); }
+		this.actions = (other.actions == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFAction>();
+		for ( org.openflow.protocol.interfaces.OFAction i : other.actions ) { this.actions.add( new OFAction((OFAction)i) ); }
     }
 
 	public short getLength() {
@@ -65,11 +65,11 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.ver1_0.interfac
 		return this;
 	}
 			
-	public org.openflow.protocol.ver1_0.interfaces.OFMatch getMatch() {
+	public org.openflow.protocol.interfaces.OFMatch getMatch() {
 		return this.match;
 	}
 	
-	public OFFlowStatsEntry setMatch(org.openflow.protocol.ver1_0.interfaces.OFMatch match) {
+	public OFFlowStatsEntry setMatch(org.openflow.protocol.interfaces.OFMatch match) {
 		this.match = match;
 		return this;
 	}
@@ -146,11 +146,11 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.ver1_0.interfac
 		return this;
 	}
 			
-	public List<org.openflow.protocol.ver1_0.interfaces.OFAction> getActions() {
+	public List<org.openflow.protocol.interfaces.OFAction> getActions() {
 		return this.actions;
 	}
 	
-	public OFFlowStatsEntry setActions(List<org.openflow.protocol.ver1_0.interfaces.OFAction> actions) {
+	public OFFlowStatsEntry setActions(List<org.openflow.protocol.interfaces.OFAction> actions) {
 		this.actions = actions;
 		return this;
 	}
@@ -173,7 +173,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.ver1_0.interfac
 		this.cookie = data.getLong();
 		this.packet_count = data.getLong();
 		this.byte_count = data.getLong();
-		if (this.actions == null) this.actions = new LinkedList<org.openflow.protocol.ver1_0.interfaces.OFAction>();
+		if (this.actions == null) this.actions = new LinkedList<org.openflow.protocol.interfaces.OFAction>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) {
 		  data.mark();
@@ -201,7 +201,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.ver1_0.interfac
 		data.putLong(this.cookie);
 		data.putLong(this.packet_count);
 		data.putLong(this.byte_count);
-		if (this.actions != null ) for (org.openflow.protocol.ver1_0.interfaces.OFAction t: this.actions) { t.writeTo(data); }
+		if (this.actions != null ) for (org.openflow.protocol.interfaces.OFAction t: this.actions) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -222,7 +222,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.ver1_0.interfac
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.ver1_0.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
     	return len;
     }
     

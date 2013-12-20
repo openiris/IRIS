@@ -7,29 +7,29 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMatchOxm extends OFMatch implements org.openflow.protocol.ver1_3.interfaces.OFMatchOxm {
+public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfaces.OFMatchOxm {
     public static int MINIMUM_LENGTH = 4;
 
-    List<org.openflow.protocol.ver1_3.interfaces.OFOxm>  oxm_fields;
+    List<org.openflow.protocol.interfaces.OFOxm>  oxm_fields;
 
     public OFMatchOxm() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMatchType.valueOf((short)1));
-		this.oxm_fields = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFOxm>();
+		this.oxm_fields = new LinkedList<org.openflow.protocol.interfaces.OFOxm>();
     }
     
     public OFMatchOxm(OFMatchOxm other) {
     	super(other);
-		this.oxm_fields = (other.oxm_fields == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFOxm>();
-		for ( org.openflow.protocol.ver1_3.interfaces.OFOxm i : other.oxm_fields ) { this.oxm_fields.add( new OFOxm((OFOxm)i) ); }
+		this.oxm_fields = (other.oxm_fields == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFOxm>();
+		for ( org.openflow.protocol.interfaces.OFOxm i : other.oxm_fields ) { this.oxm_fields.add( new OFOxm((OFOxm)i) ); }
     }
 
-	public List<org.openflow.protocol.ver1_3.interfaces.OFOxm> getOxmFields() {
+	public List<org.openflow.protocol.interfaces.OFOxm> getOxmFields() {
 		return this.oxm_fields;
 	}
 	
-	public OFMatchOxm setOxmFields(List<org.openflow.protocol.ver1_3.interfaces.OFOxm> oxm_fields) {
+	public OFMatchOxm setOxmFields(List<org.openflow.protocol.interfaces.OFOxm> oxm_fields) {
 		this.oxm_fields = oxm_fields;
 		return this;
 	}
@@ -38,7 +38,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.ver1_3.
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);
-		if (this.oxm_fields == null) this.oxm_fields = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFOxm>();
+		if (this.oxm_fields == null) this.oxm_fields = new LinkedList<org.openflow.protocol.interfaces.OFOxm>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) { OFOxm t = new OFOxm(); t.readFrom(data); this.oxm_fields.add(t); __cnt -= (OFOxm.MINIMUM_LENGTH + t.getPayloadLength()); }
 		int __align = alignment(getLength(), 8);
@@ -47,7 +47,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.ver1_3.
 
     public void writeTo(ByteBuffer data) {
     	super.writeTo(data);
-        if (this.oxm_fields != null ) for (org.openflow.protocol.ver1_3.interfaces.OFOxm t: this.oxm_fields) { t.writeTo(data); }
+        if (this.oxm_fields != null ) for (org.openflow.protocol.interfaces.OFOxm t: this.oxm_fields) { t.writeTo(data); }
 		int __align = alignment(computeLength(), 8);
 		for (int i = 0; i < __align; ++i ) { data.put((byte)0); }
     }
@@ -59,7 +59,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.ver1_3.
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.ver1_3.interfaces.OFOxm i : this.oxm_fields ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.interfaces.OFOxm i : this.oxm_fields ) { len += i.computeLength(); }
     	return len;
     }
     

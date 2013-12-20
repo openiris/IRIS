@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFFlowAdd extends OFFlowMod implements org.openflow.protocol.ver1_0.interfaces.OFFlowAdd {
+public class OFFlowAdd extends OFFlowMod implements org.openflow.protocol.interfaces.OFFlowAdd {
     public static int MINIMUM_LENGTH = 72;
 
     

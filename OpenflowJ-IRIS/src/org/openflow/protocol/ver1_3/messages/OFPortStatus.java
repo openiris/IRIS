@@ -5,14 +5,14 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFPortStatus extends OFMessage implements org.openflow.protocol.ver1_3.interfaces.OFPortStatus {
+public class OFPortStatus extends OFMessage implements org.openflow.protocol.interfaces.OFPortStatus {
     public static int MINIMUM_LENGTH = 80;
 
     byte  reason;
 	int pad_1th;
 	short pad_2th;
 	byte pad_3th;
-	org.openflow.protocol.ver1_3.interfaces.OFPortDesc  desc;
+	org.openflow.protocol.interfaces.OFPortDesc  desc;
 
     public OFPortStatus() {
         super();
@@ -36,11 +36,11 @@ public class OFPortStatus extends OFMessage implements org.openflow.protocol.ver
 		return this;
 	}
 			
-	public org.openflow.protocol.ver1_3.interfaces.OFPortDesc getDesc() {
+	public org.openflow.protocol.interfaces.OFPortDesc getDesc() {
 		return this.desc;
 	}
 	
-	public OFPortStatus setDesc(org.openflow.protocol.ver1_3.interfaces.OFPortDesc desc) {
+	public OFPortStatus setDesc(org.openflow.protocol.interfaces.OFPortDesc desc) {
 		this.desc = desc;
 		return this;
 	}

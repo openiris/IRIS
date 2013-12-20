@@ -7,30 +7,30 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMultipartMeterConfigReply extends OFMultipartReply implements org.openflow.protocol.ver1_3.interfaces.OFMultipartMeterConfigReply {
+public class OFMultipartMeterConfigReply extends OFMultipartReply implements org.openflow.protocol.interfaces.OFMultipartMeterConfigReply {
     public static int MINIMUM_LENGTH = 16;
 
-    List<org.openflow.protocol.ver1_3.interfaces.OFMeterBand>  entries;
+    List<org.openflow.protocol.interfaces.OFMeterBand>  entries;
 
     public OFMultipartMeterConfigReply() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)19));
 		setMultipartType(OFMultipartType.valueOf((short)10, getType()));
-		this.entries = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFMeterBand>();
+		this.entries = new LinkedList<org.openflow.protocol.interfaces.OFMeterBand>();
     }
     
     public OFMultipartMeterConfigReply(OFMultipartMeterConfigReply other) {
     	super(other);
-		this.entries = (other.entries == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFMeterBand>();
-		for ( org.openflow.protocol.ver1_3.interfaces.OFMeterBand i : other.entries ) { this.entries.add( new OFMeterBand((OFMeterBand)i) ); }
+		this.entries = (other.entries == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFMeterBand>();
+		for ( org.openflow.protocol.interfaces.OFMeterBand i : other.entries ) { this.entries.add( new OFMeterBand((OFMeterBand)i) ); }
     }
 
-	public List<org.openflow.protocol.ver1_3.interfaces.OFMeterBand> getEntries() {
+	public List<org.openflow.protocol.interfaces.OFMeterBand> getEntries() {
 		return this.entries;
 	}
 	
-	public OFMultipartMeterConfigReply setEntries(List<org.openflow.protocol.ver1_3.interfaces.OFMeterBand> entries) {
+	public OFMultipartMeterConfigReply setEntries(List<org.openflow.protocol.interfaces.OFMeterBand> entries) {
 		this.entries = entries;
 		return this;
 	}
@@ -39,7 +39,7 @@ public class OFMultipartMeterConfigReply extends OFMultipartReply implements org
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);
-		if (this.entries == null) this.entries = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFMeterBand>();
+		if (this.entries == null) this.entries = new LinkedList<org.openflow.protocol.interfaces.OFMeterBand>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) {
 		  data.mark();
@@ -53,7 +53,7 @@ public class OFMultipartMeterConfigReply extends OFMultipartReply implements org
 
     public void writeTo(ByteBuffer data) {
     	super.writeTo(data);
-        if (this.entries != null ) for (org.openflow.protocol.ver1_3.interfaces.OFMeterBand t: this.entries) { t.writeTo(data); }
+        if (this.entries != null ) for (org.openflow.protocol.interfaces.OFMeterBand t: this.entries) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -63,7 +63,7 @@ public class OFMultipartMeterConfigReply extends OFMultipartReply implements org
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.ver1_3.interfaces.OFMeterBand i : this.entries ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.interfaces.OFMeterBand i : this.entries ) { len += i.computeLength(); }
     	return len;
     }
     

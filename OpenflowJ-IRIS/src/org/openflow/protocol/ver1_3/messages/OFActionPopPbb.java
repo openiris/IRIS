@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFActionPopPbb extends OFAction implements org.openflow.protocol.ver1_3.interfaces.OFActionPopPbb {
+public class OFActionPopPbb extends OFAction implements org.openflow.protocol.interfaces.OFActionPopPbb {
     public static int MINIMUM_LENGTH = 8;
 
     int pad_1th;

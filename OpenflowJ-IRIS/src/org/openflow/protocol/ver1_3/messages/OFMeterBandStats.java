@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMeterBandStats   implements org.openflow.protocol.ver1_3.interfaces.OFMeterBandStats {
+public class OFMeterBandStats   implements org.openflow.protocol.interfaces.OFMeterBandStats {
     public static int MINIMUM_LENGTH = 16;
 
     long  packet_band_count;

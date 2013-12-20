@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFActionSetNwSrc extends OFAction implements org.openflow.protocol.ver1_0.interfaces.OFActionSetNwSrc {
+public class OFActionSetNwSrc extends OFAction implements org.openflow.protocol.interfaces.OFActionSetNwSrc {
     public static int MINIMUM_LENGTH = 8;
 
     int  nw_addr;

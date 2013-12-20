@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFTableFeatures   implements org.openflow.protocol.ver1_3.interfaces.OFTableFeatures {
+public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTableFeatures {
     public static int MINIMUM_LENGTH = 64;
 
     short  length;
@@ -19,11 +19,11 @@ public class OFTableFeatures   implements org.openflow.protocol.ver1_3.interface
 	long  metadata_write;
 	int  config;
 	int  max_entries;
-	List<org.openflow.protocol.ver1_3.interfaces.OFTableFeatureProperty>  properties;
+	List<org.openflow.protocol.interfaces.OFTableFeatureProperty>  properties;
 
     public OFTableFeatures() {
         name = new byte[32];
-		this.properties = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFTableFeatureProperty>();
+		this.properties = new LinkedList<org.openflow.protocol.interfaces.OFTableFeatureProperty>();
     }
     
     public OFTableFeatures(OFTableFeatures other) {
@@ -34,8 +34,8 @@ public class OFTableFeatures   implements org.openflow.protocol.ver1_3.interface
 		this.metadata_write = other.metadata_write;
 		this.config = other.config;
 		this.max_entries = other.max_entries;
-		this.properties = (other.properties == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFTableFeatureProperty>();
-		for ( org.openflow.protocol.ver1_3.interfaces.OFTableFeatureProperty i : other.properties ) { this.properties.add( new OFTableFeatureProperty((OFTableFeatureProperty)i) ); }
+		this.properties = (other.properties == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFTableFeatureProperty>();
+		for ( org.openflow.protocol.interfaces.OFTableFeatureProperty i : other.properties ) { this.properties.add( new OFTableFeatureProperty((OFTableFeatureProperty)i) ); }
     }
 
 	public short getLength() {
@@ -101,11 +101,11 @@ public class OFTableFeatures   implements org.openflow.protocol.ver1_3.interface
 		return this;
 	}
 			
-	public List<org.openflow.protocol.ver1_3.interfaces.OFTableFeatureProperty> getProperties() {
+	public List<org.openflow.protocol.interfaces.OFTableFeatureProperty> getProperties() {
 		return this.properties;
 	}
 	
-	public OFTableFeatures setProperties(List<org.openflow.protocol.ver1_3.interfaces.OFTableFeatureProperty> properties) {
+	public OFTableFeatures setProperties(List<org.openflow.protocol.interfaces.OFTableFeatureProperty> properties) {
 		this.properties = properties;
 		return this;
 	}
@@ -123,7 +123,7 @@ public class OFTableFeatures   implements org.openflow.protocol.ver1_3.interface
 		this.metadata_write = data.getLong();
 		this.config = data.getInt();
 		this.max_entries = data.getInt();
-		if (this.properties == null) this.properties = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFTableFeatureProperty>();
+		if (this.properties == null) this.properties = new LinkedList<org.openflow.protocol.interfaces.OFTableFeatureProperty>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) {
 		  data.mark();
@@ -146,7 +146,7 @@ public class OFTableFeatures   implements org.openflow.protocol.ver1_3.interface
 		data.putLong(this.metadata_write);
 		data.putInt(this.config);
 		data.putInt(this.max_entries);
-		if (this.properties != null ) for (org.openflow.protocol.ver1_3.interfaces.OFTableFeatureProperty t: this.properties) { t.writeTo(data); }
+		if (this.properties != null ) for (org.openflow.protocol.interfaces.OFTableFeatureProperty t: this.properties) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -163,7 +163,7 @@ public class OFTableFeatures   implements org.openflow.protocol.ver1_3.interface
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.ver1_3.interfaces.OFTableFeatureProperty i : this.properties ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.interfaces.OFTableFeatureProperty i : this.properties ) { len += i.computeLength(); }
     	return len;
     }
     

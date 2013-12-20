@@ -7,29 +7,29 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFTableFeaturePropertyInstructions extends OFTableFeatureProperty implements org.openflow.protocol.ver1_3.interfaces.OFTableFeaturePropertyInstructions {
+public class OFTableFeaturePropertyInstructions extends OFTableFeatureProperty implements org.openflow.protocol.interfaces.OFTableFeaturePropertyInstructions {
     public static int MINIMUM_LENGTH = 4;
 
-    List<org.openflow.protocol.ver1_3.interfaces.OFInstruction>  instruction_ids;
+    List<org.openflow.protocol.interfaces.OFInstruction>  instruction_ids;
 
     public OFTableFeaturePropertyInstructions() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFTableFeaturePropertyType.valueOf((short)0));
-		this.instruction_ids = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFInstruction>();
+		this.instruction_ids = new LinkedList<org.openflow.protocol.interfaces.OFInstruction>();
     }
     
     public OFTableFeaturePropertyInstructions(OFTableFeaturePropertyInstructions other) {
     	super(other);
-		this.instruction_ids = (other.instruction_ids == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFInstruction>();
-		for ( org.openflow.protocol.ver1_3.interfaces.OFInstruction i : other.instruction_ids ) { this.instruction_ids.add( new OFInstruction((OFInstruction)i) ); }
+		this.instruction_ids = (other.instruction_ids == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFInstruction>();
+		for ( org.openflow.protocol.interfaces.OFInstruction i : other.instruction_ids ) { this.instruction_ids.add( new OFInstruction((OFInstruction)i) ); }
     }
 
-	public List<org.openflow.protocol.ver1_3.interfaces.OFInstruction> getInstructionIds() {
+	public List<org.openflow.protocol.interfaces.OFInstruction> getInstructionIds() {
 		return this.instruction_ids;
 	}
 	
-	public OFTableFeaturePropertyInstructions setInstructionIds(List<org.openflow.protocol.ver1_3.interfaces.OFInstruction> instruction_ids) {
+	public OFTableFeaturePropertyInstructions setInstructionIds(List<org.openflow.protocol.interfaces.OFInstruction> instruction_ids) {
 		this.instruction_ids = instruction_ids;
 		return this;
 	}
@@ -38,7 +38,7 @@ public class OFTableFeaturePropertyInstructions extends OFTableFeatureProperty i
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);
-		if (this.instruction_ids == null) this.instruction_ids = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFInstruction>();
+		if (this.instruction_ids == null) this.instruction_ids = new LinkedList<org.openflow.protocol.interfaces.OFInstruction>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) {
 		  data.mark();
@@ -52,7 +52,7 @@ public class OFTableFeaturePropertyInstructions extends OFTableFeatureProperty i
 
     public void writeTo(ByteBuffer data) {
     	super.writeTo(data);
-        if (this.instruction_ids != null ) for (org.openflow.protocol.ver1_3.interfaces.OFInstruction t: this.instruction_ids) { t.writeTo(data); }
+        if (this.instruction_ids != null ) for (org.openflow.protocol.interfaces.OFInstruction t: this.instruction_ids) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -62,7 +62,7 @@ public class OFTableFeaturePropertyInstructions extends OFTableFeatureProperty i
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.ver1_3.interfaces.OFInstruction i : this.instruction_ids ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.interfaces.OFInstruction i : this.instruction_ids ) { len += i.computeLength(); }
     	return len;
     }
     

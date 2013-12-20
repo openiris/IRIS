@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFPortMod extends OFMessage implements org.openflow.protocol.ver1_0.interfaces.OFPortMod {
+public class OFPortMod extends OFMessage implements org.openflow.protocol.interfaces.OFPortMod {
     public static int MINIMUM_LENGTH = 32;
 
     OFPortNo  port_no;

@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFTableFeatureProperty   implements org.openflow.protocol.ver1_3.interfaces.OFTableFeatureProperty {
+public class OFTableFeatureProperty   implements org.openflow.protocol.interfaces.OFTableFeatureProperty {
     public static int MINIMUM_LENGTH = 4;
 
     OFTableFeaturePropertyType  type;

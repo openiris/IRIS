@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMeterFeatures   implements org.openflow.protocol.ver1_3.interfaces.OFMeterFeatures {
+public class OFMeterFeatures   implements org.openflow.protocol.interfaces.OFMeterFeatures {
     public static int MINIMUM_LENGTH = 16;
 
     int  max_meter;

@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFPacketIn extends OFMessage implements org.openflow.protocol.ver1_0.interfaces.OFPacketIn {
+public class OFPacketIn extends OFMessage implements org.openflow.protocol.interfaces.OFPacketIn {
     public static int MINIMUM_LENGTH = 18;
 
     int  buffer_id;

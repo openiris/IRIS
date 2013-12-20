@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMultipartReply extends OFMultipart implements org.openflow.protocol.ver1_3.interfaces.OFMultipartReply {
+public class OFMultipartReply extends OFMultipart implements org.openflow.protocol.interfaces.OFMultipartReply {
     public static int MINIMUM_LENGTH = 16;
 
     OFMultipartType  multipart_type;

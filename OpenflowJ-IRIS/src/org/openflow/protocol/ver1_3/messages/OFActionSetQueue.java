@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFActionSetQueue extends OFAction implements org.openflow.protocol.ver1_3.interfaces.OFActionSetQueue {
+public class OFActionSetQueue extends OFAction implements org.openflow.protocol.interfaces.OFActionSetQueue {
     public static int MINIMUM_LENGTH = 8;
 
     int  queue_id;

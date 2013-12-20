@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFActionPopVlan extends OFAction implements org.openflow.protocol.ver1_3.interfaces.OFActionPopVlan {
+public class OFActionPopVlan extends OFAction implements org.openflow.protocol.interfaces.OFActionPopVlan {
     public static int MINIMUM_LENGTH = 8;
 
     int pad_1th;

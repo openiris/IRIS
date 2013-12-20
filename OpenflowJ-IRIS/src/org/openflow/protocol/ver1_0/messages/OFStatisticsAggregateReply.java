@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFStatisticsAggregateReply extends OFStatisticsReply implements org.openflow.protocol.ver1_0.interfaces.OFStatisticsAggregateReply {
+public class OFStatisticsAggregateReply extends OFStatisticsReply implements org.openflow.protocol.interfaces.OFStatisticsAggregateReply {
     public static int MINIMUM_LENGTH = 36;
 
     long  packet_count;

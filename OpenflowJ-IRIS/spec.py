@@ -395,6 +395,10 @@ class Spec:
         break
   
 #     pprint.pprint(self.type_dic)
+    for x in self.all_items:
+      if isinstance(x, openflow_types.Struct) and x.get_supertype():
+        x.reduce()
+        
     return self.all_items
   
   def load_spec(self):

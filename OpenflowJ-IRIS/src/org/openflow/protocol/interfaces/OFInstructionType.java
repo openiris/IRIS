@@ -1,0 +1,11 @@
+package org.openflow.protocol.interfaces;
+
+public enum OFInstructionType {
+	OFPIT_METER,
+	OFPIT_WRITE_METADATA,
+	OFPIT_WRITE_ACTIONS,
+	OFPIT_EXPERIMENTER,
+	OFPIT_APPLY_ACTIONS,
+	OFPIT_GOTO_TABLE,
+	OFPIT_CLEAR_ACTIONS
+}

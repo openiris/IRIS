@@ -1,0 +1,14 @@
+package org.openflow.protocol.interfaces;
+
+public enum OFCapabilities {
+	OFPC_ARP_MATCH_IP,
+	OFPC_IP_REASM,
+	OFPC_FLOW_STATS,
+	OFPC_GROUP_STATS,
+	OFPC_STP,
+	OFPC_PORT_STATS,
+	OFPC_TABLE_STATS,
+	OFPC_RESERVED,
+	OFPC_QUEUE_STATS,
+	OFPC_PORT_BLOCKED
+}

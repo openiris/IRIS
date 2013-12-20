@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFFlowMod extends OFMessage implements org.openflow.protocol.ver1_3.interfaces.OFFlowMod {
+public class OFFlowMod extends OFMessage implements org.openflow.protocol.interfaces.OFFlowMod {
     public static int MINIMUM_LENGTH = 52;
 
     long  cookie;
@@ -22,15 +22,15 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.ver1_3
 	int  out_group;
 	short  flags;
 	short pad_1th;
-	org.openflow.protocol.ver1_3.interfaces.OFMatchOxm  match;
-	List<org.openflow.protocol.ver1_3.interfaces.OFInstruction>  instructions;
+	org.openflow.protocol.interfaces.OFMatchOxm  match;
+	List<org.openflow.protocol.interfaces.OFInstruction>  instructions;
 
     public OFFlowMod() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)14));
 		this.match = new OFMatchOxm();
-		this.instructions = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFInstruction>();
+		this.instructions = new LinkedList<org.openflow.protocol.interfaces.OFInstruction>();
     }
     
     public OFFlowMod(OFFlowMod other) {
@@ -47,8 +47,8 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.ver1_3
 		this.out_group = other.out_group;
 		this.flags = other.flags;
 		this.match = new OFMatchOxm((OFMatchOxm)other.match);
-		this.instructions = (other.instructions == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFInstruction>();
-		for ( org.openflow.protocol.ver1_3.interfaces.OFInstruction i : other.instructions ) { this.instructions.add( new OFInstruction((OFInstruction)i) ); }
+		this.instructions = (other.instructions == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFInstruction>();
+		for ( org.openflow.protocol.interfaces.OFInstruction i : other.instructions ) { this.instructions.add( new OFInstruction((OFInstruction)i) ); }
     }
 
 	public long getCookie() {
@@ -150,20 +150,20 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.ver1_3
 		return this;
 	}
 			
-	public org.openflow.protocol.ver1_3.interfaces.OFMatchOxm getMatch() {
+	public org.openflow.protocol.interfaces.OFMatchOxm getMatch() {
 		return this.match;
 	}
 	
-	public OFFlowMod setMatch(org.openflow.protocol.ver1_3.interfaces.OFMatchOxm match) {
+	public OFFlowMod setMatch(org.openflow.protocol.interfaces.OFMatchOxm match) {
 		this.match = match;
 		return this;
 	}
 			
-	public List<org.openflow.protocol.ver1_3.interfaces.OFInstruction> getInstructions() {
+	public List<org.openflow.protocol.interfaces.OFInstruction> getInstructions() {
 		return this.instructions;
 	}
 	
-	public OFFlowMod setInstructions(List<org.openflow.protocol.ver1_3.interfaces.OFInstruction> instructions) {
+	public OFFlowMod setInstructions(List<org.openflow.protocol.interfaces.OFInstruction> instructions) {
 		this.instructions = instructions;
 		return this;
 	}
@@ -186,7 +186,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.ver1_3
 		this.pad_1th = data.getShort();
 		if (this.match == null) this.match = new OFMatchOxm();
 		this.match.readFrom(data);
-		if (this.instructions == null) this.instructions = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFInstruction>();
+		if (this.instructions == null) this.instructions = new LinkedList<org.openflow.protocol.interfaces.OFInstruction>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) {
 		  data.mark();
@@ -213,7 +213,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.ver1_3
 		data.putShort(this.flags);
 		data.putShort(this.pad_1th);
 		match.writeTo(data);
-		if (this.instructions != null ) for (org.openflow.protocol.ver1_3.interfaces.OFInstruction t: this.instructions) { t.writeTo(data); }
+		if (this.instructions != null ) for (org.openflow.protocol.interfaces.OFInstruction t: this.instructions) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -236,7 +236,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.ver1_3
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
     	len += match.lengthDiff();
-		for ( org.openflow.protocol.ver1_3.interfaces.OFInstruction i : this.instructions ) { len += i.computeLength(); }
+		for ( org.openflow.protocol.interfaces.OFInstruction i : this.instructions ) { len += i.computeLength(); }
     	return len;
     }
     

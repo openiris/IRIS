@@ -46,7 +46,7 @@ class Type:
     return util[ list.index(name) ]
   
 # end of Type definition
-  
+
 class Enum(Type):
   def __init__(self, spec, definition):
     '''
@@ -490,7 +490,7 @@ class Struct(Type):
   def convert_to_interface_if_possible(self, typename):
     xtype = self.spec.get_type(typename)
     if isinstance(xtype, Struct):
-      return ('org.openflow.protocol.ver%s.interfaces.' % self.spec.get_version_string()) + typename
+      return 'org.openflow.protocol.interfaces.' + typename
     return typename
   
   def get_struct_components(self):
@@ -981,10 +981,101 @@ class Struct(Type):
     
     return ret
     
-  def convert_struct(self, path):
-    '''
-    This function processes struct and creates Java code for each.
-    '''
+#   def convert_interfaces(self, path):
+#     '''
+#     This method creates interface definitions.
+#     '''
+#     template = Template.get_template('tpl/interface.tpl')
+#     packagename = self.spec.get_java_packagename(path)
+#     typename = self.name
+#     
+#     if not self.is_topmost_struct():              # there's supertype. 
+#       inherit = 'extends ' + self.get_supertype().name
+#     else:
+#       if typename == 'OFMessage':
+#         inherit = 'extends org.openflow.protocol.OFMessage'
+#       else:
+#         inherit = ''
+#       
+#     accessors = []
+#     imports = []
+#     
+#     import_of_types = False
+#     
+#     for i in self.body:
+#       if i['type'] == 'pad':
+#         continue
+#       else:
+#         variable_type = i['type']
+#         variable_name = i['name']
+#         
+#         prefixed_variable_name = ''.join([self.name, self.spec.convert_to_camel(variable_name)])
+#         for ns in [prefixed_variable_name, variable_type, self.spec.get_java_classname(variable_name)]:
+#           tmp = self.spec.get_type(ns)
+#           if tmp:
+#             if isinstance(tmp, Enum) and tmp.is_bitmask_enum():
+#               continue
+#             else:
+#               variable_type = ns
+#               break
+#         
+#         if variable_type.startswith('OF') and variable_type != self.name:
+#           import_of_types = True
+#           
+#         etype = self.spec.get_type(variable_type)
+#         if isinstance(etype, Enum) and etype.is_bitmask_enum():
+#           tpl = Template.get_template('tpl/accessor_interface_plain.tpl')
+#           return_type = etype.get_java_representation()
+#           method_name = self.spec.convert_to_camel(variable_name)
+#           accessor = tpl.safe_substitute({'class_name':self.name, 
+#                                           'return_type':return_type,
+#                                           'method_name':method_name })
+#           accessors.append(accessor)
+#         else:
+#           if i.get('bitfields', None):
+#             tpl = Template.get_template('tpl/accessor_interface_plain.tpl')
+#             bitfields = i['bitfields']
+#             return_type = variable_type
+#             for bitfield in bitfields:
+#               method_name = self.spec.convert_to_camel(bitfield[0])
+#               accessor = tpl.safe_substitute({'class_name':self.name, 
+#                                               'return_type':return_type,
+#                                               'method_name':method_name})
+#               accessors.append(accessor)
+#           else:
+#             tpl = Template.get_template('tpl/accessor_interface_plain.tpl')
+#             return_type = variable_type
+#             if return_type == 'List':
+#               imports.append('import java.util.List;')
+#               return_type = 'List<%s>' % i['inner']
+#             method_name = self.spec.convert_to_camel(variable_name)
+#             accessor = tpl.safe_substitute({'class_name':self.name, 
+#                                             'return_type':return_type,
+#                                             'method_name':method_name })
+#             accessors.append(accessor)
+#           
+#             if self.name == 'OFMessage' and Type.is_primitive_java_type(variable_type) and Type.has_longer_java_type(variable_type):
+#               longer_type = Type.get_longer_java_type(variable_type)
+#               tpl = Template.get_template('tpl/accessor_interface_larger.tpl')
+#               accessor = tpl.safe_substitute({'class_name':self.name, 
+#                                               'method_name':method_name, 
+#                                               'longer_type':longer_type})
+#               accessors.append(accessor)
+#       
+# 
+#     if import_of_types: 
+#       imports.append('import ' + packagename[:packagename.rfind('.')] + '.types.*;')
+#     
+#     accessor_list = '\n'.join(accessors)
+#     import_list = '\n'.join(imports)
+#     result = template.safe_substitute({
+#       'typename':typename, 'packagename':packagename, 'imports':import_list,
+#       'accessors':accessor_list, 'inherit':inherit
+#     })
+#     return (self.name, result)
+  
+  def convert(self, path, interface_converter):
+
     if not self.is_topmost_struct():              # there's supertype. 
       superdef = self.get_supertype()           # superclass definition
       supername = superdef.name                   # superclass name
@@ -998,7 +1089,8 @@ class Struct(Type):
     
     # if supertype is found, reduce the subtype implementation
     if superdef:
-      self.reduce()
+      # now, self.reduce() is called at the end of Spec.process_spec method.
+      # self.reduce()
       superwriteto = 'super.writeTo(data);'
       
     #
@@ -1016,7 +1108,7 @@ class Struct(Type):
     imports.append(importname)
     imports = '\n'.join(imports)
     
-    implements = packagename[:packagename.rfind('.')] + '.interfaces.' + self.name
+    implements = self.convert_to_interface_if_possible(self.name)
     
     result = template.safe_substitute({
       'typename':typename, 'packagename':packagename, 'imports':imports,
@@ -1035,103 +1127,4 @@ class Struct(Type):
     })
     
     return (self.name, result)
-    
-  def convert_interfaces(self, path):
-    '''
-    This method creates interface definitions.
-    '''
-    template = Template.get_template('tpl/interface.tpl')
-    packagename = self.spec.get_java_packagename(path)
-    typename = self.name
-    
-    if not self.is_topmost_struct():              # there's supertype. 
-      inherit = 'extends ' + self.get_supertype().name
-    else:
-      if typename == 'OFMessage':
-        inherit = 'extends org.openflow.protocol.OFMessage'
-      else:
-        inherit = ''
-      
-    accessors = []
-    imports = []
-    
-    import_of_types = False
-    
-    for i in self.body:
-      if i['type'] == 'pad':
-        continue
-      else:
-        variable_type = i['type']
-        variable_name = i['name']
-        
-        prefixed_variable_name = ''.join([self.name, self.spec.convert_to_camel(variable_name)])
-        for ns in [prefixed_variable_name, variable_type, self.spec.get_java_classname(variable_name)]:
-          tmp = self.spec.get_type(ns)
-          if tmp:
-            if isinstance(tmp, Enum) and tmp.is_bitmask_enum():
-              continue
-            else:
-              variable_type = ns
-              break
-        
-        if variable_type.startswith('OF') and variable_type != self.name:
-          import_of_types = True
-          
-        etype = self.spec.get_type(variable_type)
-        if isinstance(etype, Enum) and etype.is_bitmask_enum():
-          tpl = Template.get_template('tpl/accessor_interface_plain.tpl')
-          return_type = etype.get_java_representation()
-          method_name = self.spec.convert_to_camel(variable_name)
-          accessor = tpl.safe_substitute({'class_name':self.name, 
-                                          'return_type':return_type,
-                                          'method_name':method_name })
-          accessors.append(accessor)
-        else:
-          if i.get('bitfields', None):
-            tpl = Template.get_template('tpl/accessor_interface_plain.tpl')
-            bitfields = i['bitfields']
-            return_type = variable_type
-            for bitfield in bitfields:
-              method_name = self.spec.convert_to_camel(bitfield[0])
-              accessor = tpl.safe_substitute({'class_name':self.name, 
-                                              'return_type':return_type,
-                                              'method_name':method_name})
-              accessors.append(accessor)
-          else:
-            tpl = Template.get_template('tpl/accessor_interface_plain.tpl')
-            return_type = variable_type
-            if return_type == 'List':
-              imports.append('import java.util.List;')
-              return_type = 'List<%s>' % i['inner']
-            method_name = self.spec.convert_to_camel(variable_name)
-            accessor = tpl.safe_substitute({'class_name':self.name, 
-                                            'return_type':return_type,
-                                            'method_name':method_name })
-            accessors.append(accessor)
-          
-            if self.name == 'OFMessage' and Type.is_primitive_java_type(variable_type) and Type.has_longer_java_type(variable_type):
-              longer_type = Type.get_longer_java_type(variable_type)
-              tpl = Template.get_template('tpl/accessor_interface_larger.tpl')
-              accessor = tpl.safe_substitute({'class_name':self.name, 
-                                              'method_name':method_name, 
-                                              'longer_type':longer_type})
-              accessors.append(accessor)
-      
-
-    if import_of_types: 
-      imports.append('import ' + packagename[:packagename.rfind('.')] + '.types.*;')
-    
-    accessor_list = '\n'.join(accessors)
-    import_list = '\n'.join(imports)
-    result = template.safe_substitute({
-      'typename':typename, 'packagename':packagename, 'imports':import_list,
-      'accessors':accessor_list, 'inherit':inherit
-    })
-    return (self.name, result)
-  
-  def convert(self, path):
-    if path.find('interfaces') < 0:
-      return self.convert_struct(path)
-    else:
-      return self.convert_interfaces(path)
     

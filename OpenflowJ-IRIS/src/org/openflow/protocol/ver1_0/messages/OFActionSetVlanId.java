@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFActionSetVlanId extends OFAction implements org.openflow.protocol.ver1_0.interfaces.OFActionSetVlanId {
+public class OFActionSetVlanId extends OFAction implements org.openflow.protocol.interfaces.OFActionSetVlanId {
     public static int MINIMUM_LENGTH = 8;
 
     short  vlan_id;

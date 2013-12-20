@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFQueueGetConfigRequest extends OFMessage implements org.openflow.protocol.ver1_3.interfaces.OFQueueGetConfigRequest {
+public class OFQueueGetConfigRequest extends OFMessage implements org.openflow.protocol.interfaces.OFQueueGetConfigRequest {
     public static int MINIMUM_LENGTH = 16;
 
     int  port;

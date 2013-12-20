@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFTableFeaturePropertyMatch extends OFTableFeatureProperty implements org.openflow.protocol.ver1_3.interfaces.OFTableFeaturePropertyMatch {
+public class OFTableFeaturePropertyMatch extends OFTableFeatureProperty implements org.openflow.protocol.interfaces.OFTableFeaturePropertyMatch {
     public static int MINIMUM_LENGTH = 4;
 
     List<Integer>  oxm_ids;

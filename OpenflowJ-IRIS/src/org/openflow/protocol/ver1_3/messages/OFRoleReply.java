@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFRoleReply extends OFMessage implements org.openflow.protocol.ver1_3.interfaces.OFRoleReply {
+public class OFRoleReply extends OFMessage implements org.openflow.protocol.interfaces.OFRoleReply {
     public static int MINIMUM_LENGTH = 8;
 
     byte[]  data;

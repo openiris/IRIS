@@ -5,10 +5,10 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.openflow.protocol.ver1_0.interfaces.OFStatisticsFlowRequest {
+public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.openflow.protocol.interfaces.OFStatisticsFlowRequest {
     public static int MINIMUM_LENGTH = 56;
 
-    org.openflow.protocol.ver1_0.interfaces.OFMatch  match;
+    org.openflow.protocol.interfaces.OFMatch  match;
 	byte  table_id;
 	byte pad_1th;
 	short  out_port;
@@ -28,11 +28,11 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 		this.out_port = other.out_port;
     }
 
-	public org.openflow.protocol.ver1_0.interfaces.OFMatch getMatch() {
+	public org.openflow.protocol.interfaces.OFMatch getMatch() {
 		return this.match;
 	}
 	
-	public OFStatisticsFlowRequest setMatch(org.openflow.protocol.ver1_0.interfaces.OFMatch match) {
+	public OFStatisticsFlowRequest setMatch(org.openflow.protocol.interfaces.OFMatch match) {
 		this.match = match;
 		return this;
 	}

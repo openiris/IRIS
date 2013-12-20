@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.ver1_3.interfaces.OFFeaturesReply {
+public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.interfaces.OFFeaturesReply {
     public static int MINIMUM_LENGTH = 32;
 
     long  datapath_id;

@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFEchoReply extends OFMessage implements org.openflow.protocol.ver1_0.interfaces.OFEchoReply {
+public class OFEchoReply extends OFMessage implements org.openflow.protocol.interfaces.OFEchoReply {
     public static int MINIMUM_LENGTH = 8;
 
     byte[]  data;

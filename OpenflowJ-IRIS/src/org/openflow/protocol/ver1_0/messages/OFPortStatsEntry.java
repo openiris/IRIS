@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFPortStatsEntry   implements org.openflow.protocol.ver1_0.interfaces.OFPortStatsEntry {
+public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPortStatsEntry {
     public static int MINIMUM_LENGTH = 104;
 
     short  port_number;

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFHelloElemVersionbitmap extends OFHelloElem implements org.openflow.protocol.ver1_3.interfaces.OFHelloElemVersionbitmap {
+public class OFHelloElemVersionbitmap extends OFHelloElem implements org.openflow.protocol.interfaces.OFHelloElemVersionbitmap {
     public static int MINIMUM_LENGTH = 4;
 
     List<Integer>  bitmaps;

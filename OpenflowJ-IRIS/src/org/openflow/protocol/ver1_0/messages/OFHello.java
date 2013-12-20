@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFHello extends OFMessage implements org.openflow.protocol.ver1_0.interfaces.OFHello {
+public class OFHello extends OFMessage implements org.openflow.protocol.interfaces.OFHello {
     public static int MINIMUM_LENGTH = 8;
 
     

@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFQueueStatsEntry   implements org.openflow.protocol.ver1_3.interfaces.OFQueueStatsEntry {
+public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQueueStatsEntry {
     public static int MINIMUM_LENGTH = 40;
 
     int  port_number;

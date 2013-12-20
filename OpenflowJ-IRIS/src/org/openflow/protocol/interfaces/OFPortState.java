@@ -1,0 +1,12 @@
+package org.openflow.protocol.interfaces;
+
+public enum OFPortState {
+	OFPPS_STP_MASK,
+	OFPPS_BLOCKED,
+	OFPPS_STP_LEARN,
+	OFPPS_STP_LISTEN,
+	OFPPS_LIVE,
+	OFPPS_LINK_DOWN,
+	OFPPS_STP_FORWARD,
+	OFPPS_STP_BLOCK
+}

@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFMatch   implements org.openflow.protocol.ver1_0.interfaces.OFMatch {
+public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
     public static int MINIMUM_LENGTH = 40;
 
     OFFlowWildcards  wildcards;

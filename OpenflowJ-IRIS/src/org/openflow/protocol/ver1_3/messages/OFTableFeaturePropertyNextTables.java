@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFTableFeaturePropertyNextTables extends OFTableFeatureProperty implements org.openflow.protocol.ver1_3.interfaces.OFTableFeaturePropertyNextTables {
+public class OFTableFeaturePropertyNextTables extends OFTableFeatureProperty implements org.openflow.protocol.interfaces.OFTableFeaturePropertyNextTables {
     public static int MINIMUM_LENGTH = 4;
 
     List<Byte>  next_table_ids;

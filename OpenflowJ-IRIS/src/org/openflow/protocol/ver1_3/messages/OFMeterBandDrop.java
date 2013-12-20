@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMeterBandDrop extends OFMeterBand implements org.openflow.protocol.ver1_3.interfaces.OFMeterBandDrop {
+public class OFMeterBandDrop extends OFMeterBand implements org.openflow.protocol.interfaces.OFMeterBandDrop {
     public static int MINIMUM_LENGTH = 16;
 
     int pad_1th;

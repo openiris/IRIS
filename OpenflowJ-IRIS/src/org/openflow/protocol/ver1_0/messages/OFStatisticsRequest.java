@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 
-public class OFStatisticsRequest extends OFStatistics implements org.openflow.protocol.ver1_0.interfaces.OFStatisticsRequest {
+public class OFStatisticsRequest extends OFStatistics implements org.openflow.protocol.interfaces.OFStatisticsRequest {
     public static int MINIMUM_LENGTH = 12;
 
     OFStatisticsType  statistics_type;

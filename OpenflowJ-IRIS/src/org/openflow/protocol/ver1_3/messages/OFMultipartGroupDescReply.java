@@ -7,30 +7,30 @@ import java.util.List;
 import java.util.LinkedList;
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFMultipartGroupDescReply extends OFMultipartReply implements org.openflow.protocol.ver1_3.interfaces.OFMultipartGroupDescReply {
+public class OFMultipartGroupDescReply extends OFMultipartReply implements org.openflow.protocol.interfaces.OFMultipartGroupDescReply {
     public static int MINIMUM_LENGTH = 16;
 
-    List<org.openflow.protocol.ver1_3.interfaces.OFGroupDescStatsEntry>  entries;
+    List<org.openflow.protocol.interfaces.OFGroupDescStatsEntry>  entries;
 
     public OFMultipartGroupDescReply() {
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)19));
 		setMultipartType(OFMultipartType.valueOf((short)7, getType()));
-		this.entries = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFGroupDescStatsEntry>();
+		this.entries = new LinkedList<org.openflow.protocol.interfaces.OFGroupDescStatsEntry>();
     }
     
     public OFMultipartGroupDescReply(OFMultipartGroupDescReply other) {
     	super(other);
-		this.entries = (other.entries == null)? null: new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFGroupDescStatsEntry>();
-		for ( org.openflow.protocol.ver1_3.interfaces.OFGroupDescStatsEntry i : other.entries ) { this.entries.add( new OFGroupDescStatsEntry((OFGroupDescStatsEntry)i) ); }
+		this.entries = (other.entries == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFGroupDescStatsEntry>();
+		for ( org.openflow.protocol.interfaces.OFGroupDescStatsEntry i : other.entries ) { this.entries.add( new OFGroupDescStatsEntry((OFGroupDescStatsEntry)i) ); }
     }
 
-	public List<org.openflow.protocol.ver1_3.interfaces.OFGroupDescStatsEntry> getEntries() {
+	public List<org.openflow.protocol.interfaces.OFGroupDescStatsEntry> getEntries() {
 		return this.entries;
 	}
 	
-	public OFMultipartGroupDescReply setEntries(List<org.openflow.protocol.ver1_3.interfaces.OFGroupDescStatsEntry> entries) {
+	public OFMultipartGroupDescReply setEntries(List<org.openflow.protocol.interfaces.OFGroupDescStatsEntry> entries) {
 		this.entries = entries;
 		return this;
 	}
@@ -39,14 +39,14 @@ public class OFMultipartGroupDescReply extends OFMultipartReply implements org.o
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);
-		if (this.entries == null) this.entries = new LinkedList<org.openflow.protocol.ver1_3.interfaces.OFGroupDescStatsEntry>();
+		if (this.entries == null) this.entries = new LinkedList<org.openflow.protocol.interfaces.OFGroupDescStatsEntry>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
 		while (__cnt > 0) { OFGroupDescStatsEntry t = new OFGroupDescStatsEntry(); t.readFrom(data); this.entries.add(t); __cnt -= t.getLength(); }
     }
 
     public void writeTo(ByteBuffer data) {
     	super.writeTo(data);
-        if (this.entries != null ) for (org.openflow.protocol.ver1_3.interfaces.OFGroupDescStatsEntry t: this.entries) { t.writeTo(data); }
+        if (this.entries != null ) for (org.openflow.protocol.interfaces.OFGroupDescStatsEntry t: this.entries) { t.writeTo(data); }
     }
 
     public String toString() {
@@ -56,7 +56,7 @@ public class OFMultipartGroupDescReply extends OFMultipartReply implements org.o
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.ver1_3.interfaces.OFGroupDescStatsEntry i : this.entries ) { len += i.computeLength(); }
+    	for ( org.openflow.protocol.interfaces.OFGroupDescStatsEntry i : this.entries ) { len += i.computeLength(); }
     	return len;
     }
     

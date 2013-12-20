@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFQueuePropertyExperimenter extends OFQueueProperty implements org.openflow.protocol.ver1_3.interfaces.OFQueuePropertyExperimenter {
+public class OFQueuePropertyExperimenter extends OFQueueProperty implements org.openflow.protocol.interfaces.OFQueuePropertyExperimenter {
     public static int MINIMUM_LENGTH = 16;
 
     int  experimenter_id;

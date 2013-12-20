@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFOxm   implements org.openflow.protocol.ver1_3.interfaces.OFOxm {
+public class OFOxm   implements org.openflow.protocol.interfaces.OFOxm {
     public static int MINIMUM_LENGTH = 4;
 
     OFOxmClass  oxm_class;

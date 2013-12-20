@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
 
-public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.ver1_3.interfaces.OFFlowRemoved {
+public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.interfaces.OFFlowRemoved {
     public static int MINIMUM_LENGTH = 52;
 
     long  cookie;
@@ -18,7 +18,7 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.ve
 	short  hard_timeout;
 	long  packet_count;
 	long  byte_count;
-	org.openflow.protocol.ver1_3.interfaces.OFMatchOxm  match;
+	org.openflow.protocol.interfaces.OFMatchOxm  match;
 
     public OFFlowRemoved() {
         super();
@@ -132,11 +132,11 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.ve
 		return this;
 	}
 			
-	public org.openflow.protocol.ver1_3.interfaces.OFMatchOxm getMatch() {
+	public org.openflow.protocol.interfaces.OFMatchOxm getMatch() {
 		return this.match;
 	}
 	
-	public OFFlowRemoved setMatch(org.openflow.protocol.ver1_3.interfaces.OFMatchOxm match) {
+	public OFFlowRemoved setMatch(org.openflow.protocol.interfaces.OFMatchOxm match) {
 		this.match = match;
 		return this;
 	}
