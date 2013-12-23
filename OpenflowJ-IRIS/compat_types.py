@@ -53,6 +53,19 @@ class InterfaceForStruct(Interface):
     Interface.__init__(self)
     self.struct = struct
     self.name = struct.name
+    # set of all declared names
+    self.decl_names = set()
+    self.decl_refs = {}
+
+    for i in self.struct['body']:
+      if not i.get('name', None): 
+        continue                        # just skip padding declarations
+      self.decl_names.add(i['name'])
+      list = self.decl_refs.get(i['name'], None)
+      if not list:
+        list = []
+        self.decl_refs[ i['name'] ] = list
+      list.append( i )
     
   def __repr__(self):
     return '<InterfaceForStruct name:%s>' % (self.name)
