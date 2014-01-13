@@ -59,9 +59,12 @@ try:
     for object_name in method_map:
       versions = method_map[object_name]
       cases = []
+      as_cases = []
       for version in versions:
         cases.append('case "%s": return new org.openflow.protocol.ver%s.messages.OF%s();' % (version, version.replace('.', '_'), object_name))
+        as_cases.append('case "%s": return (OF%s) m;' % (version, object_name) )
       r = tpl.safe_substitute({'cases':'\n\t\t'.join(cases),
+                               'as_cases': '\n\t\t'.join(as_cases),
                                'object_name': object_name})
       creation_methods.append(r.lstrip())
     
