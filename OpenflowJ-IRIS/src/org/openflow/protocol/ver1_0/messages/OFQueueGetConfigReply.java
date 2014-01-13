@@ -3,9 +3,10 @@ package org.openflow.protocol.ver1_0.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import java.util.List;
-import java.util.LinkedList;
 import org.openflow.protocol.ver1_0.types.*;
+import org.openflow.util.OFPort;
+import java.util.LinkedList;
+import java.util.List;
 
 public class OFQueueGetConfigReply extends OFMessage implements org.openflow.protocol.interfaces.OFQueueGetConfigReply {
     public static int MINIMUM_LENGTH = 16;
@@ -19,7 +20,6 @@ public class OFQueueGetConfigReply extends OFMessage implements org.openflow.pro
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)21));
-		this.queues = new LinkedList<org.openflow.protocol.interfaces.OFPacketQueue>();
     }
     
     public OFQueueGetConfigReply(OFQueueGetConfigReply other) {
@@ -29,15 +29,15 @@ public class OFQueueGetConfigReply extends OFMessage implements org.openflow.pro
 		for ( org.openflow.protocol.interfaces.OFPacketQueue i : other.queues ) { this.queues.add( new OFPacketQueue((OFPacketQueue)i) ); }
     }
 
-	public short getPort() {
-		return this.port;
+	public OFPort getPort() {
+		return new OFPort(this.port);
 	}
 	
-	public OFQueueGetConfigReply setPort(short port) {
-		this.port = port;
+	public OFQueueGetConfigReply setPort(OFPort port) {
+		this.port = (short) port.get();
 		return this;
 	}
-			
+	
 	public List<org.openflow.protocol.interfaces.OFPacketQueue> getQueues() {
 		return this.queues;
 	}
@@ -47,7 +47,9 @@ public class OFQueueGetConfigReply extends OFMessage implements org.openflow.pro
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);
@@ -75,7 +77,7 @@ public class OFQueueGetConfigReply extends OFMessage implements org.openflow.pro
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.interfaces.OFPacketQueue i : this.queues ) { len += i.computeLength(); }
+    	if ( this.queues != null ) for ( org.openflow.protocol.interfaces.OFPacketQueue i : this.queues ) { len += i.computeLength(); }
     	return len;
     }
     

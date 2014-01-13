@@ -3,6 +3,7 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
+import org.openflow.util.OFPort;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFPacketIn extends OFMessage implements org.openflow.protocol.interfaces.OFPacketIn {
@@ -21,7 +22,6 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)10));
-		this.match = new OFMatchOxm();
     }
     
     public OFPacketIn(OFPacketIn other) {
@@ -53,15 +53,21 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 			
-	public OFPacketInReason getReason() {
-		return this.reason;
+
+	public org.openflow.protocol.interfaces.OFPacketInReason getReason() {
+		return OFPacketInReason.to(this.reason);
+	}
+	
+	public OFPacketIn setReason(org.openflow.protocol.interfaces.OFPacketInReason reason) {
+		this.reason = OFPacketInReason.from(reason);
+		return this;
 	}
 	
 	public OFPacketIn setReason(OFPacketInReason reason) {
 		this.reason = reason;
 		return this;
 	}
-			
+	
 	public byte getTableId() {
 		return this.table_id;
 	}
@@ -80,12 +86,12 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 			
-	public org.openflow.protocol.interfaces.OFMatchOxm getMatch() {
+	public org.openflow.protocol.interfaces.OFMatch getMatch() {
 		return this.match;
 	}
 	
-	public OFPacketIn setMatch(org.openflow.protocol.interfaces.OFMatchOxm match) {
-		this.match = match;
+	public OFPacketIn setMatch(org.openflow.protocol.interfaces.OFMatch match) {
+		this.match = (OFMatchOxm) match;
 		return this;
 	}
 			
@@ -98,7 +104,17 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 			
-
+	public OFPort getInputPort() {
+		throw new UnsupportedOperationException("public OFPort getInputPort() is not supported operation");
+	}
+	
+	public OFPacketIn setInputPort(OFPort value) {
+		throw new UnsupportedOperationException("public OFPacketIn setInputPort(OFPort value) is not supported operation");
+	}
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

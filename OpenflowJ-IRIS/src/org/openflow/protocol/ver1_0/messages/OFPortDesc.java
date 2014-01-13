@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
+import org.openflow.util.OFPort;
 
 public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc {
     public static int MINIMUM_LENGTH = 48;
@@ -35,15 +36,15 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		this.peer_features = other.peer_features;
     }
 
-	public short getPort() {
-		return this.port;
+	public OFPort getPort() {
+		return new OFPort(this.port);
 	}
 	
-	public OFPortDesc setPort(short port) {
-		this.port = port;
+	public OFPortDesc setPort(OFPort port) {
+		this.port = (short) port.get();
 		return this;
 	}
-			
+	
 	public byte[] getHwAddr() {
 		return this.hw_addr;
 	}
@@ -116,7 +117,25 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		return this;
 	}
 			
-
+	public int getCurrSpeed() {
+		throw new UnsupportedOperationException("public int getCurrSpeed() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFPortDesc setCurrSpeed(int value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFPortDesc setCurrSpeed(int value) is not supported operation");
+	}
+	
+	public int getMaxSpeed() {
+		throw new UnsupportedOperationException("public int getMaxSpeed() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFPortDesc setMaxSpeed(int value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFPortDesc setMaxSpeed(int value) is not supported operation");
+	}
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         this.port = data.getShort();
 		if ( this.hw_addr == null ) this.hw_addr = new byte[6];

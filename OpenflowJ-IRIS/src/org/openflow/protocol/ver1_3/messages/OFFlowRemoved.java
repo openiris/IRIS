@@ -24,7 +24,6 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)11));
-		this.match = new OFMatchOxm();
     }
     
     public OFFlowRemoved(OFFlowRemoved other) {
@@ -60,15 +59,21 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		return this;
 	}
 			
-	public OFFlowRemovedReason getReason() {
-		return this.reason;
+
+	public org.openflow.protocol.interfaces.OFFlowRemovedReason getReason() {
+		return OFFlowRemovedReason.to(this.reason);
+	}
+	
+	public OFFlowRemoved setReason(org.openflow.protocol.interfaces.OFFlowRemovedReason reason) {
+		this.reason = OFFlowRemovedReason.from(reason);
+		return this;
 	}
 	
 	public OFFlowRemoved setReason(OFFlowRemovedReason reason) {
 		this.reason = reason;
 		return this;
 	}
-			
+	
 	public byte getTableId() {
 		return this.table_id;
 	}
@@ -132,16 +137,18 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		return this;
 	}
 			
-	public org.openflow.protocol.interfaces.OFMatchOxm getMatch() {
+	public org.openflow.protocol.interfaces.OFMatch getMatch() {
 		return this.match;
 	}
 	
-	public OFFlowRemoved setMatch(org.openflow.protocol.interfaces.OFMatchOxm match) {
-		this.match = match;
+	public OFFlowRemoved setMatch(org.openflow.protocol.interfaces.OFMatch match) {
+		this.match = (OFMatchOxm) match;
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.cookie = data.getLong();

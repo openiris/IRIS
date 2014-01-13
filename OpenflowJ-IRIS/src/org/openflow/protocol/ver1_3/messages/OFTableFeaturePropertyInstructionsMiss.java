@@ -3,8 +3,8 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFTableFeaturePropertyInstructionsMiss extends OFTableFeatureProperty implements org.openflow.protocol.interfaces.OFTableFeaturePropertyInstructionsMiss {
@@ -16,7 +16,6 @@ public class OFTableFeaturePropertyInstructionsMiss extends OFTableFeatureProper
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFTableFeaturePropertyType.valueOf((short)1));
-		this.instruction_ids = new LinkedList<org.openflow.protocol.interfaces.OFInstruction>();
     }
     
     public OFTableFeaturePropertyInstructionsMiss(OFTableFeaturePropertyInstructionsMiss other) {
@@ -34,7 +33,9 @@ public class OFTableFeaturePropertyInstructionsMiss extends OFTableFeatureProper
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);
@@ -62,7 +63,7 @@ public class OFTableFeaturePropertyInstructionsMiss extends OFTableFeatureProper
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.interfaces.OFInstruction i : this.instruction_ids ) { len += i.computeLength(); }
+    	if ( this.instruction_ids != null ) for ( org.openflow.protocol.interfaces.OFInstruction i : this.instruction_ids ) { len += i.computeLength(); }
     	return len;
     }
     

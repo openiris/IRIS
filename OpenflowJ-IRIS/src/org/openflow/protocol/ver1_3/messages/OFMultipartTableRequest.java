@@ -14,15 +14,17 @@ public class OFMultipartTableRequest extends OFMultipartRequest implements org.o
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)18));
-		setMultipartType(OFMultipartType.valueOf((short)3, getType()));
+		setMultipartType(OFMultipartType.valueOf((short)3, this.type));
     }
     
     public OFMultipartTableRequest(OFMultipartTableRequest other) {
     	super(other);
     }
 
-
-
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

@@ -20,6 +20,7 @@ package etri.sdn.controller.module.forwarding;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.openflow.protocol.OFMessage;
@@ -33,6 +34,7 @@ import org.openflow.protocol.ver1_0.types.OFFlowModCommand;
 import org.openflow.protocol.ver1_0.types.OFFlowWildcards;
 import org.openflow.protocol.ver1_0.types.OFMessageType;
 import org.openflow.protocol.ver1_0.types.OFPortNo;
+import org.openflow.util.OFPort;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
@@ -161,16 +163,16 @@ public class Forwarding extends ForwardingBase {
 		// initialize match structure and populate it using the packet
 //		OFMatch match = new OFMatch();
 //		match.loadFromPacket(pi.getPacketData(), pi.getInPort());
-		OFMatch match = version_adaptor_10.loadOFMatchFromPacket(pi.getData(), pi.getInputPort());
+		OFMatch match = version_adaptor_10.loadOFMatchFromPacket(pi.getData(), (short)pi.getInputPort().get());
 		if (decision.getWildcards() != null) {
-			match.setWildcards(decision.getWildcards());
+			match.setWildcardsWire(decision.getWildcards());
 		}
 
 		// Create flow-mod based on packet-in and src-switch
 //		OFFlowMod fm = (OFFlowMod) sw.getConnection().getFactory().getMessage(OFType.FLOW_MOD);
 		OFFlowMod fm = (OFFlowMod) OFMessageType.FLOW_MOD.newInstance();
 		
-		List<OFAction> actions = new ArrayList<OFAction>(); // Set no action to
+//		List<OFAction> actions = new ArrayList<OFAction>(); // Set no action to
 		// drop
 		long cookie = AppCookie.makeCookie(FORWARDING_APP_ID, 0);
 
@@ -179,7 +181,7 @@ public class Forwarding extends ForwardingBase {
 		.setIdleTimeout((short) 5)
 		.setBufferId(0xffffffff /* OFPacketOut.BUFFER_ID_NONE */)
 		.setMatch(match)
-		.setActions(actions)
+		.setActions(Collections.<org.openflow.protocol.interfaces.OFAction>emptyList())
 		.setLengthU(OFFlowMod.MINIMUM_LENGTH); // +OFActionOutput.MINIMUM_LENGTH);
 
 		try {
@@ -207,7 +209,7 @@ public class Forwarding extends ForwardingBase {
 			boolean requestFlowRemovedNotifn) {    
 //		OFMatch match = new OFMatch();
 //		match.loadFromPacket(pi.getPacketData(), pi.getInPort());
-		OFMatch match = version_adaptor_10.loadOFMatchFromPacket(pi.getData(), pi.getInputPort());
+		OFMatch match = version_adaptor_10.loadOFMatchFromPacket(pi.getData(), (short)pi.getInputPort().get());
 
 		// Check if we have the location of the destination
 		IDevice dstDevice = (IDevice) cntx.get(MessageContext.DST_DEVICE);
@@ -235,7 +237,7 @@ public class Forwarding extends ForwardingBase {
 				if ((dstIsland != null) && dstIsland.equals(srcIsland)) {
 					on_same_island = true;
 					if ((sw.getId() == dstSwDpid) &&
-							(pi.getInputPort() == dstDap.getPort())) {
+							(pi.getInputPort().get() == dstDap.getPort())) {
 						on_same_if = true;
 					}
 					break;
@@ -306,17 +308,17 @@ public class Forwarding extends ForwardingBase {
 								wildcard_hints = ((Integer) sw
 										.getAttribute(IOFSwitch.PROP_FASTWILDCARDS))
 										.intValue()
-										& ~OFFlowWildcards.OFPFW_IN_PORT
-										& ~OFFlowWildcards.OFPFW_DL_VLAN
-										& ~OFFlowWildcards.OFPFW_DL_SRC
-										& ~OFFlowWildcards.OFPFW_DL_DST
-										& ~OFFlowWildcards.OFPFW_NW_SRC_MASK
-										& ~OFFlowWildcards.OFPFW_NW_DST_MASK;
+										& ~OFFlowWildcards.IN_PORT
+										& ~OFFlowWildcards.DL_VLAN
+										& ~OFFlowWildcards.DL_SRC
+										& ~OFFlowWildcards.DL_DST
+										& ~OFFlowWildcards.NW_SRC_MASK
+										& ~OFFlowWildcards.NW_DST_MASK;
 							}
 
 							pushRoute(sw.getConnection(), route, match, wildcard_hints, pi, sw.getId(), cookie, 
 									cntx, requestFlowRemovedNotifn, false,
-									OFFlowModCommand.OFPFC_ADD.getValue());
+									OFFlowModCommand.ADD.getValue());
 						}
 					}
 					iSrcDaps++;
@@ -342,8 +344,7 @@ public class Forwarding extends ForwardingBase {
 	 * @param cntx the {@link MessageContext}
 	 */
 	protected void doFlood(IOFSwitch sw, OFPacketIn pi, MessageContext cntx) {
-		if (topology.isIncomingBroadcastAllowed(sw.getId(),
-				pi.getInputPort()) == false) {
+		if (! topology.isIncomingBroadcastAllowed(sw.getId(), (short) pi.getInputPort().get()) ) {
 //			if (log.isTraceEnabled()) {
 //				log.trace("doFlood, drop broadcast packet, pi={}, " + 
 //						"from a blocked port, srcSwitch=[{},{}], linkInfo={}",
@@ -356,16 +357,16 @@ public class Forwarding extends ForwardingBase {
 //		OFPacketOut po = (OFPacketOut) sw.getConnection().getFactory().getMessage(OFType.PACKET_OUT);
 		OFPacketOut po = (OFPacketOut) OFMessageType.PACKET_OUT.newInstance();
 		
-		List<OFAction> actions = new ArrayList<OFAction>();
+		List<org.openflow.protocol.interfaces.OFAction> actions = new ArrayList<org.openflow.protocol.interfaces.OFAction>();
 		if (sw.hasAttribute(IOFSwitch.PROP_SUPPORTS_OFPP_FLOOD)) {
 			OFActionOutput action_output = new OFActionOutput();
-			action_output.setPort(OFPortNo.OFPP_FLOOD.getValue()).setMaxLength((short)0xffff);
+			action_output.setPort(OFPort.of(OFPortNo.FLOOD.getValue())).setMaxLength((short)0xffff);
 			actions.add(action_output);
 //			actions.add(new OFActionOutput(OFPortNo.OFPP_FLOOD.getValue(), 
 //					(short)0xFFFF));
 		} else {
 			OFActionOutput action_output = new OFActionOutput();
-			action_output.setPort(OFPortNo.OFPP_ALL.getValue()).setMaxLength((short)0xffff);
+			action_output.setPort(OFPort.of(OFPortNo.ALL.getValue())).setMaxLength((short)0xffff);
 			actions.add(action_output);
 //			actions.add(new OFActionOutput(OFPortNo.OFPP_ALL.getValue(), 
 //					(short)0xFFFF));

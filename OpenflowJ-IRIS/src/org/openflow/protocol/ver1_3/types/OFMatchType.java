@@ -11,17 +11,25 @@ import java.util.List;
 import org.openflow.protocol.ver1_3.messages.*;
 
 public enum OFMatchType {
-    STANDARD	(0, OFMatchStandard.class, new Instantiable<OFMatch>() {
-    public OFMatch instantiate() {
-      return new OFMatchStandard();
-    }}),
-	OXM	(1, OFMatchOxm.class, new Instantiable<OFMatch>() {
-    public OFMatch instantiate() {
-      return new OFMatchOxm();
-    }});
+    STANDARD	(0, org.openflow.protocol.interfaces.OFMatchType.STANDARD, 
+	OFMatchStandard.class, 
+	new Instantiable<OFMatch>() {
+    	public OFMatch instantiate() {
+      		return new OFMatchStandard();
+    	}
+    }),
+	OXM	(1, org.openflow.protocol.interfaces.OFMatchType.OXM, 
+	OFMatchOxm.class, 
+	new Instantiable<OFMatch>() {
+    	public OFMatch instantiate() {
+      		return new OFMatchOxm();
+    	}
+    });
 
     // static OFMatchType[] mapping;
     static Map<Short, OFMatchType> mapping;
+    static Map<Short, org.openflow.protocol.interfaces.OFMatchType> compatMapping;
+    static Map<org.openflow.protocol.interfaces.OFMatchType, OFMatchType> compatMappingReverse;
     static short start_key = 0;
     static short end_key = 0;
 
@@ -30,7 +38,10 @@ public enum OFMatchType {
     protected Instantiable<OFMatch> instantiable;
     protected short type;
 
-    OFMatchType(int type, Class<? extends OFMatch> clazz, Instantiable<OFMatch> instantiator) {
+    OFMatchType(
+    	int type, org.openflow.protocol.interfaces.OFMatchType compatType,
+    	Class<? extends OFMatch> clazz, Instantiable<OFMatch> instantiator) 
+    {
         this.type = (short) type;
         this.clazz = clazz;
         this.instantiable = instantiator;
@@ -41,15 +52,10 @@ public enum OFMatchType {
                     "Failure getting constructor for class: " + clazz, e);
         }
         OFMatchType.addMapping(this.type, this);
+        OFMatchType.addMapping(this.type, compatType, this);
     }
 
     static public void addMapping(short i, OFMatchType t) {
-    	/*
-        if (mapping == null)
-            mapping = new OFMatchType[2];
-        if ( i < 0 ) i = (short)(2 + i);
-        OFMatchType.mapping[i] = t;
-        */
         if ( mapping == null )
         	mapping = new ConcurrentHashMap<Short, OFMatchType>();
         	
@@ -59,13 +65,34 @@ public enum OFMatchType {
         end_key = i;
         mapping.put(i, t);
     }
+    
+    static public void addMapping(short i, org.openflow.protocol.interfaces.OFMatchType c, OFMatchType t) {
+    	if ( compatMapping == null ) 
+    		compatMapping = new ConcurrentHashMap<Short, org.openflow.protocol.interfaces.OFMatchType>();
+    		
+    	if ( compatMappingReverse == null )
+    		compatMappingReverse = new ConcurrentHashMap<org.openflow.protocol.interfaces.OFMatchType, OFMatchType>();
+    		
+    	compatMapping.put( i, c );
+    	compatMappingReverse.put( c, t );
+    }
 
     static public OFMatchType valueOf(short i) {
-    	/*
-        if ( i < 0 ) i = (short)(2 + i);
-        return OFMatchType.mapping[i];
-        */
         return mapping.get(i);
+    }
+    
+    /**
+     * Convert to compatibility-support type
+     */
+    static public org.openflow.protocol.interfaces.OFMatchType to(OFMatchType i) {
+    	return compatMapping.get(i.getTypeValue());
+    }
+    
+    /**
+     * Convert from compatibility-support type
+     */
+    static public OFMatchType from(org.openflow.protocol.interfaces.OFMatchType c) {
+    	return compatMappingReverse.get(c);
     }
     
 	static public short readFrom(ByteBuffer data) {
@@ -73,12 +100,10 @@ public enum OFMatchType {
 	}
     
     static public OFMatchType first() {
-    	// return OFMatchType.mapping[0];
     	return mapping.get(start_key);
     }
     
     static public OFMatchType last() {
-    	// return OFMatchType.mapping[OFMatchType.mapping.length - 1];
     	return mapping.get(end_key);
     }
     
@@ -89,7 +114,7 @@ public enum OFMatchType {
     		demux.readFrom(data);
     		data.reset();
     		
-    		OFMatch real = demux.getType().newInstance();
+    		OFMatch real = OFMatchType.from(demux.getType()).newInstance();
     		real.readFrom(data);
     		output.add(real);
     		length -= real.getLength();

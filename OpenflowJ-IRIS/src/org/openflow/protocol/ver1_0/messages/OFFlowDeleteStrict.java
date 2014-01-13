@@ -21,8 +21,10 @@ public class OFFlowDeleteStrict extends OFFlowMod implements org.openflow.protoc
     	super(other);
     }
 
-
-
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

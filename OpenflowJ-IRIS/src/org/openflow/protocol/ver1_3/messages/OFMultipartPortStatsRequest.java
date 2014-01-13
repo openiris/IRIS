@@ -15,7 +15,7 @@ public class OFMultipartPortStatsRequest extends OFMultipartRequest implements o
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)18));
-		setMultipartType(OFMultipartType.valueOf((short)4, getType()));
+		setMultipartType(OFMultipartType.valueOf((short)4, this.type));
     }
     
     public OFMultipartPortStatsRequest(OFMultipartPortStatsRequest other) {
@@ -23,16 +23,23 @@ public class OFMultipartPortStatsRequest extends OFMultipartRequest implements o
 		this.port_no = other.port_no;
     }
 
-	public OFPortNo getPortNo() {
-		return this.port_no;
+	public org.openflow.protocol.interfaces.OFPortNo getPortNo() {
+		return OFPortNo.to(this.port_no);
+	}
+	
+	public OFMultipartPortStatsRequest setPortNo(org.openflow.protocol.interfaces.OFPortNo port_no) {
+		this.port_no = OFPortNo.from(port_no);
+		return this;
 	}
 	
 	public OFMultipartPortStatsRequest setPortNo(OFPortNo port_no) {
 		this.port_no = port_no;
 		return this;
 	}
-			
-
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.port_no = OFPortNo.valueOf(OFPortNo.readFrom(data));

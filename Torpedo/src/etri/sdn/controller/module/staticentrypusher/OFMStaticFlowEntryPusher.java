@@ -194,7 +194,7 @@ public class OFMStaticFlowEntryPusher extends OFModule implements
 				OFFlowMod newFlowMod = entriesToAdd.get(dpid).get(entry);
 				OFFlowMod oldFlowMod = staticFlowEntryStorage.getFlowModEntryTable().get(dpid).get(entry);
 				if (oldFlowMod != null) { // remove any pre-existing rule
-					oldFlowMod.setCommand(OFFlowModCommand.OFPFC_DELETE_STRICT);
+					oldFlowMod.setCommand(OFFlowModCommand.DELETE_STRICT);
 					outQueue.add(oldFlowMod);
 				}
 				if (newFlowMod != null) {
@@ -272,7 +272,7 @@ public class OFMStaticFlowEntryPusher extends OFModule implements
 		
 		
 		OFFlowMod flowMod = staticFlowEntryStorage.getFlowModEntryTable().get(dpid).get(flowName);
-		flowMod.setCommand(OFFlowModCommand.OFPFC_DELETE_STRICT);
+		flowMod.setCommand(OFFlowModCommand.DELETE_STRICT);
 
 		if (staticFlowEntryStorage.getFlowModEntryTable().containsKey(dpid)
 				&& staticFlowEntryStorage.getFlowModEntryTable().get(dpid).containsKey(flowName)) {

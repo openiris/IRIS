@@ -14,15 +14,17 @@ public class OFStatisticsTableRequest extends OFStatisticsRequest implements org
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)16));
-		setStatisticsType(OFStatisticsType.valueOf((short)3, getType()));
+		setStatisticsType(OFStatisticsType.valueOf((short)3, this.type));
     }
     
     public OFStatisticsTableRequest(OFStatisticsTableRequest other) {
     	super(other);
     }
 
-
-
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

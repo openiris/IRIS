@@ -16,7 +16,7 @@ public class OFMultipartExperimenterReply extends OFMultipartReply implements or
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)19));
-		setMultipartType(OFMultipartType.valueOf((short)0xffff, getType()));
+		setMultipartType(OFMultipartType.valueOf((short)0xffff, this.type));
     }
     
     public OFMultipartExperimenterReply(OFMultipartExperimenterReply other) {
@@ -53,7 +53,9 @@ public class OFMultipartExperimenterReply extends OFMultipartReply implements or
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

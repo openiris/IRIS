@@ -19,6 +19,7 @@ import org.openflow.protocol.ver1_0.types.OFMessageType;
 import org.openflow.protocol.ver1_0.types.OFFlowModCommand;
 import org.openflow.protocol.ver1_0.types.OFPortNo;
 import org.openflow.util.LRULinkedHashMap;
+import org.openflow.util.OFPort;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
@@ -198,8 +199,8 @@ public final class OFMLearningMac extends OFModule {
 		flowMod.setHardTimeout(HARD_TIMEOUT_DEFAULT);
 		flowMod.setPriority(PRIORITY_DEFAULT);
 		flowMod.setBufferId(bufferId);
-		flowMod.setOutPort((command == OFFlowModCommand.OFPFC_DELETE.getValue()) ? outPort : OFPortNo.OFPP_NONE.getValue());
-		flowMod.setFlags((command == OFFlowModCommand.OFPFC_DELETE.getValue()) ? 0 : (short) (1 << 0)); // OFPFF_SEND_FLOW_REM
+		flowMod.setOutPort(OFPort.of((command == OFFlowModCommand.DELETE.getValue()) ? outPort : OFPortNo.NONE.getValue()));
+		flowMod.setFlagsWire((command == OFFlowModCommand.DELETE.getValue()) ? 0 : (short) (1 << 0)); // OFPFF_SEND_FLOW_REM
 
 		// set the ofp_action_header/out actions:
 		// from the openflow 1.0 spec: need to set these on a struct ofp_action_output:
@@ -210,9 +211,9 @@ public final class OFMLearningMac extends OFModule {
 		// type/len are set because it is OFActionOutput,
 		// and port, max_len are arguments to this constructor
 		OFActionOutput action_output = new OFActionOutput();
-		action_output.setPort(outPort).setMaxLength((short)0xffff);
+		action_output.setPort(OFPort.of(outPort)).setMaxLength((short)0xffff);
 //		flowMod.setActions(Arrays.asList((OFAction) new OFActionOutput(outPort, (short) 0xffff)));
-		flowMod.setActions(Arrays.asList( (OFAction)action_output) );
+		flowMod.setActions(Arrays.asList( (org.openflow.protocol.interfaces.OFAction)action_output) );
 		
 		flowMod.setLength((short) (OFFlowMod.MINIMUM_LENGTH + OFActionOutput.MINIMUM_LENGTH));
 
@@ -255,9 +256,9 @@ public final class OFMLearningMac extends OFModule {
 		packetOutLength += OFActionOutput.MINIMUM_LENGTH;
 
 		// set actions
-		List<OFAction> actions = new ArrayList<OFAction>(1);      
+		List<org.openflow.protocol.interfaces.OFAction> actions = new ArrayList<org.openflow.protocol.interfaces.OFAction>(1);      
 		OFActionOutput action_output = new OFActionOutput();
-		action_output.setPort(egressPort).setMaxLength((short)0);
+		action_output.setPort(OFPort.of(egressPort)).setMaxLength((short)0);
 		actions.add(action_output);
 //		actions.add(new OFActionOutput(egressPort, (short) 0));
 		packetOutMessage.setActions(actions);
@@ -335,7 +336,7 @@ public final class OFMLearningMac extends OFModule {
 		// Read in packet data headers by using OFMatch
 //		OFMatch match = new OFMatch();
 //		match.loadFromPacket(pi.getPacketData(), pi.getInPort());
-		OFMatch match = version_adaptor_10.loadOFMatchFromPacket(pi.getData(), pi.getInputPort());
+		OFMatch match = version_adaptor_10.loadOFMatchFromPacket(pi.getData(), (short) pi.getInputPort().get());
 		
 		Long sourceMac = Ethernet.toLong(match.getDataLayerSource());
 		Long destMac = Ethernet.toLong(match.getDataLayerDestination());
@@ -346,7 +347,7 @@ public final class OFMLearningMac extends OFModule {
 		}
 		if ((sourceMac & 0x010000000000L) == 0) {
 			// If source MAC is a unicast address, learn the port for this MAC/VLAN
-			this.addToPortMap(conn.getSwitch(), sourceMac, vlan, pi.getInputPort());
+			this.addToPortMap(conn.getSwitch(), sourceMac, vlan, (short) pi.getInputPort().get());
 		}
 
 		// Now output flow-mod and/or packet
@@ -357,8 +358,8 @@ public final class OFMLearningMac extends OFModule {
 			// XXX For LearningSwitch this doesn't do much. The sourceMac is removed
 			//     from port map whenever a flow expires, so you would still see
 			//     a lot of floods.
-			this.writePacketOutForPacketIn(conn.getSwitch(), pi, OFPortNo.OFPP_FLOOD.getValue(), out);
-		} else if (outPort == match.getInputPort()) {
+			this.writePacketOutForPacketIn(conn.getSwitch(), pi, OFPortNo.FLOOD.getValue(), out);
+		} else if (outPort == match.getInputPort().get()) {
 			// ignore this packet.
 			//            log.trace("ignoring packet that arrived on same port as learned destination:"
 			//                    + " switch {} vlan {} dest MAC {} port {}",
@@ -373,16 +374,16 @@ public final class OFMLearningMac extends OFModule {
 			// its former location does not keep the stale entry alive forever.
 			// FIXME: current HP switches ignore DL_SRC and DL_DST fields, so we have to match on
 			// NW_SRC and NW_DST as well
-			match.setWildcards(
+			match.setWildcardsWire(
 					((Integer)conn.getSwitch().getAttribute(IOFSwitch.PROP_FASTWILDCARDS)).intValue()
-					& ~OFFlowWildcards.OFPFW_IN_PORT
-					& ~OFFlowWildcards.OFPFW_DL_VLAN & ~OFFlowWildcards.OFPFW_DL_SRC & ~OFFlowWildcards.OFPFW_DL_DST
-					& ~OFFlowWildcards.OFPFW_NW_SRC_MASK & ~OFFlowWildcards.OFPFW_NW_DST_MASK
+					& ~OFFlowWildcards.IN_PORT
+					& ~OFFlowWildcards.DL_VLAN & ~OFFlowWildcards.DL_SRC & ~OFFlowWildcards.DL_DST
+					& ~OFFlowWildcards.NW_SRC_MASK & ~OFFlowWildcards.NW_DST_MASK
 			);
-			this.writeFlowMod(conn.getSwitch(), OFFlowModCommand.OFPFC_ADD.getValue(), 
+			this.writeFlowMod(conn.getSwitch(), OFFlowModCommand.ADD.getValue(), 
 					pi.getBufferId(), match, outPort, out);
 			if (LEARNING_SWITCH_REVERSE_FLOW) {
-				this.writeFlowMod(conn.getSwitch(), OFFlowModCommand.OFPFC_ADD.getValue(), -1, 
+				this.writeFlowMod(conn.getSwitch(), OFFlowModCommand.ADD.getValue(), -1, 
 						new OFMatch(match)
 							.setDataLayerSource(match.getDataLayerDestination())
 							.setDataLayerDestination(match.getDataLayerSource())
@@ -390,8 +391,8 @@ public final class OFMLearningMac extends OFModule {
 							.setNetworkDestination(match.getNetworkSource())
 							.setTransportSource(match.getTransportDestination())
 							.setTransportDestination(match.getTransportSource())
-							.setInputPort(outPort),
-						match.getInputPort(),
+							.setInputPort(OFPort.of(outPort)),
+						(short) match.getInputPort().get(),
 						out
 				);
 			}

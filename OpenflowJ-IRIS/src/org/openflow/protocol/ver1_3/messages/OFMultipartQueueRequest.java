@@ -15,7 +15,7 @@ public class OFMultipartQueueRequest extends OFMultipartRequest implements org.o
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)18));
-		setMultipartType(OFMultipartType.valueOf((short)5, getType()));
+		setMultipartType(OFMultipartType.valueOf((short)5, this.type));
     }
     
     public OFMultipartQueueRequest(OFMultipartQueueRequest other) {
@@ -24,15 +24,20 @@ public class OFMultipartQueueRequest extends OFMultipartRequest implements org.o
 		this.queue_id = other.queue_id;
     }
 
-	public OFPortNo getPortNo() {
-		return this.port_no;
+	public org.openflow.protocol.interfaces.OFPortNo getPortNo() {
+		return OFPortNo.to(this.port_no);
+	}
+	
+	public OFMultipartQueueRequest setPortNo(org.openflow.protocol.interfaces.OFPortNo port_no) {
+		this.port_no = OFPortNo.from(port_no);
+		return this;
 	}
 	
 	public OFMultipartQueueRequest setPortNo(OFPortNo port_no) {
 		this.port_no = port_no;
 		return this;
 	}
-			
+	
 	public int getQueueId() {
 		return this.queue_id;
 	}
@@ -42,7 +47,9 @@ public class OFMultipartQueueRequest extends OFMultipartRequest implements org.o
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.port_no = OFPortNo.valueOf(OFPortNo.readFrom(data));

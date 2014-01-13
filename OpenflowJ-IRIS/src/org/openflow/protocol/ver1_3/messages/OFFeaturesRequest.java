@@ -20,8 +20,10 @@ public class OFFeaturesRequest extends OFMessage implements org.openflow.protoco
     	super(other);
     }
 
-
-
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

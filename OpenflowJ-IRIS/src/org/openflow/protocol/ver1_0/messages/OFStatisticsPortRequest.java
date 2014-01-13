@@ -16,7 +16,7 @@ public class OFStatisticsPortRequest extends OFStatisticsRequest implements org.
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)16));
-		setStatisticsType(OFStatisticsType.valueOf((short)4, getType()));
+		setStatisticsType(OFStatisticsType.valueOf((short)4, this.type));
     }
     
     public OFStatisticsPortRequest(OFStatisticsPortRequest other) {
@@ -24,16 +24,23 @@ public class OFStatisticsPortRequest extends OFStatisticsRequest implements org.
 		this.port_no = other.port_no;
     }
 
-	public OFPortNo getPortNo() {
-		return this.port_no;
+	public org.openflow.protocol.interfaces.OFPortNo getPortNo() {
+		return OFPortNo.to(this.port_no);
+	}
+	
+	public OFStatisticsPortRequest setPortNo(org.openflow.protocol.interfaces.OFPortNo port_no) {
+		this.port_no = OFPortNo.from(port_no);
+		return this;
 	}
 	
 	public OFStatisticsPortRequest setPortNo(OFPortNo port_no) {
 		this.port_no = port_no;
 		return this;
 	}
-			
-
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.port_no = OFPortNo.valueOf(OFPortNo.readFrom(data));

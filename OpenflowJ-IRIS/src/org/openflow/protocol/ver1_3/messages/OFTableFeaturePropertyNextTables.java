@@ -3,8 +3,8 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFTableFeaturePropertyNextTables extends OFTableFeatureProperty implements org.openflow.protocol.interfaces.OFTableFeaturePropertyNextTables {
@@ -16,7 +16,6 @@ public class OFTableFeaturePropertyNextTables extends OFTableFeatureProperty imp
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFTableFeaturePropertyType.valueOf((short)2));
-		this.next_table_ids = new LinkedList<Byte>();
     }
     
     public OFTableFeaturePropertyNextTables(OFTableFeaturePropertyNextTables other) {
@@ -34,7 +33,9 @@ public class OFTableFeaturePropertyNextTables extends OFTableFeatureProperty imp
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

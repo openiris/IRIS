@@ -24,7 +24,6 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)11));
-		this.match = new OFMatch();
     }
     
     public OFFlowRemoved(OFFlowRemoved other) {
@@ -67,15 +66,21 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		return this;
 	}
 			
-	public OFFlowRemovedReason getReason() {
-		return this.reason;
+
+	public org.openflow.protocol.interfaces.OFFlowRemovedReason getReason() {
+		return OFFlowRemovedReason.to(this.reason);
+	}
+	
+	public OFFlowRemoved setReason(org.openflow.protocol.interfaces.OFFlowRemovedReason reason) {
+		this.reason = OFFlowRemovedReason.from(reason);
+		return this;
 	}
 	
 	public OFFlowRemoved setReason(OFFlowRemovedReason reason) {
 		this.reason = reason;
 		return this;
 	}
-			
+	
 	public int getDurationSec() {
 		return this.duration_sec;
 	}
@@ -121,7 +126,25 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		return this;
 	}
 			
-
+	public byte getTableId() {
+		throw new UnsupportedOperationException("public byte getTableId() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFFlowRemoved setTableId(byte value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowRemoved setTableId(byte value) is not supported operation");
+	}
+	
+	public short getHardTimeout() {
+		throw new UnsupportedOperationException("public short getHardTimeout() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFFlowRemoved setHardTimeout(short value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowRemoved setHardTimeout(short value) is not supported operation");
+	}
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		if (this.match == null) this.match = new OFMatch();

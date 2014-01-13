@@ -14,7 +14,6 @@ public class OFActionSetField extends OFAction implements org.openflow.protocol.
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFActionType.valueOf((short)25));
-		this.field = new OFOxm();
     }
     
     public OFActionSetField(OFActionSetField other) {
@@ -31,7 +30,9 @@ public class OFActionSetField extends OFAction implements org.openflow.protocol.
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		if (this.field == null) this.field = new OFOxm();

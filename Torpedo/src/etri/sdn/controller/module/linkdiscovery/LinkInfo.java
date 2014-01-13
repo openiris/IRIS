@@ -54,8 +54,8 @@ public class LinkInfo {
      */
 
     public boolean linkStpBlocked() {
-        return ((srcPortState & OFPortState.OFPPS_STP_MASK) == OFPortState.OFPPS_STP_BLOCK) ||
-            ((dstPortState & OFPortState.OFPPS_STP_MASK) == OFPortState.OFPPS_STP_BLOCK);
+        return ((srcPortState & OFPortState.STP_MASK) == OFPortState.STP_BLOCK) ||
+            ((dstPortState & OFPortState.STP_MASK) == OFPortState.STP_BLOCK);
     }
 
     public Long getFirstSeenTime() {

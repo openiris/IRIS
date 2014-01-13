@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
+import org.openflow.util.OFPort;
 
 public class OFQueueGetConfigRequest extends OFMessage implements org.openflow.protocol.interfaces.OFQueueGetConfigRequest {
     public static int MINIMUM_LENGTH = 12;
@@ -22,16 +23,18 @@ public class OFQueueGetConfigRequest extends OFMessage implements org.openflow.p
 		this.port = other.port;
     }
 
-	public short getPort() {
-		return this.port;
+	public OFPort getPort() {
+		return new OFPort(this.port);
 	}
 	
-	public OFQueueGetConfigRequest setPort(short port) {
-		this.port = port;
+	public OFQueueGetConfigRequest setPort(OFPort port) {
+		this.port = (short) port.get();
 		return this;
 	}
-			
-
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.port = data.getShort();

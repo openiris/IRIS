@@ -10,7 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.openflow.protocol.ver1_3.messages.*;
 
 public enum OFMultipartType {
-    DESC	(0, OFMultipartDescRequest.class, OFMultipartDescReply.class,
+    DESC	(0, org.openflow.protocol.interfaces.OFMultipartType.DESC,
+  		OFMultipartDescRequest.class, OFMultipartDescReply.class,
 	    new Instantiable<OFMultipart>() {
 	      public OFMultipart instantiate() {
 	        return new OFMultipartDescRequest();
@@ -21,7 +22,8 @@ public enum OFMultipartType {
 	        return new OFMultipartDescReply();
 	      }
     	}),
-  	FLOW	(1, OFMultipartFlowRequest.class, OFMultipartFlowReply.class,
+  	FLOW	(1, org.openflow.protocol.interfaces.OFMultipartType.FLOW,
+  		OFMultipartFlowRequest.class, OFMultipartFlowReply.class,
 	    new Instantiable<OFMultipart>() {
 	      public OFMultipart instantiate() {
 	        return new OFMultipartFlowRequest();
@@ -32,7 +34,8 @@ public enum OFMultipartType {
 	        return new OFMultipartFlowReply();
 	      }
     	}),
-  	AGGREGATE	(2, OFMultipartAggregateRequest.class, OFMultipartAggregateReply.class,
+  	AGGREGATE	(2, org.openflow.protocol.interfaces.OFMultipartType.AGGREGATE,
+  		OFMultipartAggregateRequest.class, OFMultipartAggregateReply.class,
 	    new Instantiable<OFMultipart>() {
 	      public OFMultipart instantiate() {
 	        return new OFMultipartAggregateRequest();
@@ -43,7 +46,8 @@ public enum OFMultipartType {
 	        return new OFMultipartAggregateReply();
 	      }
     	}),
-  	TABLE	(3, OFMultipartTableRequest.class, OFMultipartTableReply.class,
+  	TABLE	(3, org.openflow.protocol.interfaces.OFMultipartType.TABLE,
+  		OFMultipartTableRequest.class, OFMultipartTableReply.class,
 	    new Instantiable<OFMultipart>() {
 	      public OFMultipart instantiate() {
 	        return new OFMultipartTableRequest();
@@ -54,7 +58,8 @@ public enum OFMultipartType {
 	        return new OFMultipartTableReply();
 	      }
     	}),
-  	PORT_STATS	(4, OFMultipartPortStatsRequest.class, OFMultipartPortStatsReply.class,
+  	PORT_STATS	(4, org.openflow.protocol.interfaces.OFMultipartType.PORT_STATS,
+  		OFMultipartPortStatsRequest.class, OFMultipartPortStatsReply.class,
 	    new Instantiable<OFMultipart>() {
 	      public OFMultipart instantiate() {
 	        return new OFMultipartPortStatsRequest();
@@ -65,7 +70,8 @@ public enum OFMultipartType {
 	        return new OFMultipartPortStatsReply();
 	      }
     	}),
-  	QUEUE	(5, OFMultipartQueueRequest.class, OFMultipartQueueReply.class,
+  	QUEUE	(5, org.openflow.protocol.interfaces.OFMultipartType.QUEUE,
+  		OFMultipartQueueRequest.class, OFMultipartQueueReply.class,
 	    new Instantiable<OFMultipart>() {
 	      public OFMultipart instantiate() {
 	        return new OFMultipartQueueRequest();
@@ -76,7 +82,8 @@ public enum OFMultipartType {
 	        return new OFMultipartQueueReply();
 	      }
     	}),
-  	GROUP	(6, OFMultipartGroupRequest.class, OFMultipartGroupReply.class,
+  	GROUP	(6, org.openflow.protocol.interfaces.OFMultipartType.GROUP,
+  		OFMultipartGroupRequest.class, OFMultipartGroupReply.class,
 	    new Instantiable<OFMultipart>() {
 	      public OFMultipart instantiate() {
 	        return new OFMultipartGroupRequest();
@@ -87,7 +94,8 @@ public enum OFMultipartType {
 	        return new OFMultipartGroupReply();
 	      }
     	}),
-  	GROUP_DESC	(7, OFMultipartGroupDescRequest.class, OFMultipartGroupDescReply.class,
+  	GROUP_DESC	(7, org.openflow.protocol.interfaces.OFMultipartType.GROUP_DESC,
+  		OFMultipartGroupDescRequest.class, OFMultipartGroupDescReply.class,
 	    new Instantiable<OFMultipart>() {
 	      public OFMultipart instantiate() {
 	        return new OFMultipartGroupDescRequest();
@@ -98,7 +106,8 @@ public enum OFMultipartType {
 	        return new OFMultipartGroupDescReply();
 	      }
     	}),
-  	GROUP_FEATURES	(8, OFMultipartGroupFeaturesRequest.class, OFMultipartGroupFeaturesReply.class,
+  	GROUP_FEATURES	(8, org.openflow.protocol.interfaces.OFMultipartType.GROUP_FEATURES,
+  		OFMultipartGroupFeaturesRequest.class, OFMultipartGroupFeaturesReply.class,
 	    new Instantiable<OFMultipart>() {
 	      public OFMultipart instantiate() {
 	        return new OFMultipartGroupFeaturesRequest();
@@ -109,7 +118,8 @@ public enum OFMultipartType {
 	        return new OFMultipartGroupFeaturesReply();
 	      }
     	}),
-  	METER	(9, OFMultipartMeterRequest.class, OFMultipartMeterReply.class,
+  	METER	(9, org.openflow.protocol.interfaces.OFMultipartType.METER,
+  		OFMultipartMeterRequest.class, OFMultipartMeterReply.class,
 	    new Instantiable<OFMultipart>() {
 	      public OFMultipart instantiate() {
 	        return new OFMultipartMeterRequest();
@@ -120,7 +130,8 @@ public enum OFMultipartType {
 	        return new OFMultipartMeterReply();
 	      }
     	}),
-  	METER_CONFIG	(10, OFMultipartMeterConfigRequest.class, OFMultipartMeterConfigReply.class,
+  	METER_CONFIG	(10, org.openflow.protocol.interfaces.OFMultipartType.METER_CONFIG,
+  		OFMultipartMeterConfigRequest.class, OFMultipartMeterConfigReply.class,
 	    new Instantiable<OFMultipart>() {
 	      public OFMultipart instantiate() {
 	        return new OFMultipartMeterConfigRequest();
@@ -131,7 +142,8 @@ public enum OFMultipartType {
 	        return new OFMultipartMeterConfigReply();
 	      }
     	}),
-  	METER_FEATURES	(11, OFMultipartMeterFeaturesRequest.class, OFMultipartMeterFeaturesReply.class,
+  	METER_FEATURES	(11, org.openflow.protocol.interfaces.OFMultipartType.METER_FEATURES,
+  		OFMultipartMeterFeaturesRequest.class, OFMultipartMeterFeaturesReply.class,
 	    new Instantiable<OFMultipart>() {
 	      public OFMultipart instantiate() {
 	        return new OFMultipartMeterFeaturesRequest();
@@ -142,7 +154,8 @@ public enum OFMultipartType {
 	        return new OFMultipartMeterFeaturesReply();
 	      }
     	}),
-  	TABLE_FEATURES	(12, OFMultipartTableFeaturesRequest.class, OFMultipartTableFeaturesReply.class,
+  	TABLE_FEATURES	(12, org.openflow.protocol.interfaces.OFMultipartType.TABLE_FEATURES,
+  		OFMultipartTableFeaturesRequest.class, OFMultipartTableFeaturesReply.class,
 	    new Instantiable<OFMultipart>() {
 	      public OFMultipart instantiate() {
 	        return new OFMultipartTableFeaturesRequest();
@@ -153,7 +166,8 @@ public enum OFMultipartType {
 	        return new OFMultipartTableFeaturesReply();
 	      }
     	}),
-  	PORT_DESC	(13, OFMultipartPortDescRequest.class, OFMultipartPortDescReply.class,
+  	PORT_DESC	(13, org.openflow.protocol.interfaces.OFMultipartType.PORT_DESC,
+  		OFMultipartPortDescRequest.class, OFMultipartPortDescReply.class,
 	    new Instantiable<OFMultipart>() {
 	      public OFMultipart instantiate() {
 	        return new OFMultipartPortDescRequest();
@@ -164,7 +178,8 @@ public enum OFMultipartType {
 	        return new OFMultipartPortDescReply();
 	      }
     	}),
-  	EXPERIMENTER	(0xffff, OFMultipartExperimenterRequest.class, OFMultipartExperimenterReply.class,
+  	EXPERIMENTER	(0xffff, org.openflow.protocol.interfaces.OFMultipartType.EXPERIMENTER,
+  		OFMultipartExperimenterRequest.class, OFMultipartExperimenterReply.class,
 	    new Instantiable<OFMultipart>() {
 	      public OFMultipart instantiate() {
 	        return new OFMultipartExperimenterRequest();
@@ -176,12 +191,12 @@ public enum OFMultipartType {
 	      }
     	});
 
-	/*
-    static OFMultipartType[] requestMapping;
-    static OFMultipartType[] replyMapping;
-    */
     static Map<Short, OFMultipartType> requestMapping;
     static Map<Short, OFMultipartType> replyMapping;
+    static Map<Short, org.openflow.protocol.interfaces.OFMultipartType> requestCompatMapping;
+    static Map<org.openflow.protocol.interfaces.OFMultipartType, OFMultipartType> requestCompatReverseMapping;
+    static Map<Short, org.openflow.protocol.interfaces.OFMultipartType> replyCompatMapping;
+    static Map<org.openflow.protocol.interfaces.OFMultipartType, OFMultipartType> replyCompatReverseMapping;
 
     protected Class<? extends OFMultipart> requestClass;
     protected Class<? extends OFMultipart> replyClass;
@@ -191,7 +206,8 @@ public enum OFMultipartType {
     protected Instantiable<OFMultipart> replyInstantiable;
     protected short type;
 
-    OFMultipartType(int type, Class<? extends OFMultipart> requestClass, Class<? extends OFMultipart> replyClass,
+    OFMultipartType(int type, org.openflow.protocol.interfaces.OFMultipartType compatType,
+    		Class<? extends OFMultipart> requestClass, Class<? extends OFMultipart> replyClass,
             Instantiable<OFMultipart> requestInstantiable, Instantiable<OFMultipart> replyInstantiable) {
         this.type = (short) type;
         this.requestClass = requestClass;
@@ -203,6 +219,7 @@ public enum OFMultipartType {
                     "Failure getting constructor for class: " + this.requestClass, e);
         }
         OFMultipartType.addMapping(this.type, OFMessageType.MULTIPART_REQUEST, this);
+        OFMultipartType.addMapping(this.type, compatType, OFMessageType.MULTIPART_REQUEST, this);
         
         this.replyClass = replyClass;
         this.replyInstantiable = replyInstantiable;
@@ -213,25 +230,15 @@ public enum OFMultipartType {
                     "Failure getting constructor for class: " + this.replyClass, e);
         }
         OFMultipartType.addMapping(this.type, OFMessageType.MULTIPART_REPLY, this);
+        OFMultipartType.addMapping(this.type, compatType, OFMessageType.MULTIPART_REPLY, this);
     }
 
     static public void addMapping(short i, OFMessageType t, OFMultipartType st) {
-        if ( i < 0 ) i = (short)(15 + i);
         if (t == OFMessageType.MULTIPART_REQUEST) {
-        	/*
-            if (requestMapping == null)
-                requestMapping = new OFMultipartType[15];
-            OFMultipartType.requestMapping[i] = st;
-            */
             if ( requestMapping == null ) 
             	requestMapping = new ConcurrentHashMap<Short, OFMultipartType>();
             requestMapping.put( i, st );
         } else if (t == OFMessageType.MULTIPART_REPLY){
-        	/*
-            if (replyMapping == null)
-                replyMapping = new OFMultipartType[15];
-            OFMultipartType.replyMapping[i] = st;
-            */
             if ( replyMapping == null )
             	replyMapping = new ConcurrentHashMap<Short, OFMultipartType>();
             replyMapping.put( i, st );
@@ -240,31 +247,80 @@ public enum OFMultipartType {
         }
     }
     
+    static public void addMapping(short i, org.openflow.protocol.interfaces.OFMultipartType c, OFMessageType t, OFMultipartType st) {
+    	if ( t == OFMessageType.MULTIPART_REQUEST ) {
+    		if ( requestCompatMapping == null ) {
+    			requestCompatMapping = new ConcurrentHashMap<Short, org.openflow.protocol.interfaces.OFMultipartType>();
+    		}
+    		if ( requestCompatReverseMapping == null ) {
+    			requestCompatReverseMapping = new ConcurrentHashMap<org.openflow.protocol.interfaces.OFMultipartType, OFMultipartType>();
+    		}
+    		
+    		requestCompatMapping.put( i, c );
+    		requestCompatReverseMapping.put( c, st );
+    	}
+    	else if ( t == OFMessageType.MULTIPART_REPLY ) {
+    		if ( replyCompatMapping == null ) {
+    			replyCompatMapping = new ConcurrentHashMap<Short, org.openflow.protocol.interfaces.OFMultipartType>();
+    		}
+    		if ( replyCompatReverseMapping == null ) {
+    			replyCompatReverseMapping = new ConcurrentHashMap<org.openflow.protocol.interfaces.OFMultipartType, OFMultipartType>();
+    		}
+    		
+    		replyCompatMapping.put( i, c );
+    		replyCompatReverseMapping.put( c, st );
+    	}
+    	else {
+    		throw new RuntimeException(t.toString() + " is an invalid OFMessageType");
+        }
+    }
+    
     static public void addReplyMapping(short i, OFMultipartType t) {
-    	/*
-        if (replyMapping == null)
-            replyMapping = new OFMultipartType[15];
-        if ( i < 0 ) i = (short)(15 + i);
-        OFMultipartType.replyMapping[i] = t;
-        */
         if ( replyMapping == null )
             replyMapping = new ConcurrentHashMap<Short, OFMultipartType>();
         replyMapping.put(i, t);
     }
 
     static public OFMultipartType valueOf(short i, OFMessageType t) {
-        if ( i < 0 ) i = (short)(15 + i);
         if ( t == OFMessageType.MULTIPART_REQUEST ) {
-          // return requestMapping[i];
           return requestMapping.get( i );
         }
         else if ( t == OFMessageType.MULTIPART_REPLY ) {
-          // return replyMapping[i];
           return replyMapping.get( i );
         }
         else {
           throw new RuntimeException(t.toString() + " is an invalid OFMessageType");
         }
+    }
+    
+    /**
+     * convert to compatibility-support type
+     */
+    static public org.openflow.protocol.interfaces.OFMultipartType to(short i, OFMessageType t) {
+    	if ( t == OFMessageType.MULTIPART_REQUEST ) {
+    		return requestCompatMapping.get(i);
+    	}
+    	else if ( t == OFMessageType.MULTIPART_REPLY ) {
+    		return replyCompatMapping.get(i);
+    	}
+    	else {
+    		throw new RuntimeException(t.toString() + " is an invalid OFMessageType");
+    	}
+    }
+    
+    /**
+     * convert from compatibility-support type
+     */
+    static public OFMultipartType from(org.openflow.protocol.interfaces.OFMultipartType c, OFMessageType t) {
+    	if ( t == OFMessageType.MULTIPART_REQUEST ) {
+    		return requestCompatReverseMapping.get(c);
+    	}
+    	else if ( t == OFMessageType.MULTIPART_REPLY ) {
+    		return replyCompatReverseMapping.get(c);
+    	}
+    	else {
+    		throw new RuntimeException(t.toString() + " is an invalid OFMessageType");
+    	}
     }
     
     public static short readFrom(ByteBuffer data) {

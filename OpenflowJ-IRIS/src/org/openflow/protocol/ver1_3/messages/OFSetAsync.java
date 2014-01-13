@@ -85,7 +85,9 @@ public class OFSetAsync extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.packet_in_mask_equal_master = data.getInt();

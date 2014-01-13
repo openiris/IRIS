@@ -10,7 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.openflow.protocol.ver1_0.messages.*;
 
 public enum OFStatisticsType {
-    DESC	(0, OFStatisticsDescRequest.class, OFStatisticsDescReply.class,
+    DESC	(0, org.openflow.protocol.interfaces.OFStatisticsType.DESC,
+  		OFStatisticsDescRequest.class, OFStatisticsDescReply.class,
 	    new Instantiable<OFStatistics>() {
 	      public OFStatistics instantiate() {
 	        return new OFStatisticsDescRequest();
@@ -21,7 +22,8 @@ public enum OFStatisticsType {
 	        return new OFStatisticsDescReply();
 	      }
     	}),
-  	FLOW	(1, OFStatisticsFlowRequest.class, OFStatisticsFlowReply.class,
+  	FLOW	(1, org.openflow.protocol.interfaces.OFStatisticsType.FLOW,
+  		OFStatisticsFlowRequest.class, OFStatisticsFlowReply.class,
 	    new Instantiable<OFStatistics>() {
 	      public OFStatistics instantiate() {
 	        return new OFStatisticsFlowRequest();
@@ -32,7 +34,8 @@ public enum OFStatisticsType {
 	        return new OFStatisticsFlowReply();
 	      }
     	}),
-  	AGGREGATE	(2, OFStatisticsAggregateRequest.class, OFStatisticsAggregateReply.class,
+  	AGGREGATE	(2, org.openflow.protocol.interfaces.OFStatisticsType.AGGREGATE,
+  		OFStatisticsAggregateRequest.class, OFStatisticsAggregateReply.class,
 	    new Instantiable<OFStatistics>() {
 	      public OFStatistics instantiate() {
 	        return new OFStatisticsAggregateRequest();
@@ -43,7 +46,8 @@ public enum OFStatisticsType {
 	        return new OFStatisticsAggregateReply();
 	      }
     	}),
-  	TABLE	(3, OFStatisticsTableRequest.class, OFStatisticsTableReply.class,
+  	TABLE	(3, org.openflow.protocol.interfaces.OFStatisticsType.TABLE,
+  		OFStatisticsTableRequest.class, OFStatisticsTableReply.class,
 	    new Instantiable<OFStatistics>() {
 	      public OFStatistics instantiate() {
 	        return new OFStatisticsTableRequest();
@@ -54,7 +58,8 @@ public enum OFStatisticsType {
 	        return new OFStatisticsTableReply();
 	      }
     	}),
-  	PORT	(4, OFStatisticsPortRequest.class, OFStatisticsPortReply.class,
+  	PORT	(4, org.openflow.protocol.interfaces.OFStatisticsType.PORT,
+  		OFStatisticsPortRequest.class, OFStatisticsPortReply.class,
 	    new Instantiable<OFStatistics>() {
 	      public OFStatistics instantiate() {
 	        return new OFStatisticsPortRequest();
@@ -65,7 +70,8 @@ public enum OFStatisticsType {
 	        return new OFStatisticsPortReply();
 	      }
     	}),
-  	QUEUE	(5, OFStatisticsQueueRequest.class, OFStatisticsQueueReply.class,
+  	QUEUE	(5, org.openflow.protocol.interfaces.OFStatisticsType.QUEUE,
+  		OFStatisticsQueueRequest.class, OFStatisticsQueueReply.class,
 	    new Instantiable<OFStatistics>() {
 	      public OFStatistics instantiate() {
 	        return new OFStatisticsQueueRequest();
@@ -76,7 +82,8 @@ public enum OFStatisticsType {
 	        return new OFStatisticsQueueReply();
 	      }
     	}),
-  	VENDOR	(0xffff, OFStatisticsVendorRequest.class, OFStatisticsVendorReply.class,
+  	VENDOR	(0xffff, org.openflow.protocol.interfaces.OFStatisticsType.VENDOR,
+  		OFStatisticsVendorRequest.class, OFStatisticsVendorReply.class,
 	    new Instantiable<OFStatistics>() {
 	      public OFStatistics instantiate() {
 	        return new OFStatisticsVendorRequest();
@@ -88,12 +95,12 @@ public enum OFStatisticsType {
 	      }
     	});
 
-	/*
-    static OFStatisticsType[] requestMapping;
-    static OFStatisticsType[] replyMapping;
-    */
     static Map<Short, OFStatisticsType> requestMapping;
     static Map<Short, OFStatisticsType> replyMapping;
+    static Map<Short, org.openflow.protocol.interfaces.OFStatisticsType> requestCompatMapping;
+    static Map<org.openflow.protocol.interfaces.OFStatisticsType, OFStatisticsType> requestCompatReverseMapping;
+    static Map<Short, org.openflow.protocol.interfaces.OFStatisticsType> replyCompatMapping;
+    static Map<org.openflow.protocol.interfaces.OFStatisticsType, OFStatisticsType> replyCompatReverseMapping;
 
     protected Class<? extends OFStatistics> requestClass;
     protected Class<? extends OFStatistics> replyClass;
@@ -103,7 +110,8 @@ public enum OFStatisticsType {
     protected Instantiable<OFStatistics> replyInstantiable;
     protected short type;
 
-    OFStatisticsType(int type, Class<? extends OFStatistics> requestClass, Class<? extends OFStatistics> replyClass,
+    OFStatisticsType(int type, org.openflow.protocol.interfaces.OFStatisticsType compatType,
+    		Class<? extends OFStatistics> requestClass, Class<? extends OFStatistics> replyClass,
             Instantiable<OFStatistics> requestInstantiable, Instantiable<OFStatistics> replyInstantiable) {
         this.type = (short) type;
         this.requestClass = requestClass;
@@ -115,6 +123,7 @@ public enum OFStatisticsType {
                     "Failure getting constructor for class: " + this.requestClass, e);
         }
         OFStatisticsType.addMapping(this.type, OFMessageType.STATISTICS_REQUEST, this);
+        OFStatisticsType.addMapping(this.type, compatType, OFMessageType.STATISTICS_REQUEST, this);
         
         this.replyClass = replyClass;
         this.replyInstantiable = replyInstantiable;
@@ -125,25 +134,15 @@ public enum OFStatisticsType {
                     "Failure getting constructor for class: " + this.replyClass, e);
         }
         OFStatisticsType.addMapping(this.type, OFMessageType.STATISTICS_REPLY, this);
+        OFStatisticsType.addMapping(this.type, compatType, OFMessageType.STATISTICS_REPLY, this);
     }
 
     static public void addMapping(short i, OFMessageType t, OFStatisticsType st) {
-        if ( i < 0 ) i = (short)(7 + i);
         if (t == OFMessageType.STATISTICS_REQUEST) {
-        	/*
-            if (requestMapping == null)
-                requestMapping = new OFStatisticsType[7];
-            OFStatisticsType.requestMapping[i] = st;
-            */
             if ( requestMapping == null ) 
             	requestMapping = new ConcurrentHashMap<Short, OFStatisticsType>();
             requestMapping.put( i, st );
         } else if (t == OFMessageType.STATISTICS_REPLY){
-        	/*
-            if (replyMapping == null)
-                replyMapping = new OFStatisticsType[7];
-            OFStatisticsType.replyMapping[i] = st;
-            */
             if ( replyMapping == null )
             	replyMapping = new ConcurrentHashMap<Short, OFStatisticsType>();
             replyMapping.put( i, st );
@@ -152,31 +151,80 @@ public enum OFStatisticsType {
         }
     }
     
+    static public void addMapping(short i, org.openflow.protocol.interfaces.OFStatisticsType c, OFMessageType t, OFStatisticsType st) {
+    	if ( t == OFMessageType.STATISTICS_REQUEST ) {
+    		if ( requestCompatMapping == null ) {
+    			requestCompatMapping = new ConcurrentHashMap<Short, org.openflow.protocol.interfaces.OFStatisticsType>();
+    		}
+    		if ( requestCompatReverseMapping == null ) {
+    			requestCompatReverseMapping = new ConcurrentHashMap<org.openflow.protocol.interfaces.OFStatisticsType, OFStatisticsType>();
+    		}
+    		
+    		requestCompatMapping.put( i, c );
+    		requestCompatReverseMapping.put( c, st );
+    	}
+    	else if ( t == OFMessageType.STATISTICS_REPLY ) {
+    		if ( replyCompatMapping == null ) {
+    			replyCompatMapping = new ConcurrentHashMap<Short, org.openflow.protocol.interfaces.OFStatisticsType>();
+    		}
+    		if ( replyCompatReverseMapping == null ) {
+    			replyCompatReverseMapping = new ConcurrentHashMap<org.openflow.protocol.interfaces.OFStatisticsType, OFStatisticsType>();
+    		}
+    		
+    		replyCompatMapping.put( i, c );
+    		replyCompatReverseMapping.put( c, st );
+    	}
+    	else {
+    		throw new RuntimeException(t.toString() + " is an invalid OFMessageType");
+        }
+    }
+    
     static public void addReplyMapping(short i, OFStatisticsType t) {
-    	/*
-        if (replyMapping == null)
-            replyMapping = new OFStatisticsType[7];
-        if ( i < 0 ) i = (short)(7 + i);
-        OFStatisticsType.replyMapping[i] = t;
-        */
         if ( replyMapping == null )
             replyMapping = new ConcurrentHashMap<Short, OFStatisticsType>();
         replyMapping.put(i, t);
     }
 
     static public OFStatisticsType valueOf(short i, OFMessageType t) {
-        if ( i < 0 ) i = (short)(7 + i);
         if ( t == OFMessageType.STATISTICS_REQUEST ) {
-          // return requestMapping[i];
           return requestMapping.get( i );
         }
         else if ( t == OFMessageType.STATISTICS_REPLY ) {
-          // return replyMapping[i];
           return replyMapping.get( i );
         }
         else {
           throw new RuntimeException(t.toString() + " is an invalid OFMessageType");
         }
+    }
+    
+    /**
+     * convert to compatibility-support type
+     */
+    static public org.openflow.protocol.interfaces.OFStatisticsType to(short i, OFMessageType t) {
+    	if ( t == OFMessageType.STATISTICS_REQUEST ) {
+    		return requestCompatMapping.get(i);
+    	}
+    	else if ( t == OFMessageType.STATISTICS_REPLY ) {
+    		return replyCompatMapping.get(i);
+    	}
+    	else {
+    		throw new RuntimeException(t.toString() + " is an invalid OFMessageType");
+    	}
+    }
+    
+    /**
+     * convert from compatibility-support type
+     */
+    static public OFStatisticsType from(org.openflow.protocol.interfaces.OFStatisticsType c, OFMessageType t) {
+    	if ( t == OFMessageType.STATISTICS_REQUEST ) {
+    		return requestCompatReverseMapping.get(c);
+    	}
+    	else if ( t == OFMessageType.STATISTICS_REPLY ) {
+    		return replyCompatReverseMapping.get(c);
+    	}
+    	else {
+    		throw new RuntimeException(t.toString() + " is an invalid OFMessageType");
+    	}
     }
     
     public static short readFrom(ByteBuffer data) {

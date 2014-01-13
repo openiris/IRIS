@@ -3,9 +3,10 @@ package org.openflow.protocol.ver1_0.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import java.util.List;
-import java.util.LinkedList;
 import org.openflow.protocol.ver1_0.types.*;
+import org.openflow.util.OFPort;
+import java.util.LinkedList;
+import java.util.List;
 
 public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacketQueue {
     public static int MINIMUM_LENGTH = 8;
@@ -16,7 +17,7 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
 	List<org.openflow.protocol.interfaces.OFQueueProperty>  properties;
 
     public OFPacketQueue() {
-        this.properties = new LinkedList<org.openflow.protocol.interfaces.OFQueueProperty>();
+        
     }
     
     public OFPacketQueue(OFPacketQueue other) {
@@ -53,7 +54,17 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
 		return this;
 	}
 			
-
+	public OFPort getPort() {
+		throw new UnsupportedOperationException("public OFPort getPort() is not supported operation");
+	}
+	
+	public OFPacketQueue setPort(OFPort value) {
+		throw new UnsupportedOperationException("public OFPacketQueue setPort(OFPort value) is not supported operation");
+	}
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		this.queue_id = data.getInt();
@@ -88,7 +99,7 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.interfaces.OFQueueProperty i : this.properties ) { len += i.computeLength(); }
+    	if ( this.properties != null ) for ( org.openflow.protocol.interfaces.OFQueueProperty i : this.properties ) { len += i.computeLength(); }
     	return len;
     }
     

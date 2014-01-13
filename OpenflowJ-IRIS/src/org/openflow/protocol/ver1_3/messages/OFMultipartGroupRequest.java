@@ -15,7 +15,7 @@ public class OFMultipartGroupRequest extends OFMultipartRequest implements org.o
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)18));
-		setMultipartType(OFMultipartType.valueOf((short)6, getType()));
+		setMultipartType(OFMultipartType.valueOf((short)6, this.type));
     }
     
     public OFMultipartGroupRequest(OFMultipartGroupRequest other) {
@@ -32,7 +32,9 @@ public class OFMultipartGroupRequest extends OFMultipartRequest implements org.o
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.group_id = data.getInt();

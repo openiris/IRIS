@@ -3,9 +3,10 @@ package org.openflow.protocol.ver1_0.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import java.util.List;
-import java.util.LinkedList;
 import org.openflow.protocol.ver1_0.types.*;
+import org.openflow.util.OFPort;
+import java.util.LinkedList;
+import java.util.List;
 
 public class OFPacketOut extends OFMessage implements org.openflow.protocol.interfaces.OFPacketOut {
     public static int MINIMUM_LENGTH = 16;
@@ -20,7 +21,6 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)13));
-		this.actions = new LinkedList<org.openflow.protocol.interfaces.OFAction>();
     }
     
     public OFPacketOut(OFPacketOut other) {
@@ -42,15 +42,15 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 		return this;
 	}
 			
-	public short getInputPort() {
-		return this.input_port;
+	public OFPort getInputPort() {
+		return new OFPort(this.input_port);
 	}
 	
-	public OFPacketOut setInputPort(short input_port) {
-		this.input_port = input_port;
+	public OFPacketOut setInputPort(OFPort port) {
+		this.input_port = (short) port.get();
 		return this;
 	}
-			
+	
 	public short getActionsLength() {
 		return this.actions_length;
 	}
@@ -78,7 +78,17 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 		return this;
 	}
 			
-
+	public OFPort getInPort() {
+		throw new UnsupportedOperationException("public OFPort getInPort() is not supported operation");
+	}
+	
+	public OFPacketOut setInPort(OFPort value) {
+		throw new UnsupportedOperationException("public OFPacketOut setInPort(OFPort value) is not supported operation");
+	}
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);
@@ -119,7 +129,7 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
+    	if ( this.actions != null ) for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
 		if ( this.data != null ) { len += this.data.length; } 
     	return len;
     }

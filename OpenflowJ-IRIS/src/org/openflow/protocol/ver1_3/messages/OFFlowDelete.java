@@ -21,8 +21,10 @@ public class OFFlowDelete extends OFFlowMod implements org.openflow.protocol.int
     	super(other);
     }
 
-
-
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

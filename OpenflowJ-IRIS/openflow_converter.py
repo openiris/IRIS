@@ -42,6 +42,7 @@ class InterfaceConverter(Converter):
     for spec in self.specs:
       # in this loop, we merge definitions step-by-step.
       all_items = spec.get_all_items();
+
       for item in all_items:
         if isinstance(item, Enum):
           if not self.interface_dic.get(item.name, None):
@@ -52,11 +53,20 @@ class InterfaceConverter(Converter):
             intf.merge( item )
         else:
           if not self.interface_dic.get(item.name, None):
+            if item.name == 'OFMatch' and spec.get_version() != '1.0':
+              continue
             intf = InterfaceForStruct(item)
             self.interface_dic[ item.name ] = intf
           else:
+            if item.name == 'OFMatch' and spec.get_version() != '1.0':
+              continue
             intf = self.interface_dic[ item.name ]
             intf.merge( item )
+              
+          if item.name == 'OFMatchOxm':
+            intf = self.interface_dic[ 'OFMatch' ]
+            intf.merge( item )
+            self.interface_dic[ item.name ].merge( intf.struct )
             
     # for every interface within the dictionary,
     # we create an interface file and save it into org.openflow.protocol.interfaces.
@@ -68,6 +78,12 @@ class InterfaceConverter(Converter):
       (typename, result) = interface.convert();
       if typename == None or result == None: continue;
       Converter.write_to_java_file(path, typename, result)
+      
+  def get_interface(self, name):
+    '''
+    This method lookup an interface definition by its name.
+    '''
+    return self.interface_dic.get(name, None)
 
 
 class ConcreteConverter(Converter):

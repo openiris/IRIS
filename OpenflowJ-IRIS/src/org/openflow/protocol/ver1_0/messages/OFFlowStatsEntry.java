@@ -3,9 +3,9 @@ package org.openflow.protocol.ver1_0.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import java.util.List;
-import java.util.LinkedList;
 import org.openflow.protocol.ver1_0.types.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFlowStatsEntry {
     public static int MINIMUM_LENGTH = 88;
@@ -27,8 +27,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 	List<org.openflow.protocol.interfaces.OFAction>  actions;
 
     public OFFlowStatsEntry() {
-        this.match = new OFMatch();
-		this.actions = new LinkedList<org.openflow.protocol.interfaces.OFAction>();
+        
     }
     
     public OFFlowStatsEntry(OFFlowStatsEntry other) {
@@ -155,7 +154,25 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		return this;
 	}
 			
-
+	public short getFlags() {
+		throw new UnsupportedOperationException("public short getFlags() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFFlowStatsEntry setFlags(short value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowStatsEntry setFlags(short value) is not supported operation");
+	}
+	
+	public List<org.openflow.protocol.interfaces.OFInstruction> getInstructions() {
+		throw new UnsupportedOperationException("public List<org.openflow.protocol.interfaces.OFInstruction> getInstructions() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFFlowStatsEntry setInstructions(List<org.openflow.protocol.interfaces.OFInstruction> value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowStatsEntry setInstructions(List<org.openflow.protocol.interfaces.OFInstruction> value) is not supported operation");
+	}
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		this.length = data.getShort();
@@ -222,7 +239,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
+    	if ( this.actions != null ) for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
     	return len;
     }
     

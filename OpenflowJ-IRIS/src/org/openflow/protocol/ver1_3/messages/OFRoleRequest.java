@@ -42,7 +42,9 @@ public class OFRoleRequest extends OFMessage implements org.openflow.protocol.in
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.role = data.getInt();

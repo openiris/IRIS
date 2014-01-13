@@ -3,9 +3,12 @@ package org.openflow.protocol.ver1_0.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import java.util.List;
+import org.openflow.util.OFPort;
 import java.util.LinkedList;
+import java.util.Set;
 import org.openflow.protocol.ver1_0.types.*;
+import java.util.HashSet;
+import java.util.List;
 
 public class OFFlowMod extends OFMessage implements org.openflow.protocol.interfaces.OFFlowMod {
     public static int MINIMUM_LENGTH = 72;
@@ -25,8 +28,6 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)14));
-		this.match = new OFMatch();
-		this.actions = new LinkedList<org.openflow.protocol.interfaces.OFAction>();
     }
     
     public OFFlowMod(OFFlowMod other) {
@@ -62,15 +63,21 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 			
-	public OFFlowModCommand getCommand() {
-		return this.command;
+
+	public org.openflow.protocol.interfaces.OFFlowModCommand getCommand() {
+		return OFFlowModCommand.to(this.command);
+	}
+	
+	public OFFlowMod setCommand(org.openflow.protocol.interfaces.OFFlowModCommand command) {
+		this.command = OFFlowModCommand.from(command);
+		return this;
 	}
 	
 	public OFFlowMod setCommand(OFFlowModCommand command) {
 		this.command = command;
 		return this;
 	}
-			
+	
 	public short getIdleTimeout() {
 		return this.idle_timeout;
 	}
@@ -107,24 +114,42 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 			
-	public short getOutPort() {
-		return this.out_port;
+	public OFPort getOutPort() {
+		return new OFPort(this.out_port);
 	}
 	
-	public OFFlowMod setOutPort(short out_port) {
-		this.out_port = out_port;
+	public OFFlowMod setOutPort(OFPort port) {
+		this.out_port = (short) port.get();
 		return this;
 	}
-			
-	public short getFlags() {
+	
+	public short getFlagsWire() {
 		return this.flags;
 	}
 	
-	public OFFlowMod setFlags(short flags) {
+	public OFFlowMod setFlagsWire(short flags) {
 		this.flags = flags;
 		return this;
 	}
-			
+	
+	public Set<org.openflow.protocol.interfaces.OFFlowModFlags> getFlags() {
+		OFFlowModFlags tmp = OFFlowModFlags.of(this.flags);
+		Set<org.openflow.protocol.interfaces.OFFlowModFlags> ret = new HashSet<org.openflow.protocol.interfaces.OFFlowModFlags>();
+		for ( org.openflow.protocol.interfaces.OFFlowModFlags v : org.openflow.protocol.interfaces.OFFlowModFlags.values() ) {
+			if (tmp.has(v)) {
+				ret.add(v);
+			}
+		}
+		return ret;
+	}
+		
+	public OFFlowMod setFlags(Set<org.openflow.protocol.interfaces.OFFlowModFlags> values) {
+		OFFlowModFlags tmp = OFFlowModFlags.of(this.flags);
+		tmp.and( values );
+		this.flags = tmp.get();
+		return this;
+	}
+		
 	public List<org.openflow.protocol.interfaces.OFAction> getActions() {
 		return this.actions;
 	}
@@ -134,7 +159,41 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 			
-
+	public long getCookieMask() {
+		throw new UnsupportedOperationException("public long getCookieMask() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFFlowMod setCookieMask(long value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowMod setCookieMask(long value) is not supported operation");
+	}
+	
+	public byte getTableId() {
+		throw new UnsupportedOperationException("public byte getTableId() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFFlowMod setTableId(byte value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowMod setTableId(byte value) is not supported operation");
+	}
+	
+	public int getOutGroup() {
+		throw new UnsupportedOperationException("public int getOutGroup() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFFlowMod setOutGroup(int value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowMod setOutGroup(int value) is not supported operation");
+	}
+	
+	public List<org.openflow.protocol.interfaces.OFInstruction> getInstructions() {
+		throw new UnsupportedOperationException("public List<org.openflow.protocol.interfaces.OFInstruction> getInstructions() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFFlowMod setInstructions(List<org.openflow.protocol.interfaces.OFInstruction> value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowMod setInstructions(List<org.openflow.protocol.interfaces.OFInstruction> value) is not supported operation");
+	}
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);
@@ -190,7 +249,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
+    	if ( this.actions != null ) for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
     	return len;
     }
     

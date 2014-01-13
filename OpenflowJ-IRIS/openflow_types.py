@@ -4,6 +4,11 @@ import itertools
 import pprint
 from template import *
 
+def remove_prefix(str):
+  n = str[str.find('_')+1:]
+  if n[0].isdigit(): return 'N_' + n
+  return n
+
 class Type:
   def __init__(self):
     ''' 
@@ -97,12 +102,29 @@ class Enum(Type):
       
     if forced_type:
       for i in self.body:
-        ret += '%s\t%s\t=\t%s;\n\t' % (forced_type, i['name'], i['value'])
+        n = i['name']
+        n = remove_prefix(n)
+        ret += '%s\t%s\t=\t%s;\n\t' % (forced_type, n, i['value'])
       return ret
     else:
+      results = []
       for i in self.body:
-        ret += '%s\t(%s),\n\t' % (i['name'], i['value'])
-      return ret.strip(',\n\t')
+        n = i['name']
+        n = remove_prefix(n)
+        template = Template.get_template('tpl/enum_line.tpl')
+        result = template.safe_substitute({'typename':self.name, 'name':n, 'value':i['value']})
+        results.append(result)
+      return '\n'.join(results).strip(',\n\t')
+    
+  def get_java_static_lines(self):
+    results = []
+    for i in self.body:
+      n = i['name']
+      n = remove_prefix(n)
+      template = Template.get_template('tpl/enum_static_line.tpl')
+      result = template.safe_substitute({'name':n, 'typename':self.name})
+      results.append(result)
+    return '\n\t'.join(results)
     
   def get_java_representation(self):
     '''
@@ -125,7 +147,7 @@ class Enum(Type):
     ret = ''
     for i in self.body:
       n = i['name']
-      n = n[n.find('_')+1:]
+      n = remove_prefix(n)
       v = i['value']
       typename = ''
       if supertype != 'OFMessage':
@@ -133,7 +155,8 @@ class Enum(Type):
       else:
         typename = 'OF'
       typename = self.spec.convert_to_camel(n, 0, typename)
-      ret += one.substitute({'n':n, 'v':v, 'typename':typename, 'supertype':supertype}).rstrip() + '\n'
+      ret += one.substitute({'n':n, 'v':v, 'enumtype':self.name,
+                             'typename':typename, 'supertype':supertype}).rstrip() + '\n'
     
     return ret.strip(', \n\t')
       
@@ -157,7 +180,7 @@ class Enum(Type):
     for i in self.body:
       v = i['value']            # enum value
       n = i['name']             # enum name
-      n = n[n.find('_')+1:]     # remove prefix such as OFP_ from the enum name
+      n = remove_prefix(n)      # remove prefix such as OFP_ from the enum name
       typename = ''
       if supertype != 'OFMessage':
         typename = supertype
@@ -165,7 +188,9 @@ class Enum(Type):
         typename = 'OF'
       
       typename = self.spec.convert_to_camel(n, 0, typename) 
-      ret += two.substitute({'n':n, 'v':v, 'typename':typename, 'supertype':supertype}).rstrip() + '\n'
+      ret += two.substitute({'n':n, 'v':v, 
+                             'enumtype':self.name,
+                             'typename':typename, 'supertype':supertype}).rstrip() + '\n'
       
     return ret.strip(', \n\t')
   
@@ -204,11 +229,14 @@ class Enum(Type):
     
     packagename = self.spec.get_java_packagename(path)
     rep = self.get_java_representation()
+    orep = self.get_object_type(rep)
     methodname = self.spec.convert_to_camel(rep)
     body = self.get_java_lines('public static ' + rep)
+    staticbody = self.get_java_static_lines()
     result = template.substitute(
         {'packagename': packagename, 'typename':self.name, 
-         'body':body, 'rep':rep, 'methodname':methodname}                         
+         'staticbody':staticbody,
+         'body':body, 'rep':rep, 'orep':orep, 'methodname':methodname}                         
     )
     return (self.name, result)
     
@@ -453,13 +481,13 @@ class Struct(Type):
         elif isinstance(ttype, Enum):
           jref = ttype.get_java_representation()
           if ttype.is_generative_enum_rnr():
-            self.constructor.append('set%s(%s.valueOf((%s)%s, getType()));' % (self.spec.convert_to_camel(n), ttype.name, jref, v))
+            self.constructor.append('set%s(%s.valueOf((%s)%s, this.type));' % (self.spec.convert_to_camel(n), ttype.name, jref, v))
           else:
             self.constructor.append('set%s(%s.valueOf((%s)%s));' % (self.spec.convert_to_camel(n), ttype.name, jref, v))
         elif isinstance(ntype, Enum):
           jref = ntype.get_java_representation()
           if ntype.is_generative_enum_rnr():
-            self.constructor.append('set%s(%s.valueOf((%s)%s, getType()));' % (self.spec.convert_to_camel(n), ntype.name, jref, v))
+            self.constructor.append('set%s(%s.valueOf((%s)%s, this.type));' % (self.spec.convert_to_camel(n), ntype.name, jref, v))
           else:
             self.constructor.append('set%s(%s.valueOf((%s)%s));' % (self.spec.convert_to_camel(n), ntype.name, jref, v))
         else:
@@ -493,7 +521,23 @@ class Struct(Type):
       return 'org.openflow.protocol.interfaces.' + typename
     return typename
   
-  def get_struct_components(self):
+
+  def is_list_type(self, variable_type):
+    return variable_type == 'List' or variable_type.startswith('List')
+
+
+  def is_octet_type(self, variable_type):
+    return variable_type == 'byte[]'
+
+
+  def is_openflow_type(self, variable_type):
+    return variable_type.startswith('OF')
+
+
+  def is_string_type(self, variable_type):
+    return variable_type == ('String')
+
+  def get_struct_components(self, interface_converter):
     '''
     This method converts 'body' into variable declarations
     '''
@@ -506,12 +550,14 @@ class Struct(Type):
     constructor = self.constructor
     copyconstructor = []
     accessors = []
+    builder = ''
+    builder_accessors = []
     hashcode_logics = []
     comparisons = []
     tostrings = []
     readfroms = []
     writetos = []
-    imports = []
+    imports = set()
     computelengths = []
     
     if self.name == 'OFMessage':
@@ -531,6 +577,10 @@ class Struct(Type):
     mark_added = False      
     prime = Struct.get_next_prime()
     pad_num = 0       # count the number of pad
+    
+    matching_interface = interface_converter.get_interface(self.name)
+    # get InterfaceDeclarations object
+    interface_decls = matching_interface.get_all_declarations()
     
     for i in self.body:
       '''
@@ -561,41 +611,60 @@ class Struct(Type):
         prefixed_variable_name = ''.join([self.name, 
                                           self.spec.convert_to_camel(variable_name)])
         
-        #
-        # build declaration lines
-        #
-        
         # see if we can change the default java type name
         for ns in [prefixed_variable_name, variable_type, self.spec.get_java_classname(variable_name)]:
           tmp = self.spec.get_type(ns)
           if tmp:
-            if isinstance(tmp, Enum) and tmp.is_bitmask_enum():
-              continue
-            else:
-              variable_type = ns
-              break
+            variable_type = ns
+            break
+        
+        # this is for changing the return type of port number-related methods.
+        port_type = None
+        if variable_type in ['short', 'int']:
+          if variable_name.endswith('port') or variable_name.endswith('port_number'):
+            if variable_name.find('tp') < 0 and variable_name.find('transport') < 0:
+              port_type = 'OFPort'
+              imports.add('import org.openflow.util.OFPort;')  
           
-        if variable_type == 'List':
+        if i.get('bitfields', None):
+          for x in i['bitfields']:
+            interface_decls.remove_matching_declaration(variable_type, x[0])
+        else:
+          interface_decls.remove_matching_declaration(variable_type, variable_name)
+          
+        #
+        # build declaration lines
+        #
+        
+        if self.is_list_type(variable_type):
           declarations.append('%s<%s>  %s;' % ( variable_type, self.convert_to_interface_if_possible(i['inner']), variable_name))
         else:
-          declarations.append('%s  %s;' % ( self.convert_to_interface_if_possible(variable_type), variable_name ))
+          etype = self.spec.get_type(variable_type)
+          if isinstance(etype, Enum) and etype.is_bitmask_enum():
+            declarations.append('%s  %s;' % ( etype.get_java_representation(), variable_name ))
+          else:
+            declarations.append('%s  %s;' % ( self.convert_to_interface_if_possible(variable_type), variable_name ))
         
         #
         # process imports
         #
         
-        if variable_type.startswith('List'):  
-          imports.append('import java.util.List;')
-          imports.append('import java.util.LinkedList;')
+        etype = self.spec.get_type(variable_type)
+        if isinstance(etype, Enum) and etype.is_bitmask_enum():
+          imports.add('import java.util.Set;')
+          imports.add('import java.util.HashSet;')
+        elif self.is_list_type(variable_type):
+          imports.add('import java.util.List;')
+          imports.add('import java.util.LinkedList;')
         
         #
         # build copy constructor lines
         # 
         
-        if variable_type == 'byte[]':
+        if self.is_octet_type(variable_type):
           copyconstructor.append('if (other.%s != null) { this.%s = java.util.Arrays.copyOf(other.%s, other.%s.length); }' 
                                    % (variable_name, variable_name, variable_name, variable_name))
-        elif variable_type.startswith('OF'):
+        elif self.is_openflow_type(variable_type):
           # then, this type is either enum or struct.
           # in the case of struct, its enough to do new
           t = self.spec.get_type(variable_type)
@@ -603,7 +672,7 @@ class Struct(Type):
             copyconstructor.append('this.%s = other.%s;' % (variable_name, variable_name))
           else:
             copyconstructor.append('this.%s = new %s((%s)other.%s);' % (variable_name, variable_type, variable_type, variable_name))
-        elif variable_type.startswith('List'):
+        elif self.is_list_type(variable_type):
           inner = i['inner']
           copyconstructor.append('this.%s = (other.%s == null)? null: new Linked%s<%s>();' 
                                  % (variable_name, variable_name, variable_type, self.convert_to_interface_if_possible(i['inner'])))  
@@ -615,33 +684,76 @@ class Struct(Type):
         #
         # build constructor lines -- only for byte[], List, enumerations, and structs.
         #      
-        
-        if variable_value and variable_value != '?':
+        etype = self.spec.get_type(variable_type)
+        if isinstance(etype, Enum) and etype.is_bitmask_enum():
+          if variable_value:
+            constructor.append('this.%s = %s;' % (variable_name, variable_value))
+        elif variable_value and variable_value != '?':
           constructor.append('this.%s = (%s)%s;' % (variable_name, variable_type, variable_value))
-        elif variable_type == 'byte[]':
+        elif self.is_octet_type(variable_type):
           if variable_length:
             constructor.append(''.join([variable_name, ' = new byte[', str(variable_length), '];']))
-        elif variable_type.startswith('OF'):
+        elif self.is_list_type(variable_type):
           # then, this type is either enum or struct.
           # in the case of struct, its enough to do new
           t = self.spec.get_type(variable_type)
           if isinstance(t, Struct):
             constructor.append('this.%s = new %s();' % (variable_name, variable_type))              
-        elif variable_type.startswith('List'):
+        elif self.is_list_type(variable_type):
           constructor.append('this.%s = new Linked%s<%s>();' % (variable_name, variable_type, self.convert_to_interface_if_possible(i['inner'])))  
+          
+        # 
+        # build Builder lines
+        # 
+        if self.name in ['OFMatch', 'OFMatchOxm']:
+          method_name = self.spec.convert_to_camel(variable_name)
+          # this is for changing the return type of port number-related methods.
+          r = variable_type
+          if r in ['short', 'int']:
+            if i['name'].endswith('port') or i['name'].endswith('port_number'):
+              if i['name'].find('tp') < 0 and i['name'].find('transport') < 0:
+                r = 'OFPort'
+                imports.add('import org.openflow.util.OFPort;')
+                
+          rtype = self.spec.get_type(r)
+          if isinstance(rtype, Enum) and rtype.is_bitmask_enum():
+            r = 'Set<org.openflow.protocol.interfaces.%s>' % r
+            imports.add('import java.util.Set;')
+                
+          if self.name == 'OFMatch' and self.spec.get_version() == '1.0':
+            tpl = Template.get_template('tpl/builder_accessor_ofmatch.tpl')
+            result = tpl.safe_substitute({'method_name':method_name,
+                                         'variable_type':r,
+                                         'variable_name':variable_name})
+            builder_accessors.append(result.lstrip())
+          elif self.name == 'OFMatchOxm':
+            if i.get('inner', None) and i['inner'] == 'OFOxm':
+              tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_ofoxm.tpl')
+              result = tpl.safe_substitute({'method_name':method_name,
+                                            'variable_name':variable_name})
+              builder_accessors.append(result.lstrip())
+            
           
         # 
         # now we build accessors 
         # 
 
         etype = self.spec.get_type(variable_type)
-        if isinstance(etype, Enum) and etype.is_bitmask_enum():
+        if port_type:
+          tpl = Template.get_template('tpl/accessor_port.tpl')
+          method_name = self.spec.convert_to_camel(variable_name)
+          accessor = tpl.safe_substitute({'class_name': self.name,
+                                          'return_type': variable_type,
+                                          'variable_name': variable_name,
+                                          'method_name': method_name })
+          accessors.append(accessor)
+        elif isinstance(etype, Enum) and etype.is_bitmask_enum():
           tpl = Template.get_template('tpl/accessor_bitmask_enum.tpl')
           return_type = etype.get_java_representation()
           method_name = self.spec.convert_to_camel(variable_name)
           accessor = tpl.safe_substitute({'class_name':self.name, 
-                                          'return_type':return_type,
-                                          'variable_type':variable_type,
+                                          'return_type':etype.get_java_representation(),
+                                          'class_type':variable_type,
                                           'variable_name':variable_name, 
                                           'method_name':method_name })
           accessors.append(accessor)
@@ -663,16 +775,64 @@ class Struct(Type):
               accessors.append(accessor)
               accu = accu + int(bitfield[1])
           else:
-            tpl = Template.get_template('tpl/accessor_primitive_type.tpl')
-            return_type = variable_type
-            if return_type == 'List':
-              return_type = 'List<%s>' % (self.convert_to_interface_if_possible(i['inner']))
-            method_name = self.spec.convert_to_camel(variable_name)
-            accessor = tpl.safe_substitute({'class_name':self.name, 
-                                            'return_type':self.convert_to_interface_if_possible(return_type),
-                                            'variable_name':variable_name, 
-                                            'method_name':method_name })
-            accessors.append(accessor)
+            #
+            # this block handles everything from primitive to OF types
+            #
+            if interface_converter.get_interface(variable_type):
+              # 
+              # if the variable type is defined by interface-enumeration class
+              #
+              if isinstance(etype, Enum):
+                #
+                # enums
+                #
+                if etype.is_generative_enum_rnr():
+                  tpl = Template.get_template('tpl/accessor_interface_type_rnr.tpl')
+                  accessor = tpl.safe_substitute({'class_name':self.name, 'method_name':self.spec.convert_to_camel(variable_name), 
+                                                  'return_type':variable_type, 'variable_name':variable_name})
+                  accessors.append(accessor)
+                else:
+                  tpl = Template.get_template('tpl/accessor_interface_type.tpl')
+                  accessor = tpl.safe_substitute({'class_name':self.name, 'method_name':self.spec.convert_to_camel(variable_name), 
+                                                  'return_type':variable_type, 'variable_name':variable_name})
+                  accessors.append(accessor)
+              else:
+                #
+                # structs
+                #
+                return_type = variable_type
+                if self.is_list_type(return_type):
+                  return_type = 'List<%s>' % (self.convert_to_interface_if_possible(i['inner']))
+                
+                if return_type != 'OFMatchOxm':
+                  tpl = Template.get_template('tpl/accessor_primitive_type.tpl')
+                  method_name = self.spec.convert_to_camel(variable_name)
+                  accessor = tpl.safe_substitute({'class_name':self.name, 
+                                                  'return_type':self.convert_to_interface_if_possible(return_type),
+                                                  'variable_name':variable_name, 
+                                                  'method_name':method_name })
+                else:
+                  # return type is OFMatchOxm'
+                  tpl = Template.get_template('tpl/accessor_matchoxm.tpl')
+                  method_name = self.spec.convert_to_camel(variable_name)
+                  accessor = tpl.safe_substitute({'class_name':self.name,
+                                                  'return_type':self.convert_to_interface_if_possible('OFMatch'),
+                                                  'variable_name':variable_name,
+                                                  'method_name':method_name})
+    
+                  
+                accessors.append(accessor)
+            else:
+              tpl = Template.get_template('tpl/accessor_primitive_type.tpl')
+              return_type = variable_type
+              if self.is_list_type(return_type):
+                return_type = 'List<%s>' % (self.convert_to_interface_if_possible(i['inner']))
+              method_name = self.spec.convert_to_camel(variable_name)
+              accessor = tpl.safe_substitute({'class_name':self.name, 
+                                              'return_type':self.convert_to_interface_if_possible(return_type),
+                                              'variable_name':variable_name, 
+                                              'method_name':method_name })
+              accessors.append(accessor)
           
             if self.name == 'OFMessage' and Type.is_primitive_java_type(variable_type) and Type.has_longer_java_type(variable_type):
               longer_type = Type.get_longer_java_type(variable_type)
@@ -688,9 +848,12 @@ class Struct(Type):
         #
         # hashcode
         # 
-        if Type.is_value_java_type(variable_type):
+        etype = self.spec.get_type(variable_type)
+        if isinstance(etype, Enum) and etype.is_bitmask_enum():
           hashcode_line = 'result = prime * result + (int) %s;' % variable_name
-        elif variable_type == 'byte[]':
+        elif Type.is_value_java_type(variable_type):
+          hashcode_line = 'result = prime * result + (int) %s;' % variable_name
+        elif self.is_octet_type(variable_type):
           hashcode_line = 'result = prime * result + ((%s == null)?0:java.util.Arrays.hashCode(%s));' % (variable_name, variable_name)
         else:
           hashcode_line = 'result = prime * result + ((%s == null)?0:%s.hashCode());' % (variable_name, variable_name)
@@ -700,12 +863,15 @@ class Struct(Type):
         #
         # equals
         #
-        if Type.is_value_java_type(variable_type):
+        etype = self.spec.get_type(variable_type)
+        if isinstance(etype, Enum) and etype.is_bitmask_enum():
+          comparison = 'if ( %s != other.%s ) return false;' % (variable_name, variable_name)
+        elif Type.is_value_java_type(variable_type):
           comparison = 'if ( %s != other.%s ) return false;' % (variable_name, variable_name)
         else:
           comparison = 'if ( %s == null && other.%s != null ) { return false; }' % (variable_name, variable_name)
           comparisons.append(comparison)
-          if variable_type == 'byte[]':
+          if self.is_octet_type(variable_type):
             comparison = 'else if ( !java.util.Arrays.equals(%s, other.%s) ) { return false; }' %(variable_name, variable_name)
           else:
             comparison = 'else if ( !%s.equals(other.%s) ) { return false; }' % (variable_name, variable_name)
@@ -715,16 +881,16 @@ class Struct(Type):
         #
         # computelength
         # 
-        if variable_type.startswith('List'):
+        if self.is_list_type(variable_type):
           inner = i['inner']
           itype = self.spec.get_type(inner)
           if itype == None:
             type_size = self.spec.get_type_size(inner)
             clen = 'if ( this.%s != null ) { len += %s * this.%s.size(); }' % (variable_name, type_size, variable_name)
           else:
-            clen = 'for ( %s i : this.%s ) { len += i.computeLength(); }' % (self.convert_to_interface_if_possible(inner), variable_name)
+            clen = 'if ( this.%s != null ) for ( %s i : this.%s ) { len += i.computeLength(); }' % (variable_name, self.convert_to_interface_if_possible(inner), variable_name)
           computelengths.append(clen);
-        elif variable_type == 'byte[]':
+        elif self.is_octet_type(variable_type):
           if not variable_length:
             computelengths.append('if ( this.%s != null ) { len += this.%s.length; } ' % (variable_name, variable_name))
         elif variable_type.startswith('OFMatch') and variable_type != 'OFMatchType' and self.spec.get_version() == '1.3':
@@ -733,9 +899,12 @@ class Struct(Type):
         #
         # toString
         #
-        if Type.is_value_java_type(variable_type):
+        etype = self.spec.get_type(variable_type)
+        if isinstance(etype, Enum) and etype.is_bitmask_enum():
+          tsline = '":%s=" + %s.f(%s) + ' % (variable_name, Type.get_java_util_type(etype.get_java_representation()), variable_name)
+        elif Type.is_value_java_type(variable_type):
           tsline = '":%s=" + %s.f(%s) + ' % (variable_name, Type.get_java_util_type(variable_type), variable_name)
-        elif variable_type == 'byte[]':
+        elif self.is_octet_type(variable_type):
           tsline = '":%s=" + java.util.Arrays.toString(%s) + ' % (variable_name, variable_name)
         else:
           tsline = '":%s=" + %s.toString() + ' % (variable_name, variable_name)
@@ -750,7 +919,7 @@ class Struct(Type):
             rline = 'this.%s = data.get();' % variable_name
           else:
             rline = 'this.%s = data.get%s();' % (variable_name, self.spec.convert_to_camel(variable_type))
-        elif variable_type == 'byte[]':
+        elif self.is_octet_type(variable_type):
           if self.name == 'OFOxm' and prev_var and prev_var.endswith("length"):
             rline = 'if ( this.%s > 0 ) {' % prev_var
             readfroms.append(rline)
@@ -772,23 +941,18 @@ class Struct(Type):
             rline = 'if ( this.%s == null ) this.%s = new byte[%s];' % (variable_name, variable_name, sz)
             readfroms.append(rline)
             rline = 'data.get(this.%s);' % variable_name
-        elif variable_type == ('String'):
-#           limit = 256
-#           if variable_name.find('serial') >= 0 :
-#             limit = 32
+        elif self.is_string_type(variable_type):
           rline = 'this.%s = StringByteSerializer.readFrom(data, %d);' % (variable_name, variable_length)
         elif isinstance(self.spec.get_type(variable_type), Enum):
           etype = self.spec.get_type(variable_type)
           if etype.is_bitmask_enum():
-            rline = 'if (this.%s == null) this.%s = new %s();' % (variable_name, variable_name, variable_type)
-            readfroms.append(rline)
-            rline = 'this.%s.setValue( %s.readFrom(data) );' % (variable_name, variable_type)
+            rline = 'this.%s = data.get%s();' % (variable_name, self.spec.convert_to_camel(etype.get_java_representation()))
           elif etype.is_generative_enum_rnr():
-            rline = 'this.%s = %s.valueOf(%s.readFrom(data), super.getType());' % (variable_name, variable_type, variable_type)
+            rline = 'this.%s = %s.valueOf(%s.readFrom(data), this.type);' % (variable_name, variable_type, variable_type)
           else:
             rline = 'this.%s = %s.valueOf(%s.readFrom(data));' % (variable_name, variable_type, variable_type)
         else:
-          if variable_type.startswith('List'):
+          if self.is_list_type(variable_type):
             inner = i['inner']
             itype = self.spec.get_type(inner)
             iitype = self.spec.get_type(inner + 'Type')
@@ -888,9 +1052,9 @@ class Struct(Type):
             rline = 'data.put(this.%s);' % variable_name
           else:
             rline = 'data.put%s(this.%s);' % (self.spec.convert_to_camel(variable_type), variable_name)
-        elif variable_type == 'byte[]':
+        elif self.is_octet_type(variable_type):
           rline = 'if ( this.%s != null ) { data.put(this.%s); }' % (variable_name, variable_name)
-        elif variable_type == 'String':
+        elif self.is_string_type(variable_type):
           rline = 'StringByteSerializer.writeTo(data, %d, %s);' % (variable_length, variable_name)
         elif isinstance(self.spec.get_type(variable_type), Enum):
           etype = self.spec.get_type(variable_type)
@@ -898,10 +1062,12 @@ class Struct(Type):
           if mn == 'Byte': mn = ''
           if etype.is_generative_enum():
             rline = 'data.put%s(this.%s.getTypeValue());' % (mn, variable_name)
+          elif etype.is_bitmask_enum():
+            rline = 'data.put%s(this.%s);' % (mn, variable_name)
           else:
             rline = 'data.put%s(this.%s.getValue());' % (mn, variable_name)
         else:
-          if variable_type.startswith('List'):
+          if self.is_list_type(variable_type):
             inner = i['inner']
             itype = self.spec.get_type(inner)
             if isinstance(itype,Enum) and itype.is_generative_enum():
@@ -920,6 +1086,32 @@ class Struct(Type):
         prev_var = variable_name
         
     # end of for 
+    
+    #
+    # now, all the matching declarations witnin the interface_decls are processed. 
+    # from  now on, we shoould process the leftovers and put them in the accessors.
+    # 
+    
+    # convert interface declarations with interface prefixes. 
+    if_decls = []
+    for x in interface_decls.declarations:
+      if x.find('List') >= 0 : 
+        imports.add('import java.util.List;')
+      if re.search(r'OFPort\b', x) :
+        if_decls.append(x)
+        imports.add('import org.openflow.util.OFPort;')
+      else :
+        if_decls.append(re.sub(r'(OF\w+)', r'org.openflow.protocol.interfaces.\1', x, 2))
+    
+    # since now that the conversion is done, for each of the method, we supply the default 
+    # implementation that returns the UnsupportedExceptionOperation
+    t = Template.get_template('tpl/accessor_null.tpl')
+    for decl in if_decls:
+      d = decl.strip(';')
+      r = t.safe_substitute({'signature':d})
+      accessors.append(r)
+      if d.find('Set') >= 0:
+        imports.add('import java.util.Set;')
     
     # add readfrom lines if there is alignment considerations such as 
     # align(8) at the end of struct.
@@ -966,10 +1158,99 @@ class Struct(Type):
     
     #build computelength
     computelength = '\n\t\t'.join(computelengths)
+    
+    
+    #
+    # build builder definitions - including null accessors
+    #
+    if self.name in ['OFMatch', 'OFMatchOxm']:
+      tpl = Template.get_template('tpl/builder_accessor_null.tpl')
+      if (self.name == 'OFMatch' and self.spec.get_version() == '1.0') or self.name == 'OFMatchOxm':
+        template_file = 'tpl/builder_ofmatch.tpl'
+        if self.name == 'OFMatchOxm':
+          template_file = 'tpl/builder_ofmatchoxm.tpl'
+          
+        #
+        # create null accessors and append
+        #
+        for x in interface_decls.declarations:
+          if re.search(r'\bset', x):    # we need set methods only
+            # we first get the method signature.
+            method_name = re.search(r'\b(set.+)\Z', x).group(1).rstrip(';')
+            # and we conver the name to include interface prefix.
+            imethod_name = re.sub(r'\b(OF\w+)\b', r'org.openflow.protocol.interfaces.\1', method_name)
+            
+            if self.name == 'OFMatchOxm' and len([x for x in ['InputPort', 'DataLayer', 'Network', 'Transport'] if method_name.find(x) >= 0]) > 0:
+              # for the method names which needs a special care, we does it by loading specialized templates for each.
+              result = None
+              if method_name.find('setInputPort') >= 0:
+                tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_ofport.tpl')
+                result = tpl.safe_substitute({'method_name':method_name, 
+                                             'match_field': 'OFB_IN_PORT'})
+              elif method_name.find('setDataLayerSource') >= 0:
+                tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_mac.tpl')
+                result = tpl.safe_substitute({'method_name':method_name,
+                                              'match_field': 'OFB_ETH_SRC'})
+              elif method_name.find('setDataLayerDestination') >= 0:
+                tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_mac.tpl')
+                result = tpl.safe_substitute({'method_name':method_name,
+                                              'match_field': 'OFB_ETH_DST'})
+              elif method_name.find('setDataLayerVirtualLanPriorityCodePoint') >= 0:
+                tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_byte.tpl')
+                result = tpl.safe_substitute({'method_name':method_name,
+                                              'prerequisite':'',
+                                              'match_field': 'OFB_VLAN_PCP'})
+              elif method_name.find('setDataLayerVirtualLan') >= 0:
+                tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_short.tpl')
+                result = tpl.safe_substitute({'method_name':method_name,
+                                              'match_field': 'OFB_VLAN_VID'})
+              elif method_name.find('setDataLayerType') >= 0:
+                tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_short.tpl')
+                result = tpl.safe_substitute({'method_name':method_name,
+                                              'match_field': 'OFB_ETH_TYPE'})
+              elif method_name.find('setNetworkTypeOfService') >= 0:
+                tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_byte.tpl')
+                result = tpl.safe_substitute({'method_name':method_name,
+                                              'prerequisite':'',
+                                              'match_field': 'OFB_IP_DSCP'})
+              elif method_name.find('setNetworkSource') >= 0:
+                tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_int.tpl')
+                result = tpl.safe_substitute({'method_name':method_name,
+                                              'match_field': 'OFB_IPV4_SRC'})
+              elif method_name.find('setNetworkDestination') >= 0:
+                tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_int.tpl')
+                result = tpl.safe_substitute({'method_name':method_name,
+                                              'match_field': 'OFB_IPV4_DST'})
+              elif method_name.find('setNetworkProtocol') >= 0:
+                tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_byte.tpl')
+                result = tpl.safe_substitute({'method_name':method_name,
+                                              'prerequisite':'this.network_protocol = value;',
+                                              'match_field': 'OFB_IP_PROTO'})
+              elif method_name.find('setTransportSource') >= 0:
+                tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_tpsource.tpl')
+                result = tpl.safe_substitute({})
+              elif method_name.find('setTransportDestination') >= 0:
+                tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_tpdestination.tpl')
+                result = tpl.safe_substitute({})
+                              
+              if result: builder_accessors.append(result.lstrip())                            
+            else:
+              tpl = Template.get_template('tpl/builder_accessor_null.tpl')
+              # in other case, we create the null accessor and append it.
+              result = tpl.safe_substitute({'method_signature':imethod_name})
+              builder_accessors.append(result.lstrip())
+              
+            
+            
+        tpl = Template.get_template(template_file)
+        builder = tpl.safe_substitute({'classname':self.name,
+                                       'builder_returntype':'OFMatch',
+                                       'builder_accessors':'\n\t\t'.join(builder_accessors).lstrip()})
         
     ret['declarations'] = '\n\t'.join(declarations)
     ret['constructor'] = '\n\t\t'.join(constructor)
-    ret['accessors'] = '\n'.join(accessors)
+    ret['accessors'] = '\n'.join(accessors).lstrip()
+    ret['builder'] = builder
     ret['hashcode'] = hashcode
     ret['equals'] = equals
     ret['tostring'] = tostring
@@ -981,99 +1262,7 @@ class Struct(Type):
     
     return ret
     
-#   def convert_interfaces(self, path):
-#     '''
-#     This method creates interface definitions.
-#     '''
-#     template = Template.get_template('tpl/interface.tpl')
-#     packagename = self.spec.get_java_packagename(path)
-#     typename = self.name
-#     
-#     if not self.is_topmost_struct():              # there's supertype. 
-#       inherit = 'extends ' + self.get_supertype().name
-#     else:
-#       if typename == 'OFMessage':
-#         inherit = 'extends org.openflow.protocol.OFMessage'
-#       else:
-#         inherit = ''
-#       
-#     accessors = []
-#     imports = []
-#     
-#     import_of_types = False
-#     
-#     for i in self.body:
-#       if i['type'] == 'pad':
-#         continue
-#       else:
-#         variable_type = i['type']
-#         variable_name = i['name']
-#         
-#         prefixed_variable_name = ''.join([self.name, self.spec.convert_to_camel(variable_name)])
-#         for ns in [prefixed_variable_name, variable_type, self.spec.get_java_classname(variable_name)]:
-#           tmp = self.spec.get_type(ns)
-#           if tmp:
-#             if isinstance(tmp, Enum) and tmp.is_bitmask_enum():
-#               continue
-#             else:
-#               variable_type = ns
-#               break
-#         
-#         if variable_type.startswith('OF') and variable_type != self.name:
-#           import_of_types = True
-#           
-#         etype = self.spec.get_type(variable_type)
-#         if isinstance(etype, Enum) and etype.is_bitmask_enum():
-#           tpl = Template.get_template('tpl/accessor_interface_plain.tpl')
-#           return_type = etype.get_java_representation()
-#           method_name = self.spec.convert_to_camel(variable_name)
-#           accessor = tpl.safe_substitute({'class_name':self.name, 
-#                                           'return_type':return_type,
-#                                           'method_name':method_name })
-#           accessors.append(accessor)
-#         else:
-#           if i.get('bitfields', None):
-#             tpl = Template.get_template('tpl/accessor_interface_plain.tpl')
-#             bitfields = i['bitfields']
-#             return_type = variable_type
-#             for bitfield in bitfields:
-#               method_name = self.spec.convert_to_camel(bitfield[0])
-#               accessor = tpl.safe_substitute({'class_name':self.name, 
-#                                               'return_type':return_type,
-#                                               'method_name':method_name})
-#               accessors.append(accessor)
-#           else:
-#             tpl = Template.get_template('tpl/accessor_interface_plain.tpl')
-#             return_type = variable_type
-#             if return_type == 'List':
-#               imports.append('import java.util.List;')
-#               return_type = 'List<%s>' % i['inner']
-#             method_name = self.spec.convert_to_camel(variable_name)
-#             accessor = tpl.safe_substitute({'class_name':self.name, 
-#                                             'return_type':return_type,
-#                                             'method_name':method_name })
-#             accessors.append(accessor)
-#           
-#             if self.name == 'OFMessage' and Type.is_primitive_java_type(variable_type) and Type.has_longer_java_type(variable_type):
-#               longer_type = Type.get_longer_java_type(variable_type)
-#               tpl = Template.get_template('tpl/accessor_interface_larger.tpl')
-#               accessor = tpl.safe_substitute({'class_name':self.name, 
-#                                               'method_name':method_name, 
-#                                               'longer_type':longer_type})
-#               accessors.append(accessor)
-#       
-# 
-#     if import_of_types: 
-#       imports.append('import ' + packagename[:packagename.rfind('.')] + '.types.*;')
-#     
-#     accessor_list = '\n'.join(accessors)
-#     import_list = '\n'.join(imports)
-#     result = template.safe_substitute({
-#       'typename':typename, 'packagename':packagename, 'imports':import_list,
-#       'accessors':accessor_list, 'inherit':inherit
-#     })
-#     return (self.name, result)
-  
+ 
   def convert(self, path, interface_converter):
 
     if not self.is_topmost_struct():              # there's supertype. 
@@ -1103,12 +1292,16 @@ class Struct(Type):
     importname = 'import ' + packagename[:packagename.rfind('.')] + '.types.*;'
     
     minimumlength = self.get_minimum_length()
-    component_map = self.get_struct_components()
+    component_map = self.get_struct_components(interface_converter)
     imports = component_map['imports']
-    imports.append(importname)
+    imports.add(importname)
     imports = '\n'.join(imports)
     
-    implements = self.convert_to_interface_if_possible(self.name)
+    implements = 'implements ' + self.convert_to_interface_if_possible(self.name)
+    if self.spec.version == '1.3':
+      if self.name != 'OFMatch':
+        if self.name == 'OFMatchOxm':
+          implements = 'implements ' + self.convert_to_interface_if_possible('OFMatch') + ', ' + self.convert_to_interface_if_possible('OFMatchOxm')
     
     result = template.safe_substitute({
       'typename':typename, 'packagename':packagename, 'imports':imports,
@@ -1116,6 +1309,7 @@ class Struct(Type):
       'constructor':component_map['constructor'],
       'copyconstructor':component_map['copyconstructor'],
       'accessors':component_map['accessors'],
+      'builder':component_map['builder'].lstrip(),
       'hashcode':component_map['hashcode'], 'equals':component_map['equals'],
       'tostring':component_map['tostring'], 'readfrom':component_map['readfrom'],
       'writeto':component_map['writeto'],

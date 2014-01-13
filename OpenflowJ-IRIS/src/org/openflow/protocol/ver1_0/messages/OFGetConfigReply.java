@@ -41,7 +41,17 @@ public class OFGetConfigReply extends OFMessage implements org.openflow.protocol
 		return this;
 	}
 			
-
+	public short getMissSendLen() {
+		throw new UnsupportedOperationException("public short getMissSendLen() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFGetConfigReply setMissSendLen(short value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFGetConfigReply setMissSendLen(short value) is not supported operation");
+	}
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.flags = data.getShort();

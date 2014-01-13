@@ -31,6 +31,8 @@ import org.openflow.protocol.ver1_0.messages.OFMatch;
 import org.openflow.protocol.ver1_0.types.OFFlowModCommand;
 import org.openflow.protocol.ver1_0.types.OFPortNo;
 import org.openflow.util.HexString;
+import org.openflow.util.OFPort;
+
 import etri.sdn.controller.protocol.packet.IPv4;
 import etri.sdn.controller.util.AppCookie;
 import etri.sdn.controller.util.Logger;
@@ -113,9 +115,9 @@ public class StaticFlowEntryType {
         fm.setBufferId(0xffffffff /* OFPacketOut.BUFFER_ID_NONE */);
 //        fm.setCommand((short) 0);
         fm.setCommand(OFFlowModCommand.valueOf((short)0));
-        fm.setFlags((short) 0);
-//        fm.setOutPort(OFPort.OFPP_NONE.getValue());
-        fm.setOutPort(OFPortNo.OFPP_NONE.getValue());
+        fm.setFlagsWire((short) 0);
+//        fm.setOutPort(OFPort.NONE.getValue());
+        fm.setOutPort(OFPort.of(OFPortNo.NONE.getValue()));
         fm.setCookie(computeEntryCookie(fm, 0, entryName));  
         fm.setPriority(Short.MAX_VALUE);
     }
@@ -169,18 +171,18 @@ public class StaticFlowEntryType {
      */
     public static Map<String, Object> flowModToStorageEntry(OFFlowMod fm, String sw, String name) {
         Map<String, Object> entry = new HashMap<String, Object>();
-        OFMatch match = fm.getMatch();
+        OFMatch match = (OFMatch) fm.getMatch();
         entry.put(COLUMN_NAME, name);
         entry.put(COLUMN_SWITCH, sw);
         entry.put(COLUMN_ACTIVE, Boolean.toString(true));
         entry.put(COLUMN_PRIORITY, Short.toString(fm.getPriority()));
-        entry.put(COLUMN_WILDCARD, Integer.toString(match.getWildcards()));
+        entry.put(COLUMN_WILDCARD, Integer.toString(match.getWildcardsWire()));
         
         if ((fm.getActions() != null) && (fm.getActions().size() > 0))
         	entry.put(COLUMN_ACTIONS, flowModActionsToString(fm.getActions()));
         
-        if (match.getInputPort() != 0)
-        	entry.put(COLUMN_IN_PORT, Short.toString(match.getInputPort()));
+        if (match.getInputPort().get() != 0)
+        	entry.put(COLUMN_IN_PORT, Short.toString((short) match.getInputPort().get()));
         
         if (!Arrays.equals(match.getDataLayerSource(), zeroMac))
         	entry.put(COLUMN_DL_SRC, HexString.toHexString(match.getDataLayerSource()));
@@ -221,22 +223,22 @@ public class StaticFlowEntryType {
     /**
      * Returns a String representation of all the openflow actions.
      * 
-     * @param fmActions	A list of OFActions to encode into one string
+     * @param list	A list of OFActions to encode into one string
      * @return			A string of the actions encoded for our database
      */
-    private static String flowModActionsToString(List<OFAction> fmActions) {
+    private static String flowModActionsToString(List<org.openflow.protocol.interfaces.OFAction> list) {
         StringBuilder sb = new StringBuilder();
-        for (OFAction a : fmActions) {
+        for (org.openflow.protocol.interfaces.OFAction a : list) {
             if (sb.length() > 0) {
                 sb.append(',');
             }
             switch(a.getType()) {
                 case OUTPUT:
-                    sb.append("output=" + Short.toString(((OFActionOutput)a).getPort()));
+                    sb.append("output=" + Integer.toString(((OFActionOutput)a).getPort().get()));
                     break;
                 case OPAQUE_ENQUEUE:
                     int queue = ((OFActionOpaqueEnqueue)a).getQueueId();
-                    short port = ((OFActionOpaqueEnqueue)a).getPort();
+                    short port = (short) ((OFActionOpaqueEnqueue)a).getPort().get();
                     sb.append("enqueue=" + Short.toString(port) + ":0x" + String.format("%02x", queue));
                     break;
                 case STRIP_VLAN:
@@ -392,7 +394,8 @@ public class StaticFlowEntryType {
      * @param log		A logger to log for errors.
      */
     public static void parseActionString(OFFlowMod flowMod, String actionstr) {
-        List<OFAction> actions = new LinkedList<OFAction>();
+        List<org.openflow.protocol.interfaces.OFAction> actions = 
+        		new LinkedList<org.openflow.protocol.interfaces.OFAction>();
         int actionsLength = 0;
         if (actionstr != null) {
             actionstr = actionstr.toLowerCase();
@@ -466,7 +469,7 @@ public class StaticFlowEntryType {
         if (n.matches()) {
             OFActionOutput action = new OFActionOutput();
             action.setMaxLength((short) Short.MAX_VALUE);
-            short port = OFPortNo.OFPP_NONE.getValue();
+            short port = OFPortNo.NONE.getValue();
             if (n.group(1) != null) {
                 try {
                     port = get_short(n.group(1));
@@ -477,18 +480,18 @@ public class StaticFlowEntryType {
                 }
             }
             else if (n.group(2) != null)
-                port = OFPortNo.OFPP_ALL.getValue();
+                port = OFPortNo.ALL.getValue();
             else if (n.group(3) != null)
-                port = OFPortNo.OFPP_CONTROLLER.getValue();
+                port = OFPortNo.CONTROLLER.getValue();
             else if (n.group(4) != null)
-                port = OFPortNo.OFPP_LOCAL.getValue();
+                port = OFPortNo.LOCAL.getValue();
             else if (n.group(5) != null)
-                port = OFPortNo.OFPP_IN_PORT.getValue();
+                port = OFPortNo.IN_PORT.getValue();
             else if (n.group(6) != null)
-                port = OFPortNo.OFPP_NORMAL.getValue();
+                port = OFPortNo.NORMAL.getValue();
             else if (n.group(7) != null)
-                port = OFPortNo.OFPP_FLOOD.getValue();
-            action.setPort(port);
+                port = OFPortNo.FLOOD.getValue();
+            action.setPort(OFPort.of(port));
             Logger.debug("action {}", action);
             
             sa = new SubActionStruct();
@@ -538,7 +541,7 @@ public class StaticFlowEntryType {
             }
             
             OFActionOpaqueEnqueue action = new OFActionOpaqueEnqueue();
-            action.setPort(portnum);
+            action.setPort(OFPort.of(portnum));
             action.setQueueId(queueid);
             Logger.debug("action {}", action);
             

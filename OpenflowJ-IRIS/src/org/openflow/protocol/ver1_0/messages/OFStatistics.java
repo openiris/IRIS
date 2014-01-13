@@ -19,8 +19,10 @@ public class OFStatistics extends OFMessage implements org.openflow.protocol.int
     	super(other);
     }
 
-
-
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

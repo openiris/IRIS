@@ -17,7 +17,7 @@ public class OFMultipartAggregateReply extends OFMultipartReply implements org.o
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)19));
-		setMultipartType(OFMultipartType.valueOf((short)2, getType()));
+		setMultipartType(OFMultipartType.valueOf((short)2, this.type));
     }
     
     public OFMultipartAggregateReply(OFMultipartAggregateReply other) {
@@ -54,7 +54,9 @@ public class OFMultipartAggregateReply extends OFMultipartReply implements org.o
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.packet_count = data.getLong();

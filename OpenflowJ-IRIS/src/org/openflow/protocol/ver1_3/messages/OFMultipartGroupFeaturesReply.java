@@ -3,7 +3,9 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
+import java.util.HashSet;
 import org.openflow.protocol.ver1_3.types.*;
+import java.util.Set;
 
 public class OFMultipartGroupFeaturesReply extends OFMultipartReply implements org.openflow.protocol.interfaces.OFMultipartGroupFeaturesReply {
     public static int MINIMUM_LENGTH = 56;
@@ -23,7 +25,7 @@ public class OFMultipartGroupFeaturesReply extends OFMultipartReply implements o
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)19));
-		setMultipartType(OFMultipartType.valueOf((short)8, getType()));
+		setMultipartType(OFMultipartType.valueOf((short)8, this.type));
     }
     
     public OFMultipartGroupFeaturesReply(OFMultipartGroupFeaturesReply other) {
@@ -49,15 +51,33 @@ public class OFMultipartGroupFeaturesReply extends OFMultipartReply implements o
 		return this;
 	}
 			
-	public int getCapabilities() {
+	public int getCapabilitiesWire() {
 		return this.capabilities;
 	}
 	
-	public OFMultipartGroupFeaturesReply setCapabilities(int capabilities) {
+	public OFMultipartGroupFeaturesReply setCapabilitiesWire(int capabilities) {
 		this.capabilities = capabilities;
 		return this;
 	}
-			
+	
+	public Set<org.openflow.protocol.interfaces.OFCapabilities> getCapabilities() {
+		OFCapabilities tmp = OFCapabilities.of(this.capabilities);
+		Set<org.openflow.protocol.interfaces.OFCapabilities> ret = new HashSet<org.openflow.protocol.interfaces.OFCapabilities>();
+		for ( org.openflow.protocol.interfaces.OFCapabilities v : org.openflow.protocol.interfaces.OFCapabilities.values() ) {
+			if (tmp.has(v)) {
+				ret.add(v);
+			}
+		}
+		return ret;
+	}
+		
+	public OFMultipartGroupFeaturesReply setCapabilities(Set<org.openflow.protocol.interfaces.OFCapabilities> values) {
+		OFCapabilities tmp = OFCapabilities.of(this.capabilities);
+		tmp.and( values );
+		this.capabilities = tmp.get();
+		return this;
+	}
+		
 	public int getMaxGroupsAll() {
 		return this.max_groups_all;
 	}
@@ -130,7 +150,9 @@ public class OFMultipartGroupFeaturesReply extends OFMultipartReply implements o
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.types = data.getInt();

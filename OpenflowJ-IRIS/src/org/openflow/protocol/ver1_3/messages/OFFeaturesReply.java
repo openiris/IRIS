@@ -3,7 +3,10 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
+import java.util.HashSet;
 import org.openflow.protocol.ver1_3.types.*;
+import java.util.List;
+import java.util.Set;
 
 public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.interfaces.OFFeaturesReply {
     public static int MINIMUM_LENGTH = 32;
@@ -68,15 +71,33 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		return this;
 	}
 			
-	public int getCapabilities() {
+	public int getCapabilitiesWire() {
 		return this.capabilities;
 	}
 	
-	public OFFeaturesReply setCapabilities(int capabilities) {
+	public OFFeaturesReply setCapabilitiesWire(int capabilities) {
 		this.capabilities = capabilities;
 		return this;
 	}
-			
+	
+	public Set<org.openflow.protocol.interfaces.OFCapabilities> getCapabilities() {
+		OFCapabilities tmp = OFCapabilities.of(this.capabilities);
+		Set<org.openflow.protocol.interfaces.OFCapabilities> ret = new HashSet<org.openflow.protocol.interfaces.OFCapabilities>();
+		for ( org.openflow.protocol.interfaces.OFCapabilities v : org.openflow.protocol.interfaces.OFCapabilities.values() ) {
+			if (tmp.has(v)) {
+				ret.add(v);
+			}
+		}
+		return ret;
+	}
+		
+	public OFFeaturesReply setCapabilities(Set<org.openflow.protocol.interfaces.OFCapabilities> values) {
+		OFCapabilities tmp = OFCapabilities.of(this.capabilities);
+		tmp.and( values );
+		this.capabilities = tmp.get();
+		return this;
+	}
+		
 	public int getReserved() {
 		return this.reserved;
 	}
@@ -86,7 +107,25 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		return this;
 	}
 			
-
+	public int getActions() {
+		throw new UnsupportedOperationException("public int getActions() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFFeaturesReply setActions(int value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFeaturesReply setActions(int value) is not supported operation");
+	}
+	
+	public List<org.openflow.protocol.interfaces.OFPortDesc> getPorts() {
+		throw new UnsupportedOperationException("public List<org.openflow.protocol.interfaces.OFPortDesc> getPorts() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFFeaturesReply setPorts(List<org.openflow.protocol.interfaces.OFPortDesc> value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFeaturesReply setPorts(List<org.openflow.protocol.interfaces.OFPortDesc> value) is not supported operation");
+	}
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.datapath_id = data.getLong();

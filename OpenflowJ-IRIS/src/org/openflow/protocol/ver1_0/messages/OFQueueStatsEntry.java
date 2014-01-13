@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
+import org.openflow.util.OFPort;
 
 public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQueueStatsEntry {
     public static int MINIMUM_LENGTH = 32;
@@ -27,15 +28,15 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 		this.transmit_errors = other.transmit_errors;
     }
 
-	public short getPortNumber() {
-		return this.port_number;
+	public OFPort getPortNumber() {
+		return new OFPort(this.port_number);
 	}
 	
-	public OFQueueStatsEntry setPortNumber(short port_number) {
-		this.port_number = port_number;
+	public OFQueueStatsEntry setPortNumber(OFPort port) {
+		this.port_number = (short) port.get();
 		return this;
 	}
-			
+	
 	public int getQueueId() {
 		return this.queue_id;
 	}
@@ -72,7 +73,25 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 		return this;
 	}
 			
-
+	public int getDurationSec() {
+		throw new UnsupportedOperationException("public int getDurationSec() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFQueueStatsEntry setDurationSec(int value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFQueueStatsEntry setDurationSec(int value) is not supported operation");
+	}
+	
+	public int getDurationNsec() {
+		throw new UnsupportedOperationException("public int getDurationNsec() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFQueueStatsEntry setDurationNsec(int value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFQueueStatsEntry setDurationNsec(int value) is not supported operation");
+	}
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         this.port_number = data.getShort();
 		this.pad_1th = data.getShort();

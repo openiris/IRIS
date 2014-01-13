@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
+import org.openflow.util.OFPort;
 
 public class OFPacketIn extends OFMessage implements org.openflow.protocol.interfaces.OFPacketIn {
     public static int MINIMUM_LENGTH = 18;
@@ -48,24 +49,30 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 			
-	public short getInputPort() {
-		return this.input_port;
+	public OFPort getInputPort() {
+		return new OFPort(this.input_port);
 	}
 	
-	public OFPacketIn setInputPort(short input_port) {
-		this.input_port = input_port;
+	public OFPacketIn setInputPort(OFPort port) {
+		this.input_port = (short) port.get();
 		return this;
 	}
-			
-	public OFPacketInReason getReason() {
-		return this.reason;
+	
+
+	public org.openflow.protocol.interfaces.OFPacketInReason getReason() {
+		return OFPacketInReason.to(this.reason);
+	}
+	
+	public OFPacketIn setReason(org.openflow.protocol.interfaces.OFPacketInReason reason) {
+		this.reason = OFPacketInReason.from(reason);
+		return this;
 	}
 	
 	public OFPacketIn setReason(OFPacketInReason reason) {
 		this.reason = reason;
 		return this;
 	}
-			
+	
 	public byte[] getData() {
 		return this.data;
 	}
@@ -75,7 +82,33 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 			
-
+	public byte getTableId() {
+		throw new UnsupportedOperationException("public byte getTableId() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFPacketIn setTableId(byte value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFPacketIn setTableId(byte value) is not supported operation");
+	}
+	
+	public long getCookie() {
+		throw new UnsupportedOperationException("public long getCookie() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFPacketIn setCookie(long value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFPacketIn setCookie(long value) is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch getMatch() {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFMatch getMatch() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFPacketIn setMatch(org.openflow.protocol.interfaces.OFMatch value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFPacketIn setMatch(org.openflow.protocol.interfaces.OFMatch value) is not supported operation");
+	}
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

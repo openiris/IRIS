@@ -137,7 +137,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
 
                 decision = new RoutingDecision(
                 		sw.getId(),
-                		pi.getInputPort(), 
+                		(short) pi.getInputPort().get(), 
                 		(IDevice) cntx.get(MessageContext.SRC_DEVICE),
                         IRoutingDecision.RoutingAction.MULTICAST);
                 decision.addToContext(cntx);
@@ -146,7 +146,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
 
                 decision = new RoutingDecision(
                 		sw.getId(),
-                		pi.getInputPort(), 
+                		(short) pi.getInputPort().get(), 
                 		(IDevice) cntx.get(MessageContext.SRC_DEVICE),
                 		IRoutingDecision.RoutingAction.DROP);
                 decision.addToContext(cntx);
@@ -174,7 +174,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
             if (rule == null || rule.action == FirewallRule.FirewallAction.DENY) {
                 decision = new RoutingDecision(
                 		sw.getId(),
-                		pi.getInputPort(), 
+                		(short) pi.getInputPort().get(), 
                 		(IDevice) cntx.get(MessageContext.SRC_DEVICE),
                         IRoutingDecision.RoutingAction.DROP);
                 decision.setWildcards(match_ret.wildcards);
@@ -190,7 +190,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
             } else {
                 decision = new RoutingDecision(
                 		sw.getId(),
-                		pi.getInputPort(), 
+                		(short) pi.getInputPort().get(), 
                 		(IDevice) cntx.get(MessageContext.SRC_DEVICE),
                         IRoutingDecision.RoutingAction.FORWARD_OR_FLOOD);
                 decision.setWildcards(match_ret.wildcards);
@@ -248,7 +248,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
                 rule = iter.next();
 
                 // check if rule matches
-                if (rule.matchesFlow(sw.getId(), pi.getInputPort(), eth, wildcards) == true) {
+                if (rule.matchesFlow(sw.getId(), (short)pi.getInputPort().get(), eth, wildcards) == true) {
                     matched_rule = rule;
                     break;
                 }

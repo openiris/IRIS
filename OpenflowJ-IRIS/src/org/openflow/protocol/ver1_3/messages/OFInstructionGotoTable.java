@@ -32,7 +32,9 @@ public class OFInstructionGotoTable extends OFInstruction implements org.openflo
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.table_id = data.get();

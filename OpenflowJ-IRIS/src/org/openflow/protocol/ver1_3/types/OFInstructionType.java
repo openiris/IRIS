@@ -11,37 +11,60 @@ import java.util.List;
 import org.openflow.protocol.ver1_3.messages.*;
 
 public enum OFInstructionType {
-    GOTO_TABLE	(0x1, OFInstructionGotoTable.class, new Instantiable<OFInstruction>() {
-    public OFInstruction instantiate() {
-      return new OFInstructionGotoTable();
-    }}),
-	WRITE_METADATA	(0x2, OFInstructionWriteMetadata.class, new Instantiable<OFInstruction>() {
-    public OFInstruction instantiate() {
-      return new OFInstructionWriteMetadata();
-    }}),
-	WRITE_ACTIONS	(0x3, OFInstructionWriteActions.class, new Instantiable<OFInstruction>() {
-    public OFInstruction instantiate() {
-      return new OFInstructionWriteActions();
-    }}),
-	APPLY_ACTIONS	(0x4, OFInstructionApplyActions.class, new Instantiable<OFInstruction>() {
-    public OFInstruction instantiate() {
-      return new OFInstructionApplyActions();
-    }}),
-	CLEAR_ACTIONS	(0x5, OFInstructionClearActions.class, new Instantiable<OFInstruction>() {
-    public OFInstruction instantiate() {
-      return new OFInstructionClearActions();
-    }}),
-	METER	(0x6, OFInstructionMeter.class, new Instantiable<OFInstruction>() {
-    public OFInstruction instantiate() {
-      return new OFInstructionMeter();
-    }}),
-	EXPERIMENTER	(0xffff, OFInstructionExperimenter.class, new Instantiable<OFInstruction>() {
-    public OFInstruction instantiate() {
-      return new OFInstructionExperimenter();
-    }});
+    GOTO_TABLE	(0x1, org.openflow.protocol.interfaces.OFInstructionType.GOTO_TABLE, 
+	OFInstructionGotoTable.class, 
+	new Instantiable<OFInstruction>() {
+    	public OFInstruction instantiate() {
+      		return new OFInstructionGotoTable();
+    	}
+    }),
+	WRITE_METADATA	(0x2, org.openflow.protocol.interfaces.OFInstructionType.WRITE_METADATA, 
+	OFInstructionWriteMetadata.class, 
+	new Instantiable<OFInstruction>() {
+    	public OFInstruction instantiate() {
+      		return new OFInstructionWriteMetadata();
+    	}
+    }),
+	WRITE_ACTIONS	(0x3, org.openflow.protocol.interfaces.OFInstructionType.WRITE_ACTIONS, 
+	OFInstructionWriteActions.class, 
+	new Instantiable<OFInstruction>() {
+    	public OFInstruction instantiate() {
+      		return new OFInstructionWriteActions();
+    	}
+    }),
+	APPLY_ACTIONS	(0x4, org.openflow.protocol.interfaces.OFInstructionType.APPLY_ACTIONS, 
+	OFInstructionApplyActions.class, 
+	new Instantiable<OFInstruction>() {
+    	public OFInstruction instantiate() {
+      		return new OFInstructionApplyActions();
+    	}
+    }),
+	CLEAR_ACTIONS	(0x5, org.openflow.protocol.interfaces.OFInstructionType.CLEAR_ACTIONS, 
+	OFInstructionClearActions.class, 
+	new Instantiable<OFInstruction>() {
+    	public OFInstruction instantiate() {
+      		return new OFInstructionClearActions();
+    	}
+    }),
+	METER	(0x6, org.openflow.protocol.interfaces.OFInstructionType.METER, 
+	OFInstructionMeter.class, 
+	new Instantiable<OFInstruction>() {
+    	public OFInstruction instantiate() {
+      		return new OFInstructionMeter();
+    	}
+    }),
+	EXPERIMENTER	(0xffff, org.openflow.protocol.interfaces.OFInstructionType.EXPERIMENTER, 
+	OFInstructionExperimenter.class, 
+	new Instantiable<OFInstruction>() {
+    	public OFInstruction instantiate() {
+      		return new OFInstructionExperimenter();
+    	}
+    });
 
     // static OFInstructionType[] mapping;
     static Map<Short, OFInstructionType> mapping;
+    static Map<Short, org.openflow.protocol.interfaces.OFInstructionType> compatMapping;
+    static Map<org.openflow.protocol.interfaces.OFInstructionType, OFInstructionType> compatMappingReverse;
     static short start_key = 0;
     static short end_key = 0;
 
@@ -50,7 +73,10 @@ public enum OFInstructionType {
     protected Instantiable<OFInstruction> instantiable;
     protected short type;
 
-    OFInstructionType(int type, Class<? extends OFInstruction> clazz, Instantiable<OFInstruction> instantiator) {
+    OFInstructionType(
+    	int type, org.openflow.protocol.interfaces.OFInstructionType compatType,
+    	Class<? extends OFInstruction> clazz, Instantiable<OFInstruction> instantiator) 
+    {
         this.type = (short) type;
         this.clazz = clazz;
         this.instantiable = instantiator;
@@ -61,15 +87,10 @@ public enum OFInstructionType {
                     "Failure getting constructor for class: " + clazz, e);
         }
         OFInstructionType.addMapping(this.type, this);
+        OFInstructionType.addMapping(this.type, compatType, this);
     }
 
     static public void addMapping(short i, OFInstructionType t) {
-    	/*
-        if (mapping == null)
-            mapping = new OFInstructionType[7];
-        if ( i < 0 ) i = (short)(7 + i);
-        OFInstructionType.mapping[i] = t;
-        */
         if ( mapping == null )
         	mapping = new ConcurrentHashMap<Short, OFInstructionType>();
         	
@@ -79,13 +100,34 @@ public enum OFInstructionType {
         end_key = i;
         mapping.put(i, t);
     }
+    
+    static public void addMapping(short i, org.openflow.protocol.interfaces.OFInstructionType c, OFInstructionType t) {
+    	if ( compatMapping == null ) 
+    		compatMapping = new ConcurrentHashMap<Short, org.openflow.protocol.interfaces.OFInstructionType>();
+    		
+    	if ( compatMappingReverse == null )
+    		compatMappingReverse = new ConcurrentHashMap<org.openflow.protocol.interfaces.OFInstructionType, OFInstructionType>();
+    		
+    	compatMapping.put( i, c );
+    	compatMappingReverse.put( c, t );
+    }
 
     static public OFInstructionType valueOf(short i) {
-    	/*
-        if ( i < 0 ) i = (short)(7 + i);
-        return OFInstructionType.mapping[i];
-        */
         return mapping.get(i);
+    }
+    
+    /**
+     * Convert to compatibility-support type
+     */
+    static public org.openflow.protocol.interfaces.OFInstructionType to(OFInstructionType i) {
+    	return compatMapping.get(i.getTypeValue());
+    }
+    
+    /**
+     * Convert from compatibility-support type
+     */
+    static public OFInstructionType from(org.openflow.protocol.interfaces.OFInstructionType c) {
+    	return compatMappingReverse.get(c);
     }
     
 	static public short readFrom(ByteBuffer data) {
@@ -93,12 +135,10 @@ public enum OFInstructionType {
 	}
     
     static public OFInstructionType first() {
-    	// return OFInstructionType.mapping[0];
     	return mapping.get(start_key);
     }
     
     static public OFInstructionType last() {
-    	// return OFInstructionType.mapping[OFInstructionType.mapping.length - 1];
     	return mapping.get(end_key);
     }
     
@@ -109,7 +149,7 @@ public enum OFInstructionType {
     		demux.readFrom(data);
     		data.reset();
     		
-    		OFInstruction real = demux.getType().newInstance();
+    		OFInstruction real = OFInstructionType.from(demux.getType()).newInstance();
     		real.readFrom(data);
     		output.add(real);
     		length -= real.getLength();

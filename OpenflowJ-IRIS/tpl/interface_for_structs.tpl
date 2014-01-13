@@ -1,4 +1,4 @@
-package $packagename;
+package org.openflow.protocol.interfaces;
 
 import java.nio.ByteBuffer;
 
@@ -6,7 +6,7 @@ $imports
 
 public interface $typename $inherit {
 
-$accessors
+	$accessors
 
     public void readFrom(ByteBuffer data);
 

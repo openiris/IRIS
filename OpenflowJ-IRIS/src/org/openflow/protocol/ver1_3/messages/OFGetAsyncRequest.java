@@ -85,7 +85,9 @@ public class OFGetAsyncRequest extends OFMessage implements org.openflow.protoco
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.packet_in_mask_equal_master = data.getInt();

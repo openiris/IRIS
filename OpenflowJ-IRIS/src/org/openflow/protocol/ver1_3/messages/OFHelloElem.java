@@ -20,15 +20,20 @@ public class OFHelloElem   implements org.openflow.protocol.interfaces.OFHelloEl
 		this.length = other.length;
     }
 
-	public OFHelloElemType getType() {
-		return this.type;
+	public org.openflow.protocol.interfaces.OFHelloElemType getType() {
+		return OFHelloElemType.to(this.type);
+	}
+	
+	public OFHelloElem setType(org.openflow.protocol.interfaces.OFHelloElemType type) {
+		this.type = OFHelloElemType.from(type);
+		return this;
 	}
 	
 	public OFHelloElem setType(OFHelloElemType type) {
 		this.type = type;
 		return this;
 	}
-			
+	
 	public short getLength() {
 		return this.length;
 	}
@@ -38,7 +43,9 @@ public class OFHelloElem   implements org.openflow.protocol.interfaces.OFHelloEl
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         this.type = OFHelloElemType.valueOf(OFHelloElemType.readFrom(data));
 		this.length = data.getShort();

@@ -3,6 +3,7 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
+import org.openflow.util.OFPort;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFQueueGetConfigRequest extends OFMessage implements org.openflow.protocol.interfaces.OFQueueGetConfigRequest {
@@ -22,16 +23,18 @@ public class OFQueueGetConfigRequest extends OFMessage implements org.openflow.p
 		this.port = other.port;
     }
 
-	public int getPort() {
-		return this.port;
+	public OFPort getPort() {
+		return new OFPort(this.port);
 	}
 	
-	public OFQueueGetConfigRequest setPort(int port) {
-		this.port = port;
+	public OFQueueGetConfigRequest setPort(OFPort port) {
+		this.port = (int) port.get();
 		return this;
 	}
-			
-
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.port = data.getInt();

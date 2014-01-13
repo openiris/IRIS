@@ -15,8 +15,7 @@ public class OFStatisticsVendorRequest extends OFStatisticsRequest implements or
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)16));
-		setStatisticsType(OFStatisticsType.valueOf((short)0xffff, getType()));
-		this.vendor = new OFVendor();
+		setStatisticsType(OFStatisticsType.valueOf((short)0xffff, this.type));
     }
     
     public OFStatisticsVendorRequest(OFStatisticsVendorRequest other) {
@@ -43,7 +42,9 @@ public class OFStatisticsVendorRequest extends OFStatisticsRequest implements or
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

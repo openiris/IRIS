@@ -3,8 +3,8 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFTableFeaturePropertyApplySetfieldMiss extends OFTableFeatureProperty implements org.openflow.protocol.interfaces.OFTableFeaturePropertyApplySetfieldMiss {
@@ -16,7 +16,6 @@ public class OFTableFeaturePropertyApplySetfieldMiss extends OFTableFeaturePrope
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFTableFeaturePropertyType.valueOf((short)15));
-		this.oxm_ids = new LinkedList<Integer>();
     }
     
     public OFTableFeaturePropertyApplySetfieldMiss(OFTableFeaturePropertyApplySetfieldMiss other) {
@@ -34,7 +33,9 @@ public class OFTableFeaturePropertyApplySetfieldMiss extends OFTableFeaturePrope
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

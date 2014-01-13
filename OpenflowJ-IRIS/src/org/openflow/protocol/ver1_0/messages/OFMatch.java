@@ -4,11 +4,15 @@ import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
+import org.openflow.util.OFPort;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
     public static int MINIMUM_LENGTH = 40;
 
-    OFFlowWildcards  wildcards;
+    int  wildcards;
 	short  input_port;
 	byte[]  data_layer_source;
 	byte[]  data_layer_destination;
@@ -45,24 +49,42 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		this.transport_destination = other.transport_destination;
     }
 
-	public int getWildcards() {
-		return this.wildcards.getValue();
+	public int getWildcardsWire() {
+		return this.wildcards;
 	}
 	
-	public OFMatch setWildcards(int wildcards) {
-		if (this.wildcards == null) this.wildcards = new OFFlowWildcards();
-		this.wildcards.setValue( wildcards );
+	public OFMatch setWildcardsWire(int wildcards) {
+		this.wildcards = wildcards;
 		return this;
-	}
-	public short getInputPort() {
-		return this.input_port;
 	}
 	
-	public OFMatch setInputPort(short input_port) {
-		this.input_port = input_port;
+	public Set<org.openflow.protocol.interfaces.OFFlowWildcards> getWildcards() {
+		OFFlowWildcards tmp = OFFlowWildcards.of(this.wildcards);
+		Set<org.openflow.protocol.interfaces.OFFlowWildcards> ret = new HashSet<org.openflow.protocol.interfaces.OFFlowWildcards>();
+		for ( org.openflow.protocol.interfaces.OFFlowWildcards v : org.openflow.protocol.interfaces.OFFlowWildcards.values() ) {
+			if (tmp.has(v)) {
+				ret.add(v);
+			}
+		}
+		return ret;
+	}
+		
+	public OFMatch setWildcards(Set<org.openflow.protocol.interfaces.OFFlowWildcards> values) {
+		OFFlowWildcards tmp = OFFlowWildcards.of(this.wildcards);
+		tmp.and( values );
+		this.wildcards = tmp.get();
 		return this;
 	}
-			
+		
+	public OFPort getInputPort() {
+		return new OFPort(this.input_port);
+	}
+	
+	public OFMatch setInputPort(OFPort port) {
+		this.input_port = (short) port.get();
+		return this;
+	}
+	
 	public byte[] getDataLayerSource() {
 		return this.data_layer_source;
 	}
@@ -162,10 +184,103 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		return this;
 	}
 			
-
+	public List<org.openflow.protocol.interfaces.OFOxm> getOxmFields() {
+		throw new UnsupportedOperationException("public List<org.openflow.protocol.interfaces.OFOxm> getOxmFields() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatchOxm setOxmFields(List<org.openflow.protocol.interfaces.OFOxm> value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFMatchOxm setOxmFields(List<org.openflow.protocol.interfaces.OFOxm> value) is not supported operation");
+	}
+	
+	
+	public class Builder 
+	implements	org.openflow.util.Builder<org.openflow.protocol.interfaces.OFMatch>,
+				org.openflow.protocol.interfaces.OFMatch.Builder, 
+				org.openflow.protocol.interfaces.OFMatchOxm.Builder {
+	
+		private OFMatch object;
+		
+		public Builder() {
+			object = new OFMatch();
+		}
+		
+		public Builder setWildcards(Set<org.openflow.protocol.interfaces.OFFlowWildcards> wildcards) {
+			object.setWildcards(wildcards);
+			return this;
+		}
+		
+		public Builder setInputPort(OFPort input_port) {
+			object.setInputPort(input_port);
+			return this;
+		}
+		
+		public Builder setDataLayerSource(byte[] data_layer_source) {
+			object.setDataLayerSource(data_layer_source);
+			return this;
+		}
+		
+		public Builder setDataLayerDestination(byte[] data_layer_destination) {
+			object.setDataLayerDestination(data_layer_destination);
+			return this;
+		}
+		
+		public Builder setDataLayerVirtualLan(short data_layer_virtual_lan) {
+			object.setDataLayerVirtualLan(data_layer_virtual_lan);
+			return this;
+		}
+		
+		public Builder setDataLayerVirtualLanPriorityCodePoint(byte data_layer_virtual_lan_priority_code_point) {
+			object.setDataLayerVirtualLanPriorityCodePoint(data_layer_virtual_lan_priority_code_point);
+			return this;
+		}
+		
+		public Builder setDataLayerType(short data_layer_type) {
+			object.setDataLayerType(data_layer_type);
+			return this;
+		}
+		
+		public Builder setNetworkTypeOfService(byte network_type_of_service) {
+			object.setNetworkTypeOfService(network_type_of_service);
+			return this;
+		}
+		
+		public Builder setNetworkProtocol(byte network_protocol) {
+			object.setNetworkProtocol(network_protocol);
+			return this;
+		}
+		
+		public Builder setNetworkSource(int network_source) {
+			object.setNetworkSource(network_source);
+			return this;
+		}
+		
+		public Builder setNetworkDestination(int network_destination) {
+			object.setNetworkDestination(network_destination);
+			return this;
+		}
+		
+		public Builder setTransportSource(short transport_source) {
+			object.setTransportSource(transport_source);
+			return this;
+		}
+		
+		public Builder setTransportDestination(short transport_destination) {
+			object.setTransportDestination(transport_destination);
+			return this;
+		}
+		
+		public Builder setOxmFields(List<org.openflow.protocol.interfaces.OFOxm> value) {
+			throw new UnsupportedOperationException("setOxmFields(List<org.openflow.protocol.interfaces.OFOxm> value) is not supported for this version.");
+		}
+		
+		
+		public org.openflow.protocol.interfaces.OFMatch build() {
+			return object;
+		}
+	}
+	
     public void readFrom(ByteBuffer data) {
-        if (this.wildcards == null) this.wildcards = new OFFlowWildcards();
-		this.wildcards.setValue( OFFlowWildcards.readFrom(data) );
+        this.wildcards = data.getInt();
 		this.input_port = data.getShort();
 		if ( this.data_layer_source == null ) this.data_layer_source = new byte[6];
 		data.get(this.data_layer_source);
@@ -186,7 +301,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 
     public void writeTo(ByteBuffer data) {
     	
-        data.putInt(this.wildcards.getValue());
+        data.putInt(this.wildcards);
 		data.putShort(this.input_port);
 		if ( this.data_layer_source != null ) { data.put(this.data_layer_source); }
 		if ( this.data_layer_destination != null ) { data.put(this.data_layer_destination); }
@@ -204,7 +319,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
     }
 
     public String toString() {
-        return  ":OFMatch-"+":wildcards=" + wildcards.toString() + 
+        return  ":OFMatch-"+":wildcards=" + U32.f(wildcards) + 
 		":input_port=" + U16.f(input_port) + 
 		":data_layer_source=" + java.util.Arrays.toString(data_layer_source) + 
 		":data_layer_destination=" + java.util.Arrays.toString(data_layer_destination) + 
@@ -242,7 +357,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
         		
 		final int prime = 2731;
 		int result = super.hashCode() * prime;
-		result = prime * result + ((wildcards == null)?0:wildcards.hashCode());
+		result = prime * result + (int) wildcards;
 		result = prime * result + (int) input_port;
 		result = prime * result + ((data_layer_source == null)?0:java.util.Arrays.hashCode(data_layer_source));
 		result = prime * result + ((data_layer_destination == null)?0:java.util.Arrays.hashCode(data_layer_destination));
@@ -271,8 +386,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
             return false;
         }
         OFMatch other = (OFMatch) obj;
-		if ( wildcards == null && other.wildcards != null ) { return false; }
-		else if ( !wildcards.equals(other.wildcards) ) { return false; }
+		if ( wildcards != other.wildcards ) return false;
 		if ( input_port != other.input_port ) return false;
 		if ( data_layer_source == null && other.data_layer_source != null ) { return false; }
 		else if ( !java.util.Arrays.equals(data_layer_source, other.data_layer_source) ) { return false; }

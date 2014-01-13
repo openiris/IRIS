@@ -18,7 +18,7 @@ public class OFMultipartDescReply extends OFMultipartReply implements org.openfl
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)19));
-		setMultipartType(OFMultipartType.valueOf((short)0, getType()));
+		setMultipartType(OFMultipartType.valueOf((short)0, this.type));
     }
     
     public OFMultipartDescReply(OFMultipartDescReply other) {
@@ -75,7 +75,9 @@ public class OFMultipartDescReply extends OFMultipartReply implements org.openfl
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.manufacturer_description = StringByteSerializer.readFrom(data, 256);

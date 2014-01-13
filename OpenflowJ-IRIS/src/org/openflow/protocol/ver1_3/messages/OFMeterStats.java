@@ -3,8 +3,8 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterStats {
@@ -22,7 +22,7 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 	List<org.openflow.protocol.interfaces.OFMeterBandStats>  band_stats;
 
     public OFMeterStats() {
-        this.band_stats = new LinkedList<org.openflow.protocol.interfaces.OFMeterBandStats>();
+        
     }
     
     public OFMeterStats(OFMeterStats other) {
@@ -109,7 +109,9 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		this.meter_id = data.getInt();
@@ -154,7 +156,7 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.interfaces.OFMeterBandStats i : this.band_stats ) { len += i.computeLength(); }
+    	if ( this.band_stats != null ) for ( org.openflow.protocol.interfaces.OFMeterBandStats i : this.band_stats ) { len += i.computeLength(); }
     	return len;
     }
     

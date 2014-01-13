@@ -11,6 +11,7 @@ public interface OFMessage {
 	public int getLengthU();
 	public void writeTo(ByteBuffer buf);
 	public byte getTypeByte();
+	public org.openflow.protocol.interfaces.OFMessageType getType();
 	public int getXid();
 	public OFMessage setXid(int xid);
 	public short computeLength();

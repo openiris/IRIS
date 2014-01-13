@@ -15,6 +15,8 @@ public enum $typename {
 
     // static $typename[] mapping;
     static Map<$orep, $typename> mapping;
+    static Map<$orep, org.openflow.protocol.interfaces.$typename> compatMapping;
+    static Map<org.openflow.protocol.interfaces.$typename, $typename> compatMappingReverse;
     static $rep start_key = 0;
     static $rep end_key = 0;
 
@@ -23,7 +25,10 @@ public enum $typename {
     protected Instantiable<$supertype> instantiable;
     protected $rep type;
 
-    $typename(int type, Class<? extends $supertype> clazz, Instantiable<$supertype> instantiator) {
+    $typename(
+    	int type, org.openflow.protocol.interfaces.$typename compatType,
+    	Class<? extends $supertype> clazz, Instantiable<$supertype> instantiator) 
+    {
         this.type = ($rep) type;
         this.clazz = clazz;
         this.instantiable = instantiator;
@@ -34,15 +39,10 @@ public enum $typename {
                     "Failure getting constructor for class: " + clazz, e);
         }
         $typename.addMapping(this.type, this);
+        $typename.addMapping(this.type, compatType, this);
     }
 
     static public void addMapping($rep i, $typename t) {
-    	/*
-        if (mapping == null)
-            mapping = new $typename[$length];
-        if ( i < 0 ) i = ($rep)($length + i);
-        $typename.mapping[i] = t;
-        */
         if ( mapping == null )
         	mapping = new ConcurrentHashMap<$orep, $typename>();
         	
@@ -52,13 +52,34 @@ public enum $typename {
         end_key = i;
         mapping.put(i, t);
     }
+    
+    static public void addMapping($rep i, org.openflow.protocol.interfaces.$typename c, $typename t) {
+    	if ( compatMapping == null ) 
+    		compatMapping = new ConcurrentHashMap<$orep, org.openflow.protocol.interfaces.$typename>();
+    		
+    	if ( compatMappingReverse == null )
+    		compatMappingReverse = new ConcurrentHashMap<org.openflow.protocol.interfaces.$typename, $typename>();
+    		
+    	compatMapping.put( i, c );
+    	compatMappingReverse.put( c, t );
+    }
 
     static public $typename valueOf($rep i) {
-    	/*
-        if ( i < 0 ) i = ($rep)($length + i);
-        return $typename.mapping[i];
-        */
         return mapping.get(i);
+    }
+    
+    /**
+     * Convert to compatibility-support type
+     */
+    static public org.openflow.protocol.interfaces.$typename to($typename i) {
+    	return compatMapping.get(i.getTypeValue());
+    }
+    
+    /**
+     * Convert from compatibility-support type
+     */
+    static public $typename from(org.openflow.protocol.interfaces.$typename c) {
+    	return compatMappingReverse.get(c);
     }
     
 	static public $rep readFrom(ByteBuffer data) {
@@ -66,12 +87,10 @@ public enum $typename {
 	}
     
     static public $typename first() {
-    	// return $typename.mapping[0];
     	return mapping.get(start_key);
     }
     
     static public $typename last() {
-    	// return $typename.mapping[$typename.mapping.length - 1];
     	return mapping.get(end_key);
     }
     
@@ -82,7 +101,7 @@ public enum $typename {
     		demux.readFrom(data);
     		data.reset();
     		
-    		$supertype real = demux.getType().newInstance();
+    		$supertype real = $typename.from(demux.getType()).newInstance();
     		real.readFrom(data);
     		output.add(real);
     		length -= real.getLength();

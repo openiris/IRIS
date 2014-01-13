@@ -25,6 +25,7 @@ import org.openflow.protocol.ver1_0.messages.OFStatisticsPortRequest;
 import org.openflow.protocol.ver1_0.messages.OFStatisticsReply;
 import org.openflow.protocol.ver1_0.types.OFPortNo;
 import org.openflow.util.HexString;
+import org.openflow.util.OFPort;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -141,16 +142,16 @@ public class State extends OFModel {
 //					OFMatch match = new OFMatch();
 //	                match.setWildcards(0xffffffff);
 //	                specificReq.setMatch(match);
-//	                specificReq.setOutPort(OFPort.OFPP_NONE.getValue());
+//	                specificReq.setOutPort(OFPort.NONE.getValue());
 //	                specificReq.setTableId((byte) 0xff);
 //	                req.setStatistics(Collections.singletonList((OFStatistics)specificReq));
 //	                requestLength += specificReq.getLength();
 //	                req.setLengthU(requestLength);
 					OFStatisticsAggregateRequest req = new OFStatisticsAggregateRequest();
 					OFMatch match = new OFMatch();
-					match.setWildcards(0xffffffff);
+					match.setWildcardsWire(0xffffffff);
 					req.setMatch(match);
-					req.setOutPort(OFPortNo.OFPP_NONE.getValue());
+					req.setOutPort(OFPort.of(OFPortNo.NONE.getValue()));
 					req.setTableId((byte)0xff);					
 	                
 //	                List<OFStatistics> reply = sw.getSwitchStatistics( req );
@@ -198,16 +199,16 @@ public class State extends OFModel {
 //					OFMatch match = new OFMatch();
 //	                match.setWildcards(0xffffffff);
 //	                specificReq.setMatch(match);
-//	                specificReq.setOutPort(OFPort.OFPP_NONE.getValue());
+//	                specificReq.setOutPort(OFPort.NONE.getValue());
 //	                specificReq.setTableId((byte) 0xff);
 //	                req.setStatistics(Collections.singletonList((OFStatistics)specificReq));
 //	                requestLength += specificReq.getLength();
 //	                req.setLengthU(requestLength);
 					OFStatisticsAggregateRequest req = new OFStatisticsAggregateRequest();
 					OFMatch match = new OFMatch();
-					match.setWildcards(0xffffffff);
+					match.setWildcardsWire(0xffffffff);
 					req.setMatch(match);
-					req.setOutPort(OFPortNo.OFPP_NONE.getValue());
+					req.setOutPort(OFPort.of(OFPortNo.NONE.getValue()));
 					req.setTableId((byte)0xff);
 	                
 //	                List<OFStatistics> reply = sw.getSwitchStatistics( req );
@@ -284,13 +285,13 @@ public class State extends OFModel {
 						return;		// switch is not completely set up.
 					}
 					
-					HashMap<String, List<OFPortStatsEntry>> result = 
-						new HashMap<String, List<OFPortStatsEntry>>();
+					HashMap<String, List<org.openflow.protocol.interfaces.OFPortStatsEntry>> result = 
+						new HashMap<String, List<org.openflow.protocol.interfaces.OFPortStatsEntry>>();
 					
-					List<OFPortStatsEntry> resultValues;
+					List<org.openflow.protocol.interfaces.OFPortStatsEntry> resultValues;
 					result.put( 
 						switchIdStr, 
-						resultValues = new java.util.LinkedList<OFPortStatsEntry>() 
+						resultValues = new java.util.LinkedList<org.openflow.protocol.interfaces.OFPortStatsEntry>() 
 					);
 
 //					OFStatisticsRequest req = new OFStatisticsRequest();
@@ -298,14 +299,14 @@ public class State extends OFModel {
 //					int requestLength = req.getLengthU();
 //					
 //					OFPortStatisticsRequest specificReq = new OFPortStatisticsRequest();
-//	                specificReq.setPortNumber((short)OFPort.OFPP_NONE.getValue());
+//	                specificReq.setPortNumber((short)OFPort.NONE.getValue());
 //	                req.setStatistics(Collections.singletonList((OFStatistics)specificReq));
 //	                requestLength += specificReq.getLength();
 //
 //					req.setLengthU( requestLength );
 					
 					OFStatisticsPortRequest req = new OFStatisticsPortRequest();
-					req.setPortNo(OFPortNo.OFPP_NONE);
+					req.setPortNo(OFPortNo.NONE);
 
 //					List<OFStatistics> reply = sw.getSwitchStatistics( req );
 					List<OFStatisticsReply> reply = version_adaptor_10.getSwitchStatistics(sw, req);
@@ -389,9 +390,10 @@ public class State extends OFModel {
 //						= new HashMap<String, List<OFFlowStatisticsReply>>();
 //					List<OFFlowStatisticsReply> resultValues = new java.util.LinkedList<OFFlowStatisticsReply>();
 //					result.put( switchIdStr, resultValues );
-					HashMap<String, List<OFFlowStatsEntry>> result = 
-						new HashMap<String, List<OFFlowStatsEntry>>();
-					List<OFFlowStatsEntry> resultValues = new java.util.LinkedList<OFFlowStatsEntry>();
+					HashMap<String, List<org.openflow.protocol.interfaces.OFFlowStatsEntry>> result = 
+						new HashMap<String, List<org.openflow.protocol.interfaces.OFFlowStatsEntry>>();
+					List<org.openflow.protocol.interfaces.OFFlowStatsEntry> resultValues = 
+						new java.util.LinkedList<org.openflow.protocol.interfaces.OFFlowStatsEntry>();
 					result.put(switchIdStr, resultValues);
 					
 //					OFStatisticsRequest req = new OFStatisticsRequest();
@@ -402,7 +404,7 @@ public class State extends OFModel {
 //	                OFMatch match = new OFMatch();
 //	                match.setWildcards(0xffffffff);
 //	                specificReq.setMatch(match);
-//	                specificReq.setOutPort(OFPort.OFPP_NONE.getValue());
+//	                specificReq.setOutPort(OFPort.NONE.getValue());
 //	                specificReq.setTableId((byte) 0xff);
 //	                req.setStatistics(Collections.singletonList((OFStatistics)specificReq));
 //	                requestLength += specificReq.getLength();
@@ -411,9 +413,9 @@ public class State extends OFModel {
 					
 					OFStatisticsFlowRequest req = new OFStatisticsFlowRequest();
 					OFMatch match = new OFMatch();
-					match.setWildcards(0xffffffff);
+					match.setWildcardsWire(0xffffffff);
 					req.setMatch(match);
-					req.setOutPort(OFPortNo.OFPP_NONE.getValue());
+					req.setOutPort(OFPort.of(OFPortNo.NONE.getValue()));
 					req.setTableId((byte)0xff);
 
 //					List<OFStatistics> reply = sw.getSwitchStatistics( req );

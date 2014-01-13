@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
+import java.util.List;
 
 public class OFHello extends OFMessage implements org.openflow.protocol.interfaces.OFHello {
     public static int MINIMUM_LENGTH = 8;
@@ -20,8 +21,17 @@ public class OFHello extends OFMessage implements org.openflow.protocol.interfac
     	super(other);
     }
 
-
-
+	public List<org.openflow.protocol.interfaces.OFHelloElem> getElements() {
+		throw new UnsupportedOperationException("public List<org.openflow.protocol.interfaces.OFHelloElem> getElements() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFHello setElements(List<org.openflow.protocol.interfaces.OFHelloElem> value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFHello setElements(List<org.openflow.protocol.interfaces.OFHelloElem> value) is not supported operation");
+	}
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

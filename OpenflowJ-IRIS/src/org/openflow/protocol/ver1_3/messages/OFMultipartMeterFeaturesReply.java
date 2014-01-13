@@ -14,8 +14,7 @@ public class OFMultipartMeterFeaturesReply extends OFMultipartReply implements o
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)19));
-		setMultipartType(OFMultipartType.valueOf((short)11, getType()));
-		this.features = new OFMeterFeatures();
+		setMultipartType(OFMultipartType.valueOf((short)11, this.type));
     }
     
     public OFMultipartMeterFeaturesReply(OFMultipartMeterFeaturesReply other) {
@@ -32,7 +31,9 @@ public class OFMultipartMeterFeaturesReply extends OFMultipartReply implements o
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		if (this.features == null) this.features = new OFMeterFeatures();

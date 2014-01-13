@@ -14,15 +14,17 @@ public class OFMultipartMeterFeaturesRequest extends OFMultipartRequest implemen
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)18));
-		setMultipartType(OFMultipartType.valueOf((short)11, getType()));
+		setMultipartType(OFMultipartType.valueOf((short)11, this.type));
     }
     
     public OFMultipartMeterFeaturesRequest(OFMultipartMeterFeaturesRequest other) {
     	super(other);
     }
 
-
-
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

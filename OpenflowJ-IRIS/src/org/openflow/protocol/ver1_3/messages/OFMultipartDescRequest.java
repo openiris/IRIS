@@ -14,15 +14,17 @@ public class OFMultipartDescRequest extends OFMultipartRequest implements org.op
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)18));
-		setMultipartType(OFMultipartType.valueOf((short)0, getType()));
+		setMultipartType(OFMultipartType.valueOf((short)0, this.type));
     }
     
     public OFMultipartDescRequest(OFMultipartDescRequest other) {
     	super(other);
     }
 
-
-
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

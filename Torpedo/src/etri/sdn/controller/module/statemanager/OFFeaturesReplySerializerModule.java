@@ -10,6 +10,7 @@ import org.codehaus.jackson.map.SerializerProvider;
 import org.codehaus.jackson.map.module.SimpleModule;
 import org.openflow.protocol.ver1_0.messages.OFFeaturesReply;
 import org.openflow.protocol.ver1_0.messages.OFPortDesc;
+import org.openflow.protocol.ver1_0.types.OFCapabilities;
 import org.openflow.util.HexString;
 
 /**
@@ -27,7 +28,7 @@ final class OFFeaturesReplySerializer extends JsonSerializer<OFFeaturesReply> {
 		jgen.writeStringField("datapathId", HexString.toHexString(reply.getDatapathId()));
 		jgen.writeNumberField("actions", reply.getActions());
 		jgen.writeNumberField("buffers", reply.getNBuffers());
-		jgen.writeNumberField("capabilities", reply.getCapabilities());
+		jgen.writeNumberField("capabilities", OFCapabilities.of(reply.getCapabilities()).get());
 		jgen.writeNumberField("length", reply.getLength());
 		jgen.writeNumberField("tables", reply.getNTables());
         jgen.writeStringField("type", reply.getType().toString());
@@ -52,7 +53,7 @@ final class OFPhysicalPortSerializer extends JsonSerializer<OFPortDesc> {
 	throws IOException, JsonProcessingException {
 		
 		jgen.writeStartObject();
-		jgen.writeNumberField("portNumber", port.getPort());
+		jgen.writeNumberField("portNumber", port.getPort().get());
 		jgen.writeStringField("hardwareAddress", HexString.toHexString(port.getHwAddr()));
 		jgen.writeStringField("name", new String(port.getName()));
 		jgen.writeNumberField("config", port.getConfig());

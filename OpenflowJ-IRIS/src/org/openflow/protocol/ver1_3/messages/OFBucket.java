@@ -3,8 +3,9 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import java.util.List;
+import org.openflow.util.OFPort;
 import java.util.LinkedList;
+import java.util.List;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
@@ -18,7 +19,7 @@ public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
 	List<org.openflow.protocol.interfaces.OFAction>  actions;
 
     public OFBucket() {
-        this.actions = new LinkedList<org.openflow.protocol.interfaces.OFAction>();
+        
     }
     
     public OFBucket(OFBucket other) {
@@ -48,15 +49,15 @@ public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
 		return this;
 	}
 			
-	public int getWatchPort() {
-		return this.watch_port;
+	public OFPort getWatchPort() {
+		return new OFPort(this.watch_port);
 	}
 	
-	public OFBucket setWatchPort(int watch_port) {
-		this.watch_port = watch_port;
+	public OFBucket setWatchPort(OFPort port) {
+		this.watch_port = (int) port.get();
 		return this;
 	}
-			
+	
 	public int getWatchGroup() {
 		return this.watch_group;
 	}
@@ -75,7 +76,9 @@ public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		this.length = data.getShort();
@@ -116,7 +119,7 @@ public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
+    	if ( this.actions != null ) for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
     	return len;
     }
     

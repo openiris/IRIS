@@ -32,7 +32,9 @@ public class OFActionSetMplsTtl extends OFAction implements org.openflow.protoco
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.mpls_ttl = data.get();

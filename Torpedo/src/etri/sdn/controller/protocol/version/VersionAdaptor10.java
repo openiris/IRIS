@@ -29,6 +29,7 @@ import org.openflow.protocol.ver1_0.types.OFPortReason;
 import org.openflow.protocol.ver1_0.types.OFPortState;
 import org.openflow.protocol.ver1_0.types.OFStatisticsType;
 import org.openflow.util.HexString;
+import org.openflow.util.OFPort;
 import org.openflow.util.U16;
 import org.openflow.util.U8;
 
@@ -102,7 +103,7 @@ public class VersionAdaptor10 extends VersionAdaptor {
 		List<OFPortDesc> ret = new LinkedList<OFPortDesc>();
 		for ( PortInformation pi : this.getPortInformations(sw) ) {
 			OFPortDesc pd = new OFPortDesc()
-			.setPort((short)pi.getPort())
+			.setPort(OFPort.of(pi.getPort()))
 			.setHwAddr(pi.getHwAddr())
 			.setName(pi.getName())
 			.setConfig(pi.getConfig())
@@ -120,7 +121,7 @@ public class VersionAdaptor10 extends VersionAdaptor {
 		PortInformation pi = this.getPortInformation(sw,  (int)portNum );
 		if ( pi != null ) {
 			OFPortDesc pd = new OFPortDesc()
-			.setPort(portNum)
+			.setPort(OFPort.of(portNum))
 			.setHwAddr(pi.getHwAddr())
 			.setName(pi.getName())
 			.setConfig(pi.getConfig())
@@ -135,7 +136,7 @@ public class VersionAdaptor10 extends VersionAdaptor {
 	}
 	
 	public void setPort(IOFSwitch sw, OFPortDesc portDesc) {
-		PortInformation pi = this.getPortInformation(sw, (int) portDesc.getPort());
+		PortInformation pi = this.getPortInformation(sw, portDesc.getPort().get());
 		pi.setHwAddr(portDesc.getHwAddr())
 		.setName(portDesc.getName())
 		.setConfig(portDesc.getConfig())
@@ -209,15 +210,15 @@ public class VersionAdaptor10 extends VersionAdaptor {
 				
 				this.getSwitchInformation(sw)
 				.setId(fr.getDatapathId())
-				.setCapabilities(fr.getCapabilities())
+				.setCapabilities(fr.getCapabilitiesWire())
 				.setBuffers(fr.getNBuffers())
 				.setActions(fr.getActions())
 				.setTables(fr.getNTables());
 				
 				// now we must add port information from the features-reply msg.
-				List<OFPortDesc> ports = fr.getPorts();
-				for (OFPortDesc port : ports ) {
-					setPort(sw, port);
+				List<org.openflow.protocol.interfaces.OFPortDesc> ports = fr.getPorts();
+				for (org.openflow.protocol.interfaces.OFPortDesc port : ports ) {
+					setPort(sw, (OFPortDesc) port);
 				}
 			}
 			
@@ -246,15 +247,15 @@ public class VersionAdaptor10 extends VersionAdaptor {
 		case PORT_STATUS:
 			
 			OFPortStatus ps = (OFPortStatus) m;
-			OFPortDesc phyport = ps.getDesc();
-			if ( ps.getReason() == OFPortReason.OFPPR_DELETE.ordinal() ) {
-				deletePort( conn.getSwitch(), phyport.getPort() );
+			OFPortDesc phyport = (OFPortDesc) ps.getDesc();
+			if ( ps.getReason() == OFPortReason.DELETE.ordinal() ) {
+				deletePort( conn.getSwitch(), (short) phyport.getPort().get() );
 			}
-			else if ( ps.getReason() == OFPortReason.OFPPR_MODIFY.ordinal() ) {
-				deletePort(conn.getSwitch(), phyport.getPort() );
+			else if ( ps.getReason() == OFPortReason.MODIFY.ordinal() ) {
+				deletePort(conn.getSwitch(), (short) phyport.getPort().get() );
 				setPort(conn.getSwitch(), phyport);
 			}
-			else { /*ps.getReason() == OFPortReason.OFPPR_ADD.ordinal() */ 
+			else { /*ps.getReason() == OFPortReason.ADD.ordinal() */ 
 				setPort(conn.getSwitch(), phyport);
 			}
 			
@@ -268,7 +269,7 @@ public class VersionAdaptor10 extends VersionAdaptor {
 			
 			OFStatisticsReply stat = (OFStatisticsReply) m;
 
-			if ( stat.getStatisticsType() == OFStatisticsType.DESC ) {
+			if ( stat.getStatisticsType() == org.openflow.protocol.interfaces.OFStatisticsType.DESC ) {
 				setDescription(conn.getSwitch(), (OFStatisticsDescReply) stat );
 			}
 			else {
@@ -402,7 +403,7 @@ public class VersionAdaptor10 extends VersionAdaptor {
 		
 		for (OFPortDesc port: allPorts) {
 			if (portEnabled(port)) {
-				result.add(port.getPort());
+				result.add((short) port.getPort().get());
 			}
 		}
 		return result;
@@ -411,12 +412,12 @@ public class VersionAdaptor10 extends VersionAdaptor {
 	public boolean portEnabled(OFPortDesc port) {
 		if (port == null)
 			return false;
-		if ((port.getConfig() & OFPortConfig.OFPPC_PORT_DOWN) > 0)
+		if ((port.getConfig() & OFPortConfig.PORT_DOWN) > 0)
 			return false;
-		if ((port.getState() & OFPortState.OFPPS_LINK_DOWN) > 0)
+		if ((port.getState() & OFPortState.LINK_DOWN) > 0)
 			return false;
 		// Port STP state doesn't work with multiple VLANs, so ignore it for now
-		//if ((port.getState() & OFPortState.OFPPS_STP_MASK.getValue()) == OFPortState.OFPPS_STP_BLOCK.getValue())
+		//if ((port.getState() & OFPortState.STP_MASK.getValue()) == OFPortState.STP_BLOCK.getValue())
 		//    return false;
 		return true;
 	}
@@ -437,12 +438,12 @@ public class VersionAdaptor10 extends VersionAdaptor {
         ByteBuffer packetDataBB = ByteBuffer.wrap(packetData);
         int limit = packetDataBB.limit();
 
-        ret.setWildcards(0); // all fields have explicit entries
-        ret.setInputPort(inputPort);
+        ret.setWildcardsWire(0); // all fields have explicit entries
+        ret.setInputPort(OFPort.of(inputPort));
 
-        if (inputPort == OFPortNo.OFPP_ALL.getValue())
-//            this.wildcards |= OFFlowWildcards.OFPFW_IN_PORT;
-        	ret.setWildcards( ret.getWildcards() | OFFlowWildcards.OFPFW_IN_PORT );
+        if (inputPort == OFPortNo.ALL.getValue())
+//            this.wildcards |= OFFlowWildcards.IN_PORT;
+        	ret.setWildcardsWire( ret.getWildcardsWire() | OFFlowWildcards.IN_PORT );
 
         assert (limit >= 14);
         // dl dst
@@ -574,12 +575,12 @@ public class VersionAdaptor10 extends VersionAdaptor {
         int mask = 32 - prefix;
         if (which.equals(STR_NW_DST)) {
         	match.setNetworkDestination(ip);
-        	match.setWildcards((match.getWildcards() & ~OFFlowWildcards.OFPFW_NW_DST_MASK) | 
-        					(mask << OFFlowWildcards.OFPFW_NW_DST_SHIFT));
+        	match.setWildcardsWire((match.getWildcardsWire() & ~OFFlowWildcards.NW_DST_MASK) | 
+        					(mask << OFFlowWildcards.NW_DST_SHIFT));
         } else if (which.equals(STR_NW_SRC)) {
         	match.setNetworkSource(ip);
-        	match.setWildcards((match.getWildcards() & ~OFFlowWildcards.OFPFW_NW_SRC_MASK) | 
-					(mask << OFFlowWildcards.OFPFW_NW_SRC_SHIFT));
+        	match.setWildcardsWire((match.getWildcardsWire() & ~OFFlowWildcards.NW_SRC_MASK) | 
+					(mask << OFFlowWildcards.NW_SRC_SHIFT));
         }
     }
     
@@ -638,7 +639,7 @@ public class VersionAdaptor10 extends VersionAdaptor {
         int initArg = 0;
         if (tokens[0].equals("OFMatch"))
             initArg = 1;
-        ret.setWildcards(OFFlowWildcards.OFPFW_ALL);
+        ret.setWildcardsWire(OFFlowWildcards.ALL);
         int i;
         for (i = initArg; i < tokens.length; i++) {
             values = tokens[i].split("=");
@@ -647,33 +648,33 @@ public class VersionAdaptor10 extends VersionAdaptor {
                         + " does not have form 'key=value' parsing " + match);
             values[0] = values[0].toLowerCase(); // try to make this case insens
             if (values[0].equals(STR_IN_PORT) || values[0].equals("input_port")) {
-            	ret.setInputPort(U16.t(Integer.valueOf(values[1])));
-            	ret.setWildcards(ret.getWildcards() & ~OFFlowWildcards.OFPFW_IN_PORT);
+            	ret.setInputPort(OFPort.of(Integer.valueOf(values[1])));
+            	ret.setWildcardsWire(ret.getWildcardsWire() & ~OFFlowWildcards.IN_PORT);
             } else if (values[0].equals(STR_DL_DST)
                     || values[0].equals("eth_dst")) {
             	ret.setDataLayerDestination(HexString.fromHexString(values[1]));
-            	ret.setWildcards(ret.getWildcards() & ~OFFlowWildcards.OFPFW_DL_DST);
+            	ret.setWildcardsWire(ret.getWildcardsWire() & ~OFFlowWildcards.DL_DST);
             } else if (values[0].equals(STR_DL_SRC)
                     || values[0].equals("eth_src")) {
             	ret.setDataLayerSource(HexString.fromHexString(values[1]));
-            	ret.setWildcards(ret.getWildcards() & ~OFFlowWildcards.OFPFW_DL_SRC);
+            	ret.setWildcardsWire(ret.getWildcardsWire() & ~OFFlowWildcards.DL_SRC);
             } else if (values[0].equals(STR_DL_TYPE)
                     || values[0].equals("eth_type")) {
                 if (values[1].startsWith("0x"))
                 	ret.setDataLayerType(U16.t(Integer.valueOf(values[1].replaceFirst("0x", ""), 16)));
                 else
                 	ret.setDataLayerType(U16.t(Integer.valueOf(values[1])));
-                ret.setWildcards(ret.getWildcards() & ~OFFlowWildcards.OFPFW_DL_TYPE);
+                ret.setWildcardsWire(ret.getWildcardsWire() & ~OFFlowWildcards.DL_TYPE);
             } else if (values[0].equals(STR_DL_VLAN)) {
                 if (values[1].contains("0x")) {
                 	ret.setDataLayerVirtualLan(U16.t(Integer.valueOf(values[1].replaceFirst("0x", ""), 16)));
                 } else {
                 	ret.setDataLayerVirtualLan(U16.t(Integer.valueOf(values[1])));
                 }
-                ret.setWildcards(ret.getWildcards() & ~OFFlowWildcards.OFPFW_DL_VLAN);
+                ret.setWildcardsWire(ret.getWildcardsWire() & ~OFFlowWildcards.DL_VLAN);
             } else if (values[0].equals(STR_DL_VLAN_PCP)) {
             	ret.setDataLayerVirtualLanPriorityCodePoint(U8.t(Short.valueOf(values[1])));
-                ret.setWildcards(ret.getWildcards() & ~OFFlowWildcards.OFPFW_DL_VLAN_PCP);
+                ret.setWildcardsWire(ret.getWildcardsWire() & ~OFFlowWildcards.DL_VLAN_PCP);
             } else if (values[0].equals(STR_NW_DST)
                     || values[0].equals("ip_dst"))
                 setFromCIDR(ret, values[1], STR_NW_DST);
@@ -681,16 +682,16 @@ public class VersionAdaptor10 extends VersionAdaptor {
                 setFromCIDR(ret, values[1], STR_NW_SRC);
             else if (values[0].equals(STR_NW_PROTO)) {
             	ret.setNetworkProtocol(U8.t(Short.valueOf(values[1])));
-                ret.setWildcards(ret.getWildcards() & ~OFFlowWildcards.OFPFW_NW_PROTO);
+                ret.setWildcardsWire(ret.getWildcardsWire() & ~OFFlowWildcards.NW_PROTO);
             } else if (values[0].equals(STR_NW_TOS)) {
             	ret.setNetworkTypeOfService(U8.t(Short.valueOf(values[1])));
-                ret.setWildcards(ret.getWildcards() & ~OFFlowWildcards.OFPFW_NW_TOS);
+                ret.setWildcardsWire(ret.getWildcardsWire() & ~OFFlowWildcards.NW_TOS);
             } else if (values[0].equals(STR_TP_DST)) {
             	ret.setTransportDestination(U16.t(Integer.valueOf(values[1])));
-                ret.setWildcards(ret.getWildcards() & ~OFFlowWildcards.OFPFW_TP_DST);
+                ret.setWildcardsWire(ret.getWildcardsWire() & ~OFFlowWildcards.TP_DST);
             } else if (values[0].equals(STR_TP_SRC)) {
                 ret.setTransportSource(U16.t(Integer.valueOf(values[1])));
-                ret.setWildcards(ret.getWildcards() & ~OFFlowWildcards.OFPFW_TP_SRC);
+                ret.setWildcardsWire(ret.getWildcardsWire() & ~OFFlowWildcards.TP_SRC);
             } else
                 throw new IllegalArgumentException("unknown token " + tokens[i]
                         + " parsing " + match);

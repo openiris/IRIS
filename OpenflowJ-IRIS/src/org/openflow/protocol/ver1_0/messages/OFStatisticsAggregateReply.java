@@ -17,7 +17,7 @@ public class OFStatisticsAggregateReply extends OFStatisticsReply implements org
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)17));
-		setStatisticsType(OFStatisticsType.valueOf((short)2, getType()));
+		setStatisticsType(OFStatisticsType.valueOf((short)2, this.type));
     }
     
     public OFStatisticsAggregateReply(OFStatisticsAggregateReply other) {
@@ -54,7 +54,9 @@ public class OFStatisticsAggregateReply extends OFStatisticsReply implements org
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.packet_count = data.getLong();

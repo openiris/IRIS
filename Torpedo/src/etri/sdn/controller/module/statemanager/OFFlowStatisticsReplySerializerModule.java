@@ -45,7 +45,7 @@ final class OFMatchSerializer extends JsonSerializer<OFMatch> {
      */
     public int getNetworkDestinationMaskLen(OFMatch match) {
         return Math
-                .max(32 - ((match.getWildcards() & OFFlowWildcards.OFPFW_NW_DST_MASK) >> OFFlowWildcards.OFPFW_NW_DST_SHIFT),
+                .max(32 - ((match.getWildcardsWire() & OFFlowWildcards.NW_DST_MASK) >> OFFlowWildcards.NW_DST_SHIFT),
                         0);
     }
 
@@ -60,7 +60,7 @@ final class OFMatchSerializer extends JsonSerializer<OFMatch> {
      */
     public int getNetworkSourceMaskLen(OFMatch match) {
         return Math
-                .max(32 - ((match.getWildcards() & OFFlowWildcards.OFPFW_NW_SRC_MASK) >> OFFlowWildcards.OFPFW_NW_SRC_SHIFT),
+                .max(32 - ((match.getWildcardsWire() & OFFlowWildcards.NW_SRC_MASK) >> OFFlowWildcards.NW_SRC_SHIFT),
                         0);
     }
 	
@@ -87,7 +87,7 @@ final class OFMatchSerializer extends JsonSerializer<OFMatch> {
         jgen.writeStringField("dataLayerType", "0x" + dataType);
         jgen.writeNumberField("dataLayerVirtualLan", match.getDataLayerVirtualLan());
         jgen.writeNumberField("dataLayerVirtualLanPriorityCodePoint", match.getDataLayerVirtualLanPriorityCodePoint());
-        jgen.writeNumberField("inputPort", match.getInputPort());
+        jgen.writeNumberField("inputPort", match.getInputPort().get());
         jgen.writeStringField("networkDestination", intToIp(match.getNetworkDestination()));
         jgen.writeNumberField("networkDestinationMaskLen", getNetworkDestinationMaskLen(match));
         jgen.writeNumberField("networkProtocol", match.getNetworkProtocol());
@@ -96,7 +96,7 @@ final class OFMatchSerializer extends JsonSerializer<OFMatch> {
         jgen.writeNumberField("networkTypeOfService", match.getNetworkTypeOfService());
         jgen.writeNumberField("transportDestination", match.getTransportDestination());
         jgen.writeNumberField("transportSource", match.getTransportSource());
-        jgen.writeNumberField("wildcards", match.getWildcards());
+        jgen.writeNumberField("wildcards", match.getWildcardsWire());
         jgen.writeEndObject();
 	}
 }

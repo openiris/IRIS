@@ -14,6 +14,7 @@ import java.util.Set;
 import org.openflow.protocol.OFMessage;
 import org.openflow.protocol.ver1_0.messages.OFPacketIn;
 import org.openflow.protocol.ver1_0.types.OFMessageType;
+import org.openflow.util.OFPort;
 
 import etri.sdn.controller.IInfoProvider;
 import etri.sdn.controller.IOFTask;
@@ -208,7 +209,7 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 		}
 
 		// Extract source entity information
-		Entity srcEntity = getSourceEntityFromPacket(eth, sw.getId(), pi.getInputPort());
+		Entity srcEntity = getSourceEntityFromPacket(eth, sw.getId(), pi.getInputPort().get());
 		if (srcEntity == null)
 			return false;
 
@@ -244,13 +245,11 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 	 * 
 	 * @param eth the packet to parse
 	 * @param swdpid the switch on which the packet arrived
-	 * @param port the original packetin
+	 * @param ofPort the original packetin
 	 * 
 	 * @return the entity from the packet
 	 */
-	private Entity getSourceEntityFromPacket(Ethernet eth,
-			long swdpid,
-			int port) {
+	private Entity getSourceEntityFromPacket(Ethernet eth, long swdpid, int ofPort) {
 		byte[] dlAddrArr = eth.getSourceMACAddress();
 		long dlAddr = Ethernet.toLong(dlAddrArr);
 
@@ -264,7 +263,7 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 				((vlan >= 0) ? vlan : null),
 				((nwSrc != 0) ? nwSrc : null),
 				swdpid,
-				port,
+				ofPort,
 				new Date());
 	}
 

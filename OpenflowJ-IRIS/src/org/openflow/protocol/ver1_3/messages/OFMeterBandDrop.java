@@ -20,8 +20,10 @@ public class OFMeterBandDrop extends OFMeterBand implements org.openflow.protoco
     	super(other);
     }
 
-
-
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.pad_1th = data.getInt();

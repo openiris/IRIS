@@ -20,8 +20,10 @@ public class OFBarrierRequest extends OFMessage implements org.openflow.protocol
     	super(other);
     }
 
-
-
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

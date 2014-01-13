@@ -3,8 +3,8 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFMeterMod extends OFMessage implements org.openflow.protocol.interfaces.OFMeterMod {
@@ -19,7 +19,6 @@ public class OFMeterMod extends OFMessage implements org.openflow.protocol.inter
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)29));
-		this.meters = new LinkedList<org.openflow.protocol.interfaces.OFMeterBand>();
     }
     
     public OFMeterMod(OFMeterMod other) {
@@ -31,15 +30,20 @@ public class OFMeterMod extends OFMessage implements org.openflow.protocol.inter
 		for ( org.openflow.protocol.interfaces.OFMeterBand i : other.meters ) { this.meters.add( new OFMeterBand((OFMeterBand)i) ); }
     }
 
-	public OFMeterModCommand getCommand() {
-		return this.command;
+	public org.openflow.protocol.interfaces.OFMeterModCommand getCommand() {
+		return OFMeterModCommand.to(this.command);
+	}
+	
+	public OFMeterMod setCommand(org.openflow.protocol.interfaces.OFMeterModCommand command) {
+		this.command = OFMeterModCommand.from(command);
+		return this;
 	}
 	
 	public OFMeterMod setCommand(OFMeterModCommand command) {
 		this.command = command;
 		return this;
 	}
-			
+	
 	public short getFlags() {
 		return this.flags;
 	}
@@ -67,7 +71,9 @@ public class OFMeterMod extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);
@@ -104,7 +110,7 @@ public class OFMeterMod extends OFMessage implements org.openflow.protocol.inter
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.interfaces.OFMeterBand i : this.meters ) { len += i.computeLength(); }
+    	if ( this.meters != null ) for ( org.openflow.protocol.interfaces.OFMeterBand i : this.meters ) { len += i.computeLength(); }
     	return len;
     }
     

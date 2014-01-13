@@ -3,7 +3,13 @@ import re
 import itertools
 import pprint
 import spec
+import openflow_types
 from template import *
+
+def remove_prefix(str):
+  n = str[str.find('_')+1:]
+  if n[0].isdigit(): return 'N_' + n
+  return n
 
 class Interface:
   def __init__(self):
@@ -24,7 +30,10 @@ class InterfaceForEnum(Interface):
     self.name = enum.name
     self.constants = set()
     for i in self.enum['body']:
-      self.constants.add( i['name'] )
+      n = i['name']
+      n = remove_prefix(n)     # remove prefix such as OFP_ from the enum name
+      if n[0].isdigit(): n = 'N_' + n
+      self.constants.add( n )
     
   def __repr__(self):
     return '<InterfaceForEnum name:%s>' % (self.name)
@@ -37,13 +46,37 @@ class InterfaceForEnum(Interface):
     
   def merge(self, enum):
     for i in enum['body']:
-      self.constants.add( i['name'] )  
+      n = i['name']
+      n = remove_prefix(n)    # remove prefix such as OFP_ from the enum name
+      self.constants.add( n )  
       
   def convert(self):
     template = Template.get_template('./tpl/interface_for_types.tpl')
     result = template.safe_substitute({'interfacename':self.name, 
                                        'enumerations':',\n\t'.join(self.constants)})
     return (self.name, result)
+  
+class InterfaceDeclarations:
+  
+  def __init__(self, interface):
+    '''
+    constructor.
+    '''
+    self.interface = interface
+    self.declarations = list( interface.declarations )
+    
+  def remove_matching_declaration(self, variable_type, variable_name):
+    ''' 
+    This method removes matching declarations within self.declarations.
+    '''
+    get_method_name = spec.Spec.convert_to_camel(variable_name, 0, 'get')+'('
+    set_method_name = spec.Spec.convert_to_camel(variable_name, 0, 'set')+'('
+    
+    self.declarations = [ x for x in self.declarations if x.find(get_method_name) < 0 and x.find(set_method_name) < 0 ]
+    
+  def merge(self, interface_decls):
+    self.declarations = self.declarations + interface_decls.declarations
+             
     
 class InterfaceForStruct(Interface):
   
@@ -79,18 +112,48 @@ class InterfaceForStruct(Interface):
         self.imports.add('import java.util.List;')
       else:
         return_type = i['type']
-        prefixed_type = self.name + spec.Spec.convert_to_camel( i['name'] )
-        if struct.spec.get_type(prefixed_type):
-          return_type = prefixed_type
-         
-      get_signature = 'public %s get%s();' % (return_type, spec.Spec.convert_to_camel( i['name'] ))
-      set_signature = 'public %s set%s(%s value);' % (struct.name, spec.Spec.convert_to_camel( i['name'] ), return_type) 
         
-      ret.append(get_signature)
-      ret.append(set_signature)
+        prefixed_types = [self.name + spec.Spec.convert_to_camel( i['name'] ),
+                          spec.Spec.get_java_classname( i['name'] ),
+                          i['type']]
+        for prefixed_type in prefixed_types:
+          t = struct.spec.get_type(prefixed_type)
+          if t:
+            if isinstance(t, openflow_types.Enum) and t.is_bitmask_enum():
+              return_type = 'Set<%s>' % prefixed_type
+              self.imports.add('import java.util.Set;')
+            else:
+              return_type = prefixed_type
+        
+        # this is for changing the return type of port number-related methods.
+        if return_type in ['short', 'int']:
+          if i['name'].endswith('port') or i['name'].endswith('port_number'):
+            if i['name'].find('tp') < 0 and i['name'].find('transport') < 0:
+              return_type = 'OFPort'
+              self.imports.add('import org.openflow.util.OFPort;')
+              
+        # this is for changing the return time manually into OFMatch if it is OFMatchOxm
+        if return_type == 'OFMatchOxm':
+          return_type = 'OFMatch'
+           
+      if i.get('bitfields', None):
+        bitfields = i['bitfields']
+        for bitfield in bitfields:
+          get_signature = 'public %s get%s();' % (return_type, spec.Spec.convert_to_camel( bitfield[0] ))
+          set_signature = 'public %s set%s(%s value);' % (struct.name, spec.Spec.convert_to_camel( bitfield[0] ), return_type) 
+          ret.append(get_signature)
+          ret.append(set_signature)
+      else:
+        get_signature = 'public %s get%s();' % (return_type, spec.Spec.convert_to_camel( i['name'] ))
+        set_signature = 'public %s set%s(%s value);' % (struct.name, spec.Spec.convert_to_camel( i['name'] ), return_type) 
+        ret.append(get_signature)
+        ret.append(set_signature)
     
     return ret
-      
+  
+  def get_all_declarations(self):
+    return InterfaceDeclarations(self)
+    
   def __repr__(self):
     return '<InterfaceForStruct name:%s>' % (self.name)
   
@@ -102,17 +165,37 @@ class InterfaceForStruct(Interface):
     
   def merge(self, struct):
     self.add_declarations( self.get_declarations(struct) )
+    
+  def retrieve_set_declarations(self):
+    return [x for x in self.declarations if re.search(r'\bset', x)]
   
   def convert(self):
+    is_ofmatch = False
     template = Template.get_template('./tpl/interface_for_structs.tpl')
+    if (self.name == 'OFMatch' and self.struct.spec.get_version() == '1.0') or self.name == 'OFMatchOxm':
+      template = Template.get_template('tpl/interface_for_structs_ofmatch.tpl')
+      set_accessors = self.retrieve_set_declarations()
+      for name in [ 'OFMatch', 'OFMatchOxm' ]:
+        set_accessors = [re.sub(r'\b%s\b' % name, 'Builder', x) for x in set_accessors]
+      is_ofmatch = True
+    
     if self.struct.supertype:
       inherit = 'extends %s' % self.struct.supertype
     else:
       inherit = ''
-    result = template.safe_substitute({'typename':self.name, 
-                                       'imports':'\n'.join(self.imports),
-                                       'inherit':inherit,
-                                       'accessors':'\n\n\t'.join(self.declarations)})
+      if self.name == 'OFMessage': inherit = 'extends org.openflow.protocol.OFMessage'
+      
+    if is_ofmatch:
+      result = template.safe_substitute({'typename':self.name, 
+                                         'imports':'\n'.join(self.imports),
+                                         'inherit':inherit,
+                                         'accessors':'\n\n\t'.join(self.declarations),
+                                         'builder_accessors':'\n\t\t'.join(set_accessors)})
+    else:
+      result = template.safe_substitute({'typename':self.name, 
+                                         'imports':'\n'.join(self.imports),
+                                         'inherit':inherit,
+                                         'accessors':'\n\t'.join(self.declarations)})
     return (self.name, result)
   
   

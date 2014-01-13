@@ -5,7 +5,7 @@ import org.openflow.util.*;
 
 $imports
 
-public class $typename $inherit_method $supertype implements $implements {
+public class $typename $inherit_method $supertype $implements {
     public static int MINIMUM_LENGTH = $minimumlength;
 
     $declarations
@@ -18,8 +18,10 @@ public class $typename $inherit_method $supertype implements $implements {
     	$copyconstructor
     }
 
-$accessors
-
+	$accessors
+	
+	$builder
+	
     public void readFrom(ByteBuffer data) {
         $readfrom
     }

@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFTableStatsEntry {
     public static int MINIMUM_LENGTH = 64;
@@ -12,7 +14,7 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 	short pad_1th;
 	byte pad_2th;
 	byte[]  name;
-	OFFlowWildcards  wildcards;
+	int  wildcards;
 	int  max_entries;
 	int  active_count;
 	long  lookup_count;
@@ -50,15 +52,33 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		return this;
 	}
 			
-	public int getWildcards() {
-		return this.wildcards.getValue();
+	public int getWildcardsWire() {
+		return this.wildcards;
 	}
 	
-	public OFTableStatsEntry setWildcards(int wildcards) {
-		if (this.wildcards == null) this.wildcards = new OFFlowWildcards();
-		this.wildcards.setValue( wildcards );
+	public OFTableStatsEntry setWildcardsWire(int wildcards) {
+		this.wildcards = wildcards;
 		return this;
 	}
+	
+	public Set<org.openflow.protocol.interfaces.OFFlowWildcards> getWildcards() {
+		OFFlowWildcards tmp = OFFlowWildcards.of(this.wildcards);
+		Set<org.openflow.protocol.interfaces.OFFlowWildcards> ret = new HashSet<org.openflow.protocol.interfaces.OFFlowWildcards>();
+		for ( org.openflow.protocol.interfaces.OFFlowWildcards v : org.openflow.protocol.interfaces.OFFlowWildcards.values() ) {
+			if (tmp.has(v)) {
+				ret.add(v);
+			}
+		}
+		return ret;
+	}
+		
+	public OFTableStatsEntry setWildcards(Set<org.openflow.protocol.interfaces.OFFlowWildcards> values) {
+		OFFlowWildcards tmp = OFFlowWildcards.of(this.wildcards);
+		tmp.and( values );
+		this.wildcards = tmp.get();
+		return this;
+	}
+		
 	public int getMaxEntries() {
 		return this.max_entries;
 	}
@@ -95,15 +115,16 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         this.table_id = data.get();
 		this.pad_1th = data.getShort();
 		this.pad_2th = data.get();
 		if ( this.name == null ) this.name = new byte[32];
 		data.get(this.name);
-		if (this.wildcards == null) this.wildcards = new OFFlowWildcards();
-		this.wildcards.setValue( OFFlowWildcards.readFrom(data) );
+		this.wildcards = data.getInt();
 		this.max_entries = data.getInt();
 		this.active_count = data.getInt();
 		this.lookup_count = data.getLong();
@@ -116,7 +137,7 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		data.putShort(this.pad_1th);
 		data.put(this.pad_2th);
 		if ( this.name != null ) { data.put(this.name); }
-		data.putInt(this.wildcards.getValue());
+		data.putInt(this.wildcards);
 		data.putInt(this.max_entries);
 		data.putInt(this.active_count);
 		data.putLong(this.lookup_count);
@@ -126,7 +147,7 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
     public String toString() {
         return  ":OFTableStatsEntry-"+":table_id=" + U8.f(table_id) + 
 		":name=" + java.util.Arrays.toString(name) + 
-		":wildcards=" + wildcards.toString() + 
+		":wildcards=" + U32.f(wildcards) + 
 		":max_entries=" + U32.f(max_entries) + 
 		":active_count=" + U32.f(active_count) + 
 		":lookup_count=" + U64.f(lookup_count) + 
@@ -158,7 +179,7 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		int result = super.hashCode() * prime;
 		result = prime * result + (int) table_id;
 		result = prime * result + ((name == null)?0:java.util.Arrays.hashCode(name));
-		result = prime * result + ((wildcards == null)?0:wildcards.hashCode());
+		result = prime * result + (int) wildcards;
 		result = prime * result + (int) max_entries;
 		result = prime * result + (int) active_count;
 		result = prime * result + (int) lookup_count;
@@ -182,8 +203,7 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		if ( table_id != other.table_id ) return false;
 		if ( name == null && other.name != null ) { return false; }
 		else if ( !java.util.Arrays.equals(name, other.name) ) { return false; }
-		if ( wildcards == null && other.wildcards != null ) { return false; }
-		else if ( !wildcards.equals(other.wildcards) ) { return false; }
+		if ( wildcards != other.wildcards ) return false;
 		if ( max_entries != other.max_entries ) return false;
 		if ( active_count != other.active_count ) return false;
 		if ( lookup_count != other.lookup_count ) return false;

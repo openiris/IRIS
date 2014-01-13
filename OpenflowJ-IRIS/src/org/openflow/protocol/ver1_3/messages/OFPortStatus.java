@@ -18,7 +18,6 @@ public class OFPortStatus extends OFMessage implements org.openflow.protocol.int
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)12));
-		this.desc = new OFPortDesc();
     }
     
     public OFPortStatus(OFPortStatus other) {
@@ -45,7 +44,9 @@ public class OFPortStatus extends OFMessage implements org.openflow.protocol.int
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.reason = data.get();

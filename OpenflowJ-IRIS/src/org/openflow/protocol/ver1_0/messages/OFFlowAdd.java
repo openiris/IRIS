@@ -21,8 +21,10 @@ public class OFFlowAdd extends OFFlowMod implements org.openflow.protocol.interf
     	super(other);
     }
 
-
-
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

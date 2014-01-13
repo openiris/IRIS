@@ -6,7 +6,7 @@ package org.openflow.io;
 import java.util.List;
 
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.factory.OFMessageFactory;
+import org.openflow.protocol.factory.OFMessageParser;
 
 /**
  * Interface for reading OFMessages from a buffered stream
@@ -40,12 +40,12 @@ public interface OFMessageInStream {
      * 
      * @param factory
      */
-    public void setMessageFactory(OFMessageFactory factory);
+    public void setMessageFactory(OFMessageParser factory);
 
     /**
      * Returns the OFMessageFactory used to create messages on this stream
      * 
      * @return
      */
-    public OFMessageFactory getMessageFactory();
+    public OFMessageParser getMessageFactory();
 }

@@ -24,15 +24,20 @@ public class OFOxm   implements org.openflow.protocol.interfaces.OFOxm {
 		if (other.data != null) { this.data = java.util.Arrays.copyOf(other.data, other.data.length); }
     }
 
-	public OFOxmClass getOxmClass() {
-		return this.oxm_class;
+	public org.openflow.protocol.interfaces.OFOxmClass getOxmClass() {
+		return OFOxmClass.to(this.oxm_class);
+	}
+	
+	public OFOxm setOxmClass(org.openflow.protocol.interfaces.OFOxmClass oxm_class) {
+		this.oxm_class = OFOxmClass.from(oxm_class);
+		return this;
 	}
 	
 	public OFOxm setOxmClass(OFOxmClass oxm_class) {
 		this.oxm_class = oxm_class;
 		return this;
 	}
-			
+	
 	public byte getField() {
 		byte t__ = (byte)(this.field_bitmask & 0b111111110);
 		return (byte)(t__ >> 1);
@@ -71,7 +76,9 @@ public class OFOxm   implements org.openflow.protocol.interfaces.OFOxm {
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         this.oxm_class = OFOxmClass.valueOf(OFOxmClass.readFrom(data));
 		this.field_bitmask = data.get();

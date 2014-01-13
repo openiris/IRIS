@@ -44,15 +44,21 @@ public class OFMessage   implements org.openflow.protocol.interfaces.OFMessage {
 		return this;
 	}
 	
-	public OFMessageType getType() {
-		return this.type;
+
+	public org.openflow.protocol.interfaces.OFMessageType getType() {
+		return OFMessageType.to(this.type);
+	}
+	
+	public OFMessage setType(org.openflow.protocol.interfaces.OFMessageType type) {
+		this.type = OFMessageType.from(type);
+		return this;
 	}
 	
 	public OFMessage setType(OFMessageType type) {
 		this.type = type;
 		return this;
 	}
-			
+	
 	public short getLength() {
 		return this.length;
 	}
@@ -89,7 +95,9 @@ public class OFMessage   implements org.openflow.protocol.interfaces.OFMessage {
 		return this;
 	}
 	
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         this.version = data.get();
 		this.type = OFMessageType.valueOf(OFMessageType.readFrom(data));

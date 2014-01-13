@@ -20,8 +20,10 @@ public class OFActionCopyTtlIn extends OFAction implements org.openflow.protocol
     	super(other);
     }
 
-
-
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.pad_1th = data.getInt();

@@ -25,15 +25,20 @@ public class OFError extends OFMessage implements org.openflow.protocol.interfac
 		if (other.data != null) { this.data = java.util.Arrays.copyOf(other.data, other.data.length); }
     }
 
-	public OFErrorCode getErrorCode() {
-		return this.error_code;
+	public org.openflow.protocol.interfaces.OFErrorCode getErrorCode() {
+		return OFErrorCode.to(this.error_code);
+	}
+	
+	public OFError setErrorCode(org.openflow.protocol.interfaces.OFErrorCode error_code) {
+		this.error_code = OFErrorCode.from(error_code);
+		return this;
 	}
 	
 	public OFError setErrorCode(OFErrorCode error_code) {
 		this.error_code = error_code;
 		return this;
 	}
-			
+	
 	public short getSubcode() {
 		return this.subcode;
 	}
@@ -52,7 +57,9 @@ public class OFError extends OFMessage implements org.openflow.protocol.interfac
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

@@ -9,8 +9,8 @@ import java.nio.channels.SocketChannel;
 import java.util.List;
 
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.factory.OFMessageFactory;
-import org.openflow.protocol.factory.VersionedMessageFactory;
+import org.openflow.protocol.factory.OFMessageParser;
+import org.openflow.protocol.factory.VersionedMessageParser;
 
 /**
  * Asynchronous OpenFlow message marshalling and unmarshalling stream wrapped
@@ -25,7 +25,7 @@ OFMessageOutStream {
     static public int defaultBufferSize = 65536;
 
     protected ByteBuffer inBuf, outBuf;
-    protected OFMessageFactory messageFactory;
+    protected OFMessageParser messageFactory;
     protected SocketChannel sock;
     protected int partialReadCount = 0;
 
@@ -34,7 +34,7 @@ OFMessageOutStream {
         inBuf = ByteBuffer.allocateDirect(OFMessageAsyncStream.defaultBufferSize);
         outBuf = ByteBuffer.allocateDirect(OFMessageAsyncStream.defaultBufferSize);
         this.sock = sock;
-        this.messageFactory = new VersionedMessageFactory();
+        this.messageFactory = new VersionedMessageParser();
         // this.sock.configureBlocking(false);
     }
 
@@ -111,7 +111,7 @@ OFMessageOutStream {
     /**
      * @return the messageFactory
      */
-    public OFMessageFactory getMessageFactory() {
+    public OFMessageParser getMessageFactory() {
         return messageFactory;
     }
 
@@ -119,7 +119,7 @@ OFMessageOutStream {
      * @param messageFactory
      *            the messageFactory to set
      */
-    public void setMessageFactory(OFMessageFactory messageFactory) {
+    public void setMessageFactory(OFMessageParser messageFactory) {
         this.messageFactory = messageFactory;
     }
 }

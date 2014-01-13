@@ -3,8 +3,8 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFInstructionApplyActions extends OFInstruction implements org.openflow.protocol.interfaces.OFInstructionApplyActions {
@@ -17,7 +17,6 @@ public class OFInstructionApplyActions extends OFInstruction implements org.open
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFInstructionType.valueOf((short)4));
-		this.actions = new LinkedList<org.openflow.protocol.interfaces.OFAction>();
     }
     
     public OFInstructionApplyActions(OFInstructionApplyActions other) {
@@ -35,7 +34,9 @@ public class OFInstructionApplyActions extends OFInstruction implements org.open
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);
@@ -65,7 +66,7 @@ public class OFInstructionApplyActions extends OFInstruction implements org.open
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
+    	if ( this.actions != null ) for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
     	return len;
     }
     

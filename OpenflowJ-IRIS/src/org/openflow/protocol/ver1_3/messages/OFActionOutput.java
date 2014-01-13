@@ -3,6 +3,7 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
+import org.openflow.util.OFPort;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFActionOutput extends OFAction implements org.openflow.protocol.interfaces.OFActionOutput {
@@ -25,15 +26,15 @@ public class OFActionOutput extends OFAction implements org.openflow.protocol.in
 		this.max_length = other.max_length;
     }
 
-	public int getPort() {
-		return this.port;
+	public OFPort getPort() {
+		return new OFPort(this.port);
 	}
 	
-	public OFActionOutput setPort(int port) {
-		this.port = port;
+	public OFActionOutput setPort(OFPort port) {
+		this.port = (int) port.get();
 		return this;
 	}
-			
+	
 	public short getMaxLength() {
 		return this.max_length;
 	}
@@ -43,7 +44,9 @@ public class OFActionOutput extends OFAction implements org.openflow.protocol.in
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.port = data.getInt();

@@ -20,15 +20,20 @@ public class OFAction   implements org.openflow.protocol.interfaces.OFAction {
 		this.length = other.length;
     }
 
-	public OFActionType getType() {
-		return this.type;
+	public org.openflow.protocol.interfaces.OFActionType getType() {
+		return OFActionType.to(this.type);
+	}
+	
+	public OFAction setType(org.openflow.protocol.interfaces.OFActionType type) {
+		this.type = OFActionType.from(type);
+		return this;
 	}
 	
 	public OFAction setType(OFActionType type) {
 		this.type = type;
 		return this;
 	}
-			
+	
 	public short getLength() {
 		return this.length;
 	}
@@ -38,7 +43,9 @@ public class OFAction   implements org.openflow.protocol.interfaces.OFAction {
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         this.type = OFActionType.valueOf(OFActionType.readFrom(data));
 		this.length = data.getShort();

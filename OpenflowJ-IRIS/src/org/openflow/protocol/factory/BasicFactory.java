@@ -73,7 +73,7 @@ class OFHeader {
  * @author Rob Sherwood (rob.sherwood@stanford.edu)
  *
  */
-public class BasicFactory implements OFMessageFactory {
+public class BasicFactory implements OFMessageParser {
 
     public List<OFMessage> parseMessages(ByteBuffer data) {
         return parseMessages(data, 0);

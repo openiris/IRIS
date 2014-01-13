@@ -30,7 +30,9 @@ public class OFRoleReply extends OFMessage implements org.openflow.protocol.inte
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

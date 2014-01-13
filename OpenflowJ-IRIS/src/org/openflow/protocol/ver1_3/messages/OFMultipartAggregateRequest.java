@@ -3,6 +3,7 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
+import org.openflow.util.OFPort;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFMultipartAggregateRequest extends OFMultipartRequest implements org.openflow.protocol.interfaces.OFMultipartAggregateRequest {
@@ -22,8 +23,7 @@ public class OFMultipartAggregateRequest extends OFMultipartRequest implements o
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)18));
-		setMultipartType(OFMultipartType.valueOf((short)2, getType()));
-		this.match = new OFMatchOxm();
+		setMultipartType(OFMultipartType.valueOf((short)2, this.type));
     }
     
     public OFMultipartAggregateRequest(OFMultipartAggregateRequest other) {
@@ -45,15 +45,15 @@ public class OFMultipartAggregateRequest extends OFMultipartRequest implements o
 		return this;
 	}
 			
-	public int getOutPort() {
-		return this.out_port;
+	public OFPort getOutPort() {
+		return new OFPort(this.out_port);
 	}
 	
-	public OFMultipartAggregateRequest setOutPort(int out_port) {
-		this.out_port = out_port;
+	public OFMultipartAggregateRequest setOutPort(OFPort port) {
+		this.out_port = (int) port.get();
 		return this;
 	}
-			
+	
 	public int getOutGroup() {
 		return this.out_group;
 	}
@@ -81,16 +81,18 @@ public class OFMultipartAggregateRequest extends OFMultipartRequest implements o
 		return this;
 	}
 			
-	public org.openflow.protocol.interfaces.OFMatchOxm getMatch() {
+	public org.openflow.protocol.interfaces.OFMatch getMatch() {
 		return this.match;
 	}
 	
-	public OFMultipartAggregateRequest setMatch(org.openflow.protocol.interfaces.OFMatchOxm match) {
-		this.match = match;
+	public OFMultipartAggregateRequest setMatch(org.openflow.protocol.interfaces.OFMatch match) {
+		this.match = (OFMatchOxm) match;
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.table_id = data.get();

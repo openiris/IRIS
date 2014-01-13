@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
+import org.openflow.util.OFPort;
 
 public class OFActionOpaqueEnqueue extends OFAction implements org.openflow.protocol.interfaces.OFActionOpaqueEnqueue {
     public static int MINIMUM_LENGTH = 16;
@@ -25,15 +26,15 @@ public class OFActionOpaqueEnqueue extends OFAction implements org.openflow.prot
 		this.queue_id = other.queue_id;
     }
 
-	public short getPort() {
-		return this.port;
+	public OFPort getPort() {
+		return new OFPort(this.port);
 	}
 	
-	public OFActionOpaqueEnqueue setPort(short port) {
-		this.port = port;
+	public OFActionOpaqueEnqueue setPort(OFPort port) {
+		this.port = (short) port.get();
 		return this;
 	}
-			
+	
 	public int getQueueId() {
 		return this.queue_id;
 	}
@@ -43,7 +44,9 @@ public class OFActionOpaqueEnqueue extends OFAction implements org.openflow.prot
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.port = data.getShort();

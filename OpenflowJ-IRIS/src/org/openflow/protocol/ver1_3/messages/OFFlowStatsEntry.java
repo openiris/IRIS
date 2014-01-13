@@ -3,8 +3,8 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFlowStatsEntry {
@@ -27,8 +27,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 	List<org.openflow.protocol.interfaces.OFInstruction>  instructions;
 
     public OFFlowStatsEntry() {
-        this.match = new OFMatchOxm();
-		this.instructions = new LinkedList<org.openflow.protocol.interfaces.OFInstruction>();
+        
     }
     
     public OFFlowStatsEntry(OFFlowStatsEntry other) {
@@ -147,12 +146,12 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		return this;
 	}
 			
-	public org.openflow.protocol.interfaces.OFMatchOxm getMatch() {
+	public org.openflow.protocol.interfaces.OFMatch getMatch() {
 		return this.match;
 	}
 	
-	public OFFlowStatsEntry setMatch(org.openflow.protocol.interfaces.OFMatchOxm match) {
-		this.match = match;
+	public OFFlowStatsEntry setMatch(org.openflow.protocol.interfaces.OFMatch match) {
+		this.match = (OFMatchOxm) match;
 		return this;
 	}
 			
@@ -165,7 +164,17 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		return this;
 	}
 			
-
+	public List<org.openflow.protocol.interfaces.OFAction> getActions() {
+		throw new UnsupportedOperationException("public List<org.openflow.protocol.interfaces.OFAction> getActions() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFFlowStatsEntry setActions(List<org.openflow.protocol.interfaces.OFAction> value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowStatsEntry setActions(List<org.openflow.protocol.interfaces.OFAction> value) is not supported operation");
+	}
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		this.length = data.getShort();
@@ -234,7 +243,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
     	len += match.lengthDiff();
-		for ( org.openflow.protocol.interfaces.OFInstruction i : this.instructions ) { len += i.computeLength(); }
+		if ( this.instructions != null ) for ( org.openflow.protocol.interfaces.OFInstruction i : this.instructions ) { len += i.computeLength(); }
     	return len;
     }
     

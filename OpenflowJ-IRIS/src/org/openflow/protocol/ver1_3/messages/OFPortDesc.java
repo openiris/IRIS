@@ -3,6 +3,7 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
+import org.openflow.util.OFPort;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc {
@@ -41,15 +42,15 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		this.max_speed = other.max_speed;
     }
 
-	public int getPort() {
-		return this.port;
+	public OFPort getPort() {
+		return new OFPort(this.port);
 	}
 	
-	public OFPortDesc setPort(int port) {
-		this.port = port;
+	public OFPortDesc setPort(OFPort port) {
+		this.port = (int) port.get();
 		return this;
 	}
-			
+	
 	public byte[] getHwAddr() {
 		return this.hw_addr;
 	}
@@ -140,7 +141,9 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         this.port = data.getInt();
 		this.pad_1th = data.getInt();

@@ -3,7 +3,9 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
+import java.util.HashSet;
 import org.openflow.protocol.ver1_3.types.*;
+import java.util.Set;
 
 public class OFMeterFeatures   implements org.openflow.protocol.interfaces.OFMeterFeatures {
     public static int MINIMUM_LENGTH = 16;
@@ -45,15 +47,33 @@ public class OFMeterFeatures   implements org.openflow.protocol.interfaces.OFMet
 		return this;
 	}
 			
-	public int getCapabilities() {
+	public int getCapabilitiesWire() {
 		return this.capabilities;
 	}
 	
-	public OFMeterFeatures setCapabilities(int capabilities) {
+	public OFMeterFeatures setCapabilitiesWire(int capabilities) {
 		this.capabilities = capabilities;
 		return this;
 	}
-			
+	
+	public Set<org.openflow.protocol.interfaces.OFCapabilities> getCapabilities() {
+		OFCapabilities tmp = OFCapabilities.of(this.capabilities);
+		Set<org.openflow.protocol.interfaces.OFCapabilities> ret = new HashSet<org.openflow.protocol.interfaces.OFCapabilities>();
+		for ( org.openflow.protocol.interfaces.OFCapabilities v : org.openflow.protocol.interfaces.OFCapabilities.values() ) {
+			if (tmp.has(v)) {
+				ret.add(v);
+			}
+		}
+		return ret;
+	}
+		
+	public OFMeterFeatures setCapabilities(Set<org.openflow.protocol.interfaces.OFCapabilities> values) {
+		OFCapabilities tmp = OFCapabilities.of(this.capabilities);
+		tmp.and( values );
+		this.capabilities = tmp.get();
+		return this;
+	}
+		
 	public byte getMaxBands() {
 		return this.max_bands;
 	}
@@ -72,7 +92,9 @@ public class OFMeterFeatures   implements org.openflow.protocol.interfaces.OFMet
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         this.max_meter = data.getInt();
 		this.band_types = data.getInt();

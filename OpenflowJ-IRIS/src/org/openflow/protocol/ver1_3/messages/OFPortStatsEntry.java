@@ -3,6 +3,7 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
+import org.openflow.util.OFPort;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPortStatsEntry {
@@ -47,15 +48,15 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		this.duration_nsec = other.duration_nsec;
     }
 
-	public int getPortNumber() {
-		return this.port_number;
+	public OFPort getPortNumber() {
+		return new OFPort(this.port_number);
 	}
 	
-	public OFPortStatsEntry setPortNumber(int port_number) {
-		this.port_number = port_number;
+	public OFPortStatsEntry setPortNumber(OFPort port) {
+		this.port_number = (int) port.get();
 		return this;
 	}
-			
+	
 	public long getReceivePackets() {
 		return this.receive_packets;
 	}
@@ -182,7 +183,17 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		return this;
 	}
 			
-
+	public long getReceiveCrcErr() {
+		throw new UnsupportedOperationException("public long getReceiveCrcErr() is not supported operation");
+	}
+	
+	public org.openflow.protocol.interfaces.OFPortStatsEntry setReceiveCrcErr(long value) {
+		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFPortStatsEntry setReceiveCrcErr(long value) is not supported operation");
+	}
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         this.port_number = data.getInt();
 		this.pad_1th = data.getInt();

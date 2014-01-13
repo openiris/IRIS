@@ -21,15 +21,20 @@ public class OFQueueProperty   implements org.openflow.protocol.interfaces.OFQue
 		this.length = other.length;
     }
 
-	public OFQueuePropertyType getType() {
-		return this.type;
+	public org.openflow.protocol.interfaces.OFQueuePropertyType getType() {
+		return OFQueuePropertyType.to(this.type);
+	}
+	
+	public OFQueueProperty setType(org.openflow.protocol.interfaces.OFQueuePropertyType type) {
+		this.type = OFQueuePropertyType.from(type);
+		return this;
 	}
 	
 	public OFQueueProperty setType(OFQueuePropertyType type) {
 		this.type = type;
 		return this;
 	}
-			
+	
 	public short getLength() {
 		return this.length;
 	}
@@ -39,7 +44,9 @@ public class OFQueueProperty   implements org.openflow.protocol.interfaces.OFQue
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         this.type = OFQueuePropertyType.valueOf(OFQueuePropertyType.readFrom(data));
 		this.length = data.getShort();

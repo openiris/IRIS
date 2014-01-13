@@ -20,15 +20,20 @@ public class OFInstruction   implements org.openflow.protocol.interfaces.OFInstr
 		this.length = other.length;
     }
 
-	public OFInstructionType getType() {
-		return this.type;
+	public org.openflow.protocol.interfaces.OFInstructionType getType() {
+		return OFInstructionType.to(this.type);
+	}
+	
+	public OFInstruction setType(org.openflow.protocol.interfaces.OFInstructionType type) {
+		this.type = OFInstructionType.from(type);
+		return this;
 	}
 	
 	public OFInstruction setType(OFInstructionType type) {
 		this.type = type;
 		return this;
 	}
-			
+	
 	public short getLength() {
 		return this.length;
 	}
@@ -38,7 +43,9 @@ public class OFInstruction   implements org.openflow.protocol.interfaces.OFInstr
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         this.type = OFInstructionType.valueOf(OFInstructionType.readFrom(data));
 		this.length = data.getShort();

@@ -3,8 +3,8 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFGroupMod extends OFMessage implements org.openflow.protocol.interfaces.OFGroupMod {
@@ -20,7 +20,6 @@ public class OFGroupMod extends OFMessage implements org.openflow.protocol.inter
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)15));
-		this.buckets = new LinkedList<org.openflow.protocol.interfaces.OFBucket>();
     }
     
     public OFGroupMod(OFGroupMod other) {
@@ -32,24 +31,35 @@ public class OFGroupMod extends OFMessage implements org.openflow.protocol.inter
 		for ( org.openflow.protocol.interfaces.OFBucket i : other.buckets ) { this.buckets.add( new OFBucket((OFBucket)i) ); }
     }
 
-	public OFGroupModCommand getCommand() {
-		return this.command;
+	public org.openflow.protocol.interfaces.OFGroupModCommand getCommand() {
+		return OFGroupModCommand.to(this.command);
+	}
+	
+	public OFGroupMod setCommand(org.openflow.protocol.interfaces.OFGroupModCommand command) {
+		this.command = OFGroupModCommand.from(command);
+		return this;
 	}
 	
 	public OFGroupMod setCommand(OFGroupModCommand command) {
 		this.command = command;
 		return this;
 	}
-			
-	public OFGroupCategory getGroupCategory() {
-		return this.group_category;
+	
+
+	public org.openflow.protocol.interfaces.OFGroupCategory getGroupCategory() {
+		return OFGroupCategory.to(this.group_category);
+	}
+	
+	public OFGroupMod setGroupCategory(org.openflow.protocol.interfaces.OFGroupCategory group_category) {
+		this.group_category = OFGroupCategory.from(group_category);
+		return this;
 	}
 	
 	public OFGroupMod setGroupCategory(OFGroupCategory group_category) {
 		this.group_category = group_category;
 		return this;
 	}
-			
+	
 	public int getGroupId() {
 		return this.group_id;
 	}
@@ -68,7 +78,9 @@ public class OFGroupMod extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);
@@ -100,7 +112,7 @@ public class OFGroupMod extends OFMessage implements org.openflow.protocol.inter
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.interfaces.OFBucket i : this.buckets ) { len += i.computeLength(); }
+    	if ( this.buckets != null ) for ( org.openflow.protocol.interfaces.OFBucket i : this.buckets ) { len += i.computeLength(); }
     	return len;
     }
     

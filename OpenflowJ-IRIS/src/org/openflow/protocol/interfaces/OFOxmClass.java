@@ -1,8 +1,8 @@
 package org.openflow.protocol.interfaces;
 
 public enum OFOxmClass {
-	OFPXMC_OPENFLOW_BASIC,
-	OFPXMC_NXM_0,
-	OFPXMC_NXM_1,
-	OFPXMC_EXPERIMENTER
+	OPENFLOW_BASIC,
+	EXPERIMENTER,
+	NXM_1,
+	NXM_0
 }

@@ -23,15 +23,20 @@ public class OFStatisticsReply extends OFStatistics implements org.openflow.prot
 		this.flags = other.flags;
     }
 
-	public OFStatisticsType getStatisticsType() {
-		return this.statistics_type;
+	public org.openflow.protocol.interfaces.OFStatisticsType getStatisticsType() {
+		return OFStatisticsType.to(this.statistics_type.getTypeValue(), this.type);
+	}
+	
+	public OFStatisticsReply setStatisticsType(org.openflow.protocol.interfaces.OFStatisticsType statistics_type) {
+		this.statistics_type = OFStatisticsType.from(statistics_type, this.type);
+		return this;
 	}
 	
 	public OFStatisticsReply setStatisticsType(OFStatisticsType statistics_type) {
 		this.statistics_type = statistics_type;
 		return this;
 	}
-			
+	
 	public short getFlags() {
 		return this.flags;
 	}
@@ -41,10 +46,12 @@ public class OFStatisticsReply extends OFStatistics implements org.openflow.prot
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
-		this.statistics_type = OFStatisticsType.valueOf(OFStatisticsType.readFrom(data), super.getType());
+		this.statistics_type = OFStatisticsType.valueOf(OFStatisticsType.readFrom(data), this.type);
 		this.flags = data.getShort();
     }
 

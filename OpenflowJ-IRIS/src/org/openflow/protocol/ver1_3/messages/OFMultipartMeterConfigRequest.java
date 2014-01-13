@@ -15,7 +15,7 @@ public class OFMultipartMeterConfigRequest extends OFMultipartRequest implements
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)18));
-		setMultipartType(OFMultipartType.valueOf((short)10, getType()));
+		setMultipartType(OFMultipartType.valueOf((short)10, this.type));
     }
     
     public OFMultipartMeterConfigRequest(OFMultipartMeterConfigRequest other) {
@@ -32,7 +32,9 @@ public class OFMultipartMeterConfigRequest extends OFMultipartRequest implements
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.meter_id = data.getInt();

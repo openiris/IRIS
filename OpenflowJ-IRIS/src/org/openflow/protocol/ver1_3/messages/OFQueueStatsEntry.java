@@ -3,6 +3,7 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
+import org.openflow.util.OFPort;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQueueStatsEntry {
@@ -30,15 +31,15 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 		this.duration_nsec = other.duration_nsec;
     }
 
-	public int getPortNumber() {
-		return this.port_number;
+	public OFPort getPortNumber() {
+		return new OFPort(this.port_number);
 	}
 	
-	public OFQueueStatsEntry setPortNumber(int port_number) {
-		this.port_number = port_number;
+	public OFQueueStatsEntry setPortNumber(OFPort port) {
+		this.port_number = (int) port.get();
 		return this;
 	}
-			
+	
 	public int getQueueId() {
 		return this.queue_id;
 	}
@@ -93,7 +94,9 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         this.port_number = data.getInt();
 		this.queue_id = data.getInt();

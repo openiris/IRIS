@@ -1,4 +1,5 @@
-  	$n	($v, ${typename}Request.class, ${typename}Reply.class,
+  	$n	($v, org.openflow.protocol.interfaces.${enumtype}.$n,
+  		${typename}Request.class, ${typename}Reply.class,
 	    new Instantiable<$supertype>() {
 	      public $supertype instantiate() {
 	        return new ${typename}Request();

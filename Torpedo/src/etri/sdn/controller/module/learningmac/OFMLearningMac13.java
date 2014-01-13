@@ -27,6 +27,7 @@ import org.openflow.protocol.ver1_3.types.OFOxmClass;
 import org.openflow.protocol.ver1_3.types.OFOxmMatchFields;
 import org.openflow.protocol.ver1_3.types.OFPortNo;
 import org.openflow.util.LRULinkedHashMap;
+import org.openflow.util.OFPort;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
@@ -187,13 +188,13 @@ public final class OFMLearningMac13 extends OFModule {
 
 		// send flow_mod to process [labry]
 		OFInstructionApplyActions instruction = new OFInstructionApplyActions();
-		List<OFInstruction> instructions = new LinkedList<OFInstruction>();
+		List<org.openflow.protocol.interfaces.OFInstruction> instructions = new LinkedList<org.openflow.protocol.interfaces.OFInstruction>();
 		OFActionOutput action = new OFActionOutput();
-		List<OFAction> actions = new LinkedList<OFAction>();
+		List<org.openflow.protocol.interfaces.OFAction> actions = new LinkedList<org.openflow.protocol.interfaces.OFAction>();
 		
 		OFFlowMod fm = (OFFlowMod) OFMessageType.FLOW_MOD.newInstance();
 		action.setType(OFActionType.OUTPUT);
-		action.setPort(outPort);
+		action.setPort(OFPort.of(outPort));
 		action.setMaxLength((short) 0x0);
 		action.setLength(action.computeLength());
 		actions.add(action);
@@ -204,16 +205,16 @@ public final class OFMLearningMac13 extends OFModule {
 		instructions.add(instruction);
 
 		fm.setTableId((byte) 0x0)						//the table which the flow entry should be inserted
-		.setCommand(OFFlowModCommand.OFPFC_ADD)
+		.setCommand(OFFlowModCommand.ADD)
 		.setIdleTimeout((short) 0)
 		.setHardTimeout((short) 0)					//permanent if idle and hard timeout are zero
 		.setPriority((short) 100)
 		.setBufferId(bufferId)					//refers to a packet buffered at the switch and sent to the controller
 		.setOutGroup(bufferId)					//OFPP_ANY
-		.setOutPort((command == OFFlowModCommand.OFPFC_DELETE.getValue()) ? outPort : OFPortNo.OFPP_ANY.getValue())
+		.setOutPort(OFPort.of((command == OFFlowModCommand.DELETE.getValue()) ? outPort : OFPortNo.ANY.getValue()))
 		.setMatch(matchOxm)
 		.setInstructions(instructions)
-		.setFlags((short) 0x0001);					//send flow removed message when flow expires or is deleted
+		.setFlagsWire((short) 0x0001);					//send flow removed message when flow expires or is deleted
 		fm.setLength(fm.computeLength());
 		
 		out.add(fm);
@@ -247,14 +248,14 @@ public final class OFMLearningMac13 extends OFModule {
 
 		// Set buffer_id, in_port, actions_len
 		packetOutMessage.setBufferId(packetInMessage.getBufferId());
-		packetOutMessage.setInPort(getInputPort);
+		packetOutMessage.setInPort(OFPort.of(getInputPort));
 		packetOutMessage.setActionsLength((short)OFActionOutput.MINIMUM_LENGTH);
 		packetOutLength += OFActionOutput.MINIMUM_LENGTH;
 
 		// set actions
-		List<OFAction> actions = new ArrayList<OFAction>(1);      
+		List<org.openflow.protocol.interfaces.OFAction> actions = new ArrayList<org.openflow.protocol.interfaces.OFAction>(1);      
 		OFActionOutput action_output = new OFActionOutput();
-		action_output.setPort(egressPort).setMaxLength((short)0);
+		action_output.setPort(OFPort.of(egressPort)).setMaxLength((short)0);
 		actions.add(action_output);
 		//		actions.add(new OFActionOutput(egressPort, (short) 0));
 		packetOutMessage.setActions(actions);
@@ -354,13 +355,13 @@ public final class OFMLearningMac13 extends OFModule {
 		Short vlan = new Short((short) 0xffff);
 		Short outPort = null;
 
-		OFMatchOxm recievedMatchOxm = pi.getMatch();
+		OFMatchOxm recievedMatchOxm = (OFMatchOxm) pi.getMatch();
 		
-		List<OFOxm> recievedlistOxm = recievedMatchOxm.getOxmFields();
+		List<org.openflow.protocol.interfaces.OFOxm> recievedlistOxm = recievedMatchOxm.getOxmFields();
 
 		Integer getInputPortTmp = null;
 
-		for(OFOxm oxm : recievedlistOxm) {
+		for(org.openflow.protocol.interfaces.OFOxm oxm : recievedlistOxm) {
 			
 			switch(oxm.getField()) {
 			case 11:
@@ -392,26 +393,26 @@ public final class OFMLearningMac13 extends OFModule {
 		
 		OFMatchOxm forwardMatchOxm = new OFMatchOxm();
 		forwardMatchOxm.setType(OFMatchType.OXM);
-		List<OFOxm> forwardListOxm = new ArrayList<OFOxm>();
+		List<org.openflow.protocol.interfaces.OFOxm> forwardListOxm = new ArrayList<org.openflow.protocol.interfaces.OFOxm>();
 
 		OFOxm ofOxmInPort = new OFOxm();
-		ofOxmInPort.setOxmClass(OFOxmClass.OFPXMC_OPENFLOW_BASIC);
-		ofOxmInPort.setField(OFOxmMatchFields.OFPXMT_OFB_IN_PORT.getValue()); //OFOxmMatchFields.
+		ofOxmInPort.setOxmClass(OFOxmClass.OPENFLOW_BASIC);
+		ofOxmInPort.setField(OFOxmMatchFields.OFB_IN_PORT.getValue()); //OFOxmMatchFields.
 		ofOxmInPort.setBitmask((byte) 0);
 		ofOxmInPort.setData(IPv4.toIPv4AddressBytes(getInputPortTmp));
 		ofOxmInPort.setPayloadLength((byte) 0x04);
 
 
 		OFOxm ofOxmEthDst = new OFOxm();
-		ofOxmEthDst.setOxmClass(OFOxmClass.OFPXMC_OPENFLOW_BASIC);
-		ofOxmEthDst.setField(OFOxmMatchFields.OFPXMT_OFB_ETH_DST.getValue()); //OFOxmMatchFields.
+		ofOxmEthDst.setOxmClass(OFOxmClass.OPENFLOW_BASIC);
+		ofOxmEthDst.setField(OFOxmMatchFields.OFB_ETH_DST.getValue()); //OFOxmMatchFields.
 		ofOxmEthDst.setBitmask((byte) 0);
 		ofOxmEthDst.setData(Ethernet.toByteArray(destMac));
 		ofOxmEthDst.setPayloadLength((byte) 0x06);
 
 		OFOxm ofOxmEthSrc = new OFOxm();
-		ofOxmEthSrc.setOxmClass(OFOxmClass.OFPXMC_OPENFLOW_BASIC);
-		ofOxmEthSrc.setField(OFOxmMatchFields.OFPXMT_OFB_ETH_SRC.getValue()); //OFOxmMatchFields.
+		ofOxmEthSrc.setOxmClass(OFOxmClass.OPENFLOW_BASIC);
+		ofOxmEthSrc.setField(OFOxmMatchFields.OFB_ETH_SRC.getValue()); //OFOxmMatchFields.
 		ofOxmEthSrc.setBitmask((byte) 0);
 		ofOxmEthSrc.setData(Ethernet.toByteArray(sourceMac));
 		ofOxmEthSrc.setPayloadLength((byte) 0x06);
@@ -423,18 +424,6 @@ public final class OFMLearningMac13 extends OFModule {
 		forwardMatchOxm.setOxmFields(forwardListOxm);
 		forwardMatchOxm.setLength((short) forwardMatchOxm.computeLength());//working on...
 		
-		
-//		Logger.stderr("sourceMac : " + MACAddress.valueOf(sourceMac));
-//		Logger.stderr("destMac : " + MACAddress.valueOf(destMac));
-//		Logger.stderr("vlan : " + vlan);
-//		Logger.stderr("inputPort : " + getInputPort);
-//		
-//		if(sourceIP != null && destIP != null ) {
-//			Logger.stderr("source IP : " + IPv4.fromIPv4Address(sourceIP));
-//			Logger.stderr("dest IP : " +  IPv4.fromIPv4Address(destIP));
-//		}
-
-
 		if ((destMac & 0xfffffffffff0L) == 0x0180c2000000L) {
 			return true;
 		}
@@ -452,7 +441,7 @@ public final class OFMLearningMac13 extends OFModule {
 			// XXX For LearningSwitch this doesn't do much. The sourceMac is removed
 			//     from port map whenever a flow expires, so you would still see
 			//     a lot of floods.
-			this.writePacketOutForPacketIn(conn.getSwitch(), pi, OFPortNo.OFPP_FLOOD.getValue(), getInputPort, out);
+			this.writePacketOutForPacketIn(conn.getSwitch(), pi, OFPortNo.FLOOD.getValue(), getInputPort, out);
 			
 		} else if (outPort == getInputPort) {
 			
@@ -470,7 +459,7 @@ public final class OFMLearningMac13 extends OFModule {
 			// NW_SRC and NW_DST as well
 
 
-			this.writeFlowMod(conn.getSwitch(), OFFlowModCommand.OFPFC_ADD.getValue(), 
+			this.writeFlowMod(conn.getSwitch(), OFFlowModCommand.ADD.getValue(), 
 					pi.getBufferId(), forwardMatchOxm, outPort, out);
 
 			

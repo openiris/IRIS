@@ -20,15 +20,20 @@ public class OFTableFeatureProperty   implements org.openflow.protocol.interface
 		this.length = other.length;
     }
 
-	public OFTableFeaturePropertyType getType() {
-		return this.type;
+	public org.openflow.protocol.interfaces.OFTableFeaturePropertyType getType() {
+		return OFTableFeaturePropertyType.to(this.type);
+	}
+	
+	public OFTableFeatureProperty setType(org.openflow.protocol.interfaces.OFTableFeaturePropertyType type) {
+		this.type = OFTableFeaturePropertyType.from(type);
+		return this;
 	}
 	
 	public OFTableFeatureProperty setType(OFTableFeaturePropertyType type) {
 		this.type = type;
 		return this;
 	}
-			
+	
 	public short getLength() {
 		return this.length;
 	}
@@ -38,7 +43,9 @@ public class OFTableFeatureProperty   implements org.openflow.protocol.interface
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         this.type = OFTableFeaturePropertyType.valueOf(OFTableFeaturePropertyType.readFrom(data));
 		this.length = data.getShort();

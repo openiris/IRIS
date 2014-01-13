@@ -4,8 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.ver1_3.messages.OFPacketIn;
-import org.openflow.protocol.ver1_3.types.OFMessageType;
+import org.openflow.protocol.interfaces.OFMessageType;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFController;
@@ -94,9 +93,6 @@ public class SimpleOFController extends OFController {
 	public boolean handlePacketIn(Connection conn, MessageContext context, OFMessage m) {
 		
 		//m.getVersion(); //labry 
-		
-		OFPacketIn pi = (OFPacketIn) m;
-
 		List<OFMessage> out = new LinkedList<OFMessage>();
 		for ( int i = 0; i < packet_in_pipeline.length; ++i ) {
 			boolean cont = packet_in_pipeline[i].processMessage( conn, context, m, out );
@@ -142,7 +138,7 @@ public class SimpleOFController extends OFController {
 	@Override
 	public boolean handleGeneric(Connection conn, MessageContext context, OFMessage m) {
 		
-		OFMessageType msgType = OFMessageType.valueOf(m.getTypeByte());
+		OFMessageType msgType = m.getType();
 		
 		if ( msgType == OFMessageType.PORT_STATUS ) {
 			List<OFMessage> out = new LinkedList<OFMessage>();

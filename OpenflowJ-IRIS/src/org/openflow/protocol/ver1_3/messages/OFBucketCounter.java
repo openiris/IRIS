@@ -38,7 +38,9 @@ public class OFBucketCounter   implements org.openflow.protocol.interfaces.OFBuc
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         this.packet_count = data.getLong();
 		this.byte_count = data.getLong();

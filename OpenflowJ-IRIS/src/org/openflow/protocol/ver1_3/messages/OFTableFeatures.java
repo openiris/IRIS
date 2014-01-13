@@ -3,8 +3,8 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTableFeatures {
@@ -23,7 +23,6 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 
     public OFTableFeatures() {
         name = new byte[32];
-		this.properties = new LinkedList<org.openflow.protocol.interfaces.OFTableFeatureProperty>();
     }
     
     public OFTableFeatures(OFTableFeatures other) {
@@ -110,7 +109,9 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		this.length = data.getShort();
@@ -163,7 +164,7 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.interfaces.OFTableFeatureProperty i : this.properties ) { len += i.computeLength(); }
+    	if ( this.properties != null ) for ( org.openflow.protocol.interfaces.OFTableFeatureProperty i : this.properties ) { len += i.computeLength(); }
     	return len;
     }
     

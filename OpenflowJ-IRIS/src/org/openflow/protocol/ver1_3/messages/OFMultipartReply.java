@@ -3,7 +3,9 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
+import java.util.HashSet;
 import org.openflow.protocol.ver1_3.types.*;
+import java.util.Set;
 
 public class OFMultipartReply extends OFMultipart implements org.openflow.protocol.interfaces.OFMultipartReply {
     public static int MINIMUM_LENGTH = 16;
@@ -16,7 +18,7 @@ public class OFMultipartReply extends OFMultipart implements org.openflow.protoc
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)19));
-		this.flags = (short)0;
+		this.flags = 0;
     }
     
     public OFMultipartReply(OFMultipartReply other) {
@@ -25,28 +27,53 @@ public class OFMultipartReply extends OFMultipart implements org.openflow.protoc
 		this.flags = other.flags;
     }
 
-	public OFMultipartType getMultipartType() {
-		return this.multipart_type;
+	public org.openflow.protocol.interfaces.OFMultipartType getMultipartType() {
+		return OFMultipartType.to(this.multipart_type.getTypeValue(), this.type);
+	}
+	
+	public OFMultipartReply setMultipartType(org.openflow.protocol.interfaces.OFMultipartType multipart_type) {
+		this.multipart_type = OFMultipartType.from(multipart_type, this.type);
+		return this;
 	}
 	
 	public OFMultipartReply setMultipartType(OFMultipartType multipart_type) {
 		this.multipart_type = multipart_type;
 		return this;
 	}
-			
-	public short getFlags() {
+	
+	public short getFlagsWire() {
 		return this.flags;
 	}
 	
-	public OFMultipartReply setFlags(short flags) {
+	public OFMultipartReply setFlagsWire(short flags) {
 		this.flags = flags;
 		return this;
 	}
-			
-
+	
+	public Set<org.openflow.protocol.interfaces.OFMultipartReplyFlags> getFlags() {
+		OFMultipartReplyFlags tmp = OFMultipartReplyFlags.of(this.flags);
+		Set<org.openflow.protocol.interfaces.OFMultipartReplyFlags> ret = new HashSet<org.openflow.protocol.interfaces.OFMultipartReplyFlags>();
+		for ( org.openflow.protocol.interfaces.OFMultipartReplyFlags v : org.openflow.protocol.interfaces.OFMultipartReplyFlags.values() ) {
+			if (tmp.has(v)) {
+				ret.add(v);
+			}
+		}
+		return ret;
+	}
+		
+	public OFMultipartReply setFlags(Set<org.openflow.protocol.interfaces.OFMultipartReplyFlags> values) {
+		OFMultipartReplyFlags tmp = OFMultipartReplyFlags.of(this.flags);
+		tmp.and( values );
+		this.flags = tmp.get();
+		return this;
+	}
+		
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
-		this.multipart_type = OFMultipartType.valueOf(OFMultipartType.readFrom(data), super.getType());
+		this.multipart_type = OFMultipartType.valueOf(OFMultipartType.readFrom(data), this.type);
 		this.flags = data.getShort();
 		this.pad_1th = data.getInt();
     }

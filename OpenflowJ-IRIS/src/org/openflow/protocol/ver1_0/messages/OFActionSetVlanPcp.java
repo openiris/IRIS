@@ -32,7 +32,9 @@ public class OFActionSetVlanPcp extends OFAction implements org.openflow.protoco
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.vlan_pcp = data.get();

@@ -36,6 +36,7 @@ import org.openflow.protocol.ver1_3.types.OFMessageType;
 import org.openflow.protocol.ver1_3.types.OFMultipartType;
 import org.openflow.protocol.ver1_3.types.OFPortConfig;
 import org.openflow.protocol.ver1_3.types.OFPortReason;
+import org.openflow.util.OFPort;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFController;
@@ -88,7 +89,7 @@ public class VersionAdaptor13 extends VersionAdaptor {
 		PortInformation pi = this.getPortInformation(sw, (int)portNum);
 		if ( pi != null ) {
 			OFPortDesc pd = new OFPortDesc()
-			.setPort(portNum)
+			.setPort(OFPort.of(portNum))
 			.setHwAddr(pi.getHwAddr())
 			.setName(pi.getName())
 			.setConfig(pi.getConfig())
@@ -108,7 +109,7 @@ public class VersionAdaptor13 extends VersionAdaptor {
 		List<OFPortDesc> ret = new LinkedList<OFPortDesc>();
 		for ( PortInformation pi : this.getPortInformations(sw) ) {
 			OFPortDesc pd = new OFPortDesc()
-			.setPort(pi.getPort())
+			.setPort(OFPort.of(pi.getPort()))
 			.setHwAddr(pi.getHwAddr())
 			.setName(pi.getName())
 			.setConfig(pi.getConfig())
@@ -125,7 +126,7 @@ public class VersionAdaptor13 extends VersionAdaptor {
 	}
 	
 	public void setPort(IOFSwitch sw, OFPortDesc portDesc) {
-		PortInformation pi = this.getPortInformation(sw, portDesc.getPort());
+		PortInformation pi = this.getPortInformation(sw, portDesc.getPort().get());
 		pi.setHwAddr(portDesc.getHwAddr())
 		.setName(portDesc.getName())
 		.setConfig(portDesc.getConfig())
@@ -201,15 +202,15 @@ public class VersionAdaptor13 extends VersionAdaptor {
 			if ( sw == null ) return false;
 			
 			OFMultipartReply r = (OFMultipartReply) m;
-			if ( r.getMultipartType() == OFMultipartType.PORT_DESC ) {
+			if ( r.getMultipartType() == org.openflow.protocol.interfaces.OFMultipartType.PORT_DESC ) {
 				OFMultipartPortDescReply portDesc = (OFMultipartPortDescReply) m;
 				synchronized ( portLock ) {
-					List<OFPortDesc> ports = portDesc.getEntries();
-					for ( OFPortDesc port: ports ) {
-						setPort(sw, port);
+					List<org.openflow.protocol.interfaces.OFPortDesc> ports = portDesc.getEntries();
+					for ( org.openflow.protocol.interfaces.OFPortDesc port: ports ) {
+						setPort(sw, (OFPortDesc) port);
 					}
 				}
-			} else if ( r.getMultipartType() == OFMultipartType.DESC ) {
+			} else if ( r.getMultipartType() == org.openflow.protocol.interfaces.OFMultipartType.DESC ) {
 				OFMultipartDescReply desc = (OFMultipartDescReply) m;
 				this.getSwitchInformation(sw)
 				.setDatapathDescription(desc.getDatapathDescription())
@@ -231,7 +232,7 @@ public class VersionAdaptor13 extends VersionAdaptor {
 				
 				this.getSwitchInformation(sw)
 				.setId(fr.getDatapathId())
-				.setCapabilities(fr.getCapabilities())
+				.setCapabilities(fr.getCapabilitiesWire())
 				.setBuffers(fr.getNBuffers())
 				.setTables(fr.getNTables());
 				
@@ -261,14 +262,16 @@ public class VersionAdaptor13 extends VersionAdaptor {
 						
 			// send flow_mod to process table miss packets [jshin]
 			OFInstructionApplyActions instruction = new OFInstructionApplyActions();
-			List<OFInstruction> instructions = new LinkedList<OFInstruction>();
+			List<org.openflow.protocol.interfaces.OFInstruction> instructions = 
+					new LinkedList<org.openflow.protocol.interfaces.OFInstruction>();
 			OFMatchOxm match = new OFMatchOxm();
 			OFActionOutput action = new OFActionOutput();
-			List<OFAction> actions = new LinkedList<OFAction>();
+			List<org.openflow.protocol.interfaces.OFAction> actions = 
+					new LinkedList<org.openflow.protocol.interfaces.OFAction>();
 			
 			OFFlowMod fm = (OFFlowMod) OFMessageType.FLOW_MOD.newInstance();
 			action.setType(OFActionType.OUTPUT);
-			action.setPort(0xfffffffd).setMaxLength((short) 0);		//OFPP_CONTROLLER
+			action.setPort(OFPort.of(0xfffffffd)).setMaxLength((short) 0);		//OFPP_CONTROLLER
 			action.setMaxLength((short) 0x0);
 			action.setLength(action.computeLength());
 			actions.add(action);
@@ -279,16 +282,16 @@ public class VersionAdaptor13 extends VersionAdaptor {
 			instructions.add(instruction);
 
 			fm.setTableId((byte) 0x0)						//the table which the flow entry should be inserted
-			.setCommand(OFFlowModCommand.OFPFC_ADD)
+			.setCommand(OFFlowModCommand.ADD)
 			.setIdleTimeout((short) 0)
 			.setHardTimeout((short) 0)					//permanent if idle and hard timeout are zero
 			.setPriority((short) 0)
 			.setBufferId(0x00000000)					//refers to a packet buffered at the switch and sent to the controller
 			.setOutGroup(0xffffffff)					//OFPP_ANY
-			.setOutPort(0xffffffff)
+			.setOutPort(OFPort.of(0xffffffff))
 			.setMatch(match)
 			.setInstructions(instructions)
-			.setFlags((short) 0x0001);					//send flow removed message when flow expires or is deleted
+			.setFlagsWire((short) 0x0001);					//send flow removed message when flow expires or is deleted
 			
 			conn.write(fm);			
 			
@@ -297,11 +300,11 @@ public class VersionAdaptor13 extends VersionAdaptor {
 			if ( sw == null ) return false;
 			
 			OFPortStatus ps = (OFPortStatus) m;
-			OFPortDesc desc = ps.getDesc();
-			if ( ps.getReason() == OFPortReason.OFPPR_DELETE.ordinal() ) {
-				deletePort( sw, desc.getPort() );
-			} else if ( ps.getReason() == OFPortReason.OFPPR_MODIFY.ordinal() ) {
-				deletePort( sw, desc.getPort() );
+			OFPortDesc desc = (OFPortDesc) ps.getDesc();
+			if ( ps.getReason() == OFPortReason.DELETE.ordinal() ) {
+				deletePort( sw, desc.getPort().get() );
+			} else if ( ps.getReason() == OFPortReason.MODIFY.ordinal() ) {
+				deletePort( sw, desc.getPort().get() );
 				setPort( sw, desc );
 			} else {
 				setPort( sw, desc );
@@ -402,7 +405,7 @@ public class VersionAdaptor13 extends VersionAdaptor {
 	public boolean portEnabled(OFPortDesc port) {
 		if ( port == null ) 
 			return false;
-		if ( (port.getConfig() & OFPortConfig.OFPPC_PORT_DOWN) > 0 ) {
+		if ( (port.getConfig() & OFPortConfig.PORT_DOWN) > 0 ) {
 			return false;
 		}
 		return true;
@@ -436,7 +439,7 @@ public class VersionAdaptor13 extends VersionAdaptor {
 		
 		for (OFPortDesc port: allPorts) {
 			if (portEnabled(port)) {
-				result.add(port.getPort());
+				result.add(port.getPort().get());
 			}
 		}
 		return result;

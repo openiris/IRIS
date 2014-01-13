@@ -19,8 +19,10 @@ public class OFMultipart extends OFMessage implements org.openflow.protocol.inte
     	super(other);
     }
 
-
-
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

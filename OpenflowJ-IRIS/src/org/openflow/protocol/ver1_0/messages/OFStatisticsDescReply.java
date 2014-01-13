@@ -18,7 +18,7 @@ public class OFStatisticsDescReply extends OFStatisticsReply implements org.open
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)17));
-		setStatisticsType(OFStatisticsType.valueOf((short)0, getType()));
+		setStatisticsType(OFStatisticsType.valueOf((short)0, this.type));
     }
     
     public OFStatisticsDescReply(OFStatisticsDescReply other) {
@@ -75,7 +75,9 @@ public class OFStatisticsDescReply extends OFStatisticsReply implements org.open
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.manufacturer_description = StringByteSerializer.readFrom(data, 256);

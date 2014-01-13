@@ -3,8 +3,8 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFTableFeaturePropertyWriteActionsMiss extends OFTableFeatureProperty implements org.openflow.protocol.interfaces.OFTableFeaturePropertyWriteActionsMiss {
@@ -16,7 +16,6 @@ public class OFTableFeaturePropertyWriteActionsMiss extends OFTableFeatureProper
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFTableFeaturePropertyType.valueOf((short)5));
-		this.action_ids = new LinkedList<org.openflow.protocol.interfaces.OFActionId>();
     }
     
     public OFTableFeaturePropertyWriteActionsMiss(OFTableFeaturePropertyWriteActionsMiss other) {
@@ -34,7 +33,9 @@ public class OFTableFeaturePropertyWriteActionsMiss extends OFTableFeatureProper
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);
@@ -55,7 +56,7 @@ public class OFTableFeaturePropertyWriteActionsMiss extends OFTableFeatureProper
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.interfaces.OFActionId i : this.action_ids ) { len += i.computeLength(); }
+    	if ( this.action_ids != null ) for ( org.openflow.protocol.interfaces.OFActionId i : this.action_ids ) { len += i.computeLength(); }
     	return len;
     }
     

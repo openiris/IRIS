@@ -20,8 +20,10 @@ public class OFQueuePropertyNone extends OFQueueProperty implements org.openflow
     	super(other);
     }
 
-
-
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

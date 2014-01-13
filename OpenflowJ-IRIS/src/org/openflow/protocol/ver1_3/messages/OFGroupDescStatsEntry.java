@@ -3,8 +3,8 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFGroupDescStatsEntry   implements org.openflow.protocol.interfaces.OFGroupDescStatsEntry {
@@ -17,7 +17,7 @@ public class OFGroupDescStatsEntry   implements org.openflow.protocol.interfaces
 	List<org.openflow.protocol.interfaces.OFBucket>  buckets;
 
     public OFGroupDescStatsEntry() {
-        this.buckets = new LinkedList<org.openflow.protocol.interfaces.OFBucket>();
+        
     }
     
     public OFGroupDescStatsEntry(OFGroupDescStatsEntry other) {
@@ -64,7 +64,9 @@ public class OFGroupDescStatsEntry   implements org.openflow.protocol.interfaces
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		this.length = data.getShort();
@@ -95,7 +97,7 @@ public class OFGroupDescStatsEntry   implements org.openflow.protocol.interfaces
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	for ( org.openflow.protocol.interfaces.OFBucket i : this.buckets ) { len += i.computeLength(); }
+    	if ( this.buckets != null ) for ( org.openflow.protocol.interfaces.OFBucket i : this.buckets ) { len += i.computeLength(); }
     	return len;
     }
     

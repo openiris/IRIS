@@ -11,17 +11,25 @@ import java.util.List;
 import org.openflow.protocol.ver1_0.messages.*;
 
 public enum OFQueuePropertyType {
-    NONE	(0, OFQueuePropertyNone.class, new Instantiable<OFQueueProperty>() {
-    public OFQueueProperty instantiate() {
-      return new OFQueuePropertyNone();
-    }}),
-	MIN_RATE	(1, OFQueuePropertyMinRate.class, new Instantiable<OFQueueProperty>() {
-    public OFQueueProperty instantiate() {
-      return new OFQueuePropertyMinRate();
-    }});
+    NONE	(0, org.openflow.protocol.interfaces.OFQueuePropertyType.NONE, 
+	OFQueuePropertyNone.class, 
+	new Instantiable<OFQueueProperty>() {
+    	public OFQueueProperty instantiate() {
+      		return new OFQueuePropertyNone();
+    	}
+    }),
+	MIN_RATE	(1, org.openflow.protocol.interfaces.OFQueuePropertyType.MIN_RATE, 
+	OFQueuePropertyMinRate.class, 
+	new Instantiable<OFQueueProperty>() {
+    	public OFQueueProperty instantiate() {
+      		return new OFQueuePropertyMinRate();
+    	}
+    });
 
     // static OFQueuePropertyType[] mapping;
     static Map<Integer, OFQueuePropertyType> mapping;
+    static Map<Integer, org.openflow.protocol.interfaces.OFQueuePropertyType> compatMapping;
+    static Map<org.openflow.protocol.interfaces.OFQueuePropertyType, OFQueuePropertyType> compatMappingReverse;
     static int start_key = 0;
     static int end_key = 0;
 
@@ -30,7 +38,10 @@ public enum OFQueuePropertyType {
     protected Instantiable<OFQueueProperty> instantiable;
     protected int type;
 
-    OFQueuePropertyType(int type, Class<? extends OFQueueProperty> clazz, Instantiable<OFQueueProperty> instantiator) {
+    OFQueuePropertyType(
+    	int type, org.openflow.protocol.interfaces.OFQueuePropertyType compatType,
+    	Class<? extends OFQueueProperty> clazz, Instantiable<OFQueueProperty> instantiator) 
+    {
         this.type = (int) type;
         this.clazz = clazz;
         this.instantiable = instantiator;
@@ -41,15 +52,10 @@ public enum OFQueuePropertyType {
                     "Failure getting constructor for class: " + clazz, e);
         }
         OFQueuePropertyType.addMapping(this.type, this);
+        OFQueuePropertyType.addMapping(this.type, compatType, this);
     }
 
     static public void addMapping(int i, OFQueuePropertyType t) {
-    	/*
-        if (mapping == null)
-            mapping = new OFQueuePropertyType[2];
-        if ( i < 0 ) i = (int)(2 + i);
-        OFQueuePropertyType.mapping[i] = t;
-        */
         if ( mapping == null )
         	mapping = new ConcurrentHashMap<Integer, OFQueuePropertyType>();
         	
@@ -59,13 +65,34 @@ public enum OFQueuePropertyType {
         end_key = i;
         mapping.put(i, t);
     }
+    
+    static public void addMapping(int i, org.openflow.protocol.interfaces.OFQueuePropertyType c, OFQueuePropertyType t) {
+    	if ( compatMapping == null ) 
+    		compatMapping = new ConcurrentHashMap<Integer, org.openflow.protocol.interfaces.OFQueuePropertyType>();
+    		
+    	if ( compatMappingReverse == null )
+    		compatMappingReverse = new ConcurrentHashMap<org.openflow.protocol.interfaces.OFQueuePropertyType, OFQueuePropertyType>();
+    		
+    	compatMapping.put( i, c );
+    	compatMappingReverse.put( c, t );
+    }
 
     static public OFQueuePropertyType valueOf(int i) {
-    	/*
-        if ( i < 0 ) i = (int)(2 + i);
-        return OFQueuePropertyType.mapping[i];
-        */
         return mapping.get(i);
+    }
+    
+    /**
+     * Convert to compatibility-support type
+     */
+    static public org.openflow.protocol.interfaces.OFQueuePropertyType to(OFQueuePropertyType i) {
+    	return compatMapping.get(i.getTypeValue());
+    }
+    
+    /**
+     * Convert from compatibility-support type
+     */
+    static public OFQueuePropertyType from(org.openflow.protocol.interfaces.OFQueuePropertyType c) {
+    	return compatMappingReverse.get(c);
     }
     
 	static public int readFrom(ByteBuffer data) {
@@ -73,12 +100,10 @@ public enum OFQueuePropertyType {
 	}
     
     static public OFQueuePropertyType first() {
-    	// return OFQueuePropertyType.mapping[0];
     	return mapping.get(start_key);
     }
     
     static public OFQueuePropertyType last() {
-    	// return OFQueuePropertyType.mapping[OFQueuePropertyType.mapping.length - 1];
     	return mapping.get(end_key);
     }
     
@@ -89,7 +114,7 @@ public enum OFQueuePropertyType {
     		demux.readFrom(data);
     		data.reset();
     		
-    		OFQueueProperty real = demux.getType().newInstance();
+    		OFQueueProperty real = OFQueuePropertyType.from(demux.getType()).newInstance();
     		real.readFrom(data);
     		output.add(real);
     		length -= real.getLength();

@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
+import org.openflow.util.OFPort;
 
 public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.openflow.protocol.interfaces.OFStatisticsFlowRequest {
     public static int MINIMUM_LENGTH = 56;
@@ -17,8 +18,7 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
         super();
 		setLength(U16.t(MINIMUM_LENGTH));
 		setType(OFMessageType.valueOf((byte)16));
-		setStatisticsType(OFStatisticsType.valueOf((short)1, getType()));
-		this.match = new OFMatch();
+		setStatisticsType(OFStatisticsType.valueOf((short)1, this.type));
     }
     
     public OFStatisticsFlowRequest(OFStatisticsFlowRequest other) {
@@ -46,16 +46,18 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 		return this;
 	}
 			
-	public short getOutPort() {
-		return this.out_port;
+	public OFPort getOutPort() {
+		return new OFPort(this.out_port);
 	}
 	
-	public OFStatisticsFlowRequest setOutPort(short out_port) {
-		this.out_port = out_port;
+	public OFStatisticsFlowRequest setOutPort(OFPort port) {
+		this.out_port = (short) port.get();
 		return this;
 	}
-			
-
+	
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		if (this.match == null) this.match = new OFMatch();

@@ -24,15 +24,20 @@ public class OFMeterBand   implements org.openflow.protocol.interfaces.OFMeterBa
 		this.burst_size = other.burst_size;
     }
 
-	public OFMeterBandType getType() {
-		return this.type;
+	public org.openflow.protocol.interfaces.OFMeterBandType getType() {
+		return OFMeterBandType.to(this.type);
+	}
+	
+	public OFMeterBand setType(org.openflow.protocol.interfaces.OFMeterBandType type) {
+		this.type = OFMeterBandType.from(type);
+		return this;
 	}
 	
 	public OFMeterBand setType(OFMeterBandType type) {
 		this.type = type;
 		return this;
 	}
-			
+	
 	public short getLength() {
 		return this.length;
 	}
@@ -60,7 +65,9 @@ public class OFMeterBand   implements org.openflow.protocol.interfaces.OFMeterBa
 		return this;
 	}
 			
-
+	
+	
+	
     public void readFrom(ByteBuffer data) {
         this.type = OFMeterBandType.valueOf(OFMeterBandType.readFrom(data));
 		this.length = data.getShort();

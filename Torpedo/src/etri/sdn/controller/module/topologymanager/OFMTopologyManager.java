@@ -18,6 +18,7 @@ import org.openflow.protocol.ver1_0.messages.OFPacketIn;
 import org.openflow.protocol.ver1_0.messages.OFPacketOut;
 import org.openflow.protocol.ver1_0.types.OFMessageType;
 import org.openflow.protocol.ver1_0.types.OFPortNo;
+import org.openflow.util.OFPort;
 
 import etri.sdn.controller.IOFTask;
 import etri.sdn.controller.MessageContext;
@@ -267,7 +268,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	 */
 	protected boolean dropFilter(long sw, OFPacketIn pi) {
 		boolean result = true;
-		short port = pi.getInputPort();
+		short port = (short) pi.getInputPort().get();
 
 		// If the input port is not allowed for data traffic, drop everything.
 		// BDDP packets will not reach this stage.
@@ -295,10 +296,11 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		OFPacketOut po = (OFPacketOut) OFMessageType.PACKET_OUT.newInstance();
 //		OFPacketOut po = (OFPacketOut) sw.getConnection().getFactory().getMessage(OFType.PACKET_OUT);
 
-		List<OFAction> actions = new ArrayList<OFAction>();
+		List<org.openflow.protocol.interfaces.OFAction> actions = 
+				new ArrayList<org.openflow.protocol.interfaces.OFAction>();
 		for(short p: ports) {
 			OFActionOutput action_out = new OFActionOutput();
-			action_out.setPort(p);
+			action_out.setPort(OFPort.of(p));
 			action_out.setMaxLength((short) 0);
 //			actions.add(new OFActionOutput(p, (short) 0));
 			actions.add(action_out);
@@ -311,7 +313,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		// set buffer-id to BUFFER_ID_NONE
 		po.setBufferId(0xffffffff /* BUFFER_ID_NONE */);
 		// set in-port to OFPP_NONE
-		po.setInputPort(OFPortNo.OFPP_NONE.getValue());
+		po.setInputPort(OFPort.of(OFPortNo.NONE.getValue()));
 
 		// set packet data
 //		po.setPacketData(packetData);
