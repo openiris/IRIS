@@ -1,6 +1,6 @@
 IRIS
 ====
-IRIS (sounds ai-ri-s) is the name of an Openflow Controller created by ETRI.
+IRIS (pronounced ai-ri-s) is the Resursive SDN Openflow Controller created by IRIS Research Section of ETRI.
 
 In Greek mythodology, Iris is the goddess of the rainbow as well as the messenger of the other gods. 
 We named our controller after Iris in the hopes of creating a control plane architecture 
@@ -33,27 +33,27 @@ Specification
 
 1. Supports Openflow 1.0 (1.3 is comming at the end of year 2013)
 2. Pure Java-based Implementation
-3. Handles 5 million Mac Learning Requestes per second with Commodity HW
-4. Supports about 500 concurrent connections to switches with Commodity HW
-5. The same license polity with Floodlight (Apache license)
+3. Handles 5 million Mac Learning Requestes per second with commodity HW
+4. Supports about 500 concurrent connections to switches with commodity HW
+5. The same license policy with Floodlight (Apache license)
 
 Authors
 -------
 Byungjoon Lee (bjlee@etri.re.kr) 
 * GitHub ID: bjlee72 
-* Senior Engineer 
+* Senior Researcher 
 * SDN Technology Research Devision, ETRI 
 * Key Interests are: Software Engineering, SDN, Network Management, ICN
 
 Jisoo Shin (jshin@etri.re.kr) 
 * GitHub ID: jsshin 
-* Senior Engineer 
+* Senior Researcher 
 * SDN Technology Research Devision, ETRI 
 * Key Interests are: SDN, Network Management
 
-Sae Hyoung Park (labry@etri.re.kr) 
+Sae Hyong Park (labry@etri.re.kr) 
 * GitHub ID: justin-labry 
-* Engineer 
+* Researcher 
 * SDN Technology Research Devision, ETRI 
 * Key Interests are: SDN, Network Management
 
