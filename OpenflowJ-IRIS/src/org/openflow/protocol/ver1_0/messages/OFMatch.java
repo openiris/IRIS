@@ -184,10 +184,12 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		return this;
 	}
 			
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public List<org.openflow.protocol.interfaces.OFOxm> getOxmFields() {
 		throw new UnsupportedOperationException("public List<org.openflow.protocol.interfaces.OFOxm> getOxmFields() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFMatchOxm setOxmFields(List<org.openflow.protocol.interfaces.OFOxm> value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFMatchOxm setOxmFields(List<org.openflow.protocol.interfaces.OFOxm> value) is not supported operation");
 	}

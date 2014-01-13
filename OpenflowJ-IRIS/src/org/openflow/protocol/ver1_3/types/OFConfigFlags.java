@@ -126,7 +126,8 @@ public class OFConfigFlags {
 	public boolean has(org.openflow.protocol.interfaces.OFConfigFlags value) {
 		Short v = mappings.get(value);
 		if ( v == null ) {
-			throw new IllegalArgumentException("OFConfigFlags.set is called with illegal parameter.");
+			// throw new IllegalArgumentException("OFConfigFlags.set is called with illegal parameter.");
+			return false;
 		}
 		return (this.value & v) == v;
 	}

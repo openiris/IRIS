@@ -126,7 +126,8 @@ public class OFMeterFlags {
 	public boolean has(org.openflow.protocol.interfaces.OFMeterFlags value) {
 		Short v = mappings.get(value);
 		if ( v == null ) {
-			throw new IllegalArgumentException("OFMeterFlags.set is called with illegal parameter.");
+			// throw new IllegalArgumentException("OFMeterFlags.set is called with illegal parameter.");
+			return false;
 		}
 		return (this.value & v) == v;
 	}

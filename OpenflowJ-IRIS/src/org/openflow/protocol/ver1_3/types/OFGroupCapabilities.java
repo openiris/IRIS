@@ -126,7 +126,8 @@ public class OFGroupCapabilities {
 	public boolean has(org.openflow.protocol.interfaces.OFGroupCapabilities value) {
 		Integer v = mappings.get(value);
 		if ( v == null ) {
-			throw new IllegalArgumentException("OFGroupCapabilities.set is called with illegal parameter.");
+			// throw new IllegalArgumentException("OFGroupCapabilities.set is called with illegal parameter.");
+			return false;
 		}
 		return (this.value & v) == v;
 	}

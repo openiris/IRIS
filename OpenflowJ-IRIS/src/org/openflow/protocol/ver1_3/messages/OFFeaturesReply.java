@@ -107,18 +107,22 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		return this;
 	}
 			
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getActions() {
 		throw new UnsupportedOperationException("public int getActions() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFFeaturesReply setActions(int value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFeaturesReply setActions(int value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public List<org.openflow.protocol.interfaces.OFPortDesc> getPorts() {
 		throw new UnsupportedOperationException("public List<org.openflow.protocol.interfaces.OFPortDesc> getPorts() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFFeaturesReply setPorts(List<org.openflow.protocol.interfaces.OFPortDesc> value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFeaturesReply setPorts(List<org.openflow.protocol.interfaces.OFPortDesc> value) is not supported operation");
 	}

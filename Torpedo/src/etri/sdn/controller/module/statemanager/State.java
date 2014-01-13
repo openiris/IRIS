@@ -68,6 +68,11 @@ public class State extends OFModel {
 	private OFFeaturesReplySerializerModule features_reply_module = new OFFeaturesReplySerializerModule();
 	
 	/**
+	 * Custom Serializer for OFPort
+	 */
+	private OFPortSerializerModule port_module = new OFPortSerializerModule();
+	
+	/**
 	 * Custom Serializer for FLOW_STATISTICS_REPLY message.
 	 * This is used to handle the REST URI /wm/core/switch/{switchid}/flow/json.
 	 */
@@ -319,6 +324,8 @@ public class State extends OFModel {
 					
 					// create an object mapper.
 					ObjectMapper om = new ObjectMapper();
+					// this is critical in providing the port statistics correctly.
+					om.registerModule(port_module);
 					
 					try {
 						String r = om./*writerWithDefaultPrettyPrinter().*/writeValueAsString(result);

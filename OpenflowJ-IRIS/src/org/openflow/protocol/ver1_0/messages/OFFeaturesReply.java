@@ -110,18 +110,22 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		return this;
 	}
 			
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public byte getAuxiliaryId() {
 		throw new UnsupportedOperationException("public byte getAuxiliaryId() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFFeaturesReply setAuxiliaryId(byte value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFeaturesReply setAuxiliaryId(byte value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getReserved() {
 		throw new UnsupportedOperationException("public int getReserved() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFFeaturesReply setReserved(int value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFeaturesReply setReserved(int value) is not supported operation");
 	}

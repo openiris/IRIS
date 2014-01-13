@@ -21,10 +21,12 @@ public class OFHello extends OFMessage implements org.openflow.protocol.interfac
     	super(other);
     }
 
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public List<org.openflow.protocol.interfaces.OFHelloElem> getElements() {
 		throw new UnsupportedOperationException("public List<org.openflow.protocol.interfaces.OFHelloElem> getElements() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFHello setElements(List<org.openflow.protocol.interfaces.OFHelloElem> value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFHello setElements(List<org.openflow.protocol.interfaces.OFHelloElem> value) is not supported operation");
 	}

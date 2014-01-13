@@ -124,7 +124,8 @@ public class OFFlowModFlags {
 	public boolean has(org.openflow.protocol.interfaces.OFFlowModFlags value) {
 		Short v = mappings.get(value);
 		if ( v == null ) {
-			throw new IllegalArgumentException("OFFlowModFlags.set is called with illegal parameter.");
+			// throw new IllegalArgumentException("OFFlowModFlags.set is called with illegal parameter.");
+			return false;
 		}
 		return (this.value & v) == v;
 	}

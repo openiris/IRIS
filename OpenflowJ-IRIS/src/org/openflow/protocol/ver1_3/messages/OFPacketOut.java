@@ -80,10 +80,12 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 		return this;
 	}
 			
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFPort getInputPort() {
 		throw new UnsupportedOperationException("public OFPort getInputPort() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFPacketOut setInputPort(OFPort value) {
 		throw new UnsupportedOperationException("public OFPacketOut setInputPort(OFPort value) is not supported operation");
 	}

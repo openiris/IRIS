@@ -41,10 +41,12 @@ public class OFGetConfigReply extends OFMessage implements org.openflow.protocol
 		return this;
 	}
 			
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public short getMissSendLength() {
 		throw new UnsupportedOperationException("public short getMissSendLength() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFGetConfigReply setMissSendLength(short value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFGetConfigReply setMissSendLength(short value) is not supported operation");
 	}

@@ -193,10 +193,12 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 			
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public List<org.openflow.protocol.interfaces.OFAction> getActions() {
 		throw new UnsupportedOperationException("public List<org.openflow.protocol.interfaces.OFAction> getActions() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFFlowMod setActions(List<org.openflow.protocol.interfaces.OFAction> value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowMod setActions(List<org.openflow.protocol.interfaces.OFAction> value) is not supported operation");
 	}

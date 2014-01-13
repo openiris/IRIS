@@ -126,18 +126,22 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		return this;
 	}
 			
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public byte getTableId() {
 		throw new UnsupportedOperationException("public byte getTableId() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFFlowRemoved setTableId(byte value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowRemoved setTableId(byte value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public short getHardTimeout() {
 		throw new UnsupportedOperationException("public short getHardTimeout() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFFlowRemoved setHardTimeout(short value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowRemoved setHardTimeout(short value) is not supported operation");
 	}

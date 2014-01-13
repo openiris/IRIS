@@ -19,6 +19,14 @@ public class OFPort {
 		return this.port;
 	}
 	
+	/**
+	 * Only for serialization (Jackson)
+	 * @return
+	 */
+	public int getPort() {
+		return this.get();
+	}
+	
 	public static OFPort of(int v) {
 		return new OFPort(v);
 	}

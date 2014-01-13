@@ -150,7 +150,8 @@ public class OFPortFeatures {
 	public boolean has(org.openflow.protocol.interfaces.OFPortFeatures value) {
 		Integer v = mappings.get(value);
 		if ( v == null ) {
-			throw new IllegalArgumentException("OFPortFeatures.set is called with illegal parameter.");
+			// throw new IllegalArgumentException("OFPortFeatures.set is called with illegal parameter.");
+			return false;
 		}
 		return (this.value & v) == v;
 	}

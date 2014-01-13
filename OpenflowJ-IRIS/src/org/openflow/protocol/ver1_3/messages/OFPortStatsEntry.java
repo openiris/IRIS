@@ -183,10 +183,12 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		return this;
 	}
 			
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public long getReceiveCrcErr() {
 		throw new UnsupportedOperationException("public long getReceiveCrcErr() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFPortStatsEntry setReceiveCrcErr(long value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFPortStatsEntry setReceiveCrcErr(long value) is not supported operation");
 	}

@@ -126,7 +126,8 @@ public class OFPortConfig {
 	public boolean has(org.openflow.protocol.interfaces.OFPortConfig value) {
 		Integer v = mappings.get(value);
 		if ( v == null ) {
-			throw new IllegalArgumentException("OFPortConfig.set is called with illegal parameter.");
+			// throw new IllegalArgumentException("OFPortConfig.set is called with illegal parameter.");
+			return false;
 		}
 		return (this.value & v) == v;
 	}

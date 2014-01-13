@@ -136,7 +136,8 @@ public class OFIpv6exthdrFlags {
 	public boolean has(org.openflow.protocol.interfaces.OFIpv6exthdrFlags value) {
 		Short v = mappings.get(value);
 		if ( v == null ) {
-			throw new IllegalArgumentException("OFIpv6exthdrFlags.set is called with illegal parameter.");
+			// throw new IllegalArgumentException("OFIpv6exthdrFlags.set is called with illegal parameter.");
+			return false;
 		}
 		return (this.value & v) == v;
 	}

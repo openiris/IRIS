@@ -46,114 +46,142 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		return this;
 	}
 			
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public Set<org.openflow.protocol.interfaces.OFFlowWildcards> getWildcards() {
 		throw new UnsupportedOperationException("public Set<org.openflow.protocol.interfaces.OFFlowWildcards> getWildcards() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFMatch setWildcards(Set<org.openflow.protocol.interfaces.OFFlowWildcards> value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFMatch setWildcards(Set<org.openflow.protocol.interfaces.OFFlowWildcards> value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFPort getInputPort() {
 		throw new UnsupportedOperationException("public OFPort getInputPort() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFMatch setInputPort(OFPort value) {
 		throw new UnsupportedOperationException("public OFMatch setInputPort(OFPort value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public byte[] getDataLayerSource() {
 		throw new UnsupportedOperationException("public byte[] getDataLayerSource() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFMatch setDataLayerSource(byte[] value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFMatch setDataLayerSource(byte[] value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public byte[] getDataLayerDestination() {
 		throw new UnsupportedOperationException("public byte[] getDataLayerDestination() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFMatch setDataLayerDestination(byte[] value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFMatch setDataLayerDestination(byte[] value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public short getDataLayerVirtualLan() {
 		throw new UnsupportedOperationException("public short getDataLayerVirtualLan() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFMatch setDataLayerVirtualLan(short value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFMatch setDataLayerVirtualLan(short value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public byte getDataLayerVirtualLanPriorityCodePoint() {
 		throw new UnsupportedOperationException("public byte getDataLayerVirtualLanPriorityCodePoint() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFMatch setDataLayerVirtualLanPriorityCodePoint(byte value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFMatch setDataLayerVirtualLanPriorityCodePoint(byte value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public short getDataLayerType() {
 		throw new UnsupportedOperationException("public short getDataLayerType() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFMatch setDataLayerType(short value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFMatch setDataLayerType(short value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public byte getNetworkTypeOfService() {
 		throw new UnsupportedOperationException("public byte getNetworkTypeOfService() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFMatch setNetworkTypeOfService(byte value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFMatch setNetworkTypeOfService(byte value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public byte getNetworkProtocol() {
 		throw new UnsupportedOperationException("public byte getNetworkProtocol() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFMatch setNetworkProtocol(byte value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFMatch setNetworkProtocol(byte value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getNetworkSource() {
 		throw new UnsupportedOperationException("public int getNetworkSource() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFMatch setNetworkSource(int value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFMatch setNetworkSource(int value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getNetworkDestination() {
 		throw new UnsupportedOperationException("public int getNetworkDestination() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFMatch setNetworkDestination(int value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFMatch setNetworkDestination(int value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public short getTransportSource() {
 		throw new UnsupportedOperationException("public short getTransportSource() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFMatch setTransportSource(short value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFMatch setTransportSource(short value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public short getTransportDestination() {
 		throw new UnsupportedOperationException("public short getTransportDestination() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFMatch setTransportDestination(short value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFMatch setTransportDestination(short value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public List<org.openflow.protocol.interfaces.OFOxm> getOxmFields() {
 		throw new UnsupportedOperationException("public List<org.openflow.protocol.interfaces.OFOxm> getOxmFields() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFMatchOxm setOxmFields(List<org.openflow.protocol.interfaces.OFOxm> value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFMatchOxm setOxmFields(List<org.openflow.protocol.interfaces.OFOxm> value) is not supported operation");
 	}

@@ -122,7 +122,8 @@ public class OFMultipartReplyFlags {
 	public boolean has(org.openflow.protocol.interfaces.OFMultipartReplyFlags value) {
 		Short v = mappings.get(value);
 		if ( v == null ) {
-			throw new IllegalArgumentException("OFMultipartReplyFlags.set is called with illegal parameter.");
+			// throw new IllegalArgumentException("OFMultipartReplyFlags.set is called with illegal parameter.");
+			return false;
 		}
 		return (this.value & v) == v;
 	}

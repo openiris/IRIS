@@ -73,18 +73,22 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 		return this;
 	}
 			
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getDurationSec() {
 		throw new UnsupportedOperationException("public int getDurationSec() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFQueueStatsEntry setDurationSec(int value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFQueueStatsEntry setDurationSec(int value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getDurationNsec() {
 		throw new UnsupportedOperationException("public int getDurationNsec() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFQueueStatsEntry setDurationNsec(int value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFQueueStatsEntry setDurationNsec(int value) is not supported operation");
 	}

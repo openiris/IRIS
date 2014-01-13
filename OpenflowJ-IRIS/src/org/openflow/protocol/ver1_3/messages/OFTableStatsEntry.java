@@ -63,26 +63,32 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		return this;
 	}
 			
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public byte[] getName() {
 		throw new UnsupportedOperationException("public byte[] getName() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFTableStatsEntry setName(byte[] value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFTableStatsEntry setName(byte[] value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public Set<org.openflow.protocol.interfaces.OFFlowWildcards> getWildcards() {
 		throw new UnsupportedOperationException("public Set<org.openflow.protocol.interfaces.OFFlowWildcards> getWildcards() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFTableStatsEntry setWildcards(Set<org.openflow.protocol.interfaces.OFFlowWildcards> value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFTableStatsEntry setWildcards(Set<org.openflow.protocol.interfaces.OFFlowWildcards> value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getMaxEntries() {
 		throw new UnsupportedOperationException("public int getMaxEntries() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFTableStatsEntry setMaxEntries(int value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFTableStatsEntry setMaxEntries(int value) is not supported operation");
 	}

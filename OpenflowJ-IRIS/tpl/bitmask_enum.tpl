@@ -119,7 +119,8 @@ public class $typename {
 	public boolean has(org.openflow.protocol.interfaces.$typename value) {
 		$orep v = mappings.get(value);
 		if ( v == null ) {
-			throw new IllegalArgumentException("${typename}.set is called with illegal parameter.");
+			// throw new IllegalArgumentException("${typename}.set is called with illegal parameter.");
+			return false;
 		}
 		return (this.value & v) == v;
 	}

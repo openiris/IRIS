@@ -82,26 +82,32 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 			
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public byte getTableId() {
 		throw new UnsupportedOperationException("public byte getTableId() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFPacketIn setTableId(byte value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFPacketIn setTableId(byte value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public long getCookie() {
 		throw new UnsupportedOperationException("public long getCookie() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFPacketIn setCookie(long value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFPacketIn setCookie(long value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFMatch getMatch() {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFMatch getMatch() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFPacketIn setMatch(org.openflow.protocol.interfaces.OFMatch value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFPacketIn setMatch(org.openflow.protocol.interfaces.OFMatch value) is not supported operation");
 	}

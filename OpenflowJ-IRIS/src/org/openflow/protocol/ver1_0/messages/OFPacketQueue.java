@@ -54,10 +54,12 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
 		return this;
 	}
 			
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFPort getPort() {
 		throw new UnsupportedOperationException("public OFPort getPort() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFPacketQueue setPort(OFPort value) {
 		throw new UnsupportedOperationException("public OFPacketQueue setPort(OFPort value) is not supported operation");
 	}

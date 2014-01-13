@@ -154,18 +154,22 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		return this;
 	}
 			
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public short getFlags() {
 		throw new UnsupportedOperationException("public short getFlags() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFFlowStatsEntry setFlags(short value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowStatsEntry setFlags(short value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public List<org.openflow.protocol.interfaces.OFInstruction> getInstructions() {
 		throw new UnsupportedOperationException("public List<org.openflow.protocol.interfaces.OFInstruction> getInstructions() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFFlowStatsEntry setInstructions(List<org.openflow.protocol.interfaces.OFInstruction> value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowStatsEntry setInstructions(List<org.openflow.protocol.interfaces.OFInstruction> value) is not supported operation");
 	}

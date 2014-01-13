@@ -159,34 +159,42 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 			
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public long getCookieMask() {
 		throw new UnsupportedOperationException("public long getCookieMask() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFFlowMod setCookieMask(long value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowMod setCookieMask(long value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public byte getTableId() {
 		throw new UnsupportedOperationException("public byte getTableId() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFFlowMod setTableId(byte value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowMod setTableId(byte value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getOutGroup() {
 		throw new UnsupportedOperationException("public int getOutGroup() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFFlowMod setOutGroup(int value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowMod setOutGroup(int value) is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public List<org.openflow.protocol.interfaces.OFInstruction> getInstructions() {
 		throw new UnsupportedOperationException("public List<org.openflow.protocol.interfaces.OFInstruction> getInstructions() is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFFlowMod setInstructions(List<org.openflow.protocol.interfaces.OFInstruction> value) {
 		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowMod setInstructions(List<org.openflow.protocol.interfaces.OFInstruction> value) is not supported operation");
 	}
