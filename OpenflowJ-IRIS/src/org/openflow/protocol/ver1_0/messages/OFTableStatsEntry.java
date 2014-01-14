@@ -42,6 +42,10 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		this.table_id = table_id;
 		return this;
 	}
+	
+	public boolean isTableIdSupported() {
+		return true;
+	}
 			
 	public byte[] getName() {
 		return this.name;
@@ -50,6 +54,10 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 	public OFTableStatsEntry setName(byte[] name) {
 		this.name = name;
 		return this;
+	}
+	
+	public boolean isNameSupported() {
+		return true;
 	}
 			
 	public int getWildcardsWire() {
@@ -78,6 +86,10 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		this.wildcards = tmp.get();
 		return this;
 	}
+	
+	public boolean isWildcardsSupported() {
+		return true;
+	}
 		
 	public int getMaxEntries() {
 		return this.max_entries;
@@ -86,6 +98,10 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 	public OFTableStatsEntry setMaxEntries(int max_entries) {
 		this.max_entries = max_entries;
 		return this;
+	}
+	
+	public boolean isMaxEntriesSupported() {
+		return true;
 	}
 			
 	public int getActiveCount() {
@@ -96,6 +112,10 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		this.active_count = active_count;
 		return this;
 	}
+	
+	public boolean isActiveCountSupported() {
+		return true;
+	}
 			
 	public long getLookupCount() {
 		return this.lookup_count;
@@ -105,6 +125,10 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		this.lookup_count = lookup_count;
 		return this;
 	}
+	
+	public boolean isLookupCountSupported() {
+		return true;
+	}
 			
 	public long getMatchedCount() {
 		return this.matched_count;
@@ -113,6 +137,10 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 	public OFTableStatsEntry setMatchedCount(long matched_count) {
 		this.matched_count = matched_count;
 		return this;
+	}
+	
+	public boolean isMatchedCountSupported() {
+		return true;
 	}
 			
 	

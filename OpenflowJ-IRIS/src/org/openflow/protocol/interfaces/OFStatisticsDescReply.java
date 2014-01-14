@@ -8,14 +8,19 @@ public interface OFStatisticsDescReply extends OFStatisticsReply {
 
 	public String getManufacturerDescription();
 	public OFStatisticsDescReply setManufacturerDescription(String value);
+	public boolean isManufacturerDescriptionSupported();
 	public String getHardwareDescription();
 	public OFStatisticsDescReply setHardwareDescription(String value);
+	public boolean isHardwareDescriptionSupported();
 	public String getSoftwareDescription();
 	public OFStatisticsDescReply setSoftwareDescription(String value);
+	public boolean isSoftwareDescriptionSupported();
 	public String getSerialNumber();
 	public OFStatisticsDescReply setSerialNumber(String value);
+	public boolean isSerialNumberSupported();
 	public String getDatapathDescription();
 	public OFStatisticsDescReply setDatapathDescription(String value);
+	public boolean isDatapathDescriptionSupported();
 
     public void readFrom(ByteBuffer data);
 

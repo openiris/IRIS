@@ -28,6 +28,10 @@ public class OFBucketCounter   implements org.openflow.protocol.interfaces.OFBuc
 		this.packet_count = packet_count;
 		return this;
 	}
+	
+	public boolean isPacketCountSupported() {
+		return true;
+	}
 			
 	public long getByteCount() {
 		return this.byte_count;
@@ -36,6 +40,10 @@ public class OFBucketCounter   implements org.openflow.protocol.interfaces.OFBuc
 	public OFBucketCounter setByteCount(long byte_count) {
 		this.byte_count = byte_count;
 		return this;
+	}
+	
+	public boolean isByteCountSupported() {
+		return true;
 	}
 			
 	

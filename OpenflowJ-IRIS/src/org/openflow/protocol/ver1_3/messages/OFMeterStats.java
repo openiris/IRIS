@@ -45,6 +45,10 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 		this.meter_id = meter_id;
 		return this;
 	}
+	
+	public boolean isMeterIdSupported() {
+		return true;
+	}
 			
 	public short getLength() {
 		return this.length;
@@ -53,6 +57,10 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 	public OFMeterStats setLength(short length) {
 		this.length = length;
 		return this;
+	}
+	
+	public boolean isLengthSupported() {
+		return true;
 	}
 			
 	public int getFlowCount() {
@@ -63,6 +71,10 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 		this.flow_count = flow_count;
 		return this;
 	}
+	
+	public boolean isFlowCountSupported() {
+		return true;
+	}
 			
 	public long getPacketInCount() {
 		return this.packet_in_count;
@@ -71,6 +83,10 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 	public OFMeterStats setPacketInCount(long packet_in_count) {
 		this.packet_in_count = packet_in_count;
 		return this;
+	}
+	
+	public boolean isPacketInCountSupported() {
+		return true;
 	}
 			
 	public long getByteInCount() {
@@ -81,6 +97,10 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 		this.byte_in_count = byte_in_count;
 		return this;
 	}
+	
+	public boolean isByteInCountSupported() {
+		return true;
+	}
 			
 	public int getDurationSec() {
 		return this.duration_sec;
@@ -89,6 +109,10 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 	public OFMeterStats setDurationSec(int duration_sec) {
 		this.duration_sec = duration_sec;
 		return this;
+	}
+	
+	public boolean isDurationSecSupported() {
+		return true;
 	}
 			
 	public int getDurationNsec() {
@@ -99,6 +123,10 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 		this.duration_nsec = duration_nsec;
 		return this;
 	}
+	
+	public boolean isDurationNsecSupported() {
+		return true;
+	}
 			
 	public List<org.openflow.protocol.interfaces.OFMeterBandStats> getBandStats() {
 		return this.band_stats;
@@ -107,6 +135,10 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 	public OFMeterStats setBandStats(List<org.openflow.protocol.interfaces.OFMeterBandStats> band_stats) {
 		this.band_stats = band_stats;
 		return this;
+	}
+	
+	public boolean isBandStatsSupported() {
+		return true;
 	}
 			
 	

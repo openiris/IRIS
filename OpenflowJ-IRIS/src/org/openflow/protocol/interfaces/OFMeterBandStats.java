@@ -8,8 +8,10 @@ public interface OFMeterBandStats  {
 
 	public long getPacketBandCount();
 	public OFMeterBandStats setPacketBandCount(long value);
+	public boolean isPacketBandCountSupported();
 	public long getByteBandCount();
 	public OFMeterBandStats setByteBandCount(long value);
+	public boolean isByteBandCountSupported();
 
     public void readFrom(ByteBuffer data);
 

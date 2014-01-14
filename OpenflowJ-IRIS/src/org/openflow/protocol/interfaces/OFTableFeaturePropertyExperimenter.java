@@ -8,10 +8,13 @@ public interface OFTableFeaturePropertyExperimenter extends OFTableFeatureProper
 
 	public int getExperimenterId();
 	public OFTableFeaturePropertyExperimenter setExperimenterId(int value);
+	public boolean isExperimenterIdSupported();
 	public int getSubtype();
 	public OFTableFeaturePropertyExperimenter setSubtype(int value);
+	public boolean isSubtypeSupported();
 	public byte[] getExperimenterData();
 	public OFTableFeaturePropertyExperimenter setExperimenterData(byte[] value);
+	public boolean isExperimenterDataSupported();
 
     public void readFrom(ByteBuffer data);
 

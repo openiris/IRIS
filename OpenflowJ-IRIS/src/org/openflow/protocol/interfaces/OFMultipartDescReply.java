@@ -8,14 +8,19 @@ public interface OFMultipartDescReply extends OFMultipartReply {
 
 	public String getManufacturerDescription();
 	public OFMultipartDescReply setManufacturerDescription(String value);
+	public boolean isManufacturerDescriptionSupported();
 	public String getHardwareDescription();
 	public OFMultipartDescReply setHardwareDescription(String value);
+	public boolean isHardwareDescriptionSupported();
 	public String getSoftwareDescription();
 	public OFMultipartDescReply setSoftwareDescription(String value);
+	public boolean isSoftwareDescriptionSupported();
 	public String getSerialNumber();
 	public OFMultipartDescReply setSerialNumber(String value);
+	public boolean isSerialNumberSupported();
 	public String getDatapathDescription();
 	public OFMultipartDescReply setDatapathDescription(String value);
+	public boolean isDatapathDescriptionSupported();
 
     public void readFrom(ByteBuffer data);
 

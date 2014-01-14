@@ -31,6 +31,10 @@ public class OFInstructionExperimenter extends OFInstruction implements org.open
 		this.experimenter_id = experimenter_id;
 		return this;
 	}
+	
+	public boolean isExperimenterIdSupported() {
+		return true;
+	}
 			
 	public byte[] getData() {
 		return this.data;
@@ -39,6 +43,10 @@ public class OFInstructionExperimenter extends OFInstruction implements org.open
 	public OFInstructionExperimenter setData(byte[] data) {
 		this.data = data;
 		return this;
+	}
+	
+	public boolean isDataSupported() {
+		return true;
 	}
 			
 	

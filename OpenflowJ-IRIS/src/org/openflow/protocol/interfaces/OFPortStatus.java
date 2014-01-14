@@ -8,8 +8,10 @@ public interface OFPortStatus extends OFMessage {
 
 	public byte getReason();
 	public OFPortStatus setReason(byte value);
+	public boolean isReasonSupported();
 	public OFPortDesc getDesc();
 	public OFPortStatus setDesc(OFPortDesc value);
+	public boolean isDescSupported();
 
     public void readFrom(ByteBuffer data);
 

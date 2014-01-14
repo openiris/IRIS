@@ -8,20 +8,28 @@ public interface OFGroupStatsEntry  {
 
 	public short getLength();
 	public OFGroupStatsEntry setLength(short value);
+	public boolean isLengthSupported();
 	public int getGroupId();
 	public OFGroupStatsEntry setGroupId(int value);
+	public boolean isGroupIdSupported();
 	public int getRefCount();
 	public OFGroupStatsEntry setRefCount(int value);
+	public boolean isRefCountSupported();
 	public long getPacketCount();
 	public OFGroupStatsEntry setPacketCount(long value);
+	public boolean isPacketCountSupported();
 	public long getByteCount();
 	public OFGroupStatsEntry setByteCount(long value);
+	public boolean isByteCountSupported();
 	public int getDurationSec();
 	public OFGroupStatsEntry setDurationSec(int value);
+	public boolean isDurationSecSupported();
 	public int getDurationNsec();
 	public OFGroupStatsEntry setDurationNsec(int value);
+	public boolean isDurationNsecSupported();
 	public List<OFBucketCounter> getBucketStats();
 	public OFGroupStatsEntry setBucketStats(List<OFBucketCounter> value);
+	public boolean isBucketStatsSupported();
 
     public void readFrom(ByteBuffer data);
 

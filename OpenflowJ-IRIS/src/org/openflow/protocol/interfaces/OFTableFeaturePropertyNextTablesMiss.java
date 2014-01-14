@@ -8,6 +8,7 @@ public interface OFTableFeaturePropertyNextTablesMiss extends OFTableFeatureProp
 
 	public List<Byte> getNextTableIds();
 	public OFTableFeaturePropertyNextTablesMiss setNextTableIds(List<Byte> value);
+	public boolean isNextTableIdsSupported();
 
     public void readFrom(ByteBuffer data);
 

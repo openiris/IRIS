@@ -32,6 +32,10 @@ public class OFTableFeaturePropertyNextTables extends OFTableFeatureProperty imp
 		this.next_table_ids = next_table_ids;
 		return this;
 	}
+	
+	public boolean isNextTableIdsSupported() {
+		return true;
+	}
 			
 	
 	

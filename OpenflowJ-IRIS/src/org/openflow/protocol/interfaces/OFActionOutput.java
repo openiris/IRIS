@@ -8,8 +8,10 @@ public interface OFActionOutput extends OFAction {
 
 	public OFPort getPort();
 	public OFActionOutput setPort(OFPort value);
+	public boolean isPortSupported();
 	public short getMaxLength();
 	public OFActionOutput setMaxLength(short value);
+	public boolean isMaxLengthSupported();
 
     public void readFrom(ByteBuffer data);
 

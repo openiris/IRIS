@@ -9,16 +9,22 @@ public interface OFPacketOut extends OFMessage {
 
 	public int getBufferId();
 	public OFPacketOut setBufferId(int value);
+	public boolean isBufferIdSupported();
 	public OFPort getInputPort();
 	public OFPacketOut setInputPort(OFPort value);
+	public boolean isInputPortSupported();
 	public short getActionsLength();
 	public OFPacketOut setActionsLength(short value);
+	public boolean isActionsLengthSupported();
 	public List<OFAction> getActions();
 	public OFPacketOut setActions(List<OFAction> value);
+	public boolean isActionsSupported();
 	public byte[] getData();
 	public OFPacketOut setData(byte[] value);
+	public boolean isDataSupported();
 	public OFPort getInPort();
 	public OFPacketOut setInPort(OFPort value);
+	public boolean isInPortSupported();
 
     public void readFrom(ByteBuffer data);
 

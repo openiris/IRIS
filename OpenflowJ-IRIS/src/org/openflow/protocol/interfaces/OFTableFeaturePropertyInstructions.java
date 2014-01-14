@@ -8,6 +8,7 @@ public interface OFTableFeaturePropertyInstructions extends OFTableFeatureProper
 
 	public List<OFInstruction> getInstructionIds();
 	public OFTableFeaturePropertyInstructions setInstructionIds(List<OFInstruction> value);
+	public boolean isInstructionIdsSupported();
 
     public void readFrom(ByteBuffer data);
 

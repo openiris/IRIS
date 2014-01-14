@@ -33,6 +33,10 @@ public class OFTableMod extends OFMessage implements org.openflow.protocol.inter
 		this.table_id = table_id;
 		return this;
 	}
+	
+	public boolean isTableIdSupported() {
+		return true;
+	}
 			
 	public int getConfig() {
 		return this.config;
@@ -41,6 +45,10 @@ public class OFTableMod extends OFMessage implements org.openflow.protocol.inter
 	public OFTableMod setConfig(int config) {
 		this.config = config;
 		return this;
+	}
+	
+	public boolean isConfigSupported() {
+		return true;
 	}
 			
 	

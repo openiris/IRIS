@@ -8,8 +8,10 @@ public interface OFTableMod extends OFMessage {
 
 	public byte getTableId();
 	public OFTableMod setTableId(byte value);
+	public boolean isTableIdSupported();
 	public int getConfig();
 	public OFTableMod setConfig(int value);
+	public boolean isConfigSupported();
 
     public void readFrom(ByteBuffer data);
 

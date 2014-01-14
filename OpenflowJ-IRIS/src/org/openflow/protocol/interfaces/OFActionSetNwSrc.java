@@ -8,6 +8,7 @@ public interface OFActionSetNwSrc extends OFAction {
 
 	public int getNwAddr();
 	public OFActionSetNwSrc setNwAddr(int value);
+	public boolean isNwAddrSupported();
 
     public void readFrom(ByteBuffer data);
 

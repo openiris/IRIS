@@ -8,20 +8,28 @@ public interface OFTableFeatures  {
 
 	public short getLength();
 	public OFTableFeatures setLength(short value);
+	public boolean isLengthSupported();
 	public byte getTableId();
 	public OFTableFeatures setTableId(byte value);
+	public boolean isTableIdSupported();
 	public byte[] getName();
 	public OFTableFeatures setName(byte[] value);
+	public boolean isNameSupported();
 	public long getMetadataMatch();
 	public OFTableFeatures setMetadataMatch(long value);
+	public boolean isMetadataMatchSupported();
 	public long getMetadataWrite();
 	public OFTableFeatures setMetadataWrite(long value);
+	public boolean isMetadataWriteSupported();
 	public int getConfig();
 	public OFTableFeatures setConfig(int value);
+	public boolean isConfigSupported();
 	public int getMaxEntries();
 	public OFTableFeatures setMaxEntries(int value);
+	public boolean isMaxEntriesSupported();
 	public List<OFTableFeatureProperty> getProperties();
 	public OFTableFeatures setProperties(List<OFTableFeatureProperty> value);
+	public boolean isPropertiesSupported();
 
     public void readFrom(ByteBuffer data);
 

@@ -8,8 +8,10 @@ public interface OFStatisticsVendorReply extends OFStatisticsReply {
 
 	public OFVendor getVendor();
 	public OFStatisticsVendorReply setVendor(OFVendor value);
+	public boolean isVendorSupported();
 	public byte[] getData();
 	public OFStatisticsVendorReply setData(byte[] value);
+	public boolean isDataSupported();
 
     public void readFrom(ByteBuffer data);
 

@@ -8,16 +8,22 @@ public interface OFGetAsyncReply extends OFMessage {
 
 	public int getPacketInMaskEqualMaster();
 	public OFGetAsyncReply setPacketInMaskEqualMaster(int value);
+	public boolean isPacketInMaskEqualMasterSupported();
 	public int getPacketInMaskSlave();
 	public OFGetAsyncReply setPacketInMaskSlave(int value);
+	public boolean isPacketInMaskSlaveSupported();
 	public int getPortStatusMaskEqualMaster();
 	public OFGetAsyncReply setPortStatusMaskEqualMaster(int value);
+	public boolean isPortStatusMaskEqualMasterSupported();
 	public int getPortStatusMaskSlave();
 	public OFGetAsyncReply setPortStatusMaskSlave(int value);
+	public boolean isPortStatusMaskSlaveSupported();
 	public int getFlowRemovedMaskEqualMaster();
 	public OFGetAsyncReply setFlowRemovedMaskEqualMaster(int value);
+	public boolean isFlowRemovedMaskEqualMasterSupported();
 	public int getFlowRemovedMaskSlave();
 	public OFGetAsyncReply setFlowRemovedMaskSlave(int value);
+	public boolean isFlowRemovedMaskSlaveSupported();
 
     public void readFrom(ByteBuffer data);
 

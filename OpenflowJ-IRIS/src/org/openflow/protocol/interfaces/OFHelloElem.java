@@ -8,8 +8,10 @@ public interface OFHelloElem  {
 
 	public OFHelloElemType getType();
 	public OFHelloElem setType(OFHelloElemType value);
+	public boolean isTypeSupported();
 	public short getLength();
 	public OFHelloElem setLength(short value);
+	public boolean isLengthSupported();
 
     public void readFrom(ByteBuffer data);
 

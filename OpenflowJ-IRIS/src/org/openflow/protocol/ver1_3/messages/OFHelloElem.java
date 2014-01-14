@@ -34,6 +34,10 @@ public class OFHelloElem   implements org.openflow.protocol.interfaces.OFHelloEl
 		return this;
 	}
 	
+	public boolean isTypeSupported() {
+		return true;
+	}
+	
 	public short getLength() {
 		return this.length;
 	}
@@ -41,6 +45,10 @@ public class OFHelloElem   implements org.openflow.protocol.interfaces.OFHelloEl
 	public OFHelloElem setLength(short length) {
 		this.length = length;
 		return this;
+	}
+	
+	public boolean isLengthSupported() {
+		return true;
 	}
 			
 	

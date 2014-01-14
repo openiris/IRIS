@@ -8,8 +8,10 @@ public interface OFStatisticsRequest extends OFStatistics {
 
 	public OFStatisticsType getStatisticsType();
 	public OFStatisticsRequest setStatisticsType(OFStatisticsType value);
+	public boolean isStatisticsTypeSupported();
 	public short getFlags();
 	public OFStatisticsRequest setFlags(short value);
+	public boolean isFlagsSupported();
 
     public void readFrom(ByteBuffer data);
 

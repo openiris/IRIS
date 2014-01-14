@@ -45,6 +45,10 @@ public class OFGroupMod extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 	
+	public boolean isCommandSupported() {
+		return true;
+	}
+	
 
 	public org.openflow.protocol.interfaces.OFGroupCategory getGroupCategory() {
 		return OFGroupCategory.to(this.group_category);
@@ -60,6 +64,10 @@ public class OFGroupMod extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 	
+	public boolean isGroupCategorySupported() {
+		return true;
+	}
+	
 	public int getGroupId() {
 		return this.group_id;
 	}
@@ -67,6 +75,10 @@ public class OFGroupMod extends OFMessage implements org.openflow.protocol.inter
 	public OFGroupMod setGroupId(int group_id) {
 		this.group_id = group_id;
 		return this;
+	}
+	
+	public boolean isGroupIdSupported() {
+		return true;
 	}
 			
 	public List<org.openflow.protocol.interfaces.OFBucket> getBuckets() {
@@ -76,6 +88,10 @@ public class OFGroupMod extends OFMessage implements org.openflow.protocol.inter
 	public OFGroupMod setBuckets(List<org.openflow.protocol.interfaces.OFBucket> buckets) {
 		this.buckets = buckets;
 		return this;
+	}
+	
+	public boolean isBucketsSupported() {
+		return true;
 	}
 			
 	

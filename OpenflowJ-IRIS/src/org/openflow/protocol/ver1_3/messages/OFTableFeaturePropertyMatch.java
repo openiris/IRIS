@@ -32,6 +32,10 @@ public class OFTableFeaturePropertyMatch extends OFTableFeatureProperty implemen
 		this.oxm_ids = oxm_ids;
 		return this;
 	}
+	
+	public boolean isOxmIdsSupported() {
+		return true;
+	}
 			
 	
 	

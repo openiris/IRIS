@@ -8,8 +8,10 @@ public interface OFStatisticsReply extends OFStatistics {
 
 	public OFStatisticsType getStatisticsType();
 	public OFStatisticsReply setStatisticsType(OFStatisticsType value);
+	public boolean isStatisticsTypeSupported();
 	public short getFlags();
 	public OFStatisticsReply setFlags(short value);
+	public boolean isFlagsSupported();
 
     public void readFrom(ByteBuffer data);
 

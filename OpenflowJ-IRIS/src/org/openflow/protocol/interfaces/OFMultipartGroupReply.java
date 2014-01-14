@@ -8,6 +8,7 @@ public interface OFMultipartGroupReply extends OFMultipartReply {
 
 	public List<OFGroupStatsEntry> getEntries();
 	public OFMultipartGroupReply setEntries(List<OFGroupStatsEntry> value);
+	public boolean isEntriesSupported();
 
     public void readFrom(ByteBuffer data);
 

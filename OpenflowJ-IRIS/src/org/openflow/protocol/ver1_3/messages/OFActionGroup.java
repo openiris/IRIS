@@ -29,6 +29,10 @@ public class OFActionGroup extends OFAction implements org.openflow.protocol.int
 		this.group_id = group_id;
 		return this;
 	}
+	
+	public boolean isGroupIdSupported() {
+		return true;
+	}
 			
 	
 	

@@ -33,6 +33,10 @@ public class OFMultipartTableFeaturesRequest extends OFMultipartRequest implemen
 		this.entries = entries;
 		return this;
 	}
+	
+	public boolean isEntriesSupported() {
+		return true;
+	}
 			
 	
 	

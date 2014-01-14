@@ -38,6 +38,10 @@ public class OFOxm   implements org.openflow.protocol.interfaces.OFOxm {
 		return this;
 	}
 	
+	public boolean isOxmClassSupported() {
+		return true;
+	}
+	
 	public byte getField() {
 		byte t__ = (byte)(this.field_bitmask & 0b111111110);
 		return (byte)(t__ >> 1);
@@ -46,6 +50,10 @@ public class OFOxm   implements org.openflow.protocol.interfaces.OFOxm {
 	public OFOxm setField(byte field_bitmask) {
 		this.field_bitmask |= (byte) field_bitmask << 1;
 		return this;
+	}
+	
+	public boolean isFieldSupported() {
+		return true;
 	}
 			
 	public byte getBitmask() {
@@ -57,6 +65,10 @@ public class OFOxm   implements org.openflow.protocol.interfaces.OFOxm {
 		this.field_bitmask |= (byte) field_bitmask << 0;
 		return this;
 	}
+	
+	public boolean isBitmaskSupported() {
+		return true;
+	}
 			
 	public byte getPayloadLength() {
 		return this.payload_length;
@@ -66,6 +78,10 @@ public class OFOxm   implements org.openflow.protocol.interfaces.OFOxm {
 		this.payload_length = payload_length;
 		return this;
 	}
+	
+	public boolean isPayloadLengthSupported() {
+		return true;
+	}
 			
 	public byte[] getData() {
 		return this.data;
@@ -74,6 +90,10 @@ public class OFOxm   implements org.openflow.protocol.interfaces.OFOxm {
 	public OFOxm setData(byte[] data) {
 		this.data = data;
 		return this;
+	}
+	
+	public boolean isDataSupported() {
+		return true;
 	}
 			
 	

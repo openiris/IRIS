@@ -8,6 +8,7 @@ public interface OFHelloElemVersionbitmap extends OFHelloElem {
 
 	public List<Integer> getBitmaps();
 	public OFHelloElemVersionbitmap setBitmaps(List<Integer> value);
+	public boolean isBitmapsSupported();
 
     public void readFrom(ByteBuffer data);
 

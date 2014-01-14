@@ -38,6 +38,10 @@ public class OFStatisticsPortRequest extends OFStatisticsRequest implements org.
 		return this;
 	}
 	
+	public boolean isPortNoSupported() {
+		return true;
+	}
+	
 	
 	
 	

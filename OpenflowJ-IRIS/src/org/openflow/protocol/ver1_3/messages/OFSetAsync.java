@@ -39,6 +39,10 @@ public class OFSetAsync extends OFMessage implements org.openflow.protocol.inter
 		this.packet_in_mask_equal_master = packet_in_mask_equal_master;
 		return this;
 	}
+	
+	public boolean isPacketInMaskEqualMasterSupported() {
+		return true;
+	}
 			
 	public int getPacketInMaskSlave() {
 		return this.packet_in_mask_slave;
@@ -47,6 +51,10 @@ public class OFSetAsync extends OFMessage implements org.openflow.protocol.inter
 	public OFSetAsync setPacketInMaskSlave(int packet_in_mask_slave) {
 		this.packet_in_mask_slave = packet_in_mask_slave;
 		return this;
+	}
+	
+	public boolean isPacketInMaskSlaveSupported() {
+		return true;
 	}
 			
 	public int getPortStatusMaskEqualMaster() {
@@ -57,6 +65,10 @@ public class OFSetAsync extends OFMessage implements org.openflow.protocol.inter
 		this.port_status_mask_equal_master = port_status_mask_equal_master;
 		return this;
 	}
+	
+	public boolean isPortStatusMaskEqualMasterSupported() {
+		return true;
+	}
 			
 	public int getPortStatusMaskSlave() {
 		return this.port_status_mask_slave;
@@ -65,6 +77,10 @@ public class OFSetAsync extends OFMessage implements org.openflow.protocol.inter
 	public OFSetAsync setPortStatusMaskSlave(int port_status_mask_slave) {
 		this.port_status_mask_slave = port_status_mask_slave;
 		return this;
+	}
+	
+	public boolean isPortStatusMaskSlaveSupported() {
+		return true;
 	}
 			
 	public int getFlowRemovedMaskEqualMaster() {
@@ -75,6 +91,10 @@ public class OFSetAsync extends OFMessage implements org.openflow.protocol.inter
 		this.flow_removed_mask_equal_master = flow_removed_mask_equal_master;
 		return this;
 	}
+	
+	public boolean isFlowRemovedMaskEqualMasterSupported() {
+		return true;
+	}
 			
 	public int getFlowRemovedMaskSlave() {
 		return this.flow_removed_mask_slave;
@@ -83,6 +103,10 @@ public class OFSetAsync extends OFMessage implements org.openflow.protocol.inter
 	public OFSetAsync setFlowRemovedMaskSlave(int flow_removed_mask_slave) {
 		this.flow_removed_mask_slave = flow_removed_mask_slave;
 		return this;
+	}
+	
+	public boolean isFlowRemovedMaskSlaveSupported() {
+		return true;
 	}
 			
 	

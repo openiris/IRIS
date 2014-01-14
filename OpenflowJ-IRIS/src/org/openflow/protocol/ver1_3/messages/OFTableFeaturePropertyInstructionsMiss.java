@@ -32,6 +32,10 @@ public class OFTableFeaturePropertyInstructionsMiss extends OFTableFeatureProper
 		this.instruction_ids = instruction_ids;
 		return this;
 	}
+	
+	public boolean isInstructionIdsSupported() {
+		return true;
+	}
 			
 	
 	

@@ -8,6 +8,7 @@ public interface OFMeterBandDscpRemark extends OFMeterBand {
 
 	public byte getPrecLevel();
 	public OFMeterBandDscpRemark setPrecLevel(byte value);
+	public boolean isPrecLevelSupported();
 
     public void readFrom(ByteBuffer data);
 

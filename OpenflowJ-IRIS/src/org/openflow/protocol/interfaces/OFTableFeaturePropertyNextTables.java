@@ -8,6 +8,7 @@ public interface OFTableFeaturePropertyNextTables extends OFTableFeatureProperty
 
 	public List<Byte> getNextTableIds();
 	public OFTableFeaturePropertyNextTables setNextTableIds(List<Byte> value);
+	public boolean isNextTableIdsSupported();
 
     public void readFrom(ByteBuffer data);
 

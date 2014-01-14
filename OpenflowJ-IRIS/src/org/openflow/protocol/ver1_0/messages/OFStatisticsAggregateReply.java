@@ -35,6 +35,10 @@ public class OFStatisticsAggregateReply extends OFStatisticsReply implements org
 		this.packet_count = packet_count;
 		return this;
 	}
+	
+	public boolean isPacketCountSupported() {
+		return true;
+	}
 			
 	public long getByteCount() {
 		return this.byte_count;
@@ -44,6 +48,10 @@ public class OFStatisticsAggregateReply extends OFStatisticsReply implements org
 		this.byte_count = byte_count;
 		return this;
 	}
+	
+	public boolean isByteCountSupported() {
+		return true;
+	}
 			
 	public int getFlowCount() {
 		return this.flow_count;
@@ -52,6 +60,10 @@ public class OFStatisticsAggregateReply extends OFStatisticsReply implements org
 	public OFStatisticsAggregateReply setFlowCount(int flow_count) {
 		this.flow_count = flow_count;
 		return this;
+	}
+	
+	public boolean isFlowCountSupported() {
+		return true;
 	}
 			
 	

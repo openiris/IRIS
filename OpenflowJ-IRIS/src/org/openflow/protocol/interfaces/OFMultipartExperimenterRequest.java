@@ -8,10 +8,13 @@ public interface OFMultipartExperimenterRequest extends OFMultipartRequest {
 
 	public int getExperimenterId();
 	public OFMultipartExperimenterRequest setExperimenterId(int value);
+	public boolean isExperimenterIdSupported();
 	public int getExperimentType();
 	public OFMultipartExperimenterRequest setExperimentType(int value);
+	public boolean isExperimentTypeSupported();
 	public byte[] getData();
 	public OFMultipartExperimenterRequest setData(byte[] value);
+	public boolean isDataSupported();
 
     public void readFrom(ByteBuffer data);
 

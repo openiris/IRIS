@@ -8,6 +8,7 @@ public interface OFInstructionGotoTable extends OFInstruction {
 
 	public byte getTableId();
 	public OFInstructionGotoTable setTableId(byte value);
+	public boolean isTableIdSupported();
 
     public void readFrom(ByteBuffer data);
 

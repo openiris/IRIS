@@ -8,16 +8,22 @@ public interface OFMultipartFlowRequest extends OFMultipartRequest {
 
 	public byte getTableId();
 	public OFMultipartFlowRequest setTableId(byte value);
+	public boolean isTableIdSupported();
 	public OFPort getOutPort();
 	public OFMultipartFlowRequest setOutPort(OFPort value);
+	public boolean isOutPortSupported();
 	public int getOutGroup();
 	public OFMultipartFlowRequest setOutGroup(int value);
+	public boolean isOutGroupSupported();
 	public long getCookie();
 	public OFMultipartFlowRequest setCookie(long value);
+	public boolean isCookieSupported();
 	public long getCookieMask();
 	public OFMultipartFlowRequest setCookieMask(long value);
+	public boolean isCookieMaskSupported();
 	public OFMatch getMatch();
 	public OFMultipartFlowRequest setMatch(OFMatch value);
+	public boolean isMatchSupported();
 
     public void readFrom(ByteBuffer data);
 

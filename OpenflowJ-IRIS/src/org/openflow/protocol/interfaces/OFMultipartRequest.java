@@ -8,8 +8,10 @@ public interface OFMultipartRequest extends OFMultipart {
 
 	public OFMultipartType getMultipartType();
 	public OFMultipartRequest setMultipartType(OFMultipartType value);
+	public boolean isMultipartTypeSupported();
 	public Set<OFMultipartRequestFlags> getFlags();
 	public OFMultipartRequest setFlags(Set<OFMultipartRequestFlags> value);
+	public boolean isFlagsSupported();
 
     public void readFrom(ByteBuffer data);
 

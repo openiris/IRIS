@@ -8,8 +8,10 @@ public interface OFQueueProperty  {
 
 	public OFQueuePropertyType getType();
 	public OFQueueProperty setType(OFQueuePropertyType value);
+	public boolean isTypeSupported();
 	public short getLength();
 	public OFQueueProperty setLength(short value);
+	public boolean isLengthSupported();
 
     public void readFrom(ByteBuffer data);
 

@@ -8,6 +8,7 @@ public interface OFTableFeaturePropertyWriteSetfield extends OFTableFeaturePrope
 
 	public List<Integer> getOxmIds();
 	public OFTableFeaturePropertyWriteSetfield setOxmIds(List<Integer> value);
+	public boolean isOxmIdsSupported();
 
     public void readFrom(ByteBuffer data);
 

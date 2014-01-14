@@ -45,6 +45,10 @@ public class OFGroupStatsEntry   implements org.openflow.protocol.interfaces.OFG
 		this.length = length;
 		return this;
 	}
+	
+	public boolean isLengthSupported() {
+		return true;
+	}
 			
 	public int getGroupId() {
 		return this.group_id;
@@ -53,6 +57,10 @@ public class OFGroupStatsEntry   implements org.openflow.protocol.interfaces.OFG
 	public OFGroupStatsEntry setGroupId(int group_id) {
 		this.group_id = group_id;
 		return this;
+	}
+	
+	public boolean isGroupIdSupported() {
+		return true;
 	}
 			
 	public int getRefCount() {
@@ -63,6 +71,10 @@ public class OFGroupStatsEntry   implements org.openflow.protocol.interfaces.OFG
 		this.ref_count = ref_count;
 		return this;
 	}
+	
+	public boolean isRefCountSupported() {
+		return true;
+	}
 			
 	public long getPacketCount() {
 		return this.packet_count;
@@ -71,6 +83,10 @@ public class OFGroupStatsEntry   implements org.openflow.protocol.interfaces.OFG
 	public OFGroupStatsEntry setPacketCount(long packet_count) {
 		this.packet_count = packet_count;
 		return this;
+	}
+	
+	public boolean isPacketCountSupported() {
+		return true;
 	}
 			
 	public long getByteCount() {
@@ -81,6 +97,10 @@ public class OFGroupStatsEntry   implements org.openflow.protocol.interfaces.OFG
 		this.byte_count = byte_count;
 		return this;
 	}
+	
+	public boolean isByteCountSupported() {
+		return true;
+	}
 			
 	public int getDurationSec() {
 		return this.duration_sec;
@@ -89,6 +109,10 @@ public class OFGroupStatsEntry   implements org.openflow.protocol.interfaces.OFG
 	public OFGroupStatsEntry setDurationSec(int duration_sec) {
 		this.duration_sec = duration_sec;
 		return this;
+	}
+	
+	public boolean isDurationSecSupported() {
+		return true;
 	}
 			
 	public int getDurationNsec() {
@@ -99,6 +123,10 @@ public class OFGroupStatsEntry   implements org.openflow.protocol.interfaces.OFG
 		this.duration_nsec = duration_nsec;
 		return this;
 	}
+	
+	public boolean isDurationNsecSupported() {
+		return true;
+	}
 			
 	public List<org.openflow.protocol.interfaces.OFBucketCounter> getBucketStats() {
 		return this.bucket_stats;
@@ -107,6 +135,10 @@ public class OFGroupStatsEntry   implements org.openflow.protocol.interfaces.OFG
 	public OFGroupStatsEntry setBucketStats(List<org.openflow.protocol.interfaces.OFBucketCounter> bucket_stats) {
 		this.bucket_stats = bucket_stats;
 		return this;
+	}
+	
+	public boolean isBucketStatsSupported() {
+		return true;
 	}
 			
 	

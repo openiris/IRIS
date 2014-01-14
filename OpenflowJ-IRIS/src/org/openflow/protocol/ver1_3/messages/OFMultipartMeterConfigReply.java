@@ -33,6 +33,10 @@ public class OFMultipartMeterConfigReply extends OFMultipartReply implements org
 		this.entries = entries;
 		return this;
 	}
+	
+	public boolean isEntriesSupported() {
+		return true;
+	}
 			
 	
 	

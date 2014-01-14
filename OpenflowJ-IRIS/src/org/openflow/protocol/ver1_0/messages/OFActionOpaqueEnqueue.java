@@ -35,6 +35,10 @@ public class OFActionOpaqueEnqueue extends OFAction implements org.openflow.prot
 		return this;
 	}
 	
+	public boolean isPortSupported() {
+		return true;
+	}
+	
 	public int getQueueId() {
 		return this.queue_id;
 	}
@@ -42,6 +46,10 @@ public class OFActionOpaqueEnqueue extends OFAction implements org.openflow.prot
 	public OFActionOpaqueEnqueue setQueueId(int queue_id) {
 		this.queue_id = queue_id;
 		return this;
+	}
+	
+	public boolean isQueueIdSupported() {
+		return true;
 	}
 			
 	

@@ -33,6 +33,10 @@ public class OFMultipartQueueReply extends OFMultipartReply implements org.openf
 		this.entries = entries;
 		return this;
 	}
+	
+	public boolean isEntriesSupported() {
+		return true;
+	}
 			
 	
 	

@@ -29,6 +29,10 @@ public class OFActionSetField extends OFAction implements org.openflow.protocol.
 		this.field = field;
 		return this;
 	}
+	
+	public boolean isFieldSupported() {
+		return true;
+	}
 			
 	
 	

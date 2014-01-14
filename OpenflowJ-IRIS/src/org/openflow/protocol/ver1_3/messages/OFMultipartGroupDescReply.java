@@ -33,6 +33,10 @@ public class OFMultipartGroupDescReply extends OFMultipartReply implements org.o
 		this.entries = entries;
 		return this;
 	}
+	
+	public boolean isEntriesSupported() {
+		return true;
+	}
 			
 	
 	

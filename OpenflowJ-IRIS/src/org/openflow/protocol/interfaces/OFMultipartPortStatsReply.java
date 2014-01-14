@@ -8,6 +8,7 @@ public interface OFMultipartPortStatsReply extends OFMultipartReply {
 
 	public List<OFPortStatsEntry> getEntries();
 	public OFMultipartPortStatsReply setEntries(List<OFPortStatsEntry> value);
+	public boolean isEntriesSupported();
 
     public void readFrom(ByteBuffer data);
 

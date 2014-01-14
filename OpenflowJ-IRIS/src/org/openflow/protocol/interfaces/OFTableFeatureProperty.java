@@ -8,8 +8,10 @@ public interface OFTableFeatureProperty  {
 
 	public OFTableFeaturePropertyType getType();
 	public OFTableFeatureProperty setType(OFTableFeaturePropertyType value);
+	public boolean isTypeSupported();
 	public short getLength();
 	public OFTableFeatureProperty setLength(short value);
+	public boolean isLengthSupported();
 
     public void readFrom(ByteBuffer data);
 

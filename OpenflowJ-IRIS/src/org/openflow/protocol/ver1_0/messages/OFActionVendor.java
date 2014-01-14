@@ -31,6 +31,10 @@ public class OFActionVendor extends OFAction implements org.openflow.protocol.in
 		this.vendor_id = vendor_id;
 		return this;
 	}
+	
+	public boolean isVendorIdSupported() {
+		return true;
+	}
 			
 	public byte[] getData() {
 		return this.data;
@@ -39,6 +43,10 @@ public class OFActionVendor extends OFAction implements org.openflow.protocol.in
 	public OFActionVendor setData(byte[] data) {
 		this.data = data;
 		return this;
+	}
+	
+	public boolean isDataSupported() {
+		return true;
 	}
 			
 	

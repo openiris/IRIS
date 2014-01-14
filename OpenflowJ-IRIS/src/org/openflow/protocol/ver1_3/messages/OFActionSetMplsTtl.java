@@ -31,6 +31,10 @@ public class OFActionSetMplsTtl extends OFAction implements org.openflow.protoco
 		this.mpls_ttl = mpls_ttl;
 		return this;
 	}
+	
+	public boolean isMplsTtlSupported() {
+		return true;
+	}
 			
 	
 	

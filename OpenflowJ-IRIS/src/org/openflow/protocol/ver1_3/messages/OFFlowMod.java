@@ -60,6 +60,10 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		this.cookie = cookie;
 		return this;
 	}
+	
+	public boolean isCookieSupported() {
+		return true;
+	}
 			
 	public long getCookieMask() {
 		return this.cookie_mask;
@@ -69,6 +73,10 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		this.cookie_mask = cookie_mask;
 		return this;
 	}
+	
+	public boolean isCookieMaskSupported() {
+		return true;
+	}
 			
 	public byte getTableId() {
 		return this.table_id;
@@ -77,6 +85,10 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 	public OFFlowMod setTableId(byte table_id) {
 		this.table_id = table_id;
 		return this;
+	}
+	
+	public boolean isTableIdSupported() {
+		return true;
 	}
 			
 
@@ -94,6 +106,10 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 	
+	public boolean isCommandSupported() {
+		return true;
+	}
+	
 	public short getIdleTimeout() {
 		return this.idle_timeout;
 	}
@@ -101,6 +117,10 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 	public OFFlowMod setIdleTimeout(short idle_timeout) {
 		this.idle_timeout = idle_timeout;
 		return this;
+	}
+	
+	public boolean isIdleTimeoutSupported() {
+		return true;
 	}
 			
 	public short getHardTimeout() {
@@ -111,6 +131,10 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		this.hard_timeout = hard_timeout;
 		return this;
 	}
+	
+	public boolean isHardTimeoutSupported() {
+		return true;
+	}
 			
 	public short getPriority() {
 		return this.priority;
@@ -120,6 +144,10 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		this.priority = priority;
 		return this;
 	}
+	
+	public boolean isPrioritySupported() {
+		return true;
+	}
 			
 	public int getBufferId() {
 		return this.buffer_id;
@@ -128,6 +156,10 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 	public OFFlowMod setBufferId(int buffer_id) {
 		this.buffer_id = buffer_id;
 		return this;
+	}
+	
+	public boolean isBufferIdSupported() {
+		return true;
 	}
 			
 	public OFPort getOutPort() {
@@ -139,6 +171,10 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 	
+	public boolean isOutPortSupported() {
+		return true;
+	}
+	
 	public int getOutGroup() {
 		return this.out_group;
 	}
@@ -146,6 +182,10 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 	public OFFlowMod setOutGroup(int out_group) {
 		this.out_group = out_group;
 		return this;
+	}
+	
+	public boolean isOutGroupSupported() {
+		return true;
 	}
 			
 	public short getFlagsWire() {
@@ -174,6 +214,10 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		this.flags = tmp.get();
 		return this;
 	}
+	
+	public boolean isFlagsSupported() {
+		return true;
+	}
 		
 	public org.openflow.protocol.interfaces.OFMatch getMatch() {
 		return this.match;
@@ -182,6 +226,10 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 	public OFFlowMod setMatch(org.openflow.protocol.interfaces.OFMatch match) {
 		this.match = (OFMatchOxm) match;
 		return this;
+	}
+	
+	public boolean isMatchSupported() {
+		return true;
 	}
 			
 	public List<org.openflow.protocol.interfaces.OFInstruction> getInstructions() {
@@ -192,15 +240,23 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		this.instructions = instructions;
 		return this;
 	}
+	
+	public boolean isInstructionsSupported() {
+		return true;
+	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public List<org.openflow.protocol.interfaces.OFAction> getActions() {
-		throw new UnsupportedOperationException("public List<org.openflow.protocol.interfaces.OFAction> getActions() is not supported operation");
+		throw new UnsupportedOperationException("$signature is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public org.openflow.protocol.interfaces.OFFlowMod setActions(List<org.openflow.protocol.interfaces.OFAction> value) {
-		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowMod setActions(List<org.openflow.protocol.interfaces.OFAction> value) is not supported operation");
+	public OFFlowMod setActions(List<org.openflow.protocol.interfaces.OFAction> value) {
+		throw new UnsupportedOperationException("$signature is not supported operation");
+	}
+	
+	public boolean isActionsSupported() {
+		return false;
 	}
 	
 	

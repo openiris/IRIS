@@ -32,6 +32,10 @@ public class OFStatisticsVendorRequest extends OFStatisticsRequest implements or
 		this.vendor = vendor;
 		return this;
 	}
+	
+	public boolean isVendorSupported() {
+		return true;
+	}
 			
 	public byte[] getData() {
 		return this.data;
@@ -40,6 +44,10 @@ public class OFStatisticsVendorRequest extends OFStatisticsRequest implements or
 	public OFStatisticsVendorRequest setData(byte[] data) {
 		this.data = data;
 		return this;
+	}
+	
+	public boolean isDataSupported() {
+		return true;
 	}
 			
 	

@@ -29,6 +29,10 @@ public class OFRoleReply extends OFMessage implements org.openflow.protocol.inte
 		this.data = data;
 		return this;
 	}
+	
+	public boolean isDataSupported() {
+		return true;
+	}
 			
 	
 	

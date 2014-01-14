@@ -38,6 +38,10 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
 		this.queue_id = queue_id;
 		return this;
 	}
+	
+	public boolean isQueueIdSupported() {
+		return true;
+	}
 			
 	public OFPort getPort() {
 		return new OFPort(this.port);
@@ -48,6 +52,10 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
 		return this;
 	}
 	
+	public boolean isPortSupported() {
+		return true;
+	}
+	
 	public short getLength() {
 		return this.length;
 	}
@@ -55,6 +63,10 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
 	public OFPacketQueue setLength(short length) {
 		this.length = length;
 		return this;
+	}
+	
+	public boolean isLengthSupported() {
+		return true;
 	}
 			
 	public List<org.openflow.protocol.interfaces.OFQueueProperty> getProperties() {
@@ -64,6 +76,10 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
 	public OFPacketQueue setProperties(List<org.openflow.protocol.interfaces.OFQueueProperty> properties) {
 		this.properties = properties;
 		return this;
+	}
+	
+	public boolean isPropertiesSupported() {
+		return true;
 	}
 			
 	

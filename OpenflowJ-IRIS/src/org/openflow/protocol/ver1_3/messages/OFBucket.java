@@ -39,6 +39,10 @@ public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
 		this.length = length;
 		return this;
 	}
+	
+	public boolean isLengthSupported() {
+		return true;
+	}
 			
 	public short getWeight() {
 		return this.weight;
@@ -47,6 +51,10 @@ public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
 	public OFBucket setWeight(short weight) {
 		this.weight = weight;
 		return this;
+	}
+	
+	public boolean isWeightSupported() {
+		return true;
 	}
 			
 	public OFPort getWatchPort() {
@@ -58,6 +66,10 @@ public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
 		return this;
 	}
 	
+	public boolean isWatchPortSupported() {
+		return true;
+	}
+	
 	public int getWatchGroup() {
 		return this.watch_group;
 	}
@@ -65,6 +77,10 @@ public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
 	public OFBucket setWatchGroup(int watch_group) {
 		this.watch_group = watch_group;
 		return this;
+	}
+	
+	public boolean isWatchGroupSupported() {
+		return true;
 	}
 			
 	public List<org.openflow.protocol.interfaces.OFAction> getActions() {
@@ -74,6 +90,10 @@ public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
 	public OFBucket setActions(List<org.openflow.protocol.interfaces.OFAction> actions) {
 		this.actions = actions;
 		return this;
+	}
+	
+	public boolean isActionsSupported() {
+		return true;
 	}
 			
 	

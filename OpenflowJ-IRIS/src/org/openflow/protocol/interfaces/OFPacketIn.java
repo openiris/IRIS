@@ -8,20 +8,28 @@ public interface OFPacketIn extends OFMessage {
 
 	public int getBufferId();
 	public OFPacketIn setBufferId(int value);
+	public boolean isBufferIdSupported();
 	public short getTotalLength();
 	public OFPacketIn setTotalLength(short value);
+	public boolean isTotalLengthSupported();
 	public OFPort getInputPort();
 	public OFPacketIn setInputPort(OFPort value);
+	public boolean isInputPortSupported();
 	public OFPacketInReason getReason();
 	public OFPacketIn setReason(OFPacketInReason value);
+	public boolean isReasonSupported();
 	public byte[] getData();
 	public OFPacketIn setData(byte[] value);
+	public boolean isDataSupported();
 	public byte getTableId();
 	public OFPacketIn setTableId(byte value);
+	public boolean isTableIdSupported();
 	public long getCookie();
 	public OFPacketIn setCookie(long value);
+	public boolean isCookieSupported();
 	public OFMatch getMatch();
 	public OFPacketIn setMatch(OFMatch value);
+	public boolean isMatchSupported();
 
     public void readFrom(ByteBuffer data);
 

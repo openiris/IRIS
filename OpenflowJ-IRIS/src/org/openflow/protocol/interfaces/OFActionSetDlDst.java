@@ -8,6 +8,7 @@ public interface OFActionSetDlDst extends OFAction {
 
 	public byte[] getDlAddr();
 	public OFActionSetDlDst setDlAddr(byte[] value);
+	public boolean isDlAddrSupported();
 
     public void readFrom(ByteBuffer data);
 

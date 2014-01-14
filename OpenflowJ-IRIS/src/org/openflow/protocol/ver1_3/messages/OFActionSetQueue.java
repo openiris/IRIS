@@ -29,6 +29,10 @@ public class OFActionSetQueue extends OFAction implements org.openflow.protocol.
 		this.queue_id = queue_id;
 		return this;
 	}
+	
+	public boolean isQueueIdSupported() {
+		return true;
+	}
 			
 	
 	

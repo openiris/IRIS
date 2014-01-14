@@ -32,6 +32,10 @@ public class OFTableFeaturePropertyApplySetfield extends OFTableFeatureProperty 
 		this.oxm_ids = oxm_ids;
 		return this;
 	}
+	
+	public boolean isOxmIdsSupported() {
+		return true;
+	}
 			
 	
 	

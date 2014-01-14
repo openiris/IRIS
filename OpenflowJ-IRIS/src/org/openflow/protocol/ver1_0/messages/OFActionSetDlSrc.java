@@ -32,6 +32,10 @@ public class OFActionSetDlSrc extends OFAction implements org.openflow.protocol.
 		this.dl_addr = dl_addr;
 		return this;
 	}
+	
+	public boolean isDlAddrSupported() {
+		return true;
+	}
 			
 	
 	

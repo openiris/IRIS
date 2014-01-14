@@ -8,6 +8,7 @@ public interface OFActionSetNwTos extends OFAction {
 
 	public byte getNwTos();
 	public OFActionSetNwTos setNwTos(byte value);
+	public boolean isNwTosSupported();
 
     public void readFrom(ByteBuffer data);
 

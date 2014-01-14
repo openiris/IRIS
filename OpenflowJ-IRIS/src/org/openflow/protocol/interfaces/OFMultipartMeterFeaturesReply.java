@@ -8,6 +8,7 @@ public interface OFMultipartMeterFeaturesReply extends OFMultipartReply {
 
 	public OFMeterFeatures getFeatures();
 	public OFMultipartMeterFeaturesReply setFeatures(OFMeterFeatures value);
+	public boolean isFeaturesSupported();
 
     public void readFrom(ByteBuffer data);
 

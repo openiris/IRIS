@@ -33,6 +33,10 @@ public class OFMultipartPortDescReply extends OFMultipartReply implements org.op
 		this.entries = entries;
 		return this;
 	}
+	
+	public boolean isEntriesSupported() {
+		return true;
+	}
 			
 	
 	

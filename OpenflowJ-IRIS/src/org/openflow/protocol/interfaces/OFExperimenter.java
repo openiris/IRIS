@@ -8,10 +8,13 @@ public interface OFExperimenter extends OFMessage {
 
 	public int getExperimenterId();
 	public OFExperimenter setExperimenterId(int value);
+	public boolean isExperimenterIdSupported();
 	public int getSubtype();
 	public OFExperimenter setSubtype(int value);
+	public boolean isSubtypeSupported();
 	public byte[] getData();
 	public OFExperimenter setData(byte[] value);
+	public boolean isDataSupported();
 
     public void readFrom(ByteBuffer data);
 

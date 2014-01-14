@@ -29,6 +29,10 @@ public class OFActionId   implements org.openflow.protocol.interfaces.OFActionId
 		this.type = type;
 		return this;
 	}
+	
+	public boolean isTypeSupported() {
+		return true;
+	}
 			
 	public short getLength() {
 		return this.length;
@@ -37,6 +41,10 @@ public class OFActionId   implements org.openflow.protocol.interfaces.OFActionId
 	public OFActionId setLength(short length) {
 		this.length = length;
 		return this;
+	}
+	
+	public boolean isLengthSupported() {
+		return true;
 	}
 			
 	

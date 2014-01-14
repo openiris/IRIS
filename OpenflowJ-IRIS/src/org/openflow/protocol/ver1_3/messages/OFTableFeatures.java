@@ -45,6 +45,10 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 		this.length = length;
 		return this;
 	}
+	
+	public boolean isLengthSupported() {
+		return true;
+	}
 			
 	public byte getTableId() {
 		return this.table_id;
@@ -53,6 +57,10 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 	public OFTableFeatures setTableId(byte table_id) {
 		this.table_id = table_id;
 		return this;
+	}
+	
+	public boolean isTableIdSupported() {
+		return true;
 	}
 			
 	public byte[] getName() {
@@ -63,6 +71,10 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 		this.name = name;
 		return this;
 	}
+	
+	public boolean isNameSupported() {
+		return true;
+	}
 			
 	public long getMetadataMatch() {
 		return this.metadata_match;
@@ -71,6 +83,10 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 	public OFTableFeatures setMetadataMatch(long metadata_match) {
 		this.metadata_match = metadata_match;
 		return this;
+	}
+	
+	public boolean isMetadataMatchSupported() {
+		return true;
 	}
 			
 	public long getMetadataWrite() {
@@ -81,6 +97,10 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 		this.metadata_write = metadata_write;
 		return this;
 	}
+	
+	public boolean isMetadataWriteSupported() {
+		return true;
+	}
 			
 	public int getConfig() {
 		return this.config;
@@ -89,6 +109,10 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 	public OFTableFeatures setConfig(int config) {
 		this.config = config;
 		return this;
+	}
+	
+	public boolean isConfigSupported() {
+		return true;
 	}
 			
 	public int getMaxEntries() {
@@ -99,6 +123,10 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 		this.max_entries = max_entries;
 		return this;
 	}
+	
+	public boolean isMaxEntriesSupported() {
+		return true;
+	}
 			
 	public List<org.openflow.protocol.interfaces.OFTableFeatureProperty> getProperties() {
 		return this.properties;
@@ -107,6 +135,10 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 	public OFTableFeatures setProperties(List<org.openflow.protocol.interfaces.OFTableFeatureProperty> properties) {
 		this.properties = properties;
 		return this;
+	}
+	
+	public boolean isPropertiesSupported() {
+		return true;
 	}
 			
 	

@@ -31,6 +31,10 @@ public class OFActionSetVlanPcp extends OFAction implements org.openflow.protoco
 		this.vlan_pcp = vlan_pcp;
 		return this;
 	}
+	
+	public boolean isVlanPcpSupported() {
+		return true;
+	}
 			
 	
 	

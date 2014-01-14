@@ -8,6 +8,7 @@ public interface OFActionSetVlanId extends OFAction {
 
 	public short getVlanId();
 	public OFActionSetVlanId setVlanId(short value);
+	public boolean isVlanIdSupported();
 
     public void readFrom(ByteBuffer data);
 

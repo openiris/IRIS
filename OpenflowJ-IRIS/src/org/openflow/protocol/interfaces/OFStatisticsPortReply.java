@@ -8,6 +8,7 @@ public interface OFStatisticsPortReply extends OFStatisticsReply {
 
 	public List<OFPortStatsEntry> getEntries();
 	public OFStatisticsPortReply setEntries(List<OFPortStatsEntry> value);
+	public boolean isEntriesSupported();
 
     public void readFrom(ByteBuffer data);
 

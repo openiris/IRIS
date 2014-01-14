@@ -8,6 +8,7 @@ public interface OFTableFeaturePropertyWildcards extends OFTableFeatureProperty 
 
 	public List<Integer> getOxmIds();
 	public OFTableFeaturePropertyWildcards setOxmIds(List<Integer> value);
+	public boolean isOxmIdsSupported();
 
     public void readFrom(ByteBuffer data);
 

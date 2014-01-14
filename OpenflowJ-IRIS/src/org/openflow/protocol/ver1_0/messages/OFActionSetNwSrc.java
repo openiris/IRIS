@@ -29,6 +29,10 @@ public class OFActionSetNwSrc extends OFAction implements org.openflow.protocol.
 		this.nw_addr = nw_addr;
 		return this;
 	}
+	
+	public boolean isNwAddrSupported() {
+		return true;
+	}
 			
 	
 	

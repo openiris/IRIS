@@ -30,6 +30,10 @@ public class OFActionPushMpls extends OFAction implements org.openflow.protocol.
 		this.ethertype = ethertype;
 		return this;
 	}
+	
+	public boolean isEthertypeSupported() {
+		return true;
+	}
 			
 	
 	

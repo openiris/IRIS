@@ -37,6 +37,10 @@ public class OFQueueGetConfigReply extends OFMessage implements org.openflow.pro
 		return this;
 	}
 	
+	public boolean isPortSupported() {
+		return true;
+	}
+	
 	public List<org.openflow.protocol.interfaces.OFPacketQueue> getQueues() {
 		return this.queues;
 	}
@@ -44,6 +48,10 @@ public class OFQueueGetConfigReply extends OFMessage implements org.openflow.pro
 	public OFQueueGetConfigReply setQueues(List<org.openflow.protocol.interfaces.OFPacketQueue> queues) {
 		this.queues = queues;
 		return this;
+	}
+	
+	public boolean isQueuesSupported() {
+		return true;
 	}
 			
 	

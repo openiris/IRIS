@@ -36,6 +36,10 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 		this.match = match;
 		return this;
 	}
+	
+	public boolean isMatchSupported() {
+		return true;
+	}
 			
 	public byte getTableId() {
 		return this.table_id;
@@ -45,6 +49,10 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 		this.table_id = table_id;
 		return this;
 	}
+	
+	public boolean isTableIdSupported() {
+		return true;
+	}
 			
 	public OFPort getOutPort() {
 		return new OFPort(this.out_port);
@@ -53,6 +61,10 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 	public OFStatisticsFlowRequest setOutPort(OFPort port) {
 		this.out_port = (short) port.get();
 		return this;
+	}
+	
+	public boolean isOutPortSupported() {
+		return true;
 	}
 	
 	

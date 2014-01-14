@@ -29,6 +29,10 @@ public class OFMeterBandExperimenter extends OFMeterBand implements org.openflow
 		this.experimenter_id = experimenter_id;
 		return this;
 	}
+	
+	public boolean isExperimenterIdSupported() {
+		return true;
+	}
 			
 	
 	

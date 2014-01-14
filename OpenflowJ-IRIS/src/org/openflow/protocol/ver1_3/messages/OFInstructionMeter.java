@@ -29,6 +29,10 @@ public class OFInstructionMeter extends OFInstruction implements org.openflow.pr
 		this.meter_id = meter_id;
 		return this;
 	}
+	
+	public boolean isMeterIdSupported() {
+		return true;
+	}
 			
 	
 	

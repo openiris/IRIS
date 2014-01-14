@@ -8,6 +8,7 @@ public interface OFTableFeaturePropertyApplySetfield extends OFTableFeaturePrope
 
 	public List<Integer> getOxmIds();
 	public OFTableFeaturePropertyApplySetfield setOxmIds(List<Integer> value);
+	public boolean isOxmIdsSupported();
 
     public void readFrom(ByteBuffer data);
 

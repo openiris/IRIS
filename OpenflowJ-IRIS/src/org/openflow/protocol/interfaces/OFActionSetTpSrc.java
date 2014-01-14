@@ -8,6 +8,7 @@ public interface OFActionSetTpSrc extends OFAction {
 
 	public short getTpPort();
 	public OFActionSetTpSrc setTpPort(short value);
+	public boolean isTpPortSupported();
 
     public void readFrom(ByteBuffer data);
 

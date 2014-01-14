@@ -34,6 +34,10 @@ public class OFAction   implements org.openflow.protocol.interfaces.OFAction {
 		return this;
 	}
 	
+	public boolean isTypeSupported() {
+		return true;
+	}
+	
 	public short getLength() {
 		return this.length;
 	}
@@ -41,6 +45,10 @@ public class OFAction   implements org.openflow.protocol.interfaces.OFAction {
 	public OFAction setLength(short length) {
 		this.length = length;
 		return this;
+	}
+	
+	public boolean isLengthSupported() {
+		return true;
 	}
 			
 	

@@ -31,6 +31,10 @@ public class OFMeterBandDscpRemark extends OFMeterBand implements org.openflow.p
 		this.prec_level = prec_level;
 		return this;
 	}
+	
+	public boolean isPrecLevelSupported() {
+		return true;
+	}
 			
 	
 	

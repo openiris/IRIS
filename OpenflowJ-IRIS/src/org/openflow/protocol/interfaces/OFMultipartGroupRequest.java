@@ -8,6 +8,7 @@ public interface OFMultipartGroupRequest extends OFMultipartRequest {
 
 	public int getGroupId();
 	public OFMultipartGroupRequest setGroupId(int value);
+	public boolean isGroupIdSupported();
 
     public void readFrom(ByteBuffer data);
 

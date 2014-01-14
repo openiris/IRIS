@@ -45,6 +45,10 @@ public class OFPortMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 	
+	public boolean isPortNoSupported() {
+		return true;
+	}
+	
 	public byte[] getHwAddr() {
 		return this.hw_addr;
 	}
@@ -52,6 +56,10 @@ public class OFPortMod extends OFMessage implements org.openflow.protocol.interf
 	public OFPortMod setHwAddr(byte[] hw_addr) {
 		this.hw_addr = hw_addr;
 		return this;
+	}
+	
+	public boolean isHwAddrSupported() {
+		return true;
 	}
 			
 	public int getConfig() {
@@ -62,6 +70,10 @@ public class OFPortMod extends OFMessage implements org.openflow.protocol.interf
 		this.config = config;
 		return this;
 	}
+	
+	public boolean isConfigSupported() {
+		return true;
+	}
 			
 	public int getMask() {
 		return this.mask;
@@ -71,6 +83,10 @@ public class OFPortMod extends OFMessage implements org.openflow.protocol.interf
 		this.mask = mask;
 		return this;
 	}
+	
+	public boolean isMaskSupported() {
+		return true;
+	}
 			
 	public int getAdvertise() {
 		return this.advertise;
@@ -79,6 +95,10 @@ public class OFPortMod extends OFMessage implements org.openflow.protocol.interf
 	public OFPortMod setAdvertise(int advertise) {
 		this.advertise = advertise;
 		return this;
+	}
+	
+	public boolean isAdvertiseSupported() {
+		return true;
 	}
 			
 	

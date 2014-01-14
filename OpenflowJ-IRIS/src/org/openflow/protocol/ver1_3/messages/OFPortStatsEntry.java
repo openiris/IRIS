@@ -57,6 +57,10 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		return this;
 	}
 	
+	public boolean isPortNumberSupported() {
+		return true;
+	}
+	
 	public long getReceivePackets() {
 		return this.receive_packets;
 	}
@@ -64,6 +68,10 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 	public OFPortStatsEntry setReceivePackets(long receive_packets) {
 		this.receive_packets = receive_packets;
 		return this;
+	}
+	
+	public boolean isReceivePacketsSupported() {
+		return true;
 	}
 			
 	public long getTransmitPackets() {
@@ -74,6 +82,10 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		this.transmit_packets = transmit_packets;
 		return this;
 	}
+	
+	public boolean isTransmitPacketsSupported() {
+		return true;
+	}
 			
 	public long getReceiveBytes() {
 		return this.receive_bytes;
@@ -82,6 +94,10 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 	public OFPortStatsEntry setReceiveBytes(long receive_bytes) {
 		this.receive_bytes = receive_bytes;
 		return this;
+	}
+	
+	public boolean isReceiveBytesSupported() {
+		return true;
 	}
 			
 	public long getTransmitBytes() {
@@ -92,6 +108,10 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		this.transmit_bytes = transmit_bytes;
 		return this;
 	}
+	
+	public boolean isTransmitBytesSupported() {
+		return true;
+	}
 			
 	public long getReceiveDropped() {
 		return this.receive_dropped;
@@ -100,6 +120,10 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 	public OFPortStatsEntry setReceiveDropped(long receive_dropped) {
 		this.receive_dropped = receive_dropped;
 		return this;
+	}
+	
+	public boolean isReceiveDroppedSupported() {
+		return true;
 	}
 			
 	public long getTransmitDropped() {
@@ -110,6 +134,10 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		this.transmit_dropped = transmit_dropped;
 		return this;
 	}
+	
+	public boolean isTransmitDroppedSupported() {
+		return true;
+	}
 			
 	public long getReceiveErrors() {
 		return this.receive_errors;
@@ -118,6 +146,10 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 	public OFPortStatsEntry setReceiveErrors(long receive_errors) {
 		this.receive_errors = receive_errors;
 		return this;
+	}
+	
+	public boolean isReceiveErrorsSupported() {
+		return true;
 	}
 			
 	public long getTransmitErrors() {
@@ -128,6 +160,10 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		this.transmit_errors = transmit_errors;
 		return this;
 	}
+	
+	public boolean isTransmitErrorsSupported() {
+		return true;
+	}
 			
 	public long getReceiveFrameErrors() {
 		return this.receive_frame_errors;
@@ -136,6 +172,10 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 	public OFPortStatsEntry setReceiveFrameErrors(long receive_frame_errors) {
 		this.receive_frame_errors = receive_frame_errors;
 		return this;
+	}
+	
+	public boolean isReceiveFrameErrorsSupported() {
+		return true;
 	}
 			
 	public long getReceiveOverrunErrors() {
@@ -146,6 +186,10 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		this.receive_overrun_errors = receive_overrun_errors;
 		return this;
 	}
+	
+	public boolean isReceiveOverrunErrorsSupported() {
+		return true;
+	}
 			
 	public long getReceiveCrcErrors() {
 		return this.receive_CRC_errors;
@@ -154,6 +198,10 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 	public OFPortStatsEntry setReceiveCrcErrors(long receive_CRC_errors) {
 		this.receive_CRC_errors = receive_CRC_errors;
 		return this;
+	}
+	
+	public boolean isReceiveCrcErrorsSupported() {
+		return true;
 	}
 			
 	public long getCollisions() {
@@ -164,6 +212,10 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		this.collisions = collisions;
 		return this;
 	}
+	
+	public boolean isCollisionsSupported() {
+		return true;
+	}
 			
 	public int getDurationSec() {
 		return this.duration_sec;
@@ -172,6 +224,10 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 	public OFPortStatsEntry setDurationSec(int duration_sec) {
 		this.duration_sec = duration_sec;
 		return this;
+	}
+	
+	public boolean isDurationSecSupported() {
+		return true;
 	}
 			
 	public int getDurationNsec() {
@@ -182,15 +238,23 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		this.duration_nsec = duration_nsec;
 		return this;
 	}
+	
+	public boolean isDurationNsecSupported() {
+		return true;
+	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public long getReceiveCrcErr() {
-		throw new UnsupportedOperationException("public long getReceiveCrcErr() is not supported operation");
+		throw new UnsupportedOperationException("$signature is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public org.openflow.protocol.interfaces.OFPortStatsEntry setReceiveCrcErr(long value) {
-		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFPortStatsEntry setReceiveCrcErr(long value) is not supported operation");
+	public OFPortStatsEntry setReceiveCrcErr(long value) {
+		throw new UnsupportedOperationException("$signature is not supported operation");
+	}
+	
+	public boolean isReceiveCrcErrSupported() {
+		return false;
 	}
 	
 	

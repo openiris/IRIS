@@ -8,6 +8,7 @@ public interface OFTableFeaturePropertyMatch extends OFTableFeatureProperty {
 
 	public List<Integer> getOxmIds();
 	public OFTableFeaturePropertyMatch setOxmIds(List<Integer> value);
+	public boolean isOxmIdsSupported();
 
     public void readFrom(ByteBuffer data);
 

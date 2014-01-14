@@ -8,6 +8,7 @@ public interface OFActionSetField extends OFAction {
 
 	public OFOxm getField();
 	public OFActionSetField setField(OFOxm value);
+	public boolean isFieldSupported();
 
     public void readFrom(ByteBuffer data);
 

@@ -29,6 +29,10 @@ public class OFEchoRequest extends OFMessage implements org.openflow.protocol.in
 		this.data = data;
 		return this;
 	}
+	
+	public boolean isDataSupported() {
+		return true;
+	}
 			
 	
 	

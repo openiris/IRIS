@@ -8,6 +8,7 @@ public interface OFTableFeaturePropertyApplyActions extends OFTableFeatureProper
 
 	public List<OFActionId> getActionIds();
 	public OFTableFeaturePropertyApplyActions setActionIds(List<OFActionId> value);
+	public boolean isActionIdsSupported();
 
     public void readFrom(ByteBuffer data);
 

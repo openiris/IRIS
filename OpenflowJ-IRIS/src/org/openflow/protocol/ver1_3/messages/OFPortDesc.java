@@ -51,6 +51,10 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		return this;
 	}
 	
+	public boolean isPortSupported() {
+		return true;
+	}
+	
 	public byte[] getHwAddr() {
 		return this.hw_addr;
 	}
@@ -58,6 +62,10 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 	public OFPortDesc setHwAddr(byte[] hw_addr) {
 		this.hw_addr = hw_addr;
 		return this;
+	}
+	
+	public boolean isHwAddrSupported() {
+		return true;
 	}
 			
 	public byte[] getName() {
@@ -68,6 +76,10 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		this.name = name;
 		return this;
 	}
+	
+	public boolean isNameSupported() {
+		return true;
+	}
 			
 	public int getConfig() {
 		return this.config;
@@ -76,6 +88,10 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 	public OFPortDesc setConfig(int config) {
 		this.config = config;
 		return this;
+	}
+	
+	public boolean isConfigSupported() {
+		return true;
 	}
 			
 	public int getState() {
@@ -86,6 +102,10 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		this.state = state;
 		return this;
 	}
+	
+	public boolean isStateSupported() {
+		return true;
+	}
 			
 	public int getCurrentFeatures() {
 		return this.current_features;
@@ -94,6 +114,10 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 	public OFPortDesc setCurrentFeatures(int current_features) {
 		this.current_features = current_features;
 		return this;
+	}
+	
+	public boolean isCurrentFeaturesSupported() {
+		return true;
 	}
 			
 	public int getAdvertisedFeatures() {
@@ -104,6 +128,10 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		this.advertised_features = advertised_features;
 		return this;
 	}
+	
+	public boolean isAdvertisedFeaturesSupported() {
+		return true;
+	}
 			
 	public int getSupportedFeatures() {
 		return this.supported_features;
@@ -112,6 +140,10 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 	public OFPortDesc setSupportedFeatures(int supported_features) {
 		this.supported_features = supported_features;
 		return this;
+	}
+	
+	public boolean isSupportedFeaturesSupported() {
+		return true;
 	}
 			
 	public int getPeerFeatures() {
@@ -122,6 +154,10 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		this.peer_features = peer_features;
 		return this;
 	}
+	
+	public boolean isPeerFeaturesSupported() {
+		return true;
+	}
 			
 	public int getCurrSpeed() {
 		return this.curr_speed;
@@ -131,6 +167,10 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		this.curr_speed = curr_speed;
 		return this;
 	}
+	
+	public boolean isCurrSpeedSupported() {
+		return true;
+	}
 			
 	public int getMaxSpeed() {
 		return this.max_speed;
@@ -139,6 +179,10 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 	public OFPortDesc setMaxSpeed(int max_speed) {
 		this.max_speed = max_speed;
 		return this;
+	}
+	
+	public boolean isMaxSpeedSupported() {
+		return true;
 	}
 			
 	

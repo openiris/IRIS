@@ -8,10 +8,13 @@ public interface OFMultipartAggregateReply extends OFMultipartReply {
 
 	public long getPacketCount();
 	public OFMultipartAggregateReply setPacketCount(long value);
+	public boolean isPacketCountSupported();
 	public long getByteCount();
 	public OFMultipartAggregateReply setByteCount(long value);
+	public boolean isByteCountSupported();
 	public int getFlowCount();
 	public OFMultipartAggregateReply setFlowCount(int value);
+	public boolean isFlowCountSupported();
 
     public void readFrom(ByteBuffer data);
 

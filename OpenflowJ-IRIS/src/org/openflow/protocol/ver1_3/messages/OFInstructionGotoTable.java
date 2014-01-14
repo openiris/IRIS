@@ -31,6 +31,10 @@ public class OFInstructionGotoTable extends OFInstruction implements org.openflo
 		this.table_id = table_id;
 		return this;
 	}
+	
+	public boolean isTableIdSupported() {
+		return true;
+	}
 			
 	
 	

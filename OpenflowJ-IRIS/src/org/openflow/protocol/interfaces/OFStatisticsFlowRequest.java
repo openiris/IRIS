@@ -8,10 +8,13 @@ public interface OFStatisticsFlowRequest extends OFStatisticsRequest {
 
 	public OFMatch getMatch();
 	public OFStatisticsFlowRequest setMatch(OFMatch value);
+	public boolean isMatchSupported();
 	public byte getTableId();
 	public OFStatisticsFlowRequest setTableId(byte value);
+	public boolean isTableIdSupported();
 	public OFPort getOutPort();
 	public OFStatisticsFlowRequest setOutPort(OFPort value);
+	public boolean isOutPortSupported();
 
     public void readFrom(ByteBuffer data);
 

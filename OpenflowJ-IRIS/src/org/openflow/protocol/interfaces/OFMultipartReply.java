@@ -8,8 +8,10 @@ public interface OFMultipartReply extends OFMultipart {
 
 	public OFMultipartType getMultipartType();
 	public OFMultipartReply setMultipartType(OFMultipartType value);
+	public boolean isMultipartTypeSupported();
 	public Set<OFMultipartReplyFlags> getFlags();
 	public OFMultipartReply setFlags(Set<OFMultipartReplyFlags> value);
+	public boolean isFlagsSupported();
 
     public void readFrom(ByteBuffer data);
 

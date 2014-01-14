@@ -71,8 +71,9 @@ class InterfaceDeclarations:
     '''
     get_method_name = spec.Spec.convert_to_camel(variable_name, 0, 'get')+'('
     set_method_name = spec.Spec.convert_to_camel(variable_name, 0, 'set')+'('
+    is_method_name = spec.Spec.convert_to_camel(variable_name, 0, 'is') + 'Supported'
     
-    self.declarations = [ x for x in self.declarations if x.find(get_method_name) < 0 and x.find(set_method_name) < 0 ]
+    self.declarations = [ x for x in self.declarations if x.find(get_method_name) < 0 and x.find(set_method_name) < 0 and x.find(is_method_name) < 0]
     
   def merge(self, interface_decls):
     self.declarations = self.declarations + interface_decls.declarations
@@ -103,6 +104,9 @@ class InterfaceForStruct(Interface):
   def get_declarations(self, struct):
     
     ret = []
+    this_name = struct.name
+    if this_name == 'OFMatchOxm':
+      this_name = 'OFMatch'
     
     for i in struct['body']:
       if not i.get('name', None): continue
@@ -133,6 +137,7 @@ class InterfaceForStruct(Interface):
               self.imports.add('import org.openflow.util.OFPort;')
               
         # this is for changing the return time manually into OFMatch if it is OFMatchOxm
+        
         if return_type == 'OFMatchOxm':
           return_type = 'OFMatch'
            
@@ -140,14 +145,18 @@ class InterfaceForStruct(Interface):
         bitfields = i['bitfields']
         for bitfield in bitfields:
           get_signature = 'public %s get%s();' % (return_type, spec.Spec.convert_to_camel( bitfield[0] ))
-          set_signature = 'public %s set%s(%s value);' % (struct.name, spec.Spec.convert_to_camel( bitfield[0] ), return_type) 
+          set_signature = 'public %s set%s(%s value);' % (this_name, spec.Spec.convert_to_camel( bitfield[0] ), return_type) 
+          is_signature = 'public boolean is%sSupported();' % spec.Spec.convert_to_camel( bitfield[0] )
           ret.append(get_signature)
           ret.append(set_signature)
+          ret.append(is_signature)
       else:
         get_signature = 'public %s get%s();' % (return_type, spec.Spec.convert_to_camel( i['name'] ))
-        set_signature = 'public %s set%s(%s value);' % (struct.name, spec.Spec.convert_to_camel( i['name'] ), return_type) 
+        set_signature = 'public %s set%s(%s value);' % (this_name, spec.Spec.convert_to_camel( i['name'] ), return_type) 
+        is_signature = 'public boolean is%sSupported();' % spec.Spec.convert_to_camel( i['name'] )
         ret.append(get_signature)
         ret.append(set_signature)
+        ret.append(is_signature)
     
     return ret
   
@@ -169,12 +178,16 @@ class InterfaceForStruct(Interface):
   def retrieve_set_declarations(self):
     return [x for x in self.declarations if re.search(r'\bset', x)]
   
+  def retrieve_is_declarations(self):
+    return [x for x in self.declarations if re.search(r'\bis\w+Supported', x)]
+  
   def convert(self):
     is_ofmatch = False
     template = Template.get_template('./tpl/interface_for_structs.tpl')
     if (self.name == 'OFMatch' and self.struct.spec.get_version() == '1.0') or self.name == 'OFMatchOxm':
       template = Template.get_template('tpl/interface_for_structs_ofmatch.tpl')
       set_accessors = self.retrieve_set_declarations()
+      is_accessors = self.retrieve_is_declarations()
       for name in [ 'OFMatch', 'OFMatchOxm' ]:
         set_accessors = [re.sub(r'\b%s\b' % name, 'Builder', x) for x in set_accessors]
       is_ofmatch = True
@@ -190,7 +203,7 @@ class InterfaceForStruct(Interface):
                                          'imports':'\n'.join(self.imports),
                                          'inherit':inherit,
                                          'accessors':'\n\n\t'.join(self.declarations),
-                                         'builder_accessors':'\n\t\t'.join(set_accessors)})
+                                         'builder_accessors':'\n\t\t'.join(set_accessors + is_accessors)})
     else:
       result = template.safe_substitute({'typename':self.name, 
                                          'imports':'\n'.join(self.imports),

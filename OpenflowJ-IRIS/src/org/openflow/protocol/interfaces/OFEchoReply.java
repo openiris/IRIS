@@ -8,6 +8,7 @@ public interface OFEchoReply extends OFMessage {
 
 	public byte[] getData();
 	public OFEchoReply setData(byte[] value);
+	public boolean isDataSupported();
 
     public void readFrom(ByteBuffer data);
 

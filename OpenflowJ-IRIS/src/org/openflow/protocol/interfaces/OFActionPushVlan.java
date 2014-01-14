@@ -8,6 +8,7 @@ public interface OFActionPushVlan extends OFAction {
 
 	public short getEthertype();
 	public OFActionPushVlan setEthertype(short value);
+	public boolean isEthertypeSupported();
 
     public void readFrom(ByteBuffer data);
 

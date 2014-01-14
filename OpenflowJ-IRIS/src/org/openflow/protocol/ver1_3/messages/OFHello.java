@@ -32,6 +32,10 @@ public class OFHello extends OFMessage implements org.openflow.protocol.interfac
 		this.elements = elements;
 		return this;
 	}
+	
+	public boolean isElementsSupported() {
+		return true;
+	}
 			
 	
 	

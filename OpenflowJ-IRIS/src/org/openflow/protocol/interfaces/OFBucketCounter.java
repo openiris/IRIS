@@ -8,8 +8,10 @@ public interface OFBucketCounter  {
 
 	public long getPacketCount();
 	public OFBucketCounter setPacketCount(long value);
+	public boolean isPacketCountSupported();
 	public long getByteCount();
 	public OFBucketCounter setByteCount(long value);
+	public boolean isByteCountSupported();
 
     public void readFrom(ByteBuffer data);
 

@@ -8,6 +8,7 @@ public interface OFQueuePropertyMaxRate extends OFQueueProperty {
 
 	public short getRate();
 	public OFQueuePropertyMaxRate setRate(short value);
+	public boolean isRateSupported();
 
     public void readFrom(ByteBuffer data);
 

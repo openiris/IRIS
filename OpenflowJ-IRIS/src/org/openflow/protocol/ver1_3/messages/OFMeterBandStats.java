@@ -28,6 +28,10 @@ public class OFMeterBandStats   implements org.openflow.protocol.interfaces.OFMe
 		this.packet_band_count = packet_band_count;
 		return this;
 	}
+	
+	public boolean isPacketBandCountSupported() {
+		return true;
+	}
 			
 	public long getByteBandCount() {
 		return this.byte_band_count;
@@ -36,6 +40,10 @@ public class OFMeterBandStats   implements org.openflow.protocol.interfaces.OFMe
 	public OFMeterBandStats setByteBandCount(long byte_band_count) {
 		this.byte_band_count = byte_band_count;
 		return this;
+	}
+	
+	public boolean isByteBandCountSupported() {
+		return true;
 	}
 			
 	

@@ -32,6 +32,10 @@ public class OFHelloElemVersionbitmap extends OFHelloElem implements org.openflo
 		this.bitmaps = bitmaps;
 		return this;
 	}
+	
+	public boolean isBitmapsSupported() {
+		return true;
+	}
 			
 	
 	

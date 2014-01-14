@@ -38,6 +38,10 @@ public class OFStatisticsDescReply extends OFStatisticsReply implements org.open
 		this.manufacturer_description = manufacturer_description;
 		return this;
 	}
+	
+	public boolean isManufacturerDescriptionSupported() {
+		return true;
+	}
 			
 	public String getHardwareDescription() {
 		return this.hardware_description;
@@ -46,6 +50,10 @@ public class OFStatisticsDescReply extends OFStatisticsReply implements org.open
 	public OFStatisticsDescReply setHardwareDescription(String hardware_description) {
 		this.hardware_description = hardware_description;
 		return this;
+	}
+	
+	public boolean isHardwareDescriptionSupported() {
+		return true;
 	}
 			
 	public String getSoftwareDescription() {
@@ -56,6 +64,10 @@ public class OFStatisticsDescReply extends OFStatisticsReply implements org.open
 		this.software_description = software_description;
 		return this;
 	}
+	
+	public boolean isSoftwareDescriptionSupported() {
+		return true;
+	}
 			
 	public String getSerialNumber() {
 		return this.serial_number;
@@ -65,6 +77,10 @@ public class OFStatisticsDescReply extends OFStatisticsReply implements org.open
 		this.serial_number = serial_number;
 		return this;
 	}
+	
+	public boolean isSerialNumberSupported() {
+		return true;
+	}
 			
 	public String getDatapathDescription() {
 		return this.datapath_description;
@@ -73,6 +89,10 @@ public class OFStatisticsDescReply extends OFStatisticsReply implements org.open
 	public OFStatisticsDescReply setDatapathDescription(String datapath_description) {
 		this.datapath_description = datapath_description;
 		return this;
+	}
+	
+	public boolean isDatapathDescriptionSupported() {
+		return true;
 	}
 			
 	

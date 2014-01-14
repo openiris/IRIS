@@ -8,8 +8,10 @@ public interface OFInstructionExperimenter extends OFInstruction {
 
 	public int getExperimenterId();
 	public OFInstructionExperimenter setExperimenterId(int value);
+	public boolean isExperimenterIdSupported();
 	public byte[] getData();
 	public OFInstructionExperimenter setData(byte[] value);
+	public boolean isDataSupported();
 
     public void readFrom(ByteBuffer data);
 

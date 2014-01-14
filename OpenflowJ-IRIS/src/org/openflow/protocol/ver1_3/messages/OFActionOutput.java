@@ -35,6 +35,10 @@ public class OFActionOutput extends OFAction implements org.openflow.protocol.in
 		return this;
 	}
 	
+	public boolean isPortSupported() {
+		return true;
+	}
+	
 	public short getMaxLength() {
 		return this.max_length;
 	}
@@ -42,6 +46,10 @@ public class OFActionOutput extends OFAction implements org.openflow.protocol.in
 	public OFActionOutput setMaxLength(short max_length) {
 		this.max_length = max_length;
 		return this;
+	}
+	
+	public boolean isMaxLengthSupported() {
+		return true;
 	}
 			
 	

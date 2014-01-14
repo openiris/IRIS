@@ -8,6 +8,7 @@ public interface OFMultipartFlowReply extends OFMultipartReply {
 
 	public List<OFFlowStatsEntry> getEntries();
 	public OFMultipartFlowReply setEntries(List<OFFlowStatsEntry> value);
+	public boolean isEntriesSupported();
 
     public void readFrom(ByteBuffer data);
 

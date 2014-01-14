@@ -8,8 +8,10 @@ public interface OFActionExperimenter extends OFAction {
 
 	public int getExperimenterId();
 	public OFActionExperimenter setExperimenterId(int value);
+	public boolean isExperimenterIdSupported();
 	public byte[] getData();
 	public OFActionExperimenter setData(byte[] value);
+	public boolean isDataSupported();
 
     public void readFrom(ByteBuffer data);
 

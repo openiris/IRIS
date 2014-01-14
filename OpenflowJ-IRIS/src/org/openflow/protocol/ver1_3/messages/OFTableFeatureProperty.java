@@ -34,6 +34,10 @@ public class OFTableFeatureProperty   implements org.openflow.protocol.interface
 		return this;
 	}
 	
+	public boolean isTypeSupported() {
+		return true;
+	}
+	
 	public short getLength() {
 		return this.length;
 	}
@@ -41,6 +45,10 @@ public class OFTableFeatureProperty   implements org.openflow.protocol.interface
 	public OFTableFeatureProperty setLength(short length) {
 		this.length = length;
 		return this;
+	}
+	
+	public boolean isLengthSupported() {
+		return true;
 	}
 			
 	

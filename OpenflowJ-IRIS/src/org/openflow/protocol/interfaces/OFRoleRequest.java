@@ -8,8 +8,10 @@ public interface OFRoleRequest extends OFMessage {
 
 	public int getRole();
 	public OFRoleRequest setRole(int value);
+	public boolean isRoleSupported();
 	public long getGenerationId();
 	public OFRoleRequest setGenerationId(long value);
+	public boolean isGenerationIdSupported();
 
     public void readFrom(ByteBuffer data);
 

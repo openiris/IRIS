@@ -8,16 +8,22 @@ public interface OFGetAsyncRequest extends OFMessage {
 
 	public int getPacketInMaskEqualMaster();
 	public OFGetAsyncRequest setPacketInMaskEqualMaster(int value);
+	public boolean isPacketInMaskEqualMasterSupported();
 	public int getPacketInMaskSlave();
 	public OFGetAsyncRequest setPacketInMaskSlave(int value);
+	public boolean isPacketInMaskSlaveSupported();
 	public int getPortStatusMaskEqualMaster();
 	public OFGetAsyncRequest setPortStatusMaskEqualMaster(int value);
+	public boolean isPortStatusMaskEqualMasterSupported();
 	public int getPortStatusMaskSlave();
 	public OFGetAsyncRequest setPortStatusMaskSlave(int value);
+	public boolean isPortStatusMaskSlaveSupported();
 	public int getFlowRemovedMaskEqualMaster();
 	public OFGetAsyncRequest setFlowRemovedMaskEqualMaster(int value);
+	public boolean isFlowRemovedMaskEqualMasterSupported();
 	public int getFlowRemovedMaskSlave();
 	public OFGetAsyncRequest setFlowRemovedMaskSlave(int value);
+	public boolean isFlowRemovedMaskSlaveSupported();
 
     public void readFrom(ByteBuffer data);
 

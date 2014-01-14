@@ -31,6 +31,10 @@ public class OFGetConfigReply extends OFMessage implements org.openflow.protocol
 		this.flags = flags;
 		return this;
 	}
+	
+	public boolean isFlagsSupported() {
+		return true;
+	}
 			
 	public short getMissSendLen() {
 		return this.miss_send_len;
@@ -40,15 +44,23 @@ public class OFGetConfigReply extends OFMessage implements org.openflow.protocol
 		this.miss_send_len = miss_send_len;
 		return this;
 	}
+	
+	public boolean isMissSendLenSupported() {
+		return true;
+	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public short getMissSendLength() {
-		throw new UnsupportedOperationException("public short getMissSendLength() is not supported operation");
+		throw new UnsupportedOperationException("$signature is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public org.openflow.protocol.interfaces.OFGetConfigReply setMissSendLength(short value) {
-		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFGetConfigReply setMissSendLength(short value) is not supported operation");
+	public OFGetConfigReply setMissSendLength(short value) {
+		throw new UnsupportedOperationException("$signature is not supported operation");
+	}
+	
+	public boolean isMissSendLengthSupported() {
+		return false;
 	}
 	
 	

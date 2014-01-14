@@ -23,63 +23,105 @@ public interface OFMatch  {
 		public Builder setTransportSource(short value);
 		public Builder setTransportDestination(short value);
 		public Builder setOxmFields(List<OFOxm> value);
+		public boolean isWildcardsSupported();
+		public boolean isInputPortSupported();
+		public boolean isDataLayerSourceSupported();
+		public boolean isDataLayerDestinationSupported();
+		public boolean isDataLayerVirtualLanSupported();
+		public boolean isDataLayerVirtualLanPriorityCodePointSupported();
+		public boolean isDataLayerTypeSupported();
+		public boolean isNetworkTypeOfServiceSupported();
+		public boolean isNetworkProtocolSupported();
+		public boolean isNetworkSourceSupported();
+		public boolean isNetworkDestinationSupported();
+		public boolean isTransportSourceSupported();
+		public boolean isTransportDestinationSupported();
+		public boolean isOxmFieldsSupported();
 	}
 	
 	public Set<OFFlowWildcards> getWildcards();
 
 	public OFMatch setWildcards(Set<OFFlowWildcards> value);
 
+	public boolean isWildcardsSupported();
+
 	public OFPort getInputPort();
 
 	public OFMatch setInputPort(OFPort value);
+
+	public boolean isInputPortSupported();
 
 	public byte[] getDataLayerSource();
 
 	public OFMatch setDataLayerSource(byte[] value);
 
+	public boolean isDataLayerSourceSupported();
+
 	public byte[] getDataLayerDestination();
 
 	public OFMatch setDataLayerDestination(byte[] value);
+
+	public boolean isDataLayerDestinationSupported();
 
 	public short getDataLayerVirtualLan();
 
 	public OFMatch setDataLayerVirtualLan(short value);
 
+	public boolean isDataLayerVirtualLanSupported();
+
 	public byte getDataLayerVirtualLanPriorityCodePoint();
 
 	public OFMatch setDataLayerVirtualLanPriorityCodePoint(byte value);
+
+	public boolean isDataLayerVirtualLanPriorityCodePointSupported();
 
 	public short getDataLayerType();
 
 	public OFMatch setDataLayerType(short value);
 
+	public boolean isDataLayerTypeSupported();
+
 	public byte getNetworkTypeOfService();
 
 	public OFMatch setNetworkTypeOfService(byte value);
+
+	public boolean isNetworkTypeOfServiceSupported();
 
 	public byte getNetworkProtocol();
 
 	public OFMatch setNetworkProtocol(byte value);
 
+	public boolean isNetworkProtocolSupported();
+
 	public int getNetworkSource();
 
 	public OFMatch setNetworkSource(int value);
+
+	public boolean isNetworkSourceSupported();
 
 	public int getNetworkDestination();
 
 	public OFMatch setNetworkDestination(int value);
 
+	public boolean isNetworkDestinationSupported();
+
 	public short getTransportSource();
 
 	public OFMatch setTransportSource(short value);
+
+	public boolean isTransportSourceSupported();
 
 	public short getTransportDestination();
 
 	public OFMatch setTransportDestination(short value);
 
+	public boolean isTransportDestinationSupported();
+
 	public List<OFOxm> getOxmFields();
 
-	public OFMatchOxm setOxmFields(List<OFOxm> value);
+	public OFMatch setOxmFields(List<OFOxm> value);
+
+	public boolean isOxmFieldsSupported();
 
     public void readFrom(ByteBuffer data);
 

@@ -8,6 +8,7 @@ public interface OFActionPushPbb extends OFAction {
 
 	public short getEthertype();
 	public OFActionPushPbb setEthertype(short value);
+	public boolean isEthertypeSupported();
 
     public void readFrom(ByteBuffer data);
 

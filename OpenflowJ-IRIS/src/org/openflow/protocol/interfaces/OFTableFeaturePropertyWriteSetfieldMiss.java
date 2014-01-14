@@ -8,6 +8,7 @@ public interface OFTableFeaturePropertyWriteSetfieldMiss extends OFTableFeatureP
 
 	public List<Integer> getOxmIds();
 	public OFTableFeaturePropertyWriteSetfieldMiss setOxmIds(List<Integer> value);
+	public boolean isOxmIdsSupported();
 
     public void readFrom(ByteBuffer data);
 

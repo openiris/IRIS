@@ -32,6 +32,10 @@ public class OFRoleRequest extends OFMessage implements org.openflow.protocol.in
 		this.role = role;
 		return this;
 	}
+	
+	public boolean isRoleSupported() {
+		return true;
+	}
 			
 	public long getGenerationId() {
 		return this.generation_id;
@@ -40,6 +44,10 @@ public class OFRoleRequest extends OFMessage implements org.openflow.protocol.in
 	public OFRoleRequest setGenerationId(long generation_id) {
 		this.generation_id = generation_id;
 		return this;
+	}
+	
+	public boolean isGenerationIdSupported() {
+		return true;
 	}
 			
 	

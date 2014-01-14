@@ -45,6 +45,10 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		return this;
 	}
 	
+	public boolean isPortSupported() {
+		return true;
+	}
+	
 	public byte[] getHwAddr() {
 		return this.hw_addr;
 	}
@@ -52,6 +56,10 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 	public OFPortDesc setHwAddr(byte[] hw_addr) {
 		this.hw_addr = hw_addr;
 		return this;
+	}
+	
+	public boolean isHwAddrSupported() {
+		return true;
 	}
 			
 	public byte[] getName() {
@@ -62,6 +70,10 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		this.name = name;
 		return this;
 	}
+	
+	public boolean isNameSupported() {
+		return true;
+	}
 			
 	public int getConfig() {
 		return this.config;
@@ -70,6 +82,10 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 	public OFPortDesc setConfig(int config) {
 		this.config = config;
 		return this;
+	}
+	
+	public boolean isConfigSupported() {
+		return true;
 	}
 			
 	public int getState() {
@@ -80,6 +96,10 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		this.state = state;
 		return this;
 	}
+	
+	public boolean isStateSupported() {
+		return true;
+	}
 			
 	public int getCurrentFeatures() {
 		return this.current_features;
@@ -88,6 +108,10 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 	public OFPortDesc setCurrentFeatures(int current_features) {
 		this.current_features = current_features;
 		return this;
+	}
+	
+	public boolean isCurrentFeaturesSupported() {
+		return true;
 	}
 			
 	public int getAdvertisedFeatures() {
@@ -98,6 +122,10 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		this.advertised_features = advertised_features;
 		return this;
 	}
+	
+	public boolean isAdvertisedFeaturesSupported() {
+		return true;
+	}
 			
 	public int getSupportedFeatures() {
 		return this.supported_features;
@@ -106,6 +134,10 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 	public OFPortDesc setSupportedFeatures(int supported_features) {
 		this.supported_features = supported_features;
 		return this;
+	}
+	
+	public boolean isSupportedFeaturesSupported() {
+		return true;
 	}
 			
 	public int getPeerFeatures() {
@@ -116,25 +148,37 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		this.peer_features = peer_features;
 		return this;
 	}
+	
+	public boolean isPeerFeaturesSupported() {
+		return true;
+	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getCurrSpeed() {
-		throw new UnsupportedOperationException("public int getCurrSpeed() is not supported operation");
+		throw new UnsupportedOperationException("$signature is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public org.openflow.protocol.interfaces.OFPortDesc setCurrSpeed(int value) {
-		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFPortDesc setCurrSpeed(int value) is not supported operation");
+	public OFPortDesc setCurrSpeed(int value) {
+		throw new UnsupportedOperationException("$signature is not supported operation");
+	}
+	
+	public boolean isCurrSpeedSupported() {
+		return false;
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getMaxSpeed() {
-		throw new UnsupportedOperationException("public int getMaxSpeed() is not supported operation");
+		throw new UnsupportedOperationException("$signature is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public org.openflow.protocol.interfaces.OFPortDesc setMaxSpeed(int value) {
-		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFPortDesc setMaxSpeed(int value) is not supported operation");
+	public OFPortDesc setMaxSpeed(int value) {
+		throw new UnsupportedOperationException("$signature is not supported operation");
+	}
+	
+	public boolean isMaxSpeedSupported() {
+		return false;
 	}
 	
 	

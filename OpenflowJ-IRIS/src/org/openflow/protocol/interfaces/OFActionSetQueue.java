@@ -8,6 +8,7 @@ public interface OFActionSetQueue extends OFAction {
 
 	public int getQueueId();
 	public OFActionSetQueue setQueueId(int value);
+	public boolean isQueueIdSupported();
 
     public void readFrom(ByteBuffer data);
 

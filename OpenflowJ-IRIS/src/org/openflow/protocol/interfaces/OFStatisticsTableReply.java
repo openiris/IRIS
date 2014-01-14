@@ -8,6 +8,7 @@ public interface OFStatisticsTableReply extends OFStatisticsReply {
 
 	public List<OFTableStatsEntry> getEntries();
 	public OFStatisticsTableReply setEntries(List<OFTableStatsEntry> value);
+	public boolean isEntriesSupported();
 
     public void readFrom(ByteBuffer data);
 

@@ -44,6 +44,10 @@ public class OFMeterMod extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 	
+	public boolean isCommandSupported() {
+		return true;
+	}
+	
 	public short getFlags() {
 		return this.flags;
 	}
@@ -51,6 +55,10 @@ public class OFMeterMod extends OFMessage implements org.openflow.protocol.inter
 	public OFMeterMod setFlags(short flags) {
 		this.flags = flags;
 		return this;
+	}
+	
+	public boolean isFlagsSupported() {
+		return true;
 	}
 			
 	public int getMeterId() {
@@ -61,6 +69,10 @@ public class OFMeterMod extends OFMessage implements org.openflow.protocol.inter
 		this.meter_id = meter_id;
 		return this;
 	}
+	
+	public boolean isMeterIdSupported() {
+		return true;
+	}
 			
 	public List<org.openflow.protocol.interfaces.OFMeterBand> getMeters() {
 		return this.meters;
@@ -69,6 +81,10 @@ public class OFMeterMod extends OFMessage implements org.openflow.protocol.inter
 	public OFMeterMod setMeters(List<org.openflow.protocol.interfaces.OFMeterBand> meters) {
 		this.meters = meters;
 		return this;
+	}
+	
+	public boolean isMetersSupported() {
+		return true;
 	}
 			
 	

@@ -8,6 +8,7 @@ public interface OFStatisticsFlowReply extends OFStatisticsReply {
 
 	public List<OFFlowStatsEntry> getEntries();
 	public OFStatisticsFlowReply setEntries(List<OFFlowStatsEntry> value);
+	public boolean isEntriesSupported();
 
     public void readFrom(ByteBuffer data);
 

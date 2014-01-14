@@ -33,6 +33,10 @@ public class OFExperimenter extends OFMessage implements org.openflow.protocol.i
 		this.experimenter_id = experimenter_id;
 		return this;
 	}
+	
+	public boolean isExperimenterIdSupported() {
+		return true;
+	}
 			
 	public int getSubtype() {
 		return this.subtype;
@@ -42,6 +46,10 @@ public class OFExperimenter extends OFMessage implements org.openflow.protocol.i
 		this.subtype = subtype;
 		return this;
 	}
+	
+	public boolean isSubtypeSupported() {
+		return true;
+	}
 			
 	public byte[] getData() {
 		return this.data;
@@ -50,6 +58,10 @@ public class OFExperimenter extends OFMessage implements org.openflow.protocol.i
 	public OFExperimenter setData(byte[] data) {
 		this.data = data;
 		return this;
+	}
+	
+	public boolean isDataSupported() {
+		return true;
 	}
 			
 	

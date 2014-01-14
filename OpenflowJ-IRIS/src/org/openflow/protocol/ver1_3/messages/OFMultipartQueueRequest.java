@@ -38,6 +38,10 @@ public class OFMultipartQueueRequest extends OFMultipartRequest implements org.o
 		return this;
 	}
 	
+	public boolean isPortNoSupported() {
+		return true;
+	}
+	
 	public int getQueueId() {
 		return this.queue_id;
 	}
@@ -45,6 +49,10 @@ public class OFMultipartQueueRequest extends OFMultipartRequest implements org.o
 	public OFMultipartQueueRequest setQueueId(int queue_id) {
 		this.queue_id = queue_id;
 		return this;
+	}
+	
+	public boolean isQueueIdSupported() {
+		return true;
 	}
 			
 	

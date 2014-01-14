@@ -39,6 +39,10 @@ public class OFError extends OFMessage implements org.openflow.protocol.interfac
 		return this;
 	}
 	
+	public boolean isErrorCodeSupported() {
+		return true;
+	}
+	
 	public short getSubcode() {
 		return this.subcode;
 	}
@@ -46,6 +50,10 @@ public class OFError extends OFMessage implements org.openflow.protocol.interfac
 	public OFError setSubcode(short subcode) {
 		this.subcode = subcode;
 		return this;
+	}
+	
+	public boolean isSubcodeSupported() {
+		return true;
 	}
 			
 	public byte[] getData() {
@@ -55,6 +63,10 @@ public class OFError extends OFMessage implements org.openflow.protocol.interfac
 	public OFError setData(byte[] data) {
 		this.data = data;
 		return this;
+	}
+	
+	public boolean isDataSupported() {
+		return true;
 	}
 			
 	

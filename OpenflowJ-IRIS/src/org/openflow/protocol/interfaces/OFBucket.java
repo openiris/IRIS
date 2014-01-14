@@ -9,14 +9,19 @@ public interface OFBucket  {
 
 	public short getLength();
 	public OFBucket setLength(short value);
+	public boolean isLengthSupported();
 	public short getWeight();
 	public OFBucket setWeight(short value);
+	public boolean isWeightSupported();
 	public OFPort getWatchPort();
 	public OFBucket setWatchPort(OFPort value);
+	public boolean isWatchPortSupported();
 	public int getWatchGroup();
 	public OFBucket setWatchGroup(int value);
+	public boolean isWatchGroupSupported();
 	public List<OFAction> getActions();
 	public OFBucket setActions(List<OFAction> value);
+	public boolean isActionsSupported();
 
     public void readFrom(ByteBuffer data);
 

@@ -8,6 +8,7 @@ public interface OFStatisticsQueueReply extends OFStatisticsReply {
 
 	public List<OFQueueStatsEntry> getEntries();
 	public OFStatisticsQueueReply setEntries(List<OFQueueStatsEntry> value);
+	public boolean isEntriesSupported();
 
     public void readFrom(ByteBuffer data);
 

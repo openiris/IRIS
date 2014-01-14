@@ -8,8 +8,10 @@ public interface OFStatisticsQueueRequest extends OFStatisticsRequest {
 
 	public OFPortNo getPortNo();
 	public OFStatisticsQueueRequest setPortNo(OFPortNo value);
+	public boolean isPortNoSupported();
 	public int getQueueId();
 	public OFStatisticsQueueRequest setQueueId(int value);
+	public boolean isQueueIdSupported();
 
     public void readFrom(ByteBuffer data);
 

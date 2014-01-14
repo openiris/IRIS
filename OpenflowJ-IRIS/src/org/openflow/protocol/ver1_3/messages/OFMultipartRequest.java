@@ -41,6 +41,10 @@ public class OFMultipartRequest extends OFMultipart implements org.openflow.prot
 		return this;
 	}
 	
+	public boolean isMultipartTypeSupported() {
+		return true;
+	}
+	
 	public short getFlagsWire() {
 		return this.flags;
 	}
@@ -66,6 +70,10 @@ public class OFMultipartRequest extends OFMultipart implements org.openflow.prot
 		tmp.and( values );
 		this.flags = tmp.get();
 		return this;
+	}
+	
+	public boolean isFlagsSupported() {
+		return true;
 	}
 		
 	

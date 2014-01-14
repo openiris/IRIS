@@ -32,6 +32,10 @@ public class OFInstructionWriteMetadata extends OFInstruction implements org.ope
 		this.metadata = metadata;
 		return this;
 	}
+	
+	public boolean isMetadataSupported() {
+		return true;
+	}
 			
 	public long getMetadataMask() {
 		return this.metadata_mask;
@@ -40,6 +44,10 @@ public class OFInstructionWriteMetadata extends OFInstruction implements org.ope
 	public OFInstructionWriteMetadata setMetadataMask(long metadata_mask) {
 		this.metadata_mask = metadata_mask;
 		return this;
+	}
+	
+	public boolean isMetadataMaskSupported() {
+		return true;
 	}
 			
 	

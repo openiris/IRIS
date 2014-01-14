@@ -8,6 +8,7 @@ public interface OFInstructionMeter extends OFInstruction {
 
 	public int getMeterId();
 	public OFInstructionMeter setMeterId(int value);
+	public boolean isMeterIdSupported();
 
     public void readFrom(ByteBuffer data);
 

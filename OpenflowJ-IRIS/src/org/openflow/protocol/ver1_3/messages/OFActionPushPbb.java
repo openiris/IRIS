@@ -30,6 +30,10 @@ public class OFActionPushPbb extends OFAction implements org.openflow.protocol.i
 		this.ethertype = ethertype;
 		return this;
 	}
+	
+	public boolean isEthertypeSupported() {
+		return true;
+	}
 			
 	
 	

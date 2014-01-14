@@ -8,6 +8,7 @@ public interface OFActionSetNwTtl extends OFAction {
 
 	public byte getNwTtl();
 	public OFActionSetNwTtl setNwTtl(byte value);
+	public boolean isNwTtlSupported();
 
     public void readFrom(ByteBuffer data);
 

@@ -32,6 +32,10 @@ public class OFQueueGetConfigRequest extends OFMessage implements org.openflow.p
 		return this;
 	}
 	
+	public boolean isPortSupported() {
+		return true;
+	}
+	
 	
 	
 	

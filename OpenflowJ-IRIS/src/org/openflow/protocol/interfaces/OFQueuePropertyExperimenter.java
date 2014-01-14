@@ -8,8 +8,10 @@ public interface OFQueuePropertyExperimenter extends OFQueueProperty {
 
 	public int getExperimenterId();
 	public OFQueuePropertyExperimenter setExperimenterId(int value);
+	public boolean isExperimenterIdSupported();
 	public byte[] getData();
 	public OFQueuePropertyExperimenter setData(byte[] value);
+	public boolean isDataSupported();
 
     public void readFrom(ByteBuffer data);
 

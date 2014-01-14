@@ -8,6 +8,7 @@ public interface OFMultipartMeterReply extends OFMultipartReply {
 
 	public List<OFMeterStats> getEntries();
 	public OFMultipartMeterReply setEntries(List<OFMeterStats> value);
+	public boolean isEntriesSupported();
 
     public void readFrom(ByteBuffer data);
 

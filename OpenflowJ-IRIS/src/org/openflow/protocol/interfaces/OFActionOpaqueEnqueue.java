@@ -8,8 +8,10 @@ public interface OFActionOpaqueEnqueue extends OFAction {
 
 	public OFPort getPort();
 	public OFActionOpaqueEnqueue setPort(OFPort value);
+	public boolean isPortSupported();
 	public int getQueueId();
 	public OFActionOpaqueEnqueue setQueueId(int value);
+	public boolean isQueueIdSupported();
 
     public void readFrom(ByteBuffer data);
 

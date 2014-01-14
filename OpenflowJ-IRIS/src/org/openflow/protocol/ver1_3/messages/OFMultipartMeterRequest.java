@@ -31,6 +31,10 @@ public class OFMultipartMeterRequest extends OFMultipartRequest implements org.o
 		this.meter_id = meter_id;
 		return this;
 	}
+	
+	public boolean isMeterIdSupported() {
+		return true;
+	}
 			
 	
 	

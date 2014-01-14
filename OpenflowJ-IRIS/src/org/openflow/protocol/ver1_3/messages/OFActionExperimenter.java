@@ -31,6 +31,10 @@ public class OFActionExperimenter extends OFAction implements org.openflow.proto
 		this.experimenter_id = experimenter_id;
 		return this;
 	}
+	
+	public boolean isExperimenterIdSupported() {
+		return true;
+	}
 			
 	public byte[] getData() {
 		return this.data;
@@ -39,6 +43,10 @@ public class OFActionExperimenter extends OFAction implements org.openflow.proto
 	public OFActionExperimenter setData(byte[] data) {
 		this.data = data;
 		return this;
+	}
+	
+	public boolean isDataSupported() {
+		return true;
 	}
 			
 	

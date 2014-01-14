@@ -9,12 +9,16 @@ public interface OFPacketQueue  {
 
 	public int getQueueId();
 	public OFPacketQueue setQueueId(int value);
+	public boolean isQueueIdSupported();
 	public short getLength();
 	public OFPacketQueue setLength(short value);
+	public boolean isLengthSupported();
 	public List<OFQueueProperty> getProperties();
 	public OFPacketQueue setProperties(List<OFQueueProperty> value);
+	public boolean isPropertiesSupported();
 	public OFPort getPort();
 	public OFPacketQueue setPort(OFPort value);
+	public boolean isPortSupported();
 
     public void readFrom(ByteBuffer data);
 

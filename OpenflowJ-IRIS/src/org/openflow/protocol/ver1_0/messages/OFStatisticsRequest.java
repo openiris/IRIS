@@ -37,6 +37,10 @@ public class OFStatisticsRequest extends OFStatistics implements org.openflow.pr
 		return this;
 	}
 	
+	public boolean isStatisticsTypeSupported() {
+		return true;
+	}
+	
 	public short getFlags() {
 		return this.flags;
 	}
@@ -44,6 +48,10 @@ public class OFStatisticsRequest extends OFStatistics implements org.openflow.pr
 	public OFStatisticsRequest setFlags(short flags) {
 		this.flags = flags;
 		return this;
+	}
+	
+	public boolean isFlagsSupported() {
+		return true;
 	}
 			
 	

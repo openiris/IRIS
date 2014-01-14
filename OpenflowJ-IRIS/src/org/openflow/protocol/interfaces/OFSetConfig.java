@@ -8,8 +8,10 @@ public interface OFSetConfig extends OFMessage {
 
 	public short getFlags();
 	public OFSetConfig setFlags(short value);
+	public boolean isFlagsSupported();
 	public short getMissSendLength();
 	public OFSetConfig setMissSendLength(short value);
+	public boolean isMissSendLengthSupported();
 
     public void readFrom(ByteBuffer data);
 

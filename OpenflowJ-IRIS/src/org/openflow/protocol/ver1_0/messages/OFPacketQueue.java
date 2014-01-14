@@ -35,6 +35,10 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
 		this.queue_id = queue_id;
 		return this;
 	}
+	
+	public boolean isQueueIdSupported() {
+		return true;
+	}
 			
 	public short getLength() {
 		return this.length;
@@ -43,6 +47,10 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
 	public OFPacketQueue setLength(short length) {
 		this.length = length;
 		return this;
+	}
+	
+	public boolean isLengthSupported() {
+		return true;
 	}
 			
 	public List<org.openflow.protocol.interfaces.OFQueueProperty> getProperties() {
@@ -53,15 +61,23 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
 		this.properties = properties;
 		return this;
 	}
+	
+	public boolean isPropertiesSupported() {
+		return true;
+	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFPort getPort() {
-		throw new UnsupportedOperationException("public OFPort getPort() is not supported operation");
+		throw new UnsupportedOperationException("$signature is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFPacketQueue setPort(OFPort value) {
-		throw new UnsupportedOperationException("public OFPacketQueue setPort(OFPort value) is not supported operation");
+		throw new UnsupportedOperationException("$signature is not supported operation");
+	}
+	
+	public boolean isPortSupported() {
+		return false;
 	}
 	
 	

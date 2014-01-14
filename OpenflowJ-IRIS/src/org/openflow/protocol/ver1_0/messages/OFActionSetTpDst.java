@@ -30,6 +30,10 @@ public class OFActionSetTpDst extends OFAction implements org.openflow.protocol.
 		this.tp_port = tp_port;
 		return this;
 	}
+	
+	public boolean isTpPortSupported() {
+		return true;
+	}
 			
 	
 	

@@ -31,6 +31,10 @@ public class OFActionSetNwTtl extends OFAction implements org.openflow.protocol.
 		this.nw_ttl = nw_ttl;
 		return this;
 	}
+	
+	public boolean isNwTtlSupported() {
+		return true;
+	}
 			
 	
 	

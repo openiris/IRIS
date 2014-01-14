@@ -8,6 +8,7 @@ public interface OFActionSetVlanPcp extends OFAction {
 
 	public byte getVlanPcp();
 	public OFActionSetVlanPcp setVlanPcp(byte value);
+	public boolean isVlanPcpSupported();
 
     public void readFrom(ByteBuffer data);
 

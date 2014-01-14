@@ -50,6 +50,10 @@ public class OFMultipartGroupFeaturesReply extends OFMultipartReply implements o
 		this.types = types;
 		return this;
 	}
+	
+	public boolean isTypesSupported() {
+		return true;
+	}
 			
 	public int getCapabilitiesWire() {
 		return this.capabilities;
@@ -77,6 +81,10 @@ public class OFMultipartGroupFeaturesReply extends OFMultipartReply implements o
 		this.capabilities = tmp.get();
 		return this;
 	}
+	
+	public boolean isCapabilitiesSupported() {
+		return true;
+	}
 		
 	public int getMaxGroupsAll() {
 		return this.max_groups_all;
@@ -85,6 +93,10 @@ public class OFMultipartGroupFeaturesReply extends OFMultipartReply implements o
 	public OFMultipartGroupFeaturesReply setMaxGroupsAll(int max_groups_all) {
 		this.max_groups_all = max_groups_all;
 		return this;
+	}
+	
+	public boolean isMaxGroupsAllSupported() {
+		return true;
 	}
 			
 	public int getMaxGroupsSelect() {
@@ -95,6 +107,10 @@ public class OFMultipartGroupFeaturesReply extends OFMultipartReply implements o
 		this.max_groups_select = max_groups_select;
 		return this;
 	}
+	
+	public boolean isMaxGroupsSelectSupported() {
+		return true;
+	}
 			
 	public int getMaxGroupsIndirect() {
 		return this.max_groups_indirect;
@@ -103,6 +119,10 @@ public class OFMultipartGroupFeaturesReply extends OFMultipartReply implements o
 	public OFMultipartGroupFeaturesReply setMaxGroupsIndirect(int max_groups_indirect) {
 		this.max_groups_indirect = max_groups_indirect;
 		return this;
+	}
+	
+	public boolean isMaxGroupsIndirectSupported() {
+		return true;
 	}
 			
 	public int getMaxGroupsFf() {
@@ -113,6 +133,10 @@ public class OFMultipartGroupFeaturesReply extends OFMultipartReply implements o
 		this.max_groups_ff = max_groups_ff;
 		return this;
 	}
+	
+	public boolean isMaxGroupsFfSupported() {
+		return true;
+	}
 			
 	public int getActionsAll() {
 		return this.actions_all;
@@ -121,6 +145,10 @@ public class OFMultipartGroupFeaturesReply extends OFMultipartReply implements o
 	public OFMultipartGroupFeaturesReply setActionsAll(int actions_all) {
 		this.actions_all = actions_all;
 		return this;
+	}
+	
+	public boolean isActionsAllSupported() {
+		return true;
 	}
 			
 	public int getActionsSelect() {
@@ -131,6 +159,10 @@ public class OFMultipartGroupFeaturesReply extends OFMultipartReply implements o
 		this.actions_select = actions_select;
 		return this;
 	}
+	
+	public boolean isActionsSelectSupported() {
+		return true;
+	}
 			
 	public int getActionsIndirect() {
 		return this.actions_indirect;
@@ -140,6 +172,10 @@ public class OFMultipartGroupFeaturesReply extends OFMultipartReply implements o
 		this.actions_indirect = actions_indirect;
 		return this;
 	}
+	
+	public boolean isActionsIndirectSupported() {
+		return true;
+	}
 			
 	public int getActionsFf() {
 		return this.actions_ff;
@@ -148,6 +184,10 @@ public class OFMultipartGroupFeaturesReply extends OFMultipartReply implements o
 	public OFMultipartGroupFeaturesReply setActionsFf(int actions_ff) {
 		this.actions_ff = actions_ff;
 		return this;
+	}
+	
+	public boolean isActionsFfSupported() {
+		return true;
 	}
 			
 	

@@ -8,6 +8,7 @@ public interface OFQueuePropertyMinRate extends OFQueueProperty {
 
 	public short getRate();
 	public OFQueuePropertyMinRate setRate(short value);
+	public boolean isRateSupported();
 
     public void readFrom(ByteBuffer data);
 

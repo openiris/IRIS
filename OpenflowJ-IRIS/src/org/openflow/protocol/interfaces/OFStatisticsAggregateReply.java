@@ -8,10 +8,13 @@ public interface OFStatisticsAggregateReply extends OFStatisticsReply {
 
 	public long getPacketCount();
 	public OFStatisticsAggregateReply setPacketCount(long value);
+	public boolean isPacketCountSupported();
 	public long getByteCount();
 	public OFStatisticsAggregateReply setByteCount(long value);
+	public boolean isByteCountSupported();
 	public int getFlowCount();
 	public OFStatisticsAggregateReply setFlowCount(int value);
+	public boolean isFlowCountSupported();
 
     public void readFrom(ByteBuffer data);
 

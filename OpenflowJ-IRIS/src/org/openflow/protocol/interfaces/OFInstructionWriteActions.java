@@ -8,6 +8,7 @@ public interface OFInstructionWriteActions extends OFInstruction {
 
 	public List<OFAction> getActions();
 	public OFInstructionWriteActions setActions(List<OFAction> value);
+	public boolean isActionsSupported();
 
     public void readFrom(ByteBuffer data);
 

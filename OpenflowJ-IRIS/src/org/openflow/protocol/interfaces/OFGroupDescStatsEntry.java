@@ -8,12 +8,16 @@ public interface OFGroupDescStatsEntry  {
 
 	public short getLength();
 	public OFGroupDescStatsEntry setLength(short value);
+	public boolean isLengthSupported();
 	public byte getType();
 	public OFGroupDescStatsEntry setType(byte value);
+	public boolean isTypeSupported();
 	public int getGroupId();
 	public OFGroupDescStatsEntry setGroupId(int value);
+	public boolean isGroupIdSupported();
 	public List<OFBucket> getBuckets();
 	public OFGroupDescStatsEntry setBuckets(List<OFBucket> value);
+	public boolean isBucketsSupported();
 
     public void readFrom(ByteBuffer data);
 

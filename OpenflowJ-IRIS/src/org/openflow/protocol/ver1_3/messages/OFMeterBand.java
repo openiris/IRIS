@@ -38,6 +38,10 @@ public class OFMeterBand   implements org.openflow.protocol.interfaces.OFMeterBa
 		return this;
 	}
 	
+	public boolean isTypeSupported() {
+		return true;
+	}
+	
 	public short getLength() {
 		return this.length;
 	}
@@ -45,6 +49,10 @@ public class OFMeterBand   implements org.openflow.protocol.interfaces.OFMeterBa
 	public OFMeterBand setLength(short length) {
 		this.length = length;
 		return this;
+	}
+	
+	public boolean isLengthSupported() {
+		return true;
 	}
 			
 	public int getRate() {
@@ -55,6 +63,10 @@ public class OFMeterBand   implements org.openflow.protocol.interfaces.OFMeterBa
 		this.rate = rate;
 		return this;
 	}
+	
+	public boolean isRateSupported() {
+		return true;
+	}
 			
 	public int getBurstSize() {
 		return this.burst_size;
@@ -63,6 +75,10 @@ public class OFMeterBand   implements org.openflow.protocol.interfaces.OFMeterBa
 	public OFMeterBand setBurstSize(int burst_size) {
 		this.burst_size = burst_size;
 		return this;
+	}
+	
+	public boolean isBurstSizeSupported() {
+		return true;
 	}
 			
 	

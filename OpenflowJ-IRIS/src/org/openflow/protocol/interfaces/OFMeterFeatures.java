@@ -8,14 +8,19 @@ public interface OFMeterFeatures  {
 
 	public int getMaxMeter();
 	public OFMeterFeatures setMaxMeter(int value);
+	public boolean isMaxMeterSupported();
 	public int getBandTypes();
 	public OFMeterFeatures setBandTypes(int value);
+	public boolean isBandTypesSupported();
 	public Set<OFCapabilities> getCapabilities();
 	public OFMeterFeatures setCapabilities(Set<OFCapabilities> value);
+	public boolean isCapabilitiesSupported();
 	public byte getMaxBands();
 	public OFMeterFeatures setMaxBands(byte value);
+	public boolean isMaxBandsSupported();
 	public byte getMaxColor();
 	public OFMeterFeatures setMaxColor(byte value);
+	public boolean isMaxColorSupported();
 
     public void readFrom(ByteBuffer data);
 

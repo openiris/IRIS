@@ -8,12 +8,16 @@ public interface OFMessage extends org.openflow.protocol.OFMessage {
 
 	public byte getVersion();
 	public OFMessage setVersion(byte value);
+	public boolean isVersionSupported();
 	public OFMessageType getType();
 	public OFMessage setType(OFMessageType value);
+	public boolean isTypeSupported();
 	public short getLength();
 	public OFMessage setLength(short value);
+	public boolean isLengthSupported();
 	public int getXid();
 	public OFMessage setXid(int value);
+	public boolean isXidSupported();
 
     public void readFrom(ByteBuffer data);
 

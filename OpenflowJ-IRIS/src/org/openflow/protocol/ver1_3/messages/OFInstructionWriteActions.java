@@ -33,6 +33,10 @@ public class OFInstructionWriteActions extends OFInstruction implements org.open
 		this.actions = actions;
 		return this;
 	}
+	
+	public boolean isActionsSupported() {
+		return true;
+	}
 			
 	
 	

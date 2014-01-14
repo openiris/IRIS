@@ -8,6 +8,7 @@ public interface OFActionSetTpDst extends OFAction {
 
 	public short getTpPort();
 	public OFActionSetTpDst setTpPort(short value);
+	public boolean isTpPortSupported();
 
     public void readFrom(ByteBuffer data);
 

@@ -8,8 +8,10 @@ public interface OFActionVendor extends OFAction {
 
 	public int getVendorId();
 	public OFActionVendor setVendorId(int value);
+	public boolean isVendorIdSupported();
 	public byte[] getData();
 	public OFActionVendor setData(byte[] value);
+	public boolean isDataSupported();
 
     public void readFrom(ByteBuffer data);
 

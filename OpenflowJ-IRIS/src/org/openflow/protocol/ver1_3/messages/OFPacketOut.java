@@ -43,6 +43,10 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 		this.buffer_id = buffer_id;
 		return this;
 	}
+	
+	public boolean isBufferIdSupported() {
+		return true;
+	}
 			
 	public OFPort getInPort() {
 		return new OFPort(this.in_port);
@@ -53,6 +57,10 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 		return this;
 	}
 	
+	public boolean isInPortSupported() {
+		return true;
+	}
+	
 	public short getActionsLength() {
 		return this.actions_length;
 	}
@@ -60,6 +68,10 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 	public OFPacketOut setActionsLength(short actions_length) {
 		this.actions_length = actions_length;
 		return this;
+	}
+	
+	public boolean isActionsLengthSupported() {
+		return true;
 	}
 			
 	public List<org.openflow.protocol.interfaces.OFAction> getActions() {
@@ -70,6 +82,10 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 		this.actions = actions;
 		return this;
 	}
+	
+	public boolean isActionsSupported() {
+		return true;
+	}
 			
 	public byte[] getData() {
 		return this.data;
@@ -79,15 +95,23 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 		this.data = data;
 		return this;
 	}
+	
+	public boolean isDataSupported() {
+		return true;
+	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFPort getInputPort() {
-		throw new UnsupportedOperationException("public OFPort getInputPort() is not supported operation");
+		throw new UnsupportedOperationException("$signature is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFPacketOut setInputPort(OFPort value) {
-		throw new UnsupportedOperationException("public OFPacketOut setInputPort(OFPort value) is not supported operation");
+		throw new UnsupportedOperationException("$signature is not supported operation");
+	}
+	
+	public boolean isInputPortSupported() {
+		return false;
 	}
 	
 	

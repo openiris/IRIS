@@ -34,6 +34,10 @@ public class OFMultipartExperimenterReply extends OFMultipartReply implements or
 		this.experimenter_id = experimenter_id;
 		return this;
 	}
+	
+	public boolean isExperimenterIdSupported() {
+		return true;
+	}
 			
 	public int getExperimentType() {
 		return this.experiment_type;
@@ -43,6 +47,10 @@ public class OFMultipartExperimenterReply extends OFMultipartReply implements or
 		this.experiment_type = experiment_type;
 		return this;
 	}
+	
+	public boolean isExperimentTypeSupported() {
+		return true;
+	}
 			
 	public byte[] getData() {
 		return this.data;
@@ -51,6 +59,10 @@ public class OFMultipartExperimenterReply extends OFMultipartReply implements or
 	public OFMultipartExperimenterReply setData(byte[] data) {
 		this.data = data;
 		return this;
+	}
+	
+	public boolean isDataSupported() {
+		return true;
 	}
 			
 	

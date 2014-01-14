@@ -8,6 +8,7 @@ public interface OFTableFeaturePropertyInstructionsMiss extends OFTableFeaturePr
 
 	public List<OFInstruction> getInstructionIds();
 	public OFTableFeaturePropertyInstructionsMiss setInstructionIds(List<OFInstruction> value);
+	public boolean isInstructionIdsSupported();
 
     public void readFrom(ByteBuffer data);
 

@@ -8,10 +8,13 @@ public interface OFVendor extends OFMessage {
 
 	public int getVendorId();
 	public OFVendor setVendorId(int value);
+	public boolean isVendorIdSupported();
 	public int getSubtype();
 	public OFVendor setSubtype(int value);
+	public boolean isSubtypeSupported();
 	public byte[] getData();
 	public OFVendor setData(byte[] value);
+	public boolean isDataSupported();
 
     public void readFrom(ByteBuffer data);
 

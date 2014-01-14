@@ -43,6 +43,10 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		this.datapath_id = datapath_id;
 		return this;
 	}
+	
+	public boolean isDatapathIdSupported() {
+		return true;
+	}
 			
 	public int getNBuffers() {
 		return this.n_buffers;
@@ -51,6 +55,10 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 	public OFFeaturesReply setNBuffers(int n_buffers) {
 		this.n_buffers = n_buffers;
 		return this;
+	}
+	
+	public boolean isNBuffersSupported() {
+		return true;
 	}
 			
 	public byte getNTables() {
@@ -61,6 +69,10 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		this.n_tables = n_tables;
 		return this;
 	}
+	
+	public boolean isNTablesSupported() {
+		return true;
+	}
 			
 	public byte getAuxiliaryId() {
 		return this.auxiliary_id;
@@ -69,6 +81,10 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 	public OFFeaturesReply setAuxiliaryId(byte auxiliary_id) {
 		this.auxiliary_id = auxiliary_id;
 		return this;
+	}
+	
+	public boolean isAuxiliaryIdSupported() {
+		return true;
 	}
 			
 	public int getCapabilitiesWire() {
@@ -97,6 +113,10 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		this.capabilities = tmp.get();
 		return this;
 	}
+	
+	public boolean isCapabilitiesSupported() {
+		return true;
+	}
 		
 	public int getReserved() {
 		return this.reserved;
@@ -106,25 +126,37 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		this.reserved = reserved;
 		return this;
 	}
+	
+	public boolean isReservedSupported() {
+		return true;
+	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getActions() {
-		throw new UnsupportedOperationException("public int getActions() is not supported operation");
+		throw new UnsupportedOperationException("$signature is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public org.openflow.protocol.interfaces.OFFeaturesReply setActions(int value) {
-		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFeaturesReply setActions(int value) is not supported operation");
+	public OFFeaturesReply setActions(int value) {
+		throw new UnsupportedOperationException("$signature is not supported operation");
+	}
+	
+	public boolean isActionsSupported() {
+		return false;
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public List<org.openflow.protocol.interfaces.OFPortDesc> getPorts() {
-		throw new UnsupportedOperationException("public List<org.openflow.protocol.interfaces.OFPortDesc> getPorts() is not supported operation");
+		throw new UnsupportedOperationException("$signature is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public org.openflow.protocol.interfaces.OFFeaturesReply setPorts(List<org.openflow.protocol.interfaces.OFPortDesc> value) {
-		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFeaturesReply setPorts(List<org.openflow.protocol.interfaces.OFPortDesc> value) is not supported operation");
+	public OFFeaturesReply setPorts(List<org.openflow.protocol.interfaces.OFPortDesc> value) {
+		throw new UnsupportedOperationException("$signature is not supported operation");
+	}
+	
+	public boolean isPortsSupported() {
+		return false;
 	}
 	
 	

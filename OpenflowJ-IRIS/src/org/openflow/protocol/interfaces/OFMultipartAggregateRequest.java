@@ -8,16 +8,22 @@ public interface OFMultipartAggregateRequest extends OFMultipartRequest {
 
 	public byte getTableId();
 	public OFMultipartAggregateRequest setTableId(byte value);
+	public boolean isTableIdSupported();
 	public OFPort getOutPort();
 	public OFMultipartAggregateRequest setOutPort(OFPort value);
+	public boolean isOutPortSupported();
 	public int getOutGroup();
 	public OFMultipartAggregateRequest setOutGroup(int value);
+	public boolean isOutGroupSupported();
 	public long getCookie();
 	public OFMultipartAggregateRequest setCookie(long value);
+	public boolean isCookieSupported();
 	public long getCookieMask();
 	public OFMultipartAggregateRequest setCookieMask(long value);
+	public boolean isCookieMaskSupported();
 	public OFMatch getMatch();
 	public OFMultipartAggregateRequest setMatch(OFMatch value);
+	public boolean isMatchSupported();
 
     public void readFrom(ByteBuffer data);
 

@@ -8,16 +8,22 @@ public interface OFSetAsync extends OFMessage {
 
 	public int getPacketInMaskEqualMaster();
 	public OFSetAsync setPacketInMaskEqualMaster(int value);
+	public boolean isPacketInMaskEqualMasterSupported();
 	public int getPacketInMaskSlave();
 	public OFSetAsync setPacketInMaskSlave(int value);
+	public boolean isPacketInMaskSlaveSupported();
 	public int getPortStatusMaskEqualMaster();
 	public OFSetAsync setPortStatusMaskEqualMaster(int value);
+	public boolean isPortStatusMaskEqualMasterSupported();
 	public int getPortStatusMaskSlave();
 	public OFSetAsync setPortStatusMaskSlave(int value);
+	public boolean isPortStatusMaskSlaveSupported();
 	public int getFlowRemovedMaskEqualMaster();
 	public OFSetAsync setFlowRemovedMaskEqualMaster(int value);
+	public boolean isFlowRemovedMaskEqualMasterSupported();
 	public int getFlowRemovedMaskSlave();
 	public OFSetAsync setFlowRemovedMaskSlave(int value);
+	public boolean isFlowRemovedMaskSlaveSupported();
 
     public void readFrom(ByteBuffer data);
 

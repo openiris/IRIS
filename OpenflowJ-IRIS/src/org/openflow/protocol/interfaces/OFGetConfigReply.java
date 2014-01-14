@@ -8,10 +8,13 @@ public interface OFGetConfigReply extends OFMessage {
 
 	public short getFlags();
 	public OFGetConfigReply setFlags(short value);
+	public boolean isFlagsSupported();
 	public short getMissSendLength();
 	public OFGetConfigReply setMissSendLength(short value);
+	public boolean isMissSendLengthSupported();
 	public short getMissSendLen();
 	public OFGetConfigReply setMissSendLen(short value);
+	public boolean isMissSendLenSupported();
 
     public void readFrom(ByteBuffer data);
 

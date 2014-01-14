@@ -37,6 +37,10 @@ public class OFMeterFeatures   implements org.openflow.protocol.interfaces.OFMet
 		this.max_meter = max_meter;
 		return this;
 	}
+	
+	public boolean isMaxMeterSupported() {
+		return true;
+	}
 			
 	public int getBandTypes() {
 		return this.band_types;
@@ -45,6 +49,10 @@ public class OFMeterFeatures   implements org.openflow.protocol.interfaces.OFMet
 	public OFMeterFeatures setBandTypes(int band_types) {
 		this.band_types = band_types;
 		return this;
+	}
+	
+	public boolean isBandTypesSupported() {
+		return true;
 	}
 			
 	public int getCapabilitiesWire() {
@@ -73,6 +81,10 @@ public class OFMeterFeatures   implements org.openflow.protocol.interfaces.OFMet
 		this.capabilities = tmp.get();
 		return this;
 	}
+	
+	public boolean isCapabilitiesSupported() {
+		return true;
+	}
 		
 	public byte getMaxBands() {
 		return this.max_bands;
@@ -82,6 +94,10 @@ public class OFMeterFeatures   implements org.openflow.protocol.interfaces.OFMet
 		this.max_bands = max_bands;
 		return this;
 	}
+	
+	public boolean isMaxBandsSupported() {
+		return true;
+	}
 			
 	public byte getMaxColor() {
 		return this.max_color;
@@ -90,6 +106,10 @@ public class OFMeterFeatures   implements org.openflow.protocol.interfaces.OFMet
 	public OFMeterFeatures setMaxColor(byte max_color) {
 		this.max_color = max_color;
 		return this;
+	}
+	
+	public boolean isMaxColorSupported() {
+		return true;
 	}
 			
 	

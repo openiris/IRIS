@@ -34,6 +34,10 @@ public class OFPortStatus extends OFMessage implements org.openflow.protocol.int
 		this.reason = reason;
 		return this;
 	}
+	
+	public boolean isReasonSupported() {
+		return true;
+	}
 			
 	public org.openflow.protocol.interfaces.OFPortDesc getDesc() {
 		return this.desc;
@@ -42,6 +46,10 @@ public class OFPortStatus extends OFMessage implements org.openflow.protocol.int
 	public OFPortStatus setDesc(org.openflow.protocol.interfaces.OFPortDesc desc) {
 		this.desc = desc;
 		return this;
+	}
+	
+	public boolean isDescSupported() {
+		return true;
 	}
 			
 	

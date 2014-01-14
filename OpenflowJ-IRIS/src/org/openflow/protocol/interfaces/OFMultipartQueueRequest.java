@@ -8,8 +8,10 @@ public interface OFMultipartQueueRequest extends OFMultipartRequest {
 
 	public OFPortNo getPortNo();
 	public OFMultipartQueueRequest setPortNo(OFPortNo value);
+	public boolean isPortNoSupported();
 	public int getQueueId();
 	public OFMultipartQueueRequest setQueueId(int value);
+	public boolean isQueueIdSupported();
 
     public void readFrom(ByteBuffer data);
 

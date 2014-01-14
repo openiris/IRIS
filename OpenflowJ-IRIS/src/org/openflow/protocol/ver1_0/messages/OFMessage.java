@@ -34,6 +34,10 @@ public class OFMessage   implements org.openflow.protocol.interfaces.OFMessage {
 		this.version = version;
 		return this;
 	}
+	
+	public boolean isVersionSupported() {
+		return true;
+	}
 			
 	public short getVersionU() {
 		return U8.f(this.version);
@@ -42,6 +46,10 @@ public class OFMessage   implements org.openflow.protocol.interfaces.OFMessage {
 	public OFMessage setVersionU(short version) {
 		this.version = U8.t(version);
 		return this;
+	}
+	
+	public boolean isVersionUSupported() {
+		return true;
 	}
 	
 
@@ -59,6 +67,10 @@ public class OFMessage   implements org.openflow.protocol.interfaces.OFMessage {
 		return this;
 	}
 	
+	public boolean isTypeSupported() {
+		return true;
+	}
+	
 	public short getLength() {
 		return this.length;
 	}
@@ -66,6 +78,10 @@ public class OFMessage   implements org.openflow.protocol.interfaces.OFMessage {
 	public OFMessage setLength(short length) {
 		this.length = length;
 		return this;
+	}
+	
+	public boolean isLengthSupported() {
+		return true;
 	}
 			
 	public int getLengthU() {
@@ -77,6 +93,10 @@ public class OFMessage   implements org.openflow.protocol.interfaces.OFMessage {
 		return this;
 	}
 	
+	public boolean isLengthUSupported() {
+		return true;
+	}
+	
 	public int getXid() {
 		return this.xid;
 	}
@@ -84,6 +104,10 @@ public class OFMessage   implements org.openflow.protocol.interfaces.OFMessage {
 	public OFMessage setXid(int xid) {
 		this.xid = xid;
 		return this;
+	}
+	
+	public boolean isXidSupported() {
+		return true;
 	}
 			
 	public long getXidU() {
@@ -93,6 +117,10 @@ public class OFMessage   implements org.openflow.protocol.interfaces.OFMessage {
 	public OFMessage setXidU(long xid) {
 		this.xid = U32.t(xid);
 		return this;
+	}
+	
+	public boolean isXidUSupported() {
+		return true;
 	}
 	
 	

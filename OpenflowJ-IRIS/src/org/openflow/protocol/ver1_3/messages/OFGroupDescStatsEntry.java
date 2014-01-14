@@ -36,6 +36,10 @@ public class OFGroupDescStatsEntry   implements org.openflow.protocol.interfaces
 		this.length = length;
 		return this;
 	}
+	
+	public boolean isLengthSupported() {
+		return true;
+	}
 			
 	public byte getType() {
 		return this.type;
@@ -44,6 +48,10 @@ public class OFGroupDescStatsEntry   implements org.openflow.protocol.interfaces
 	public OFGroupDescStatsEntry setType(byte type) {
 		this.type = type;
 		return this;
+	}
+	
+	public boolean isTypeSupported() {
+		return true;
 	}
 			
 	public int getGroupId() {
@@ -54,6 +62,10 @@ public class OFGroupDescStatsEntry   implements org.openflow.protocol.interfaces
 		this.group_id = group_id;
 		return this;
 	}
+	
+	public boolean isGroupIdSupported() {
+		return true;
+	}
 			
 	public List<org.openflow.protocol.interfaces.OFBucket> getBuckets() {
 		return this.buckets;
@@ -62,6 +74,10 @@ public class OFGroupDescStatsEntry   implements org.openflow.protocol.interfaces
 	public OFGroupDescStatsEntry setBuckets(List<org.openflow.protocol.interfaces.OFBucket> buckets) {
 		this.buckets = buckets;
 		return this;
+	}
+	
+	public boolean isBucketsSupported() {
+		return true;
 	}
 			
 	

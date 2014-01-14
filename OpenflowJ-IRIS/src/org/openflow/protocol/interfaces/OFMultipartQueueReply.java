@@ -8,6 +8,7 @@ public interface OFMultipartQueueReply extends OFMultipartReply {
 
 	public List<OFQueueStatsEntry> getEntries();
 	public OFMultipartQueueReply setEntries(List<OFQueueStatsEntry> value);
+	public boolean isEntriesSupported();
 
     public void readFrom(ByteBuffer data);
 

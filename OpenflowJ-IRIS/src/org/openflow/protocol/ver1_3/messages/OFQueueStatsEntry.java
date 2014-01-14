@@ -40,6 +40,10 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 		return this;
 	}
 	
+	public boolean isPortNumberSupported() {
+		return true;
+	}
+	
 	public int getQueueId() {
 		return this.queue_id;
 	}
@@ -47,6 +51,10 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 	public OFQueueStatsEntry setQueueId(int queue_id) {
 		this.queue_id = queue_id;
 		return this;
+	}
+	
+	public boolean isQueueIdSupported() {
+		return true;
 	}
 			
 	public long getTransmitBytes() {
@@ -57,6 +65,10 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 		this.transmit_bytes = transmit_bytes;
 		return this;
 	}
+	
+	public boolean isTransmitBytesSupported() {
+		return true;
+	}
 			
 	public long getTransmitPackets() {
 		return this.transmit_packets;
@@ -65,6 +77,10 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 	public OFQueueStatsEntry setTransmitPackets(long transmit_packets) {
 		this.transmit_packets = transmit_packets;
 		return this;
+	}
+	
+	public boolean isTransmitPacketsSupported() {
+		return true;
 	}
 			
 	public long getTransmitErrors() {
@@ -75,6 +91,10 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 		this.transmit_errors = transmit_errors;
 		return this;
 	}
+	
+	public boolean isTransmitErrorsSupported() {
+		return true;
+	}
 			
 	public int getDurationSec() {
 		return this.duration_sec;
@@ -84,6 +104,10 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 		this.duration_sec = duration_sec;
 		return this;
 	}
+	
+	public boolean isDurationSecSupported() {
+		return true;
+	}
 			
 	public int getDurationNsec() {
 		return this.duration_nsec;
@@ -92,6 +116,10 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 	public OFQueueStatsEntry setDurationNsec(int duration_nsec) {
 		this.duration_nsec = duration_nsec;
 		return this;
+	}
+	
+	public boolean isDurationNsecSupported() {
+		return true;
 	}
 			
 	

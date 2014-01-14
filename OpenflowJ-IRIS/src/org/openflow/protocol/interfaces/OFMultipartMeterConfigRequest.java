@@ -8,6 +8,7 @@ public interface OFMultipartMeterConfigRequest extends OFMultipartRequest {
 
 	public int getMeterId();
 	public OFMultipartMeterConfigRequest setMeterId(int value);
+	public boolean isMeterIdSupported();
 
     public void readFrom(ByteBuffer data);
 

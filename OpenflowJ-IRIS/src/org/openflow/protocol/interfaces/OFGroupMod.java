@@ -8,12 +8,16 @@ public interface OFGroupMod extends OFMessage {
 
 	public OFGroupModCommand getCommand();
 	public OFGroupMod setCommand(OFGroupModCommand value);
+	public boolean isCommandSupported();
 	public OFGroupCategory getGroupCategory();
 	public OFGroupMod setGroupCategory(OFGroupCategory value);
+	public boolean isGroupCategorySupported();
 	public int getGroupId();
 	public OFGroupMod setGroupId(int value);
+	public boolean isGroupIdSupported();
 	public List<OFBucket> getBuckets();
 	public OFGroupMod setBuckets(List<OFBucket> value);
+	public boolean isBucketsSupported();
 
     public void readFrom(ByteBuffer data);
 

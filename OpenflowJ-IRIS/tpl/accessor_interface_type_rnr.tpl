@@ -12,3 +12,7 @@
 		return this;
 	}
 	
+	public boolean is${method_name}Supported() {
+		return true;
+	}
+	

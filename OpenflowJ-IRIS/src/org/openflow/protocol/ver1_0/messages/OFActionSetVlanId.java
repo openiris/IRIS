@@ -30,6 +30,10 @@ public class OFActionSetVlanId extends OFAction implements org.openflow.protocol
 		this.vlan_id = vlan_id;
 		return this;
 	}
+	
+	public boolean isVlanIdSupported() {
+		return true;
+	}
 			
 	
 	

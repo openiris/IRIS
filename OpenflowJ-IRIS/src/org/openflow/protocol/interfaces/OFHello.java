@@ -8,6 +8,7 @@ public interface OFHello extends OFMessage {
 
 	public List<OFHelloElem> getElements();
 	public OFHello setElements(List<OFHelloElem> value);
+	public boolean isElementsSupported();
 
     public void readFrom(ByteBuffer data);
 

@@ -31,6 +31,10 @@ public class OFMultipartGroupRequest extends OFMultipartRequest implements org.o
 		this.group_id = group_id;
 		return this;
 	}
+	
+	public boolean isGroupIdSupported() {
+		return true;
+	}
 			
 	
 	

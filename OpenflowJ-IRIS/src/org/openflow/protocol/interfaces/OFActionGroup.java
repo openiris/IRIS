@@ -8,6 +8,7 @@ public interface OFActionGroup extends OFAction {
 
 	public int getGroupId();
 	public OFActionGroup setGroupId(int value);
+	public boolean isGroupIdSupported();
 
     public void readFrom(ByteBuffer data);
 

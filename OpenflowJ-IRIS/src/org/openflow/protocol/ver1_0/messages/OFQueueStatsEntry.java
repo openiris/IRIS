@@ -37,6 +37,10 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 		return this;
 	}
 	
+	public boolean isPortNumberSupported() {
+		return true;
+	}
+	
 	public int getQueueId() {
 		return this.queue_id;
 	}
@@ -44,6 +48,10 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 	public OFQueueStatsEntry setQueueId(int queue_id) {
 		this.queue_id = queue_id;
 		return this;
+	}
+	
+	public boolean isQueueIdSupported() {
+		return true;
 	}
 			
 	public long getTransmitBytes() {
@@ -54,6 +62,10 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 		this.transmit_bytes = transmit_bytes;
 		return this;
 	}
+	
+	public boolean isTransmitBytesSupported() {
+		return true;
+	}
 			
 	public long getTransmitPackets() {
 		return this.transmit_packets;
@@ -62,6 +74,10 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 	public OFQueueStatsEntry setTransmitPackets(long transmit_packets) {
 		this.transmit_packets = transmit_packets;
 		return this;
+	}
+	
+	public boolean isTransmitPacketsSupported() {
+		return true;
 	}
 			
 	public long getTransmitErrors() {
@@ -72,25 +88,37 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 		this.transmit_errors = transmit_errors;
 		return this;
 	}
+	
+	public boolean isTransmitErrorsSupported() {
+		return true;
+	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getDurationSec() {
-		throw new UnsupportedOperationException("public int getDurationSec() is not supported operation");
+		throw new UnsupportedOperationException("$signature is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public org.openflow.protocol.interfaces.OFQueueStatsEntry setDurationSec(int value) {
-		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFQueueStatsEntry setDurationSec(int value) is not supported operation");
+	public OFQueueStatsEntry setDurationSec(int value) {
+		throw new UnsupportedOperationException("$signature is not supported operation");
+	}
+	
+	public boolean isDurationSecSupported() {
+		return false;
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getDurationNsec() {
-		throw new UnsupportedOperationException("public int getDurationNsec() is not supported operation");
+		throw new UnsupportedOperationException("$signature is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public org.openflow.protocol.interfaces.OFQueueStatsEntry setDurationNsec(int value) {
-		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFQueueStatsEntry setDurationNsec(int value) is not supported operation");
+	public OFQueueStatsEntry setDurationNsec(int value) {
+		throw new UnsupportedOperationException("$signature is not supported operation");
+	}
+	
+	public boolean isDurationNsecSupported() {
+		return false;
 	}
 	
 	

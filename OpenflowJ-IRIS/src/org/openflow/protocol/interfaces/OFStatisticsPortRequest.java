@@ -8,6 +8,7 @@ public interface OFStatisticsPortRequest extends OFStatisticsRequest {
 
 	public OFPortNo getPortNo();
 	public OFStatisticsPortRequest setPortNo(OFPortNo value);
+	public boolean isPortNoSupported();
 
     public void readFrom(ByteBuffer data);
 

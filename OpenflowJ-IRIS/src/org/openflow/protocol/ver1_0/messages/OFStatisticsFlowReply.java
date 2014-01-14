@@ -33,6 +33,10 @@ public class OFStatisticsFlowReply extends OFStatisticsReply implements org.open
 		this.entries = entries;
 		return this;
 	}
+	
+	public boolean isEntriesSupported() {
+		return true;
+	}
 			
 	
 	

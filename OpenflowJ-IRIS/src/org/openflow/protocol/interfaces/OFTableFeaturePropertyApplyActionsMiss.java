@@ -8,6 +8,7 @@ public interface OFTableFeaturePropertyApplyActionsMiss extends OFTableFeaturePr
 
 	public List<OFActionId> getActionIds();
 	public OFTableFeaturePropertyApplyActionsMiss setActionIds(List<OFActionId> value);
+	public boolean isActionIdsSupported();
 
     public void readFrom(ByteBuffer data);
 

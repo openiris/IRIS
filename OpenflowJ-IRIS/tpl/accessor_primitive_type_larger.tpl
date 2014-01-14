@@ -7,3 +7,7 @@
 		return this;
 	}
 	
+	public boolean is${method_name}USupported() {
+		return true;
+	}
+	

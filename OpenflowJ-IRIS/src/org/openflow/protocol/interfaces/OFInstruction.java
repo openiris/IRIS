@@ -8,8 +8,10 @@ public interface OFInstruction  {
 
 	public OFInstructionType getType();
 	public OFInstruction setType(OFInstructionType value);
+	public boolean isTypeSupported();
 	public short getLength();
 	public OFInstruction setLength(short value);
+	public boolean isLengthSupported();
 
     public void readFrom(ByteBuffer data);
 

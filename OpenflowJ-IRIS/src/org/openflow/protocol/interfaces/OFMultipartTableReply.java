@@ -8,6 +8,7 @@ public interface OFMultipartTableReply extends OFMultipartReply {
 
 	public List<OFTableStatsEntry> getEntries();
 	public OFMultipartTableReply setEntries(List<OFTableStatsEntry> value);
+	public boolean isEntriesSupported();
 
     public void readFrom(ByteBuffer data);
 

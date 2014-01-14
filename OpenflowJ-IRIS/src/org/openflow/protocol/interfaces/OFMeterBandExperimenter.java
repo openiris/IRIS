@@ -8,6 +8,7 @@ public interface OFMeterBandExperimenter extends OFMeterBand {
 
 	public int getExperimenterId();
 	public OFMeterBandExperimenter setExperimenterId(int value);
+	public boolean isExperimenterIdSupported();
 
     public void readFrom(ByteBuffer data);
 

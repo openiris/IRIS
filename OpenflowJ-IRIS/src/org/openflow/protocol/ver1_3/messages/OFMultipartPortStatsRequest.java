@@ -37,6 +37,10 @@ public class OFMultipartPortStatsRequest extends OFMultipartRequest implements o
 		return this;
 	}
 	
+	public boolean isPortNoSupported() {
+		return true;
+	}
+	
 	
 	
 	

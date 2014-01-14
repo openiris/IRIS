@@ -30,6 +30,10 @@ public class OFMultipartMeterFeaturesReply extends OFMultipartReply implements o
 		this.features = features;
 		return this;
 	}
+	
+	public boolean isFeaturesSupported() {
+		return true;
+	}
 			
 	
 	

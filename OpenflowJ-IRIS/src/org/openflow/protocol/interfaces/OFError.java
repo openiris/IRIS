@@ -8,10 +8,13 @@ public interface OFError extends OFMessage {
 
 	public OFErrorCode getErrorCode();
 	public OFError setErrorCode(OFErrorCode value);
+	public boolean isErrorCodeSupported();
 	public short getSubcode();
 	public OFError setSubcode(short value);
+	public boolean isSubcodeSupported();
 	public byte[] getData();
 	public OFError setData(byte[] value);
+	public boolean isDataSupported();
 
     public void readFrom(ByteBuffer data);
 

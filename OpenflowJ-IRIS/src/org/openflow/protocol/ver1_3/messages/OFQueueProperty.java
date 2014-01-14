@@ -35,6 +35,10 @@ public class OFQueueProperty   implements org.openflow.protocol.interfaces.OFQue
 		return this;
 	}
 	
+	public boolean isTypeSupported() {
+		return true;
+	}
+	
 	public short getLength() {
 		return this.length;
 	}
@@ -42,6 +46,10 @@ public class OFQueueProperty   implements org.openflow.protocol.interfaces.OFQue
 	public OFQueueProperty setLength(short length) {
 		this.length = length;
 		return this;
+	}
+	
+	public boolean isLengthSupported() {
+		return true;
 	}
 			
 	

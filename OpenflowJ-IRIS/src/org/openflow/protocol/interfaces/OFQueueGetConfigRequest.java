@@ -8,6 +8,7 @@ public interface OFQueueGetConfigRequest extends OFMessage {
 
 	public OFPort getPort();
 	public OFQueueGetConfigRequest setPort(OFPort value);
+	public boolean isPortSupported();
 
     public void readFrom(ByteBuffer data);
 

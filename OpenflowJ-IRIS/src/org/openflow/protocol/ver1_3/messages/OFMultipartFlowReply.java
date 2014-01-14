@@ -33,6 +33,10 @@ public class OFMultipartFlowReply extends OFMultipartReply implements org.openfl
 		this.entries = entries;
 		return this;
 	}
+	
+	public boolean isEntriesSupported() {
+		return true;
+	}
 			
 	
 	

@@ -32,6 +32,10 @@ public class OFTableFeaturePropertyApplyActionsMiss extends OFTableFeatureProper
 		this.action_ids = action_ids;
 		return this;
 	}
+	
+	public boolean isActionIdsSupported() {
+		return true;
+	}
 			
 	
 	

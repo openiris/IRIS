@@ -8,6 +8,7 @@ public interface OFRoleReply extends OFMessage {
 
 	public byte[] getData();
 	public OFRoleReply setData(byte[] value);
+	public boolean isDataSupported();
 
     public void readFrom(ByteBuffer data);
 

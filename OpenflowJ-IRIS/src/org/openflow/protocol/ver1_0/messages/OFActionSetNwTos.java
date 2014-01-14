@@ -31,6 +31,10 @@ public class OFActionSetNwTos extends OFAction implements org.openflow.protocol.
 		this.nw_tos = nw_tos;
 		return this;
 	}
+	
+	public boolean isNwTosSupported() {
+		return true;
+	}
 			
 	
 	

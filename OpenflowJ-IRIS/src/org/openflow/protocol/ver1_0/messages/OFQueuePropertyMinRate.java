@@ -31,6 +31,10 @@ public class OFQueuePropertyMinRate extends OFQueueProperty implements org.openf
 		this.rate = rate;
 		return this;
 	}
+	
+	public boolean isRateSupported() {
+		return true;
+	}
 			
 	
 	

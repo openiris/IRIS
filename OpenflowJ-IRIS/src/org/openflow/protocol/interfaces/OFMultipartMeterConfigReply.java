@@ -8,6 +8,7 @@ public interface OFMultipartMeterConfigReply extends OFMultipartReply {
 
 	public List<OFMeterBand> getEntries();
 	public OFMultipartMeterConfigReply setEntries(List<OFMeterBand> value);
+	public boolean isEntriesSupported();
 
     public void readFrom(ByteBuffer data);
 

@@ -33,6 +33,10 @@ public class OFStatisticsTableReply extends OFStatisticsReply implements org.ope
 		this.entries = entries;
 		return this;
 	}
+	
+	public boolean isEntriesSupported() {
+		return true;
+	}
 			
 	
 	

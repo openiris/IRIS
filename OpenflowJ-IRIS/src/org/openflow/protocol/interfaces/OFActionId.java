@@ -8,8 +8,10 @@ public interface OFActionId  {
 
 	public short getType();
 	public OFActionId setType(short value);
+	public boolean isTypeSupported();
 	public short getLength();
 	public OFActionId setLength(short value);
+	public boolean isLengthSupported();
 
     public void readFrom(ByteBuffer data);
 

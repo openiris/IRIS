@@ -44,6 +44,10 @@ public class OFMultipartFlowRequest extends OFMultipartRequest implements org.op
 		this.table_id = table_id;
 		return this;
 	}
+	
+	public boolean isTableIdSupported() {
+		return true;
+	}
 			
 	public OFPort getOutPort() {
 		return new OFPort(this.out_port);
@@ -54,6 +58,10 @@ public class OFMultipartFlowRequest extends OFMultipartRequest implements org.op
 		return this;
 	}
 	
+	public boolean isOutPortSupported() {
+		return true;
+	}
+	
 	public int getOutGroup() {
 		return this.out_group;
 	}
@@ -61,6 +69,10 @@ public class OFMultipartFlowRequest extends OFMultipartRequest implements org.op
 	public OFMultipartFlowRequest setOutGroup(int out_group) {
 		this.out_group = out_group;
 		return this;
+	}
+	
+	public boolean isOutGroupSupported() {
+		return true;
 	}
 			
 	public long getCookie() {
@@ -71,6 +83,10 @@ public class OFMultipartFlowRequest extends OFMultipartRequest implements org.op
 		this.cookie = cookie;
 		return this;
 	}
+	
+	public boolean isCookieSupported() {
+		return true;
+	}
 			
 	public long getCookieMask() {
 		return this.cookie_mask;
@@ -80,6 +96,10 @@ public class OFMultipartFlowRequest extends OFMultipartRequest implements org.op
 		this.cookie_mask = cookie_mask;
 		return this;
 	}
+	
+	public boolean isCookieMaskSupported() {
+		return true;
+	}
 			
 	public org.openflow.protocol.interfaces.OFMatch getMatch() {
 		return this.match;
@@ -88,6 +108,10 @@ public class OFMultipartFlowRequest extends OFMultipartRequest implements org.op
 	public OFMultipartFlowRequest setMatch(org.openflow.protocol.interfaces.OFMatch match) {
 		this.match = (OFMatchOxm) match;
 		return this;
+	}
+	
+	public boolean isMatchSupported() {
+		return true;
 	}
 			
 	

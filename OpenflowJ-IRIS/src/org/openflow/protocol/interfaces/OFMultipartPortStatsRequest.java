@@ -8,6 +8,7 @@ public interface OFMultipartPortStatsRequest extends OFMultipartRequest {
 
 	public OFPortNo getPortNo();
 	public OFMultipartPortStatsRequest setPortNo(OFPortNo value);
+	public boolean isPortNoSupported();
 
     public void readFrom(ByteBuffer data);
 

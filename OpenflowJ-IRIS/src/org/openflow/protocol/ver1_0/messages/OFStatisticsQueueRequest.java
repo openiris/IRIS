@@ -39,6 +39,10 @@ public class OFStatisticsQueueRequest extends OFStatisticsRequest implements org
 		return this;
 	}
 	
+	public boolean isPortNoSupported() {
+		return true;
+	}
+	
 	public int getQueueId() {
 		return this.queue_id;
 	}
@@ -46,6 +50,10 @@ public class OFStatisticsQueueRequest extends OFStatisticsRequest implements org
 	public OFStatisticsQueueRequest setQueueId(int queue_id) {
 		this.queue_id = queue_id;
 		return this;
+	}
+	
+	public boolean isQueueIdSupported() {
+		return true;
 	}
 			
 	

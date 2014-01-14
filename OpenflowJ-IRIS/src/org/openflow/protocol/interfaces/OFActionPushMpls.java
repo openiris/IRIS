@@ -8,6 +8,7 @@ public interface OFActionPushMpls extends OFAction {
 
 	public short getEthertype();
 	public OFActionPushMpls setEthertype(short value);
+	public boolean isEthertypeSupported();
 
     public void readFrom(ByteBuffer data);
 

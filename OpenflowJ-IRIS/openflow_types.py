@@ -1107,11 +1107,16 @@ class Struct(Type):
     # implementation that returns the UnsupportedExceptionOperation
     t = Template.get_template('tpl/accessor_null.tpl')
     for decl in if_decls:
-      d = decl.strip(';')
-      r = t.safe_substitute({'signature':d})
-      accessors.append(r)
-      if d.find('Set') >= 0:
-        imports.add('import java.util.Set;')
+      p = re.search(r'([<>\[\]\.\w]+)\s+\bget(\w+)\b', decl)
+      if p:
+        return_type = p.group(1)
+        method_name = p.group(2)
+        d = decl.strip(';')
+        r = t.safe_substitute({'class_name': self.name, 
+                               'return_type':return_type, 'method_name':method_name})
+        accessors.append(r)
+        if d.find('Set') >= 0:
+          imports.add('import java.util.Set;')
     
     # add readfrom lines if there is alignment considerations such as 
     # align(8) at the end of struct.
@@ -1164,7 +1169,7 @@ class Struct(Type):
     # build builder definitions - including null accessors
     #
     if self.name in ['OFMatch', 'OFMatchOxm']:
-      tpl = Template.get_template('tpl/builder_accessor_null.tpl')
+#       tpl = Template.get_template('tpl/builder_accessor_null.tpl')
       if (self.name == 'OFMatch' and self.spec.get_version() == '1.0') or self.name == 'OFMatchOxm':
         template_file = 'tpl/builder_ofmatch.tpl'
         if self.name == 'OFMatchOxm':
@@ -1177,6 +1182,7 @@ class Struct(Type):
           if re.search(r'\bset', x):    # we need set methods only
             # we first get the method signature.
             method_name = re.search(r'\b(set.+)\Z', x).group(1).rstrip(';')
+            mname = re.search(r'\bset(\w+)\b', x).group(1)
             # and we conver the name to include interface prefix.
             imethod_name = re.sub(r'\b(OF\w+)\b', r'org.openflow.protocol.interfaces.\1', method_name)
             
@@ -1185,45 +1191,45 @@ class Struct(Type):
               result = None
               if method_name.find('setInputPort') >= 0:
                 tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_ofport.tpl')
-                result = tpl.safe_substitute({'method_name':method_name, 
+                result = tpl.safe_substitute({'signature':method_name, 'method_name':mname,
                                              'match_field': 'OFB_IN_PORT'})
               elif method_name.find('setDataLayerSource') >= 0:
                 tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_mac.tpl')
-                result = tpl.safe_substitute({'method_name':method_name,
+                result = tpl.safe_substitute({'signature':method_name, 'method_name':mname,
                                               'match_field': 'OFB_ETH_SRC'})
               elif method_name.find('setDataLayerDestination') >= 0:
                 tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_mac.tpl')
-                result = tpl.safe_substitute({'method_name':method_name,
+                result = tpl.safe_substitute({'signature':method_name, 'method_name':mname,
                                               'match_field': 'OFB_ETH_DST'})
               elif method_name.find('setDataLayerVirtualLanPriorityCodePoint') >= 0:
                 tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_byte.tpl')
-                result = tpl.safe_substitute({'method_name':method_name,
+                result = tpl.safe_substitute({'signature':method_name, 'method_name':mname,
                                               'prerequisite':'',
                                               'match_field': 'OFB_VLAN_PCP'})
               elif method_name.find('setDataLayerVirtualLan') >= 0:
                 tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_short.tpl')
-                result = tpl.safe_substitute({'method_name':method_name,
+                result = tpl.safe_substitute({'signature':method_name, 'method_name':mname,
                                               'match_field': 'OFB_VLAN_VID'})
               elif method_name.find('setDataLayerType') >= 0:
                 tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_short.tpl')
-                result = tpl.safe_substitute({'method_name':method_name,
+                result = tpl.safe_substitute({'signature':method_name, 'method_name':mname,
                                               'match_field': 'OFB_ETH_TYPE'})
               elif method_name.find('setNetworkTypeOfService') >= 0:
                 tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_byte.tpl')
-                result = tpl.safe_substitute({'method_name':method_name,
+                result = tpl.safe_substitute({'signature':method_name, 'method_name':mname,
                                               'prerequisite':'',
                                               'match_field': 'OFB_IP_DSCP'})
               elif method_name.find('setNetworkSource') >= 0:
                 tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_int.tpl')
-                result = tpl.safe_substitute({'method_name':method_name,
+                result = tpl.safe_substitute({'signature':method_name, 'method_name':mname,
                                               'match_field': 'OFB_IPV4_SRC'})
               elif method_name.find('setNetworkDestination') >= 0:
                 tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_int.tpl')
-                result = tpl.safe_substitute({'method_name':method_name,
+                result = tpl.safe_substitute({'signature':method_name, 'method_name':mname,
                                               'match_field': 'OFB_IPV4_DST'})
               elif method_name.find('setNetworkProtocol') >= 0:
                 tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_byte.tpl')
-                result = tpl.safe_substitute({'method_name':method_name,
+                result = tpl.safe_substitute({'signature':method_name, 'method_name':mname,
                                               'prerequisite':'this.network_protocol = value;',
                                               'match_field': 'OFB_IP_PROTO'})
               elif method_name.find('setTransportSource') >= 0:
@@ -1237,7 +1243,7 @@ class Struct(Type):
             else:
               tpl = Template.get_template('tpl/builder_accessor_null.tpl')
               # in other case, we create the null accessor and append it.
-              result = tpl.safe_substitute({'method_signature':imethod_name})
+              result = tpl.safe_substitute({'method_signature':imethod_name, 'method_name':mname})
               builder_accessors.append(result.lstrip())
               
             

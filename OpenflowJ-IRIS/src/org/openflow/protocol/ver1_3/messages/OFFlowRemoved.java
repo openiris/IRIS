@@ -49,6 +49,10 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		this.cookie = cookie;
 		return this;
 	}
+	
+	public boolean isCookieSupported() {
+		return true;
+	}
 			
 	public short getPriority() {
 		return this.priority;
@@ -57,6 +61,10 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 	public OFFlowRemoved setPriority(short priority) {
 		this.priority = priority;
 		return this;
+	}
+	
+	public boolean isPrioritySupported() {
+		return true;
 	}
 			
 
@@ -74,6 +82,10 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		return this;
 	}
 	
+	public boolean isReasonSupported() {
+		return true;
+	}
+	
 	public byte getTableId() {
 		return this.table_id;
 	}
@@ -81,6 +93,10 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 	public OFFlowRemoved setTableId(byte table_id) {
 		this.table_id = table_id;
 		return this;
+	}
+	
+	public boolean isTableIdSupported() {
+		return true;
 	}
 			
 	public int getDurationSec() {
@@ -91,6 +107,10 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		this.duration_sec = duration_sec;
 		return this;
 	}
+	
+	public boolean isDurationSecSupported() {
+		return true;
+	}
 			
 	public int getDurationNsec() {
 		return this.duration_nsec;
@@ -99,6 +119,10 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 	public OFFlowRemoved setDurationNsec(int duration_nsec) {
 		this.duration_nsec = duration_nsec;
 		return this;
+	}
+	
+	public boolean isDurationNsecSupported() {
+		return true;
 	}
 			
 	public short getIdleTimeout() {
@@ -109,6 +133,10 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		this.idle_timeout = idle_timeout;
 		return this;
 	}
+	
+	public boolean isIdleTimeoutSupported() {
+		return true;
+	}
 			
 	public short getHardTimeout() {
 		return this.hard_timeout;
@@ -117,6 +145,10 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 	public OFFlowRemoved setHardTimeout(short hard_timeout) {
 		this.hard_timeout = hard_timeout;
 		return this;
+	}
+	
+	public boolean isHardTimeoutSupported() {
+		return true;
 	}
 			
 	public long getPacketCount() {
@@ -127,6 +159,10 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		this.packet_count = packet_count;
 		return this;
 	}
+	
+	public boolean isPacketCountSupported() {
+		return true;
+	}
 			
 	public long getByteCount() {
 		return this.byte_count;
@@ -136,6 +172,10 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		this.byte_count = byte_count;
 		return this;
 	}
+	
+	public boolean isByteCountSupported() {
+		return true;
+	}
 			
 	public org.openflow.protocol.interfaces.OFMatch getMatch() {
 		return this.match;
@@ -144,6 +184,10 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 	public OFFlowRemoved setMatch(org.openflow.protocol.interfaces.OFMatch match) {
 		this.match = (OFMatchOxm) match;
 		return this;
+	}
+	
+	public boolean isMatchSupported() {
+		return true;
 	}
 			
 	

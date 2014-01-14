@@ -54,6 +54,10 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		this.length = length;
 		return this;
 	}
+	
+	public boolean isLengthSupported() {
+		return true;
+	}
 			
 	public byte getTableId() {
 		return this.table_id;
@@ -62,6 +66,10 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 	public OFFlowStatsEntry setTableId(byte table_id) {
 		this.table_id = table_id;
 		return this;
+	}
+	
+	public boolean isTableIdSupported() {
+		return true;
 	}
 			
 	public org.openflow.protocol.interfaces.OFMatch getMatch() {
@@ -72,6 +80,10 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		this.match = match;
 		return this;
 	}
+	
+	public boolean isMatchSupported() {
+		return true;
+	}
 			
 	public int getDurationSec() {
 		return this.duration_sec;
@@ -80,6 +92,10 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 	public OFFlowStatsEntry setDurationSec(int duration_sec) {
 		this.duration_sec = duration_sec;
 		return this;
+	}
+	
+	public boolean isDurationSecSupported() {
+		return true;
 	}
 			
 	public int getDurationNsec() {
@@ -90,6 +106,10 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		this.duration_nsec = duration_nsec;
 		return this;
 	}
+	
+	public boolean isDurationNsecSupported() {
+		return true;
+	}
 			
 	public short getPriority() {
 		return this.priority;
@@ -98,6 +118,10 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 	public OFFlowStatsEntry setPriority(short priority) {
 		this.priority = priority;
 		return this;
+	}
+	
+	public boolean isPrioritySupported() {
+		return true;
 	}
 			
 	public short getIdleTimeout() {
@@ -108,6 +132,10 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		this.idle_timeout = idle_timeout;
 		return this;
 	}
+	
+	public boolean isIdleTimeoutSupported() {
+		return true;
+	}
 			
 	public short getHardTimeout() {
 		return this.hard_timeout;
@@ -116,6 +144,10 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 	public OFFlowStatsEntry setHardTimeout(short hard_timeout) {
 		this.hard_timeout = hard_timeout;
 		return this;
+	}
+	
+	public boolean isHardTimeoutSupported() {
+		return true;
 	}
 			
 	public long getCookie() {
@@ -126,6 +158,10 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		this.cookie = cookie;
 		return this;
 	}
+	
+	public boolean isCookieSupported() {
+		return true;
+	}
 			
 	public long getPacketCount() {
 		return this.packet_count;
@@ -134,6 +170,10 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 	public OFFlowStatsEntry setPacketCount(long packet_count) {
 		this.packet_count = packet_count;
 		return this;
+	}
+	
+	public boolean isPacketCountSupported() {
+		return true;
 	}
 			
 	public long getByteCount() {
@@ -144,6 +184,10 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		this.byte_count = byte_count;
 		return this;
 	}
+	
+	public boolean isByteCountSupported() {
+		return true;
+	}
 			
 	public List<org.openflow.protocol.interfaces.OFAction> getActions() {
 		return this.actions;
@@ -153,25 +197,37 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		this.actions = actions;
 		return this;
 	}
+	
+	public boolean isActionsSupported() {
+		return true;
+	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public short getFlags() {
-		throw new UnsupportedOperationException("public short getFlags() is not supported operation");
+		throw new UnsupportedOperationException("$signature is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public org.openflow.protocol.interfaces.OFFlowStatsEntry setFlags(short value) {
-		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowStatsEntry setFlags(short value) is not supported operation");
+	public OFFlowStatsEntry setFlags(short value) {
+		throw new UnsupportedOperationException("$signature is not supported operation");
+	}
+	
+	public boolean isFlagsSupported() {
+		return false;
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public List<org.openflow.protocol.interfaces.OFInstruction> getInstructions() {
-		throw new UnsupportedOperationException("public List<org.openflow.protocol.interfaces.OFInstruction> getInstructions() is not supported operation");
+		throw new UnsupportedOperationException("$signature is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public org.openflow.protocol.interfaces.OFFlowStatsEntry setInstructions(List<org.openflow.protocol.interfaces.OFInstruction> value) {
-		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFFlowStatsEntry setInstructions(List<org.openflow.protocol.interfaces.OFInstruction> value) is not supported operation");
+	public OFFlowStatsEntry setInstructions(List<org.openflow.protocol.interfaces.OFInstruction> value) {
+		throw new UnsupportedOperationException("$signature is not supported operation");
+	}
+	
+	public boolean isInstructionsSupported() {
+		return false;
 	}
 	
 	

@@ -8,18 +8,25 @@ public interface OFQueueStatsEntry  {
 
 	public OFPort getPortNumber();
 	public OFQueueStatsEntry setPortNumber(OFPort value);
+	public boolean isPortNumberSupported();
 	public int getQueueId();
 	public OFQueueStatsEntry setQueueId(int value);
+	public boolean isQueueIdSupported();
 	public long getTransmitBytes();
 	public OFQueueStatsEntry setTransmitBytes(long value);
+	public boolean isTransmitBytesSupported();
 	public long getTransmitPackets();
 	public OFQueueStatsEntry setTransmitPackets(long value);
+	public boolean isTransmitPacketsSupported();
 	public long getTransmitErrors();
 	public OFQueueStatsEntry setTransmitErrors(long value);
+	public boolean isTransmitErrorsSupported();
 	public int getDurationSec();
 	public OFQueueStatsEntry setDurationSec(int value);
+	public boolean isDurationSecSupported();
 	public int getDurationNsec();
 	public OFQueueStatsEntry setDurationNsec(int value);
+	public boolean isDurationNsecSupported();
 
     public void readFrom(ByteBuffer data);
 

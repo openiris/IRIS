@@ -6,4 +6,8 @@
 		this.$variable_name = (OFMatchOxm) $variable_name;
 		return this;
 	}
+	
+	public boolean is${method_name}Supported() {
+		return true;
+	}
 			

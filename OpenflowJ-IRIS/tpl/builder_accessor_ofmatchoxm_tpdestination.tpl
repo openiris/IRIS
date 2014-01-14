@@ -11,3 +11,8 @@
 				throw new IllegalStateException("Network protocol is wrongfully set to " + this.network_protocol);
 			}
 		}
+		
+		public boolean isTransportDestinationSupported() {
+			return true;
+		}
+		

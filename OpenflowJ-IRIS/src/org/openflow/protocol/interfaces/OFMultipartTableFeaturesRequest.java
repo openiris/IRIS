@@ -8,6 +8,7 @@ public interface OFMultipartTableFeaturesRequest extends OFMultipartRequest {
 
 	public List<OFTableFeatures> getEntries();
 	public OFMultipartTableFeaturesRequest setEntries(List<OFTableFeatures> value);
+	public boolean isEntriesSupported();
 
     public void readFrom(ByteBuffer data);
 

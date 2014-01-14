@@ -33,6 +33,10 @@ public class OFTableFeaturePropertyExperimenterMiss extends OFTableFeatureProper
 		this.experimenter_id = experimenter_id;
 		return this;
 	}
+	
+	public boolean isExperimenterIdSupported() {
+		return true;
+	}
 			
 	public int getSubtype() {
 		return this.subtype;
@@ -42,6 +46,10 @@ public class OFTableFeaturePropertyExperimenterMiss extends OFTableFeatureProper
 		this.subtype = subtype;
 		return this;
 	}
+	
+	public boolean isSubtypeSupported() {
+		return true;
+	}
 			
 	public byte[] getExperimenterData() {
 		return this.experimenter_data;
@@ -50,6 +58,10 @@ public class OFTableFeaturePropertyExperimenterMiss extends OFTableFeatureProper
 	public OFTableFeaturePropertyExperimenterMiss setExperimenterData(byte[] experimenter_data) {
 		this.experimenter_data = experimenter_data;
 		return this;
+	}
+	
+	public boolean isExperimenterDataSupported() {
+		return true;
 	}
 			
 	

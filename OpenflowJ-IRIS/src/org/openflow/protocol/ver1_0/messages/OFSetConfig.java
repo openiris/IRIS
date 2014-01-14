@@ -31,6 +31,10 @@ public class OFSetConfig extends OFMessage implements org.openflow.protocol.inte
 		this.flags = flags;
 		return this;
 	}
+	
+	public boolean isFlagsSupported() {
+		return true;
+	}
 			
 	public short getMissSendLength() {
 		return this.miss_send_length;
@@ -39,6 +43,10 @@ public class OFSetConfig extends OFMessage implements org.openflow.protocol.inte
 	public OFSetConfig setMissSendLength(short miss_send_length) {
 		this.miss_send_length = miss_send_length;
 		return this;
+	}
+	
+	public boolean isMissSendLengthSupported() {
+		return true;
 	}
 			
 	

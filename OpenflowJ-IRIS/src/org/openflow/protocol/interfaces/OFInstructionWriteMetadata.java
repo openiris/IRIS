@@ -8,8 +8,10 @@ public interface OFInstructionWriteMetadata extends OFInstruction {
 
 	public long getMetadata();
 	public OFInstructionWriteMetadata setMetadata(long value);
+	public boolean isMetadataSupported();
 	public long getMetadataMask();
 	public OFInstructionWriteMetadata setMetadataMask(long value);
+	public boolean isMetadataMaskSupported();
 
     public void readFrom(ByteBuffer data);
 

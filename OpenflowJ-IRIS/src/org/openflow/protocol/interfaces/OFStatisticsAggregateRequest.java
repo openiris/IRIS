@@ -8,10 +8,13 @@ public interface OFStatisticsAggregateRequest extends OFStatisticsRequest {
 
 	public OFMatch getMatch();
 	public OFStatisticsAggregateRequest setMatch(OFMatch value);
+	public boolean isMatchSupported();
 	public byte getTableId();
 	public OFStatisticsAggregateRequest setTableId(byte value);
+	public boolean isTableIdSupported();
 	public OFPort getOutPort();
 	public OFStatisticsAggregateRequest setOutPort(OFPort value);
+	public boolean isOutPortSupported();
 
     public void readFrom(ByteBuffer data);
 

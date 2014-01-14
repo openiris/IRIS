@@ -32,6 +32,10 @@ public class OFTableFeaturePropertyWriteActions extends OFTableFeatureProperty i
 		this.action_ids = action_ids;
 		return this;
 	}
+	
+	public boolean isActionIdsSupported() {
+		return true;
+	}
 			
 	
 	

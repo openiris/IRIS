@@ -39,6 +39,10 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 		this.buffer_id = buffer_id;
 		return this;
 	}
+	
+	public boolean isBufferIdSupported() {
+		return true;
+	}
 			
 	public short getTotalLength() {
 		return this.total_length;
@@ -48,6 +52,10 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 		this.total_length = total_length;
 		return this;
 	}
+	
+	public boolean isTotalLengthSupported() {
+		return true;
+	}
 			
 	public OFPort getInputPort() {
 		return new OFPort(this.input_port);
@@ -56,6 +64,10 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 	public OFPacketIn setInputPort(OFPort port) {
 		this.input_port = (short) port.get();
 		return this;
+	}
+	
+	public boolean isInputPortSupported() {
+		return true;
 	}
 	
 
@@ -73,6 +85,10 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 	
+	public boolean isReasonSupported() {
+		return true;
+	}
+	
 	public byte[] getData() {
 		return this.data;
 	}
@@ -81,35 +97,51 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 		this.data = data;
 		return this;
 	}
+	
+	public boolean isDataSupported() {
+		return true;
+	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public byte getTableId() {
-		throw new UnsupportedOperationException("public byte getTableId() is not supported operation");
+		throw new UnsupportedOperationException("$signature is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public org.openflow.protocol.interfaces.OFPacketIn setTableId(byte value) {
-		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFPacketIn setTableId(byte value) is not supported operation");
+	public OFPacketIn setTableId(byte value) {
+		throw new UnsupportedOperationException("$signature is not supported operation");
+	}
+	
+	public boolean isTableIdSupported() {
+		return false;
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public long getCookie() {
-		throw new UnsupportedOperationException("public long getCookie() is not supported operation");
+		throw new UnsupportedOperationException("$signature is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public org.openflow.protocol.interfaces.OFPacketIn setCookie(long value) {
-		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFPacketIn setCookie(long value) is not supported operation");
+	public OFPacketIn setCookie(long value) {
+		throw new UnsupportedOperationException("$signature is not supported operation");
+	}
+	
+	public boolean isCookieSupported() {
+		return false;
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public org.openflow.protocol.interfaces.OFMatch getMatch() {
-		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFMatch getMatch() is not supported operation");
+		throw new UnsupportedOperationException("$signature is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public org.openflow.protocol.interfaces.OFPacketIn setMatch(org.openflow.protocol.interfaces.OFMatch value) {
-		throw new UnsupportedOperationException("public org.openflow.protocol.interfaces.OFPacketIn setMatch(org.openflow.protocol.interfaces.OFMatch value) is not supported operation");
+	public OFPacketIn setMatch(org.openflow.protocol.interfaces.OFMatch value) {
+		throw new UnsupportedOperationException("$signature is not supported operation");
+	}
+	
+	public boolean isMatchSupported() {
+		return false;
 	}
 	
 	
