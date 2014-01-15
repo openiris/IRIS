@@ -251,7 +251,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 	}
 	
 	
-	public class Builder 
+	public static class Builder 
 	implements	org.openflow.util.Builder<org.openflow.protocol.interfaces.OFMatch>,
 				org.openflow.protocol.interfaces.OFMatch.Builder, 
 				org.openflow.protocol.interfaces.OFMatchOxm.Builder {

@@ -1,6 +1,7 @@
 package org.openflow.protocol.factory;
 
 import org.openflow.protocol.interfaces.*;
+import org.openflow.util.Builder;
 
 public class OFMessageFactory {
 

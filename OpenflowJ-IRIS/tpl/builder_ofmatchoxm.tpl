@@ -1,4 +1,4 @@
-	public class Builder 
+	public static class Builder 
 	implements	org.openflow.util.Builder<org.openflow.protocol.interfaces.$builder_returntype>,
 				org.openflow.protocol.interfaces.OFMatch.Builder, 
 				org.openflow.protocol.interfaces.OFMatchOxm.Builder {

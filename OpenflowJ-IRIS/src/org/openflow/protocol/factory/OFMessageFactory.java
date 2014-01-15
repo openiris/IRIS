@@ -1,6 +1,7 @@
 package org.openflow.protocol.factory;
 
 import org.openflow.protocol.interfaces.*;
+import org.openflow.util.Builder;
 
 public class OFMessageFactory {
 
@@ -29,6 +30,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionVendorBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionVendor.");
+		}
+	}
+	
 	public OFError createError() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFError();
@@ -42,6 +51,14 @@ public class OFMessageFactory {
 		switch(version) {
 		case "1.0": return (OFError) m;
 		case "1.3": return (OFError) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFError.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createErrorBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFError.");
 		}
@@ -63,6 +80,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createStatisticsRequestBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsRequest.");
+		}
+	}
+	
 	public OFStatisticsAggregateRequest createStatisticsAggregateRequest() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFStatisticsAggregateRequest();
@@ -74,6 +99,14 @@ public class OFMessageFactory {
 	public OFStatisticsAggregateRequest asStatisticsAggregateRequest(OFMessage m) {
 		switch(version) {
 		case "1.0": return (OFStatisticsAggregateRequest) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsAggregateRequest.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createStatisticsAggregateRequestBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsAggregateRequest.");
 		}
@@ -95,6 +128,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionSetNwTtlBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionSetNwTtl.");
+		}
+	}
+	
 	public OFActionCopyTtlIn createActionCopyTtlIn() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFActionCopyTtlIn();
@@ -106,6 +147,14 @@ public class OFMessageFactory {
 	public OFActionCopyTtlIn asActionCopyTtlIn(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFActionCopyTtlIn) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionCopyTtlIn.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionCopyTtlInBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFActionCopyTtlIn.");
 		}
@@ -127,6 +176,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createTableFeaturePropertyWildcardsBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyWildcards.");
+		}
+	}
+	
 	public OFStatisticsVendorRequest createStatisticsVendorRequest() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFStatisticsVendorRequest();
@@ -143,10 +200,18 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createStatisticsVendorRequestBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsVendorRequest.");
+		}
+	}
+	
 	public OFMatch createMatch() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFMatch();
-		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMatch();
+		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMatchOxm();
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMatch.");
 		}
@@ -155,7 +220,16 @@ public class OFMessageFactory {
 	public OFMatch asMatch(OFMessage m) {
 		switch(version) {
 		case "1.0": return (OFMatch) m;
-		case "1.3": return (OFMatch) m;
+		case "1.3": return (OFMatchOxm) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMatch.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMatchBuilder() {
+		switch(version) {
+		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFMatch.Builder();
+		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMatchOxm.Builder();
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMatch.");
 		}
@@ -177,6 +251,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionGroupBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionGroup.");
+		}
+	}
+	
 	public OFTableFeaturePropertyExperimenterMiss createTableFeaturePropertyExperimenterMiss() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFTableFeaturePropertyExperimenterMiss();
@@ -188,6 +270,14 @@ public class OFMessageFactory {
 	public OFTableFeaturePropertyExperimenterMiss asTableFeaturePropertyExperimenterMiss(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFTableFeaturePropertyExperimenterMiss) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyExperimenterMiss.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createTableFeaturePropertyExperimenterMissBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyExperimenterMiss.");
 		}
@@ -211,6 +301,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createFlowModifyStrictBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFFlowModifyStrict.");
+		}
+	}
+	
 	public OFInstructionWriteMetadata createInstructionWriteMetadata() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFInstructionWriteMetadata();
@@ -227,6 +325,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createInstructionWriteMetadataBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFInstructionWriteMetadata.");
+		}
+	}
+	
 	public OFTableFeaturePropertyApplyActions createTableFeaturePropertyApplyActions() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFTableFeaturePropertyApplyActions();
@@ -238,6 +344,14 @@ public class OFMessageFactory {
 	public OFTableFeaturePropertyApplyActions asTableFeaturePropertyApplyActions(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFTableFeaturePropertyApplyActions) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyApplyActions.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createTableFeaturePropertyApplyActionsBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyApplyActions.");
 		}
@@ -261,6 +375,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createSetConfigBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFSetConfig.");
+		}
+	}
+	
 	public OFMultipartGroupFeaturesRequest createMultipartGroupFeaturesRequest() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMultipartGroupFeaturesRequest();
@@ -272,6 +394,14 @@ public class OFMessageFactory {
 	public OFMultipartGroupFeaturesRequest asMultipartGroupFeaturesRequest(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFMultipartGroupFeaturesRequest) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartGroupFeaturesRequest.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartGroupFeaturesRequestBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartGroupFeaturesRequest.");
 		}
@@ -293,6 +423,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartTableRequestBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartTableRequest.");
+		}
+	}
+	
 	public OFTableFeaturePropertyNextTables createTableFeaturePropertyNextTables() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFTableFeaturePropertyNextTables();
@@ -304,6 +442,14 @@ public class OFMessageFactory {
 	public OFTableFeaturePropertyNextTables asTableFeaturePropertyNextTables(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFTableFeaturePropertyNextTables) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyNextTables.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createTableFeaturePropertyNextTablesBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyNextTables.");
 		}
@@ -325,6 +471,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionOpaqueEnqueueBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionOpaqueEnqueue.");
+		}
+	}
+	
 	public OFTableFeaturePropertyWriteSetfieldMiss createTableFeaturePropertyWriteSetfieldMiss() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFTableFeaturePropertyWriteSetfieldMiss();
@@ -336,6 +490,14 @@ public class OFMessageFactory {
 	public OFTableFeaturePropertyWriteSetfieldMiss asTableFeaturePropertyWriteSetfieldMiss(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFTableFeaturePropertyWriteSetfieldMiss) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyWriteSetfieldMiss.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createTableFeaturePropertyWriteSetfieldMissBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyWriteSetfieldMiss.");
 		}
@@ -357,6 +519,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMatchOxmBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMatchOxm.");
+		}
+	}
+	
 	public OFActionStripVlan createActionStripVlan() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFActionStripVlan();
@@ -368,6 +538,14 @@ public class OFMessageFactory {
 	public OFActionStripVlan asActionStripVlan(OFMessage m) {
 		switch(version) {
 		case "1.0": return (OFActionStripVlan) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionStripVlan.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionStripVlanBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFActionStripVlan.");
 		}
@@ -389,6 +567,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartGroupRequestBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartGroupRequest.");
+		}
+	}
+	
 	public OFOxm createOxm() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFOxm();
@@ -400,6 +586,14 @@ public class OFMessageFactory {
 	public OFOxm asOxm(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFOxm) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFOxm.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createOxmBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFOxm.");
 		}
@@ -421,6 +615,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createQueuePropertyMaxRateBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFQueuePropertyMaxRate.");
+		}
+	}
+	
 	public OFActionId createActionId() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFActionId();
@@ -432,6 +634,14 @@ public class OFMessageFactory {
 	public OFActionId asActionId(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFActionId) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionId.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionIdBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFActionId.");
 		}
@@ -455,6 +665,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createQueueGetConfigRequestBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFQueueGetConfigRequest.");
+		}
+	}
+	
 	public OFTableFeaturePropertyInstructionsMiss createTableFeaturePropertyInstructionsMiss() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFTableFeaturePropertyInstructionsMiss();
@@ -466,6 +684,14 @@ public class OFMessageFactory {
 	public OFTableFeaturePropertyInstructionsMiss asTableFeaturePropertyInstructionsMiss(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFTableFeaturePropertyInstructionsMiss) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyInstructionsMiss.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createTableFeaturePropertyInstructionsMissBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyInstructionsMiss.");
 		}
@@ -487,6 +713,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionSetNwDstBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionSetNwDst.");
+		}
+	}
+	
 	public OFMultipartPortDescRequest createMultipartPortDescRequest() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMultipartPortDescRequest();
@@ -498,6 +732,14 @@ public class OFMessageFactory {
 	public OFMultipartPortDescRequest asMultipartPortDescRequest(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFMultipartPortDescRequest) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartPortDescRequest.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartPortDescRequestBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartPortDescRequest.");
 		}
@@ -521,6 +763,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createPortStatusBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFPortStatus.");
+		}
+	}
+	
 	public OFMultipartTableReply createMultipartTableReply() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMultipartTableReply();
@@ -532,6 +782,14 @@ public class OFMessageFactory {
 	public OFMultipartTableReply asMultipartTableReply(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFMultipartTableReply) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartTableReply.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartTableReplyBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartTableReply.");
 		}
@@ -553,6 +811,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createStatisticsDescReplyBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsDescReply.");
+		}
+	}
+	
 	public OFTableFeaturePropertyNextTablesMiss createTableFeaturePropertyNextTablesMiss() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFTableFeaturePropertyNextTablesMiss();
@@ -569,6 +835,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createTableFeaturePropertyNextTablesMissBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyNextTablesMiss.");
+		}
+	}
+	
 	public OFActionSetDlSrc createActionSetDlSrc() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFActionSetDlSrc();
@@ -580,6 +854,14 @@ public class OFMessageFactory {
 	public OFActionSetDlSrc asActionSetDlSrc(OFMessage m) {
 		switch(version) {
 		case "1.0": return (OFActionSetDlSrc) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionSetDlSrc.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionSetDlSrcBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFActionSetDlSrc.");
 		}
@@ -603,6 +885,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createFlowAddBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFFlowAdd.");
+		}
+	}
+	
 	public OFMultipartMeterFeaturesReply createMultipartMeterFeaturesReply() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMultipartMeterFeaturesReply();
@@ -614,6 +904,14 @@ public class OFMessageFactory {
 	public OFMultipartMeterFeaturesReply asMultipartMeterFeaturesReply(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFMultipartMeterFeaturesReply) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartMeterFeaturesReply.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartMeterFeaturesReplyBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartMeterFeaturesReply.");
 		}
@@ -635,6 +933,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionSetFieldBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionSetField.");
+		}
+	}
+	
 	public OFMeterBandStats createMeterBandStats() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMeterBandStats();
@@ -646,6 +952,14 @@ public class OFMessageFactory {
 	public OFMeterBandStats asMeterBandStats(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFMeterBandStats) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMeterBandStats.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMeterBandStatsBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMeterBandStats.");
 		}
@@ -669,6 +983,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createFeaturesRequestBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFFeaturesRequest.");
+		}
+	}
+	
 	public OFStatistics createStatistics() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFStatistics();
@@ -680,6 +1002,14 @@ public class OFMessageFactory {
 	public OFStatistics asStatistics(OFMessage m) {
 		switch(version) {
 		case "1.0": return (OFStatistics) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFStatistics.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createStatisticsBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFStatistics.");
 		}
@@ -701,6 +1031,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionPushMplsBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionPushMpls.");
+		}
+	}
+	
 	public OFActionSetVlanId createActionSetVlanId() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFActionSetVlanId();
@@ -712,6 +1050,14 @@ public class OFMessageFactory {
 	public OFActionSetVlanId asActionSetVlanId(OFMessage m) {
 		switch(version) {
 		case "1.0": return (OFActionSetVlanId) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionSetVlanId.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionSetVlanIdBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFActionSetVlanId.");
 		}
@@ -733,6 +1079,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartMeterConfigRequestBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartMeterConfigRequest.");
+		}
+	}
+	
 	public OFMultipartTableFeaturesRequest createMultipartTableFeaturesRequest() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMultipartTableFeaturesRequest();
@@ -744,6 +1098,14 @@ public class OFMessageFactory {
 	public OFMultipartTableFeaturesRequest asMultipartTableFeaturesRequest(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFMultipartTableFeaturesRequest) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartTableFeaturesRequest.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartTableFeaturesRequestBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartTableFeaturesRequest.");
 		}
@@ -765,6 +1127,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartGroupFeaturesReplyBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartGroupFeaturesReply.");
+		}
+	}
+	
 	public OFStatisticsTableReply createStatisticsTableReply() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFStatisticsTableReply();
@@ -776,6 +1146,14 @@ public class OFMessageFactory {
 	public OFStatisticsTableReply asStatisticsTableReply(OFMessage m) {
 		switch(version) {
 		case "1.0": return (OFStatisticsTableReply) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsTableReply.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createStatisticsTableReplyBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsTableReply.");
 		}
@@ -797,6 +1175,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartReplyBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartReply.");
+		}
+	}
+	
 	public OFStatisticsPortRequest createStatisticsPortRequest() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFStatisticsPortRequest();
@@ -808,6 +1194,14 @@ public class OFMessageFactory {
 	public OFStatisticsPortRequest asStatisticsPortRequest(OFMessage m) {
 		switch(version) {
 		case "1.0": return (OFStatisticsPortRequest) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsPortRequest.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createStatisticsPortRequestBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsPortRequest.");
 		}
@@ -829,6 +1223,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createGetAsyncRequestBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFGetAsyncRequest.");
+		}
+	}
+	
 	public OFGetAsyncReply createGetAsyncReply() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFGetAsyncReply();
@@ -845,6 +1247,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createGetAsyncReplyBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFGetAsyncReply.");
+		}
+	}
+	
 	public OFStatisticsFlowReply createStatisticsFlowReply() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFStatisticsFlowReply();
@@ -856,6 +1266,14 @@ public class OFMessageFactory {
 	public OFStatisticsFlowReply asStatisticsFlowReply(OFMessage m) {
 		switch(version) {
 		case "1.0": return (OFStatisticsFlowReply) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsFlowReply.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createStatisticsFlowReplyBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsFlowReply.");
 		}
@@ -879,6 +1297,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createBarrierRequestBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFBarrierRequest.");
+		}
+	}
+	
 	public OFActionPushVlan createActionPushVlan() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFActionPushVlan();
@@ -890,6 +1316,14 @@ public class OFMessageFactory {
 	public OFActionPushVlan asActionPushVlan(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFActionPushVlan) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionPushVlan.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionPushVlanBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFActionPushVlan.");
 		}
@@ -913,6 +1347,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createPacketOutBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFPacketOut.");
+		}
+	}
+	
 	public OFGetConfigRequest createGetConfigRequest() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFGetConfigRequest();
@@ -926,6 +1368,14 @@ public class OFMessageFactory {
 		switch(version) {
 		case "1.0": return (OFGetConfigRequest) m;
 		case "1.3": return (OFGetConfigRequest) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFGetConfigRequest.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createGetConfigRequestBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFGetConfigRequest.");
 		}
@@ -947,6 +1397,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createInstructionMeterBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFInstructionMeter.");
+		}
+	}
+	
 	public OFVendor createVendor() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFVendor();
@@ -958,6 +1416,14 @@ public class OFMessageFactory {
 	public OFVendor asVendor(OFMessage m) {
 		switch(version) {
 		case "1.0": return (OFVendor) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFVendor.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createVendorBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFVendor.");
 		}
@@ -979,6 +1445,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMatchStandardBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMatchStandard.");
+		}
+	}
+	
 	public OFGroupDescStatsEntry createGroupDescStatsEntry() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFGroupDescStatsEntry();
@@ -990,6 +1464,14 @@ public class OFMessageFactory {
 	public OFGroupDescStatsEntry asGroupDescStatsEntry(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFGroupDescStatsEntry) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFGroupDescStatsEntry.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createGroupDescStatsEntryBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFGroupDescStatsEntry.");
 		}
@@ -1011,6 +1493,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartFlowReplyBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartFlowReply.");
+		}
+	}
+	
 	public OFMultipartGroupReply createMultipartGroupReply() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMultipartGroupReply();
@@ -1022,6 +1512,14 @@ public class OFMessageFactory {
 	public OFMultipartGroupReply asMultipartGroupReply(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFMultipartGroupReply) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartGroupReply.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartGroupReplyBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartGroupReply.");
 		}
@@ -1043,6 +1541,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionSetDlDstBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionSetDlDst.");
+		}
+	}
+	
 	public OFActionSetTpDst createActionSetTpDst() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFActionSetTpDst();
@@ -1054,6 +1560,14 @@ public class OFMessageFactory {
 	public OFActionSetTpDst asActionSetTpDst(OFMessage m) {
 		switch(version) {
 		case "1.0": return (OFActionSetTpDst) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionSetTpDst.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionSetTpDstBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFActionSetTpDst.");
 		}
@@ -1075,6 +1589,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createRoleRequestBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFRoleRequest.");
+		}
+	}
+	
 	public OFActionSetTpSrc createActionSetTpSrc() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFActionSetTpSrc();
@@ -1086,6 +1608,14 @@ public class OFMessageFactory {
 	public OFActionSetTpSrc asActionSetTpSrc(OFMessage m) {
 		switch(version) {
 		case "1.0": return (OFActionSetTpSrc) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionSetTpSrc.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionSetTpSrcBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFActionSetTpSrc.");
 		}
@@ -1109,6 +1639,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createFlowModBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFFlowMod.");
+		}
+	}
+	
 	public OFPortStatsEntry createPortStatsEntry() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFPortStatsEntry();
@@ -1122,6 +1660,14 @@ public class OFMessageFactory {
 		switch(version) {
 		case "1.0": return (OFPortStatsEntry) m;
 		case "1.3": return (OFPortStatsEntry) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFPortStatsEntry.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createPortStatsEntryBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFPortStatsEntry.");
 		}
@@ -1145,6 +1691,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createFlowStatsEntryBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFFlowStatsEntry.");
+		}
+	}
+	
 	public OFFlowDeleteStrict createFlowDeleteStrict() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFFlowDeleteStrict();
@@ -1158,6 +1712,14 @@ public class OFMessageFactory {
 		switch(version) {
 		case "1.0": return (OFFlowDeleteStrict) m;
 		case "1.3": return (OFFlowDeleteStrict) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFFlowDeleteStrict.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createFlowDeleteStrictBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFFlowDeleteStrict.");
 		}
@@ -1181,6 +1743,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createFlowDeleteBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFFlowDelete.");
+		}
+	}
+	
 	public OFHelloElemVersionbitmap createHelloElemVersionbitmap() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFHelloElemVersionbitmap();
@@ -1192,6 +1762,14 @@ public class OFMessageFactory {
 	public OFHelloElemVersionbitmap asHelloElemVersionbitmap(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFHelloElemVersionbitmap) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFHelloElemVersionbitmap.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createHelloElemVersionbitmapBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFHelloElemVersionbitmap.");
 		}
@@ -1215,6 +1793,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createHelloBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFHello.");
+		}
+	}
+	
 	public OFStatisticsFlowRequest createStatisticsFlowRequest() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFStatisticsFlowRequest();
@@ -1226,6 +1812,14 @@ public class OFMessageFactory {
 	public OFStatisticsFlowRequest asStatisticsFlowRequest(OFMessage m) {
 		switch(version) {
 		case "1.0": return (OFStatisticsFlowRequest) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsFlowRequest.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createStatisticsFlowRequestBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsFlowRequest.");
 		}
@@ -1247,6 +1841,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMeterBandBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMeterBand.");
+		}
+	}
+	
 	public OFStatisticsAggregateReply createStatisticsAggregateReply() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFStatisticsAggregateReply();
@@ -1263,6 +1865,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createStatisticsAggregateReplyBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsAggregateReply.");
+		}
+	}
+	
 	public OFSetAsync createSetAsync() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFSetAsync();
@@ -1274,6 +1884,14 @@ public class OFMessageFactory {
 	public OFSetAsync asSetAsync(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFSetAsync) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFSetAsync.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createSetAsyncBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFSetAsync.");
 		}
@@ -1297,6 +1915,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createFlowModifyBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFFlowModify.");
+		}
+	}
+	
 	public OFTableFeatureProperty createTableFeatureProperty() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFTableFeatureProperty();
@@ -1308,6 +1934,14 @@ public class OFMessageFactory {
 	public OFTableFeatureProperty asTableFeatureProperty(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFTableFeatureProperty) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeatureProperty.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createTableFeaturePropertyBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeatureProperty.");
 		}
@@ -1331,6 +1965,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMessageBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMessage.");
+		}
+	}
+	
 	public OFTableFeatures createTableFeatures() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFTableFeatures();
@@ -1347,6 +1989,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createTableFeaturesBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeatures.");
+		}
+	}
+	
 	public OFMultipartTableFeaturesReply createMultipartTableFeaturesReply() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMultipartTableFeaturesReply();
@@ -1358,6 +2008,14 @@ public class OFMessageFactory {
 	public OFMultipartTableFeaturesReply asMultipartTableFeaturesReply(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFMultipartTableFeaturesReply) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartTableFeaturesReply.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartTableFeaturesReplyBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartTableFeaturesReply.");
 		}
@@ -1381,6 +2039,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createTableStatsEntryBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFTableStatsEntry.");
+		}
+	}
+	
 	public OFMultipartMeterConfigReply createMultipartMeterConfigReply() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMultipartMeterConfigReply();
@@ -1397,6 +2063,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartMeterConfigReplyBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartMeterConfigReply.");
+		}
+	}
+	
 	public OFMultipartMeterRequest createMultipartMeterRequest() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMultipartMeterRequest();
@@ -1408,6 +2082,14 @@ public class OFMessageFactory {
 	public OFMultipartMeterRequest asMultipartMeterRequest(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFMultipartMeterRequest) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartMeterRequest.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartMeterRequestBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartMeterRequest.");
 		}
@@ -1431,6 +2113,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createQueueGetConfigReplyBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFQueueGetConfigReply.");
+		}
+	}
+	
 	public OFMultipartDescRequest createMultipartDescRequest() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMultipartDescRequest();
@@ -1442,6 +2132,14 @@ public class OFMessageFactory {
 	public OFMultipartDescRequest asMultipartDescRequest(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFMultipartDescRequest) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartDescRequest.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartDescRequestBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartDescRequest.");
 		}
@@ -1463,6 +2161,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createInstructionGotoTableBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFInstructionGotoTable.");
+		}
+	}
+	
 	public OFActionPopVlan createActionPopVlan() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFActionPopVlan();
@@ -1474,6 +2180,14 @@ public class OFMessageFactory {
 	public OFActionPopVlan asActionPopVlan(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFActionPopVlan) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionPopVlan.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionPopVlanBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFActionPopVlan.");
 		}
@@ -1495,6 +2209,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionPopMplsBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionPopMpls.");
+		}
+	}
+	
 	public OFMeterBandDscpRemark createMeterBandDscpRemark() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMeterBandDscpRemark();
@@ -1506,6 +2228,14 @@ public class OFMessageFactory {
 	public OFMeterBandDscpRemark asMeterBandDscpRemark(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFMeterBandDscpRemark) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMeterBandDscpRemark.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMeterBandDscpRemarkBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMeterBandDscpRemark.");
 		}
@@ -1527,6 +2257,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartQueueRequestBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartQueueRequest.");
+		}
+	}
+	
 	public OFMultipartExperimenterReply createMultipartExperimenterReply() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMultipartExperimenterReply();
@@ -1538,6 +2276,14 @@ public class OFMessageFactory {
 	public OFMultipartExperimenterReply asMultipartExperimenterReply(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFMultipartExperimenterReply) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartExperimenterReply.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartExperimenterReplyBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartExperimenterReply.");
 		}
@@ -1559,6 +2305,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createTableFeaturePropertyWriteActionsMissBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyWriteActionsMiss.");
+		}
+	}
+	
 	public OFActionSetNwTos createActionSetNwTos() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFActionSetNwTos();
@@ -1570,6 +2324,14 @@ public class OFMessageFactory {
 	public OFActionSetNwTos asActionSetNwTos(OFMessage m) {
 		switch(version) {
 		case "1.0": return (OFActionSetNwTos) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionSetNwTos.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionSetNwTosBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFActionSetNwTos.");
 		}
@@ -1591,6 +2353,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMeterBandDropBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMeterBandDrop.");
+		}
+	}
+	
 	public OFActionDecNwTtl createActionDecNwTtl() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFActionDecNwTtl();
@@ -1602,6 +2372,14 @@ public class OFMessageFactory {
 	public OFActionDecNwTtl asActionDecNwTtl(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFActionDecNwTtl) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionDecNwTtl.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionDecNwTtlBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFActionDecNwTtl.");
 		}
@@ -1625,6 +2403,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionOutputBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionOutput.");
+		}
+	}
+	
 	public OFQueueProperty createQueueProperty() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFQueueProperty();
@@ -1638,6 +2424,14 @@ public class OFMessageFactory {
 		switch(version) {
 		case "1.0": return (OFQueueProperty) m;
 		case "1.3": return (OFQueueProperty) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFQueueProperty.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createQueuePropertyBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFQueueProperty.");
 		}
@@ -1659,6 +2453,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartAggregateRequestBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartAggregateRequest.");
+		}
+	}
+	
 	public OFMultipart createMultipart() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMultipart();
@@ -1670,6 +2472,14 @@ public class OFMessageFactory {
 	public OFMultipart asMultipart(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFMultipart) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipart.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMultipart.");
 		}
@@ -1693,6 +2503,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createEchoReplyBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFEchoReply.");
+		}
+	}
+	
 	public OFQueueStatsEntry createQueueStatsEntry() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFQueueStatsEntry();
@@ -1706,6 +2524,14 @@ public class OFMessageFactory {
 		switch(version) {
 		case "1.0": return (OFQueueStatsEntry) m;
 		case "1.3": return (OFQueueStatsEntry) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFQueueStatsEntry.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createQueueStatsEntryBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFQueueStatsEntry.");
 		}
@@ -1727,6 +2553,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartExperimenterRequestBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartExperimenterRequest.");
+		}
+	}
+	
 	public OFExperimenter createExperimenter() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFExperimenter();
@@ -1738,6 +2572,14 @@ public class OFMessageFactory {
 	public OFExperimenter asExperimenter(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFExperimenter) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFExperimenter.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createExperimenterBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFExperimenter.");
 		}
@@ -1759,6 +2601,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createTableFeaturePropertyApplySetfieldBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyApplySetfield.");
+		}
+	}
+	
 	public OFTableFeaturePropertyWriteActions createTableFeaturePropertyWriteActions() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFTableFeaturePropertyWriteActions();
@@ -1775,6 +2625,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createTableFeaturePropertyWriteActionsBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyWriteActions.");
+		}
+	}
+	
 	public OFStatisticsDescRequest createStatisticsDescRequest() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFStatisticsDescRequest();
@@ -1786,6 +2644,14 @@ public class OFMessageFactory {
 	public OFStatisticsDescRequest asStatisticsDescRequest(OFMessage m) {
 		switch(version) {
 		case "1.0": return (OFStatisticsDescRequest) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsDescRequest.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createStatisticsDescRequestBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsDescRequest.");
 		}
@@ -1809,6 +2675,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createFeaturesReplyBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFFeaturesReply.");
+		}
+	}
+	
 	public OFMeterBandExperimenter createMeterBandExperimenter() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMeterBandExperimenter();
@@ -1825,6 +2699,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMeterBandExperimenterBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMeterBandExperimenter.");
+		}
+	}
+	
 	public OFInstruction createInstruction() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFInstruction();
@@ -1836,6 +2718,14 @@ public class OFMessageFactory {
 	public OFInstruction asInstruction(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFInstruction) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFInstruction.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createInstructionBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFInstruction.");
 		}
@@ -1859,6 +2749,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createQueuePropertyMinRateBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFQueuePropertyMinRate.");
+		}
+	}
+	
 	public OFMultipartDescReply createMultipartDescReply() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMultipartDescReply();
@@ -1875,6 +2773,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartDescReplyBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartDescReply.");
+		}
+	}
+	
 	public OFBucketCounter createBucketCounter() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFBucketCounter();
@@ -1886,6 +2792,14 @@ public class OFMessageFactory {
 	public OFBucketCounter asBucketCounter(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFBucketCounter) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFBucketCounter.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createBucketCounterBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFBucketCounter.");
 		}
@@ -1909,6 +2823,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFAction.");
+		}
+	}
+	
 	public OFActionCopyTtlOut createActionCopyTtlOut() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFActionCopyTtlOut();
@@ -1920,6 +2842,14 @@ public class OFMessageFactory {
 	public OFActionCopyTtlOut asActionCopyTtlOut(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFActionCopyTtlOut) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionCopyTtlOut.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionCopyTtlOutBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFActionCopyTtlOut.");
 		}
@@ -1941,6 +2871,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createGroupStatsEntryBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFGroupStatsEntry.");
+		}
+	}
+	
 	public OFTableMod createTableMod() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFTableMod();
@@ -1952,6 +2890,14 @@ public class OFMessageFactory {
 	public OFTableMod asTableMod(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFTableMod) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFTableMod.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createTableModBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFTableMod.");
 		}
@@ -1973,6 +2919,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createInstructionWriteActionsBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFInstructionWriteActions.");
+		}
+	}
+	
 	public OFActionDecMplsTtl createActionDecMplsTtl() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFActionDecMplsTtl();
@@ -1984,6 +2938,14 @@ public class OFMessageFactory {
 	public OFActionDecMplsTtl asActionDecMplsTtl(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFActionDecMplsTtl) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionDecMplsTtl.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionDecMplsTtlBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFActionDecMplsTtl.");
 		}
@@ -2005,6 +2967,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createRoleReplyBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFRoleReply.");
+		}
+	}
+	
 	public OFMultipartMeterReply createMultipartMeterReply() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMultipartMeterReply();
@@ -2021,6 +2991,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartMeterReplyBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartMeterReply.");
+		}
+	}
+	
 	public OFMeterFeatures createMeterFeatures() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMeterFeatures();
@@ -2032,6 +3010,14 @@ public class OFMessageFactory {
 	public OFMeterFeatures asMeterFeatures(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFMeterFeatures) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMeterFeatures.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMeterFeaturesBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMeterFeatures.");
 		}
@@ -2055,6 +3041,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createEchoRequestBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFEchoRequest.");
+		}
+	}
+	
 	public OFTableFeaturePropertyApplySetfieldMiss createTableFeaturePropertyApplySetfieldMiss() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFTableFeaturePropertyApplySetfieldMiss();
@@ -2066,6 +3060,14 @@ public class OFMessageFactory {
 	public OFTableFeaturePropertyApplySetfieldMiss asTableFeaturePropertyApplySetfieldMiss(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFTableFeaturePropertyApplySetfieldMiss) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyApplySetfieldMiss.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createTableFeaturePropertyApplySetfieldMissBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyApplySetfieldMiss.");
 		}
@@ -2087,6 +3089,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createTableFeaturePropertyWriteSetfieldBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyWriteSetfield.");
+		}
+	}
+	
 	public OFInstructionApplyActions createInstructionApplyActions() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFInstructionApplyActions();
@@ -2103,6 +3113,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createInstructionApplyActionsBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFInstructionApplyActions.");
+		}
+	}
+	
 	public OFInstructionClearActions createInstructionClearActions() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFInstructionClearActions();
@@ -2114,6 +3132,14 @@ public class OFMessageFactory {
 	public OFInstructionClearActions asInstructionClearActions(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFInstructionClearActions) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFInstructionClearActions.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createInstructionClearActionsBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFInstructionClearActions.");
 		}
@@ -2137,6 +3163,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createPacketInBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFPacketIn.");
+		}
+	}
+	
 	public OFBarrierReply createBarrierReply() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFBarrierReply();
@@ -2150,6 +3184,14 @@ public class OFMessageFactory {
 		switch(version) {
 		case "1.0": return (OFBarrierReply) m;
 		case "1.3": return (OFBarrierReply) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFBarrierReply.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createBarrierReplyBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFBarrierReply.");
 		}
@@ -2171,6 +3213,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartPortStatsRequestBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartPortStatsRequest.");
+		}
+	}
+	
 	public OFActionSetQueue createActionSetQueue() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFActionSetQueue();
@@ -2182,6 +3232,14 @@ public class OFMessageFactory {
 	public OFActionSetQueue asActionSetQueue(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFActionSetQueue) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionSetQueue.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionSetQueueBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFActionSetQueue.");
 		}
@@ -2203,6 +3261,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartPortDescReplyBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartPortDescReply.");
+		}
+	}
+	
 	public OFMultipartMeterFeaturesRequest createMultipartMeterFeaturesRequest() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMultipartMeterFeaturesRequest();
@@ -2214,6 +3280,14 @@ public class OFMessageFactory {
 	public OFMultipartMeterFeaturesRequest asMultipartMeterFeaturesRequest(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFMultipartMeterFeaturesRequest) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartMeterFeaturesRequest.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartMeterFeaturesRequestBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartMeterFeaturesRequest.");
 		}
@@ -2235,6 +3309,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMeterModBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMeterMod.");
+		}
+	}
+	
 	public OFTableFeaturePropertyExperimenter createTableFeaturePropertyExperimenter() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFTableFeaturePropertyExperimenter();
@@ -2246,6 +3328,14 @@ public class OFMessageFactory {
 	public OFTableFeaturePropertyExperimenter asTableFeaturePropertyExperimenter(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFTableFeaturePropertyExperimenter) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyExperimenter.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createTableFeaturePropertyExperimenterBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyExperimenter.");
 		}
@@ -2267,6 +3357,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionSetMplsTtlBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionSetMplsTtl.");
+		}
+	}
+	
 	public OFStatisticsVendorReply createStatisticsVendorReply() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFStatisticsVendorReply();
@@ -2278,6 +3376,14 @@ public class OFMessageFactory {
 	public OFStatisticsVendorReply asStatisticsVendorReply(OFMessage m) {
 		switch(version) {
 		case "1.0": return (OFStatisticsVendorReply) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsVendorReply.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createStatisticsVendorReplyBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsVendorReply.");
 		}
@@ -2299,6 +3405,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createQueuePropertyExperimenterBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFQueuePropertyExperimenter.");
+		}
+	}
+	
 	public OFInstructionExperimenter createInstructionExperimenter() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFInstructionExperimenter();
@@ -2310,6 +3424,14 @@ public class OFMessageFactory {
 	public OFInstructionExperimenter asInstructionExperimenter(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFInstructionExperimenter) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFInstructionExperimenter.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createInstructionExperimenterBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFInstructionExperimenter.");
 		}
@@ -2331,6 +3453,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartRequestBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartRequest.");
+		}
+	}
+	
 	public OFMultipartAggregateReply createMultipartAggregateReply() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMultipartAggregateReply();
@@ -2342,6 +3472,14 @@ public class OFMessageFactory {
 	public OFMultipartAggregateReply asMultipartAggregateReply(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFMultipartAggregateReply) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartAggregateReply.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartAggregateReplyBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartAggregateReply.");
 		}
@@ -2363,6 +3501,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createTableFeaturePropertyInstructionsBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyInstructions.");
+		}
+	}
+	
 	public OFHelloElem createHelloElem() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFHelloElem();
@@ -2374,6 +3520,14 @@ public class OFMessageFactory {
 	public OFHelloElem asHelloElem(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFHelloElem) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFHelloElem.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createHelloElemBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFHelloElem.");
 		}
@@ -2395,6 +3549,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionSetVlanPcpBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionSetVlanPcp.");
+		}
+	}
+	
 	public OFMultipartGroupDescRequest createMultipartGroupDescRequest() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMultipartGroupDescRequest();
@@ -2406,6 +3568,14 @@ public class OFMessageFactory {
 	public OFMultipartGroupDescRequest asMultipartGroupDescRequest(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFMultipartGroupDescRequest) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartGroupDescRequest.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartGroupDescRequestBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartGroupDescRequest.");
 		}
@@ -2427,6 +3597,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartGroupDescReplyBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartGroupDescReply.");
+		}
+	}
+	
 	public OFActionSetNwSrc createActionSetNwSrc() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFActionSetNwSrc();
@@ -2438,6 +3616,14 @@ public class OFMessageFactory {
 	public OFActionSetNwSrc asActionSetNwSrc(OFMessage m) {
 		switch(version) {
 		case "1.0": return (OFActionSetNwSrc) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionSetNwSrc.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionSetNwSrcBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFActionSetNwSrc.");
 		}
@@ -2461,6 +3647,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createPortModBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFPortMod.");
+		}
+	}
+	
 	public OFActionExperimenter createActionExperimenter() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFActionExperimenter();
@@ -2472,6 +3666,14 @@ public class OFMessageFactory {
 	public OFActionExperimenter asActionExperimenter(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFActionExperimenter) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionExperimenter.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionExperimenterBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFActionExperimenter.");
 		}
@@ -2493,6 +3695,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMeterStatsBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMeterStats.");
+		}
+	}
+	
 	public OFActionPushPbb createActionPushPbb() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFActionPushPbb();
@@ -2504,6 +3714,14 @@ public class OFMessageFactory {
 	public OFActionPushPbb asActionPushPbb(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFActionPushPbb) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionPushPbb.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionPushPbbBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFActionPushPbb.");
 		}
@@ -2527,6 +3745,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createFlowRemovedBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFFlowRemoved.");
+		}
+	}
+	
 	public OFMultipartFlowRequest createMultipartFlowRequest() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMultipartFlowRequest();
@@ -2538,6 +3764,14 @@ public class OFMessageFactory {
 	public OFMultipartFlowRequest asMultipartFlowRequest(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFMultipartFlowRequest) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartFlowRequest.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartFlowRequestBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartFlowRequest.");
 		}
@@ -2561,6 +3795,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createPortDescBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFPortDesc.");
+		}
+	}
+	
 	public OFMultipartQueueReply createMultipartQueueReply() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMultipartQueueReply();
@@ -2572,6 +3814,14 @@ public class OFMessageFactory {
 	public OFMultipartQueueReply asMultipartQueueReply(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFMultipartQueueReply) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartQueueReply.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartQueueReplyBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartQueueReply.");
 		}
@@ -2593,6 +3843,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createQueuePropertyNoneBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFQueuePropertyNone.");
+		}
+	}
+	
 	public OFBucket createBucket() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFBucket();
@@ -2604,6 +3862,14 @@ public class OFMessageFactory {
 	public OFBucket asBucket(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFBucket) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFBucket.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createBucketBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFBucket.");
 		}
@@ -2625,6 +3891,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createStatisticsTableRequestBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsTableRequest.");
+		}
+	}
+	
 	public OFTableFeaturePropertyMatch createTableFeaturePropertyMatch() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFTableFeaturePropertyMatch();
@@ -2641,6 +3915,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createTableFeaturePropertyMatchBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyMatch.");
+		}
+	}
+	
 	public OFStatisticsQueueRequest createStatisticsQueueRequest() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFStatisticsQueueRequest();
@@ -2652,6 +3934,14 @@ public class OFMessageFactory {
 	public OFStatisticsQueueRequest asStatisticsQueueRequest(OFMessage m) {
 		switch(version) {
 		case "1.0": return (OFStatisticsQueueRequest) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsQueueRequest.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createStatisticsQueueRequestBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsQueueRequest.");
 		}
@@ -2675,6 +3965,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createGetConfigReplyBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFGetConfigReply.");
+		}
+	}
+	
 	public OFStatisticsReply createStatisticsReply() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFStatisticsReply();
@@ -2686,6 +3984,14 @@ public class OFMessageFactory {
 	public OFStatisticsReply asStatisticsReply(OFMessage m) {
 		switch(version) {
 		case "1.0": return (OFStatisticsReply) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsReply.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createStatisticsReplyBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsReply.");
 		}
@@ -2707,6 +4013,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createGroupModBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFGroupMod.");
+		}
+	}
+	
 	public OFTableFeaturePropertyApplyActionsMiss createTableFeaturePropertyApplyActionsMiss() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFTableFeaturePropertyApplyActionsMiss();
@@ -2718,6 +4032,14 @@ public class OFMessageFactory {
 	public OFTableFeaturePropertyApplyActionsMiss asTableFeaturePropertyApplyActionsMiss(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFTableFeaturePropertyApplyActionsMiss) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyApplyActionsMiss.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createTableFeaturePropertyApplyActionsMissBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFTableFeaturePropertyApplyActionsMiss.");
 		}
@@ -2741,6 +4063,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createPacketQueueBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFPacketQueue.");
+		}
+	}
+	
 	public OFMultipartPortStatsReply createMultipartPortStatsReply() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFMultipartPortStatsReply();
@@ -2752,6 +4082,14 @@ public class OFMessageFactory {
 	public OFMultipartPortStatsReply asMultipartPortStatsReply(OFMessage m) {
 		switch(version) {
 		case "1.3": return (OFMultipartPortStatsReply) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartPortStatsReply.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createMultipartPortStatsReplyBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFMultipartPortStatsReply.");
 		}
@@ -2773,6 +4111,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createStatisticsPortReplyBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsPortReply.");
+		}
+	}
+	
 	public OFActionPopPbb createActionPopPbb() {
 		switch(version) {
 		case "1.3": return new org.openflow.protocol.ver1_3.messages.OFActionPopPbb();
@@ -2789,6 +4135,14 @@ public class OFMessageFactory {
 		}
 	}
 	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createActionPopPbbBuilder() {
+		switch(version) {
+		
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFActionPopPbb.");
+		}
+	}
+	
 	public OFStatisticsQueueReply createStatisticsQueueReply() {
 		switch(version) {
 		case "1.0": return new org.openflow.protocol.ver1_0.messages.OFStatisticsQueueReply();
@@ -2800,6 +4154,14 @@ public class OFMessageFactory {
 	public OFStatisticsQueueReply asStatisticsQueueReply(OFMessage m) {
 		switch(version) {
 		case "1.0": return (OFStatisticsQueueReply) m;
+		default:
+			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsQueueReply.");
+		}
+	}
+	
+	public org.openflow.protocol.interfaces.OFMatch.Builder createStatisticsQueueReplyBuilder() {
+		switch(version) {
+		
 		default:
 			throw new IllegalStateException("Version " + this.version + " does not support OFStatisticsQueueReply.");
 		}
