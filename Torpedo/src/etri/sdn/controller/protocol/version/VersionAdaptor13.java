@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.openflow.protocol.OFMessage;
+import org.openflow.protocol.ver1_0.types.OFFlowWildcards;
+import org.openflow.protocol.ver1_0.types.OFPortNo;
 import org.openflow.protocol.ver1_3.messages.OFAction;
 import org.openflow.protocol.ver1_3.messages.OFActionOutput;
 import org.openflow.protocol.ver1_3.messages.OFEchoReply;
@@ -37,6 +39,7 @@ import org.openflow.protocol.ver1_3.types.OFMultipartType;
 import org.openflow.protocol.ver1_3.types.OFPortConfig;
 import org.openflow.protocol.ver1_3.types.OFPortReason;
 import org.openflow.util.OFPort;
+import org.openflow.util.U8;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFController;
@@ -459,30 +462,121 @@ public class VersionAdaptor13 extends VersionAdaptor {
 	}
 	
 	
-	public OFMatchOxm loadOFMatchFromPacket(byte[] packetData) {
+	public OFMatchOxm loadOFMatchFromPacket(byte[] packetData, short inputPort) {
 		
 		System.out.println("packetData " + bytesToHex(packetData));
-		OFMatchOxm ret = new OFMatchOxm();
-//		ret.setType(OFMatchType.OXM);
-//		ByteBuffer buffer = ByteBuffer.allocate(packetData.length);
-//		buffer.put(packetData);
-//		System.out.println("buffer " + bytesToHex(buffer.array()));
-//		buffer.flip();
+		OFMatchOxm.Builder ret = new OFMatchOxm.Builder();
 		
-		
-		
-		//byte[] tmp = new byte[128];
-		
-//		buffer.get(tmp);
-//		System.out.println("buffer " + bytesToHex(tmp));
-		
-//		ret.readFrom(buffer);
-		
-		
-		System.out.println(ret.getOxmFields());
-		//ret.setLength(ret.computeLength());
-		//List<OFOxm> oxmList = new LinkedList<OFOxm>();
-		//System.out.println("ret " + ret);
-		return ret;
+		short scratch;
+        int transportOffset = 34;
+        ByteBuffer packetDataBB = ByteBuffer.wrap(packetData);
+        int limit = packetDataBB.limit();
+
+        ret.setInputPort(OFPort.of(inputPort));
+
+//        if (inputPort == OFPortNo.ALL.getValue())
+//        	ret.setWildcardsWire( ret.getWildcardsWire() | OFFlowWildcards.IN_PORT );
+
+        assert (limit >= 14);
+        // dl dst
+        byte[] eth_dst = new byte[6];
+        packetDataBB.get(eth_dst);
+        ret.setDataLayerDestination(eth_dst);
+        
+        // dl src
+        byte[] eth_src = new byte[6];
+        packetDataBB.get(eth_src);
+        ret.setDataLayerSource(eth_src);
+        
+        // dl type
+        short data_layer_type = packetDataBB.getShort();
+        ret.setDataLayerType(data_layer_type);
+
+        if (data_layer_type != (short) 0x8100) { // need cast to avoid signed
+            // bug
+        	ret.setDataLayerVirtualLan((short) 0xffff);
+        	ret.setDataLayerVirtualLanPriorityCodePoint((byte) 0);
+        } else {
+            // has vlan tag
+            scratch = packetDataBB.getShort();
+            ret.setDataLayerVirtualLan((short)(0xfff & scratch));
+            ret.setDataLayerVirtualLanPriorityCodePoint((byte)((0xe000 & scratch) >> 13));
+            ret.setDataLayerType(packetDataBB.getShort());
+        }
+
+        byte network_protocol = 0;
+        
+        switch (data_layer_type) {
+        case 0x0800:
+            // ipv4
+            // check packet length
+            scratch = packetDataBB.get();
+            scratch = (short) (0xf & scratch);
+            transportOffset = (packetDataBB.position() - 1) + (scratch * 4);
+            // nw tos (dscp)
+            scratch = packetDataBB.get();
+            ret.setNetworkTypeOfService((byte) ((0xfc & scratch) >> 2));
+            // nw protocol
+            packetDataBB.position(packetDataBB.position() + 7);
+            ret.setNetworkProtocol(network_protocol = packetDataBB.get());
+            // nw src
+            packetDataBB.position(packetDataBB.position() + 2);
+            ret.setNetworkSource(packetDataBB.getInt());
+            // nw dst
+            ret.setNetworkDestination(packetDataBB.getInt());
+            packetDataBB.position(transportOffset);
+            break;
+        case 0x0806:
+            // arp
+            int arpPos = packetDataBB.position();
+            // opcode
+            scratch = packetDataBB.getShort(arpPos + 6);
+            ret.setNetworkProtocol(network_protocol = (byte) (0xff & scratch));
+
+            scratch = packetDataBB.getShort(arpPos + 2);
+            // if ipv4 and addr len is 4
+            if (scratch == 0x800 && packetDataBB.get(arpPos + 5) == 4) {
+                // nw src
+            	ret.setNetworkSource(packetDataBB.getInt(arpPos + 14));
+            	// nw dst
+            	ret.setNetworkDestination(packetDataBB.getInt(arpPos + 24));
+//            } else {
+//            	ret.setNetworkSource(0);
+//            	ret.setNetworkDestination(0);
+            }
+            break;
+        default:
+            break;
+        }
+
+        switch (network_protocol) {
+        case 0x01:
+            // icmp
+            // type
+        	ret.setTransportSource(U8.f(packetDataBB.get()));
+            // code
+        	ret.setTransportDestination(U8.f(packetDataBB.get()));
+            break;
+        case 0x06:
+            // tcp
+            // tcp src
+        	ret.setTransportSource(packetDataBB.getShort());
+        	// tcp dst
+        	ret.setTransportDestination(packetDataBB.getShort());
+            break;
+        case 0x11:
+            // udp
+            // udp src
+        	ret.setTransportSource(packetDataBB.getShort());
+            // udp dest
+        	ret.setTransportDestination(packetDataBB.getShort());
+            break;
+        default:
+//        	ret.setTransportSource((short)0);
+//        	ret.setTransportDestination((short)0);
+            break;
+        }
+        
+		return (OFMatchOxm) ret.build();
 	}
 }
