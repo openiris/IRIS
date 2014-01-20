@@ -155,12 +155,12 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getCurrSpeed() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getCurrSpeed is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFPortDesc setCurrSpeed(int value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setCurrSpeed is not supported operation");
 	}
 	
 	public boolean isCurrSpeedSupported() {
@@ -169,12 +169,12 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getMaxSpeed() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getMaxSpeed is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFPortDesc setMaxSpeed(int value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setMaxSpeed is not supported operation");
 	}
 	
 	public boolean isMaxSpeedSupported() {

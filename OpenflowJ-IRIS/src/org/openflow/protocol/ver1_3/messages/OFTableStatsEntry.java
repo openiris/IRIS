@@ -81,12 +81,12 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public byte[] getName() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getName is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFTableStatsEntry setName(byte[] value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setName is not supported operation");
 	}
 	
 	public boolean isNameSupported() {
@@ -95,12 +95,12 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public Set<org.openflow.protocol.interfaces.OFFlowWildcards> getWildcards() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getWildcards is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFTableStatsEntry setWildcards(Set<org.openflow.protocol.interfaces.OFFlowWildcards> value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setWildcards is not supported operation");
 	}
 	
 	public boolean isWildcardsSupported() {
@@ -109,12 +109,12 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getMaxEntries() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getMaxEntries is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFTableStatsEntry setMaxEntries(int value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setMaxEntries is not supported operation");
 	}
 	
 	public boolean isMaxEntriesSupported() {

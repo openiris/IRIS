@@ -164,12 +164,12 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public byte getTableId() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getTableId is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFFlowRemoved setTableId(byte value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setTableId is not supported operation");
 	}
 	
 	public boolean isTableIdSupported() {
@@ -178,12 +178,12 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public short getHardTimeout() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getHardTimeout is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFFlowRemoved setHardTimeout(short value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setHardTimeout is not supported operation");
 	}
 	
 	public boolean isHardTimeoutSupported() {

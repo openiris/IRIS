@@ -133,12 +133,12 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getActions() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getActions is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFFeaturesReply setActions(int value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setActions is not supported operation");
 	}
 	
 	public boolean isActionsSupported() {
@@ -147,12 +147,12 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public List<org.openflow.protocol.interfaces.OFPortDesc> getPorts() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getPorts is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFFeaturesReply setPorts(List<org.openflow.protocol.interfaces.OFPortDesc> value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setPorts is not supported operation");
 	}
 	
 	public boolean isPortsSupported() {

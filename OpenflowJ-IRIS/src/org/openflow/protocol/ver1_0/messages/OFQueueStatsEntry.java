@@ -95,12 +95,12 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getDurationSec() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getDurationSec is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFQueueStatsEntry setDurationSec(int value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setDurationSec is not supported operation");
 	}
 	
 	public boolean isDurationSecSupported() {
@@ -109,12 +109,12 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getDurationNsec() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getDurationNsec is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFQueueStatsEntry setDurationNsec(int value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setDurationNsec is not supported operation");
 	}
 	
 	public boolean isDurationNsecSupported() {

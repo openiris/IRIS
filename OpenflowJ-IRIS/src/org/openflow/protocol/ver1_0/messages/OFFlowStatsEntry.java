@@ -204,12 +204,12 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public short getFlags() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getFlags is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFFlowStatsEntry setFlags(short value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setFlags is not supported operation");
 	}
 	
 	public boolean isFlagsSupported() {
@@ -218,12 +218,12 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public List<org.openflow.protocol.interfaces.OFInstruction> getInstructions() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getInstructions is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFFlowStatsEntry setInstructions(List<org.openflow.protocol.interfaces.OFInstruction> value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setInstructions is not supported operation");
 	}
 	
 	public boolean isInstructionsSupported() {

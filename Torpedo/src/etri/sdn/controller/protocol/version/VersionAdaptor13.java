@@ -8,9 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.openflow.protocol.OFMessage;
+import org.openflow.protocol.ver1_0.messages.OFMatch;
 import org.openflow.protocol.ver1_0.types.OFFlowWildcards;
-import org.openflow.protocol.ver1_0.types.OFPortNo;
-import org.openflow.protocol.ver1_3.messages.OFAction;
 import org.openflow.protocol.ver1_3.messages.OFActionOutput;
 import org.openflow.protocol.ver1_3.messages.OFEchoReply;
 import org.openflow.protocol.ver1_3.messages.OFError;
@@ -18,7 +17,6 @@ import org.openflow.protocol.ver1_3.messages.OFFeaturesReply;
 import org.openflow.protocol.ver1_3.messages.OFFeaturesRequest;
 import org.openflow.protocol.ver1_3.messages.OFFlowMod;
 import org.openflow.protocol.ver1_3.messages.OFHello;
-import org.openflow.protocol.ver1_3.messages.OFInstruction;
 import org.openflow.protocol.ver1_3.messages.OFInstructionApplyActions;
 import org.openflow.protocol.ver1_3.messages.OFMatchOxm;
 import org.openflow.protocol.ver1_3.messages.OFMultipartDescReply;
@@ -33,12 +31,14 @@ import org.openflow.protocol.ver1_3.messages.OFSetConfig;
 import org.openflow.protocol.ver1_3.types.OFActionType;
 import org.openflow.protocol.ver1_3.types.OFFlowModCommand;
 import org.openflow.protocol.ver1_3.types.OFInstructionType;
-import org.openflow.protocol.ver1_3.types.OFMatchType;
 import org.openflow.protocol.ver1_3.types.OFMessageType;
 import org.openflow.protocol.ver1_3.types.OFMultipartType;
+import org.openflow.protocol.ver1_3.types.OFOxmMatchFields;
 import org.openflow.protocol.ver1_3.types.OFPortConfig;
 import org.openflow.protocol.ver1_3.types.OFPortReason;
+import org.openflow.util.HexString;
 import org.openflow.util.OFPort;
+import org.openflow.util.U16;
 import org.openflow.util.U8;
 
 import etri.sdn.controller.MessageContext;
@@ -52,6 +52,20 @@ import etri.sdn.controller.util.Logger;
 public class VersionAdaptor13 extends VersionAdaptor {
 	
 	public static final byte VERSION = 0x04;						// 1.3
+	
+	/* List of Strings for marshalling and unmarshalling to human readable forms */
+    final public static String STR_IN_PORT = "in_port";
+    final public static String STR_DL_DST = "dl_dst";
+    final public static String STR_DL_SRC = "dl_src";
+    final public static String STR_DL_TYPE = "dl_type";
+    final public static String STR_DL_VLAN = "dl_vlan";
+    final public static String STR_DL_VLAN_PCP = "dl_vpcp";
+    final public static String STR_NW_DST = "nw_dst";
+    final public static String STR_NW_SRC = "nw_src";
+    final public static String STR_NW_PROTO = "nw_proto";
+    final public static String STR_NW_TOS = "nw_tos";
+    final public static String STR_TP_DST = "tp_dst";
+    final public static String STR_TP_SRC = "tp_src";
 	
 	private Object portLock = new Object();
 	
@@ -180,14 +194,6 @@ public class VersionAdaptor13 extends VersionAdaptor {
 			OFSetConfig sc = (OFSetConfig) OFMessageType.SET_CONFIG.newInstance();
 			sc.setFlags((short) 0).setMissSendLength((short) 128);
 			conn.write(sc);
-						
-//			try {
-//				Thread.sleep(2500);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			conn.write(fm);
 			break;
 			
 		case ERROR:
@@ -579,4 +585,97 @@ public class VersionAdaptor13 extends VersionAdaptor {
         
 		return (OFMatchOxm) ret.build();
 	}
+	
+	public OFMatchOxm loadOFMatchFromString(String match) throws IllegalArgumentException {
+		OFMatchOxm.Builder ret = new OFMatchOxm.Builder();
+        if (match.equals("") || match.equalsIgnoreCase("any")
+                || match.equalsIgnoreCase("all") || match.equals("[]"))
+            match = "OFMatch[]";
+        String[] tokens = match.split("[\\[,\\]]");
+        String[] values;
+        int initArg = 0;
+        if (tokens[0].equals("OFMatch"))
+            initArg = 1;
+        int i;
+        for (i = initArg; i < tokens.length; i++) {
+            values = tokens[i].split("=");
+            if (values.length != 2)
+                throw new IllegalArgumentException("Token " + tokens[i]
+                        + " does not have form 'key=value' parsing " + match);
+            values[0] = values[0].toLowerCase(); // try to make this case insens
+            if (values[0].equals(STR_IN_PORT) || values[0].equals("input_port")) {
+            	ret.setInputPort(OFPort.of(Integer.valueOf(values[1])));
+            } else if (values[0].equals(STR_DL_DST)
+                    || values[0].equals("eth_dst")) {
+            	ret.setDataLayerDestination(HexString.fromHexString(values[1]));
+            } else if (values[0].equals(STR_DL_SRC)
+                    || values[0].equals("eth_src")) {
+            	ret.setDataLayerSource(HexString.fromHexString(values[1]));
+            } else if (values[0].equals(STR_DL_TYPE)
+                    || values[0].equals("eth_type")) {
+                if (values[1].startsWith("0x"))
+                	ret.setDataLayerType(U16.t(Integer.valueOf(values[1].replaceFirst("0x", ""), 16)));
+                else
+                	ret.setDataLayerType(U16.t(Integer.valueOf(values[1])));
+            } else if (values[0].equals(STR_DL_VLAN)) {
+                if (values[1].contains("0x")) {
+                	ret.setDataLayerVirtualLan(U16.t(Integer.valueOf(values[1].replaceFirst("0x", ""), 16)));
+                } else {
+                	ret.setDataLayerVirtualLan(U16.t(Integer.valueOf(values[1])));
+                }
+            } else if (values[0].equals(STR_DL_VLAN_PCP)) {
+            	ret.setDataLayerVirtualLanPriorityCodePoint(U8.t(Short.valueOf(values[1])));
+            } else if (values[0].equals(STR_NW_DST)
+                    || values[0].equals("ip_dst"))
+                setFromCIDR(ret, values[1], STR_NW_DST);
+            else if (values[0].equals(STR_NW_SRC) || values[0].equals("ip_src"))
+                setFromCIDR(ret, values[1], STR_NW_SRC);
+            else if (values[0].equals(STR_NW_PROTO)) {
+            	ret.setNetworkProtocol(U8.t(Short.valueOf(values[1])));
+            } else if (values[0].equals(STR_NW_TOS)) {
+            	ret.setNetworkTypeOfService(U8.t(Short.valueOf(values[1])));
+            } else if (values[0].equals(STR_TP_DST)) {
+            	ret.setTransportDestination(U16.t(Integer.valueOf(values[1])));
+            } else if (values[0].equals(STR_TP_SRC)) {
+                ret.setTransportSource(U16.t(Integer.valueOf(values[1])));
+            } else
+                throw new IllegalArgumentException("unknown token " + tokens[i]
+                        + " parsing " + match);
+        }
+        return (OFMatchOxm) ret.build();
+    }
+	
+	/**
+     * Set the networkSource or networkDestionation address and their wildcards
+     * from the CIDR string
+     * 
+     * @param cidr
+     *            "192.168.0.0/16" or "172.16.1.5"
+     * @param which
+     *            one of STR_NW_DST or STR_NW_SRC
+     * @throws IllegalArgumentException
+     */
+    private void setFromCIDR(OFMatchOxm.Builder match, String cidr, String which)
+            throws IllegalArgumentException {
+        String values[] = cidr.split("/");
+        String[] ip_str = values[0].split("\\.");
+        int ip = 0;
+        ip += Integer.valueOf(ip_str[0]) << 24;
+        ip += Integer.valueOf(ip_str[1]) << 16;
+        ip += Integer.valueOf(ip_str[2]) << 8;
+        ip += Integer.valueOf(ip_str[3]);
+        int prefix = 32; // all bits are fixed, by default
+
+        if (values.length >= 2)
+            prefix = Integer.valueOf(values[1]);
+        
+        // TODO: what to do with this mask?
+        int mask = 0x80000000 >> (prefix-1);
+        
+        if (which.equals(STR_NW_DST)) {
+        	match.setValue(OFOxmMatchFields.OFB_IPV4_DST, (byte) 1, ByteBuffer.allocate(8).putInt(ip).putInt(mask).array());
+        } else if (which.equals(STR_NW_SRC)) {
+        	match.setValue(OFOxmMatchFields.OFB_IPV4_SRC, (byte) 1, ByteBuffer.allocate(8).putInt(ip).putInt(mask).array());
+        }
+    }
 }

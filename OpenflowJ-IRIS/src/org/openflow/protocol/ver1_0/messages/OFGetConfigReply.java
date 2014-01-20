@@ -51,12 +51,12 @@ public class OFGetConfigReply extends OFMessage implements org.openflow.protocol
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public short getMissSendLen() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getMissSendLen is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFGetConfigReply setMissSendLen(short value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setMissSendLen is not supported operation");
 	}
 	
 	public boolean isMissSendLenSupported() {

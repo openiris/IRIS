@@ -23,12 +23,12 @@ public class OFHello extends OFMessage implements org.openflow.protocol.interfac
 
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public List<org.openflow.protocol.interfaces.OFHelloElem> getElements() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getElements is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFHello setElements(List<org.openflow.protocol.interfaces.OFHelloElem> value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setElements is not supported operation");
 	}
 	
 	public boolean isElementsSupported() {

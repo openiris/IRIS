@@ -1192,52 +1192,60 @@ class Struct(Type):
               if method_name.find('setInputPort') >= 0:
                 tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_ofport.tpl')
                 result = tpl.safe_substitute({'signature':method_name, 'method_name':mname,
+                                              'mask': '0',
                                              'match_field': 'OFB_IN_PORT'})
               elif method_name.find('setDataLayerSource') >= 0:
                 tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_mac.tpl')
                 result = tpl.safe_substitute({'signature':method_name, 'method_name':mname,
+                                              'mask': '1',
                                               'match_field': 'OFB_ETH_SRC'})
               elif method_name.find('setDataLayerDestination') >= 0:
                 tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_mac.tpl')
                 result = tpl.safe_substitute({'signature':method_name, 'method_name':mname,
+                                              'mask': '1',
                                               'match_field': 'OFB_ETH_DST'})
               elif method_name.find('setDataLayerVirtualLanPriorityCodePoint') >= 0:
                 tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_byte.tpl')
                 result = tpl.safe_substitute({'signature':method_name, 'method_name':mname,
+                                              'mask': '0',
                                               'prerequisite':'',
                                               'match_field': 'OFB_VLAN_PCP'})
               elif method_name.find('setDataLayerVirtualLan') >= 0:
                 tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_short.tpl')
                 result = tpl.safe_substitute({'signature':method_name, 'method_name':mname,
+                                              'mask': '0',
                                               'match_field': 'OFB_VLAN_VID'})
               elif method_name.find('setDataLayerType') >= 0:
                 tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_short.tpl')
                 result = tpl.safe_substitute({'signature':method_name, 'method_name':mname,
+                                              'mask': '0',
                                               'match_field': 'OFB_ETH_TYPE'})
               elif method_name.find('setNetworkTypeOfService') >= 0:
                 tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_byte.tpl')
                 result = tpl.safe_substitute({'signature':method_name, 'method_name':mname,
+                                              'mask': '0',
                                               'prerequisite':'',
                                               'match_field': 'OFB_IP_DSCP'})
               elif method_name.find('setNetworkSource') >= 0:
-                tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_int.tpl')
+                tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_ip.tpl')
                 result = tpl.safe_substitute({'signature':method_name, 'method_name':mname,
                                               'match_field': 'OFB_IPV4_SRC'})
               elif method_name.find('setNetworkDestination') >= 0:
-                tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_int.tpl')
+                tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_ip.tpl')
                 result = tpl.safe_substitute({'signature':method_name, 'method_name':mname,
                                               'match_field': 'OFB_IPV4_DST'})
               elif method_name.find('setNetworkProtocol') >= 0:
                 tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_byte.tpl')
                 result = tpl.safe_substitute({'signature':method_name, 'method_name':mname,
+                                              'mask': '0',
                                               'prerequisite':'this.network_protocol = value;',
                                               'match_field': 'OFB_IP_PROTO'})
               elif method_name.find('setTransportSource') >= 0:
                 tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_tpsource.tpl')
-                result = tpl.safe_substitute({})
+                result = tpl.safe_substitute({'mask': '0'})
               elif method_name.find('setTransportDestination') >= 0:
                 tpl = Template.get_template('tpl/builder_accessor_ofmatchoxm_tpdestination.tpl')
-                result = tpl.safe_substitute({})
+                result = tpl.safe_substitute({'mask': '0'})
                               
               if result: builder_accessors.append(result.lstrip())                            
             else:

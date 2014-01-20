@@ -201,12 +201,12 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public long getCookieMask() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getCookieMask is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFFlowMod setCookieMask(long value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setCookieMask is not supported operation");
 	}
 	
 	public boolean isCookieMaskSupported() {
@@ -215,12 +215,12 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public byte getTableId() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getTableId is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFFlowMod setTableId(byte value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setTableId is not supported operation");
 	}
 	
 	public boolean isTableIdSupported() {
@@ -229,12 +229,12 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getOutGroup() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getOutGroup is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFFlowMod setOutGroup(int value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setOutGroup is not supported operation");
 	}
 	
 	public boolean isOutGroupSupported() {
@@ -243,12 +243,12 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public List<org.openflow.protocol.interfaces.OFInstruction> getInstructions() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getInstructions is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFFlowMod setInstructions(List<org.openflow.protocol.interfaces.OFInstruction> value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setInstructions is not supported operation");
 	}
 	
 	public boolean isInstructionsSupported() {

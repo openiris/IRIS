@@ -245,12 +245,12 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public long getReceiveCrcErr() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getReceiveCrcErr is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFPortStatsEntry setReceiveCrcErr(long value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setReceiveCrcErr is not supported operation");
 	}
 	
 	public boolean isReceiveCrcErrSupported() {

@@ -3,6 +3,9 @@
 				org.openflow.protocol.interfaces.OFMatch.Builder, 
 				org.openflow.protocol.interfaces.OFMatchOxm.Builder {
 	
+		static byte[] mac_mask = { (byte)0xff, (byte)0xff, (byte)0xff, 
+								   (byte)0xff, (byte)0xff, (byte)0xff };
+		
 		private $classname object;
 		Byte network_protocol;
 		
@@ -11,7 +14,7 @@
 			this.network_protocol = null;
 		}
 		
-		private Builder setValue(OFOxmMatchFields match_field, byte[] data) {
+		public Builder setValue(OFOxmMatchFields match_field, byte mask, byte[] data) {
 			List<org.openflow.protocol.interfaces.OFOxm> oxm_fields = object.getOxmFields();
 			if ( oxm_fields == null ) {
 				oxm_fields = new LinkedList<org.openflow.protocol.interfaces.OFOxm>();
@@ -21,7 +24,7 @@
 			OFOxm oxm = new OFOxm();
 			oxm.setOxmClass(OFOxmClass.OPENFLOW_BASIC);
 			oxm.setField(match_field.getValue()); //OFOxmMatchFields.
-			oxm.setBitmask((byte) 0);
+			oxm.setBitmask(mask);
 			oxm.setData(data);
 			oxm.setPayloadLength((byte) data.length);
 

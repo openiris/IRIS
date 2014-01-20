@@ -100,12 +100,12 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFPort getInPort() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getInPort is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFPacketOut setInPort(OFPort value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setInPort is not supported operation");
 	}
 	
 	public boolean isInPortSupported() {

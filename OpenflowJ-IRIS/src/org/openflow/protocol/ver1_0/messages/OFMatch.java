@@ -238,12 +238,12 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public List<org.openflow.protocol.interfaces.OFOxm> getOxmFields() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getOxmFields is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFMatch setOxmFields(List<org.openflow.protocol.interfaces.OFOxm> value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setOxmFields is not supported operation");
 	}
 	
 	public boolean isOxmFieldsSupported() {

@@ -218,12 +218,12 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public List<org.openflow.protocol.interfaces.OFAction> getActions() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getActions is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFFlowStatsEntry setActions(List<org.openflow.protocol.interfaces.OFAction> value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setActions is not supported operation");
 	}
 	
 	public boolean isActionsSupported() {

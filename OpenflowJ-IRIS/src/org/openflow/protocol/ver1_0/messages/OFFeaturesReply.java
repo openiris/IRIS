@@ -136,12 +136,12 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public byte getAuxiliaryId() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getAuxiliaryId is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFFeaturesReply setAuxiliaryId(byte value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setAuxiliaryId is not supported operation");
 	}
 	
 	public boolean isAuxiliaryIdSupported() {
@@ -150,12 +150,12 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public int getReserved() {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("getReserved is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFFeaturesReply setReserved(int value) {
-		throw new UnsupportedOperationException("$signature is not supported operation");
+		throw new UnsupportedOperationException("setReserved is not supported operation");
 	}
 	
 	public boolean isReservedSupported() {
