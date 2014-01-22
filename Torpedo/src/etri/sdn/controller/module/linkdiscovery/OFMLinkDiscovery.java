@@ -16,13 +16,13 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.openflow.protocol.OFMessage;
+import org.openflow.protocol.interfaces.OFMessageType;
 import org.openflow.protocol.ver1_0.messages.OFAction;
 import org.openflow.protocol.ver1_0.messages.OFActionOutput;
 import org.openflow.protocol.ver1_0.messages.OFPacketIn;
 import org.openflow.protocol.ver1_0.messages.OFPacketOut;
 import org.openflow.protocol.ver1_0.messages.OFPortDesc;
 import org.openflow.protocol.ver1_0.messages.OFPortStatus;
-import org.openflow.protocol.ver1_0.types.OFMessageType;
 import org.openflow.protocol.ver1_0.types.OFPortConfig;
 import org.openflow.protocol.ver1_0.types.OFPortNo;
 import org.openflow.protocol.ver1_0.types.OFPortReason;
@@ -210,7 +210,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 
 		// I will receive PACKET_IN messages selectively.
 		registerFilter(
-				OFMessageType.PACKET_IN.getTypeValue(), 
+				OFMessageType.PACKET_IN, 
 				new OFMFilter() {
 
 					@Override
@@ -234,7 +234,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		
 		// I will receive all PORT_STATUS messages.
 		registerFilter(
-				OFMessageType.PORT_STATUS.getTypeValue(),
+				OFMessageType.PORT_STATUS,
 				new OFMFilter() {
 					@Override
 					public boolean filter(OFMessage m) {
@@ -725,8 +725,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 
 		// serialize and wrap in a packet out
 		byte[] data = ethernet.serialize();
-//		OFPacketOut po = (OFPacketOut) sw.getConnection().getFactory().getMessage(OFType.PACKET_OUT);
-		OFPacketOut po = (OFPacketOut) OFMessageType.PACKET_OUT.newInstance();
+		OFPacketOut po = new OFPacketOut();
 		
 		po.setBufferId(0xffffffff /* OFPacketOut.BUFFER_ID_NONE */);
 		po.setInputPort(OFPort.of(OFPortNo.NONE.getValue()));
@@ -735,14 +734,12 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		List<org.openflow.protocol.interfaces.OFAction> actions = new ArrayList<org.openflow.protocol.interfaces.OFAction>();
 		OFActionOutput action_output = new OFActionOutput();
 		action_output.setPort(OFPort.of(port)).setMaxLength((short)0);
-//		actions.add(new OFActionOutput(port, (short) 0));
 		actions.add(action_output);
 		po.setActions(actions);
 		po.setActionsLength((short) OFActionOutput.MINIMUM_LENGTH);
 
 		// set data
 		po.setLengthU(OFPacketOut.MINIMUM_LENGTH + po.getActionsLength() + data.length);
-//		po.setPacketData(data);
 		po.setData(data);
 
 		return sw.getConnection().write(po);
@@ -793,8 +790,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 
 	@Override
 	protected boolean handleMessage(Connection conn, MessageContext context, OFMessage msg, List<OFMessage> outgoing) {
-//		switch (msg.getType()) {
-		switch (OFMessageType.valueOf(msg.getTypeByte())) {
+		switch (msg.getType()) {
 		case PACKET_IN:
 			return this.handlePacketIn(conn.getSwitch(), context, (OFPacketIn) msg, outgoing);
 		case PORT_STATUS:

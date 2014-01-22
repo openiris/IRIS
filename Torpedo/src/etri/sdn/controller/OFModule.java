@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.openflow.protocol.OFMessage;
+import org.openflow.protocol.interfaces.OFMessageType;
 
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFHandler;
@@ -27,7 +28,7 @@ public abstract class OFModule {
 	/**
 	 * private map that holds filters for OFMessage objects for this module.
 	 */
-	private ConcurrentMap<Byte, OFMFilter> filters = new ConcurrentHashMap<Byte, OFMFilter>();
+	private ConcurrentMap<OFMessageType, OFMFilter> filters = new ConcurrentHashMap<OFMessageType, OFMFilter>();
 
 	/**
 	 * reference to the controller implementation. 
@@ -61,7 +62,7 @@ public abstract class OFModule {
 	 * @param messageType type of the OFMessage that the filter applies
 	 * @param filter a filter object to be applied to OFMessage objects
 	 */
-	public void registerFilter(byte messageType, OFMFilter filter) {
+	public void registerFilter(OFMessageType messageType, OFMFilter filter) {
 		filters.put(messageType, filter);
 	}
 
@@ -134,7 +135,7 @@ public abstract class OFModule {
 	 * @return 			true if the message has been correctly processed. false otherwise.
 	 */
 	public boolean processMessage(Connection conn, MessageContext context, OFMessage msg, List<OFMessage> outgoing) {
-		OFMFilter f = filters.get(msg.getTypeByte());
+		OFMFilter f = filters.get(msg.getType());
 		if ( f != null && f.filter(msg) == true ) {
 			return handleMessage(conn, context, msg, outgoing);
 		}

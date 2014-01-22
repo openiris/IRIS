@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.openflow.protocol.OFMessage;
+import org.openflow.protocol.interfaces.OFMessageType;
 import org.openflow.protocol.ver1_0.messages.OFAction;
 import org.openflow.protocol.ver1_0.messages.OFActionOutput;
 import org.openflow.protocol.ver1_0.messages.OFFlowMod;
@@ -15,7 +16,6 @@ import org.openflow.protocol.ver1_0.messages.OFMatch;
 import org.openflow.protocol.ver1_0.messages.OFPacketIn;
 import org.openflow.protocol.ver1_0.messages.OFPacketOut;
 import org.openflow.protocol.ver1_0.types.OFFlowWildcards;
-import org.openflow.protocol.ver1_0.types.OFMessageType;
 import org.openflow.protocol.ver1_0.types.OFFlowModCommand;
 import org.openflow.protocol.ver1_0.types.OFPortNo;
 import org.openflow.util.LRULinkedHashMap;
@@ -189,11 +189,9 @@ public final class OFMLearningMac extends OFModule {
 		//                                            header. */
 		//    };
 
-//		OFFlowMod flowMod = (OFFlowMod) sw.getConnection().getFactory().getMessage(OFType.FLOW_MOD);
-		OFFlowMod flowMod = (OFFlowMod) OFMessageType.FLOW_MOD.newInstance();
+		OFFlowMod flowMod = new OFFlowMod();
 		flowMod.setMatch(match);
 		flowMod.setCookie(LEARNING_SWITCH_COOKIE);
-//		flowMod.setCommand(command);
 		flowMod.setCommand(OFFlowModCommand.valueOf(command));
 		flowMod.setIdleTimeout(IDLE_TIMEOUT_DEFAULT);
 		flowMod.setHardTimeout(HARD_TIMEOUT_DEFAULT);
@@ -212,7 +210,6 @@ public final class OFMLearningMac extends OFModule {
 		// and port, max_len are arguments to this constructor
 		OFActionOutput action_output = new OFActionOutput();
 		action_output.setPort(OFPort.of(outPort)).setMaxLength((short)0xffff);
-//		flowMod.setActions(Arrays.asList((OFAction) new OFActionOutput(outPort, (short) 0xffff)));
 		flowMod.setActions(Arrays.asList( (org.openflow.protocol.interfaces.OFAction)action_output) );
 		
 		flowMod.setLength((short) (OFFlowMod.MINIMUM_LENGTH + OFActionOutput.MINIMUM_LENGTH));
@@ -244,8 +241,7 @@ public final class OFMLearningMac extends OFModule {
                                   from the length field in the header.
                                   (Only meaningful if buffer_id == -1.) */
 
-//		OFPacketOut packetOutMessage = (OFPacketOut) sw.getConnection().getFactory().getMessage(OFType.PACKET_OUT);
-		OFPacketOut packetOutMessage = (OFPacketOut) OFMessageType.PACKET_OUT.newInstance();
+		OFPacketOut packetOutMessage = new OFPacketOut();
 		
 		short packetOutLength = (short)OFPacketOut.MINIMUM_LENGTH; // starting length
 
@@ -410,7 +406,7 @@ public final class OFMLearningMac extends OFModule {
 		version_adaptor_10 = (VersionAdaptor10) getController().getVersionAdaptor((byte)0x01);
 		
 		registerFilter(
-				OFMessageType.PACKET_IN.getTypeValue(),
+				OFMessageType.PACKET_IN,
 				new OFMFilter() {
 					@Override
 					public boolean filter(OFMessage m) {

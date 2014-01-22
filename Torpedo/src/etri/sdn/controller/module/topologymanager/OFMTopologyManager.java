@@ -12,11 +12,11 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.openflow.protocol.OFMessage;
+import org.openflow.protocol.interfaces.OFMessageType;
 import org.openflow.protocol.ver1_0.messages.OFAction;
 import org.openflow.protocol.ver1_0.messages.OFActionOutput;
 import org.openflow.protocol.ver1_0.messages.OFPacketIn;
 import org.openflow.protocol.ver1_0.messages.OFPacketOut;
-import org.openflow.protocol.ver1_0.types.OFMessageType;
 import org.openflow.protocol.ver1_0.types.OFPortNo;
 import org.openflow.util.OFPort;
 
@@ -121,7 +121,8 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 
 		// I will receive all PACKET_IN messages.
 		registerFilter(
-				OFMessageType.PACKET_IN.getTypeValue(), new OFMFilter() {
+				OFMessageType.PACKET_IN, 
+				new OFMFilter() {
 					@Override
 					public boolean filter(OFMessage m) {
 						// currently, we only handle version 1.0
@@ -216,7 +217,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	@Override
 	public boolean handleMessage(Connection conn, MessageContext context, OFMessage msg, List<OFMessage> outgoing) {
 
-		switch (OFMessageType.valueOf(msg.getTypeByte())) {
+		switch (msg.getType()) {
 		case PACKET_IN:
 			return this.processPacketInMessage(conn.getSwitch(), (OFPacketIn) msg, context, outgoing);
 
@@ -293,8 +294,9 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		if (ports == null) return;
 		if (packetData == null || packetData.length <= 0) return;
 
-		OFPacketOut po = (OFPacketOut) OFMessageType.PACKET_OUT.newInstance();
+//		OFPacketOut po = (OFPacketOut) OFMessageType.PACKET_OUT.newInstance();
 //		OFPacketOut po = (OFPacketOut) sw.getConnection().getFactory().getMessage(OFType.PACKET_OUT);
+		OFPacketOut po = new OFPacketOut();
 
 		List<org.openflow.protocol.interfaces.OFAction> actions = 
 				new ArrayList<org.openflow.protocol.interfaces.OFAction>();

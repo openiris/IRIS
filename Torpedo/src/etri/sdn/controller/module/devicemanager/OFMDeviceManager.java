@@ -13,7 +13,7 @@ import java.util.Set;
 
 import org.openflow.protocol.OFMessage;
 import org.openflow.protocol.ver1_0.messages.OFPacketIn;
-import org.openflow.protocol.ver1_0.types.OFMessageType;
+import org.openflow.protocol.interfaces.OFMessageType;
 import org.openflow.util.OFPort;
 
 import etri.sdn.controller.IInfoProvider;
@@ -126,7 +126,7 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 //		addIndex(true, EnumSet.of(DeviceField.IPV4));
 
 		registerFilter(
-				OFMessageType.PACKET_IN.getTypeValue(),
+				OFMessageType.PACKET_IN,
 //				OFType.PACKET_IN,
 				new OFMFilter() {
 					@Override

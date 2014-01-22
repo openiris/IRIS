@@ -10,7 +10,7 @@ import java.util.Map;
 
 import org.openflow.protocol.OFMessage;
 import org.openflow.protocol.ver1_0.messages.OFPacketIn;
-import org.openflow.protocol.ver1_0.types.OFMessageType;
+import org.openflow.protocol.interfaces.OFMessageType;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
@@ -489,7 +489,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
         enabled = false;
 
         registerFilter(
-        		OFMessageType.PACKET_IN.getTypeValue(), 
+        		OFMessageType.PACKET_IN, 
         		new OFMFilter() {
         			@Override
         			public boolean filter(OFMessage m) {
@@ -520,7 +520,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
 		if (!this.enabled)
             return true;
 
-        switch (OFMessageType.valueOf(msg.getTypeByte())) {
+		switch(msg.getType()) {
         case PACKET_IN:
             IRoutingDecision decision = null;
             if (context != null) {

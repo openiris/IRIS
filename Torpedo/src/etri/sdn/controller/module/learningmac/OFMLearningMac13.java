@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.openflow.protocol.OFMessage;
+import org.openflow.protocol.interfaces.OFMessageType;
 import org.openflow.protocol.ver1_3.messages.OFAction;
 import org.openflow.protocol.ver1_3.messages.OFActionOutput;
 import org.openflow.protocol.ver1_3.messages.OFFlowMod;
@@ -22,7 +23,6 @@ import org.openflow.protocol.ver1_3.types.OFActionType;
 import org.openflow.protocol.ver1_3.types.OFFlowModCommand;
 import org.openflow.protocol.ver1_3.types.OFInstructionType;
 import org.openflow.protocol.ver1_3.types.OFMatchType;
-import org.openflow.protocol.ver1_3.types.OFMessageType;
 import org.openflow.protocol.ver1_3.types.OFOxmClass;
 import org.openflow.protocol.ver1_3.types.OFOxmMatchFields;
 import org.openflow.protocol.ver1_3.types.OFPortNo;
@@ -192,7 +192,7 @@ public final class OFMLearningMac13 extends OFModule {
 		OFActionOutput action = new OFActionOutput();
 		List<org.openflow.protocol.interfaces.OFAction> actions = new LinkedList<org.openflow.protocol.interfaces.OFAction>();
 		
-		OFFlowMod fm = (OFFlowMod) OFMessageType.FLOW_MOD.newInstance();
+		OFFlowMod fm = new OFFlowMod();
 		action.setType(OFActionType.OUTPUT);
 		action.setPort(OFPort.of(outPort));
 		action.setMaxLength((short) 0x0);
@@ -242,7 +242,7 @@ public final class OFMLearningMac13 extends OFModule {
                                   from the length field in the header.
                                   (Only meaningful if buffer_id == -1.) */
 
-		OFPacketOut packetOutMessage = (OFPacketOut) OFMessageType.PACKET_OUT.newInstance();
+		OFPacketOut packetOutMessage = new OFPacketOut();
 
 		short packetOutLength = (short)OFPacketOut.MINIMUM_LENGTH; // starting length
 
@@ -532,7 +532,7 @@ protected void initialize() {
 	version_adaptor_13 = (VersionAdaptor13) getController().getVersionAdaptor((byte)0x04);
 
 	registerFilter(
-			OFMessageType.PACKET_IN.getTypeValue(),
+			OFMessageType.PACKET_IN,
 			new OFMFilter() {
 				@Override
 				public boolean filter(OFMessage m) {

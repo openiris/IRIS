@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.openflow.protocol.OFMessage;
+import org.openflow.protocol.interfaces.OFMessageType;
 import org.openflow.protocol.ver1_0.messages.OFAction;
 import org.openflow.protocol.ver1_0.messages.OFActionOutput;
 import org.openflow.protocol.ver1_0.messages.OFFlowMod;
@@ -32,7 +33,6 @@ import org.openflow.protocol.ver1_0.messages.OFPacketIn;
 import org.openflow.protocol.ver1_0.messages.OFPacketOut;
 import org.openflow.protocol.ver1_0.types.OFFlowModCommand;
 import org.openflow.protocol.ver1_0.types.OFFlowWildcards;
-import org.openflow.protocol.ver1_0.types.OFMessageType;
 import org.openflow.protocol.ver1_0.types.OFPortNo;
 import org.openflow.util.OFPort;
 
@@ -81,7 +81,7 @@ public class Forwarding extends ForwardingBase {
 		version_adaptor_10 = (VersionAdaptor10) getController().getVersionAdaptor((byte)0x01);
 		
 		registerFilter(
-			OFMessageType.PACKET_IN.getTypeValue(), 
+			OFMessageType.PACKET_IN, 
 			new OFMFilter() {
 				@Override
 				public boolean filter(OFMessage m) {
@@ -169,8 +169,7 @@ public class Forwarding extends ForwardingBase {
 		}
 
 		// Create flow-mod based on packet-in and src-switch
-//		OFFlowMod fm = (OFFlowMod) sw.getConnection().getFactory().getMessage(OFType.FLOW_MOD);
-		OFFlowMod fm = (OFFlowMod) OFMessageType.FLOW_MOD.newInstance();
+		OFFlowMod fm = new OFFlowMod();
 		
 //		List<OFAction> actions = new ArrayList<OFAction>(); // Set no action to
 		// drop
@@ -354,22 +353,17 @@ public class Forwarding extends ForwardingBase {
 		}
 
 		// Set Action to flood
-//		OFPacketOut po = (OFPacketOut) sw.getConnection().getFactory().getMessage(OFType.PACKET_OUT);
-		OFPacketOut po = (OFPacketOut) OFMessageType.PACKET_OUT.newInstance();
+		OFPacketOut po = new OFPacketOut();
 		
 		List<org.openflow.protocol.interfaces.OFAction> actions = new ArrayList<org.openflow.protocol.interfaces.OFAction>();
 		if (sw.hasAttribute(IOFSwitch.PROP_SUPPORTS_OFPP_FLOOD)) {
 			OFActionOutput action_output = new OFActionOutput();
 			action_output.setPort(OFPort.of(OFPortNo.FLOOD.getValue())).setMaxLength((short)0xffff);
 			actions.add(action_output);
-//			actions.add(new OFActionOutput(OFPortNo.OFPP_FLOOD.getValue(), 
-//					(short)0xFFFF));
 		} else {
 			OFActionOutput action_output = new OFActionOutput();
 			action_output.setPort(OFPort.of(OFPortNo.ALL.getValue())).setMaxLength((short)0xffff);
 			actions.add(action_output);
-//			actions.add(new OFActionOutput(OFPortNo.OFPP_ALL.getValue(), 
-//					(short)0xFFFF));
 		}
 		po.setActions(actions);
 		po.setActionsLength((short) OFActionOutput.MINIMUM_LENGTH);
@@ -379,10 +373,8 @@ public class Forwarding extends ForwardingBase {
 		po.setBufferId(pi.getBufferId());
 		po.setInputPort(pi.getInputPort());
 		if (pi.getBufferId() == 0xffffffff /*OFPacketOut.BUFFER_ID_NONE */ ) {
-//			byte[] packetData = pi.getPacketData();
 			byte[] packetData = pi.getData();
 			poLength += packetData.length;
-//			po.setPacketData(packetData);
 			po.setData(packetData);
 		}
 		po.setLength(poLength);
