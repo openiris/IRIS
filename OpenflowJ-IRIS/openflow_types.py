@@ -565,6 +565,18 @@ class Struct(Type):
       accessors.append('\tpublic byte getTypeByte() { return this.type.getTypeValue(); }\n')
 #     else:
 #       ret['implements'] = ''
+
+    if self.name == 'OFMatchOxm':
+      # add a declaration for index structure.
+      declarations.append('private Map<org.openflow.protocol.interfaces.OFOxmMatchFields, org.openflow.protocol.interfaces.OFOxm> index = ');
+      declarations.append('\tnew ConcurrentHashMap<org.openflow.protocol.interfaces.OFOxmMatchFields, org.openflow.protocol.interfaces.OFOxm>();')
+      imports.add('import java.util.Map;')
+      imports.add('import java.util.concurrent.ConcurrentHashMap;')
+      # add two accessors for manipulating index.
+      idx_accessor = Template.get_template('tpl/accessor_matchoxm_index.tpl')
+      r = idx_accessor.safe_substitute({})
+      accessors.append( r )
+      
       
     ret['implements'] = 'org.'
 
@@ -804,6 +816,15 @@ class Struct(Type):
                 if self.is_list_type(return_type):
                   return_type = 'List<%s>' % (self.convert_to_interface_if_possible(i['inner']))
                 
+#                 if return_type.find('List') >= 0 and return_type.find('OFOxm') >= 0:
+#                   # this is the list of OFOxm
+#                   print return_type
+#                   tpl = template.get_template('tpl/accessor_oxm_list.tpl')
+#                   method_name = self.spec.convert_to_camel(variable_name)
+#                   accessor = tpl.safe_substitute({'class_name':self.name,
+#                                                   'return_type':return_type,
+#                                                   'variable_name':variable_name,
+#                                                   'method_name':method_name})
                 if return_type != 'OFMatchOxm':
                   tpl = Template.get_template('tpl/accessor_primitive_type.tpl')
                   method_name = self.spec.convert_to_camel(variable_name)
@@ -827,11 +848,20 @@ class Struct(Type):
               return_type = variable_type
               if self.is_list_type(return_type):
                 return_type = 'List<%s>' % (self.convert_to_interface_if_possible(i['inner']))
-              method_name = self.spec.convert_to_camel(variable_name)
-              accessor = tpl.safe_substitute({'class_name':self.name, 
-                                              'return_type':self.convert_to_interface_if_possible(return_type),
-                                              'variable_name':variable_name, 
-                                              'method_name':method_name })
+            
+              if return_type.find('List') >= 0 and return_type.find('OFOxm') >= 0 : 
+                tpl = Template.get_template('tpl/accessor_oxm_list.tpl')
+                method_name = self.spec.convert_to_camel(variable_name)
+                accessor = tpl.safe_substitute({'class_name':self.name,
+                                                'return_type':return_type,
+                                                'variable_name':variable_name,
+                                                'method_name':method_name})
+              else:
+                method_name = self.spec.convert_to_camel(variable_name)
+                accessor = tpl.safe_substitute({'class_name':self.name, 
+                                                'return_type':self.convert_to_interface_if_possible(return_type),
+                                                'variable_name':variable_name, 
+                                                'method_name':method_name })
               accessors.append(accessor)
           
             if self.name == 'OFMessage' and Type.is_primitive_java_type(variable_type) and Type.has_longer_java_type(variable_type):

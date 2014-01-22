@@ -4,15 +4,19 @@ import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
 import org.openflow.util.OFPort;
-import org.openflow.protocol.ver1_3.types.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.LinkedList;
-import java.util.List;
+import org.openflow.protocol.ver1_3.types.*;
 import java.util.Set;
+import java.util.List;
+import java.util.Map;
 
 public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfaces.OFMatch, org.openflow.protocol.interfaces.OFMatchOxm {
     public static int MINIMUM_LENGTH = 4;
 
-    List<org.openflow.protocol.interfaces.OFOxm>  oxm_fields;
+    private Map<org.openflow.protocol.interfaces.OFOxmMatchFields, org.openflow.protocol.interfaces.OFOxm> index = 
+		new ConcurrentHashMap<org.openflow.protocol.interfaces.OFOxmMatchFields, org.openflow.protocol.interfaces.OFOxm>();
+	List<org.openflow.protocol.interfaces.OFOxm>  oxm_fields;
 
     public OFMatchOxm() {
         super();
@@ -26,12 +30,23 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		for ( org.openflow.protocol.interfaces.OFOxm i : other.oxm_fields ) { this.oxm_fields.add( new OFOxm((OFOxm)i) ); }
     }
 
+	public void addOxmToIndex(org.openflow.protocol.interfaces.OFOxm oxm) {
+		index.put(OFOxmMatchFields.to(OFOxmMatchFields.valueOf(oxm.getField())), oxm);
+	}
+	
+	public org.openflow.protocol.interfaces.OFOxm getOxmFromIndex(org.openflow.protocol.interfaces.OFOxmMatchFields clazz) {
+		return index.get(clazz);
+	}
+	
 	public List<org.openflow.protocol.interfaces.OFOxm> getOxmFields() {
 		return this.oxm_fields;
 	}
 	
 	public OFMatchOxm setOxmFields(List<org.openflow.protocol.interfaces.OFOxm> oxm_fields) {
 		this.oxm_fields = oxm_fields;
+		for ( org.openflow.protocol.interfaces.OFOxm oxm : this.oxm_fields ) {
+			addOxmToIndex(oxm);
+		}
 		return this;
 	}
 	
@@ -253,6 +268,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			oxm.setPayloadLength((byte) data.length);
 
 			oxm_fields.add( oxm );
+			object.addOxmToIndex( oxm );
 			
 			return this;
 		}

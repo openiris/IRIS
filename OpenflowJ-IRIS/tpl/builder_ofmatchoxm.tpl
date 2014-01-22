@@ -29,6 +29,7 @@
 			oxm.setPayloadLength((byte) data.length);
 
 			oxm_fields.add( oxm );
+			object.addOxmToIndex( oxm );
 			
 			return this;
 		}
