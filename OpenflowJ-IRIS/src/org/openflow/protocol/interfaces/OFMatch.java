@@ -117,6 +117,10 @@ public interface OFMatch  {
 
 	public boolean isTransportDestinationSupported();
 
+	public void addOxmToIndex(OFOxm oxm);
+
+	public OFOxm getOxmFromIndex(OFOxmMatchFields field);
+
 	public List<OFOxm> getOxmFields();
 
 	public OFMatch setOxmFields(List<OFOxm> value);

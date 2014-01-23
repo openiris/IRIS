@@ -107,6 +107,8 @@ class InterfaceForStruct(Interface):
     this_name = struct.name
     if this_name == 'OFMatchOxm':
       this_name = 'OFMatch'
+      ret.append('public void addOxmToIndex(OFOxm oxm);')
+      ret.append('public OFOxm getOxmFromIndex(OFOxmMatchFields field);')
     
     for i in struct['body']:
       if not i.get('name', None): continue

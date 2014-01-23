@@ -1065,7 +1065,7 @@ class Struct(Type):
                     rline = 'while (__cnt > 0) { %s t = new %s(); t.readFrom(data); this.%s.add(t); __cnt -= t.getLength(); }' % (inner, inner, variable_name)
                   else:
                     if inner == 'OFOxm':
-                      rline = 'while (__cnt > 0) { %s t = new %s(); t.readFrom(data); this.%s.add(t); __cnt -= (%s.MINIMUM_LENGTH + t.getPayloadLength()); }' % (inner, inner, variable_name, inner)
+                      rline = 'while (__cnt > 0) { %s t = new %s(); t.readFrom(data); this.%s.add(t); addOxmToIndex(t); __cnt -= (%s.MINIMUM_LENGTH + t.getPayloadLength()); }' % (inner, inner, variable_name, inner)
                     else:
                       rline = 'while (__cnt > 0) { %s t = new %s(); t.readFrom(data); this.%s.add(t); __cnt -= %s.MINIMUM_LENGTH; }' % (inner, inner, variable_name, inner)
           else:
@@ -1125,6 +1125,9 @@ class Struct(Type):
     # convert interface declarations with interface prefixes. 
     if_decls = []
     for x in interface_decls.declarations:
+      if self.name == 'OFMatchOxm' and (x.find('OxmTo') >= 0 or x.find('OxmFrom') >= 0):
+        continue
+      
       if x.find('List') >= 0 : 
         imports.add('import java.util.List;')
       if re.search(r'OFPort\b', x) :
@@ -1137,16 +1140,22 @@ class Struct(Type):
     # implementation that returns the UnsupportedExceptionOperation
     t = Template.get_template('tpl/accessor_null.tpl')
     for decl in if_decls:
-      p = re.search(r'([<>\[\]\.\w]+)\s+\bget(\w+)\b', decl)
+      p = re.search(r'getOxmFromIndex', decl)
       if p:
-        return_type = p.group(1)
-        method_name = p.group(2)
-        d = decl.strip(';')
-        r = t.safe_substitute({'class_name': self.name, 
-                               'return_type':return_type, 'method_name':method_name})
+        nt = Template.get_template('tpl/accessor_null_oxmindex.tpl')
+        r = nt.safe_substitute({})
         accessors.append(r)
-        if d.find('Set') >= 0:
-          imports.add('import java.util.Set;')
+      else:
+        p = re.search(r'([<>\[\]\.\w]+)\s+\bget(\w+)\b', decl)
+        if p:
+          return_type = p.group(1)
+          method_name = p.group(2)
+          d = decl.strip(';')
+          r = t.safe_substitute({'class_name': self.name, 
+                                 'return_type':return_type, 'method_name':method_name})
+          accessors.append(r)
+          if d.find('Set') >= 0:
+            imports.add('import java.util.Set;')
     
     # add readfrom lines if there is alignment considerations such as 
     # align(8) at the end of struct.

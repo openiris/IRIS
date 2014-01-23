@@ -237,6 +237,16 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
+	public void addOxmToIndex(org.openflow.protocol.interfaces.OFOxm oxm) {
+		throw new UnsupportedOperationException("addOxmToIndex is not supported operation");
+	}
+	
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public org.openflow.protocol.interfaces.OFOxm getOxmFromIndex(org.openflow.protocol.interfaces.OFOxmMatchFields clazz) {
+		throw new UnsupportedOperationException("getOxmFromIndex is not supported operation");
+	}
+	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public List<org.openflow.protocol.interfaces.OFOxm> getOxmFields() {
 		throw new UnsupportedOperationException("getOxmFields is not supported operation");
 	}

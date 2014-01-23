@@ -432,7 +432,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		super.readFrom(data);
 		if (this.oxm_fields == null) this.oxm_fields = new LinkedList<org.openflow.protocol.interfaces.OFOxm>();
 		int __cnt = ((int)getLength() - (data.position() - mark));
-		while (__cnt > 0) { OFOxm t = new OFOxm(); t.readFrom(data); this.oxm_fields.add(t); __cnt -= (OFOxm.MINIMUM_LENGTH + t.getPayloadLength()); }
+		while (__cnt > 0) { OFOxm t = new OFOxm(); t.readFrom(data); this.oxm_fields.add(t); addOxmToIndex(t); __cnt -= (OFOxm.MINIMUM_LENGTH + t.getPayloadLength()); }
 		int __align = alignment(getLength(), 8);
 		for (int i = 0; i < __align; ++i ) { data.get(); }
     }
