@@ -1,5 +1,6 @@
 package etri.sdn.controller.module.devicemanager;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -12,9 +13,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.ver1_0.messages.OFPacketIn;
 import org.openflow.protocol.interfaces.OFMessageType;
-import org.openflow.util.OFPort;
+import org.openflow.protocol.interfaces.OFOxm;
+import org.openflow.protocol.interfaces.OFOxmMatchFields;
+import org.openflow.protocol.interfaces.OFPacketIn;
 
 import etri.sdn.controller.IInfoProvider;
 import etri.sdn.controller.IOFTask;
@@ -60,8 +62,8 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 	private ITopologyService topology;
 	private IEntityClassifierService entityClassifier;
 	
-	@SuppressWarnings("unused")
-	private VersionAdaptor10 version_adaptor_10;
+//	@SuppressWarnings("unused")
+//	private VersionAdaptor10 version_adaptor_10;
 	
 	/** 
 	 * All the devices that you want.
@@ -119,7 +121,7 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 		this.entityClassifier = getEntityClassifierServiceRef();
 		this.devices = Devices.getInstance(topology, entityClassifier);
 		
-		this.version_adaptor_10 = (VersionAdaptor10) getController().getVersionAdaptor((byte)0x01);
+//		this.version_adaptor_10 = (VersionAdaptor10) getController().getVersionAdaptor((byte)0x01);
 		
 		// 'classes' now has an entry for the class IPv4,
 		// and this will create an entry within 'secondaryIndexMap' of ClassIndices object.
@@ -127,14 +129,10 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 
 		registerFilter(
 				OFMessageType.PACKET_IN,
-//				OFType.PACKET_IN,
 				new OFMFilter() {
 					@Override
 					public boolean filter(OFMessage m) {
-						if ( m.getVersion() == (byte)0x01 ) {
-							return true;
-						}
-						return false;
+						return true;		// accept all messages regardless versions.
 					}
 				}
 		);
@@ -159,7 +157,6 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 		if ( Main.debug ) {
 			this.controller.scheduleTask(
 					new IOFTask() {
-	
 						@Override
 						public boolean execute() {
 							Logger.debug(devices.getHostDebugInfo());
@@ -203,13 +200,22 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 		if ( eth == null ) {
 			// parse Ethernet header and put into the context
 			eth = new Ethernet();
-//			eth.deserialize(pi.getPacketData(), 0, pi.getPacketData().length);
 			eth.deserialize(pi.getData(), 0, pi.getData().length);
 			cntx.put(MessageContext.ETHER_PAYLOAD, eth);
 		}
 
 		// Extract source entity information
-		Entity srcEntity = getSourceEntityFromPacket(eth, sw.getId(), pi.getInputPort().get());
+		Entity srcEntity = null;
+		if ( pi.isInputPortSupported() ) {
+			srcEntity = getSourceEntityFromPacket(eth, sw.getId(), pi.getInputPort().get());
+		} else {
+			OFOxm oxm = pi.getMatch().getOxmFromIndex(OFOxmMatchFields.OFB_IN_PORT);
+			if ( oxm == null ) {
+				Logger.debug("Packet-in does not have oxm object for OFB_IN_PORT");
+			}
+			int inputPort = ByteBuffer.allocate(4).put(oxm.getData(), 0, 4).getInt();
+			srcEntity = getSourceEntityFromPacket(eth, sw.getId(), inputPort);
+		}
 		if (srcEntity == null)
 			return false;
 
@@ -284,15 +290,17 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 			}
 		} else if (eth.getPayload() instanceof IPv4) {
 			IPv4 ipv4 = (IPv4) eth.getPayload();
-//			if (ipv4.getPayload() instanceof UDP) {
-//				UDP udp = (UDP)ipv4.getPayload();
-//				if (udp.getPayload() instanceof DHCP) {
-//					DHCP dhcp = (DHCP)udp.getPayload();
-//					if (dhcp.getOpCode() == DHCP.OPCODE_REPLY) {
-//						return ipv4.getSourceAddress();
-//					}
-//				}
-//			}
+			/*
+			if (ipv4.getPayload() instanceof UDP) {
+				UDP udp = (UDP)ipv4.getPayload();
+				if (udp.getPayload() instanceof DHCP) {
+					DHCP dhcp = (DHCP)udp.getPayload();
+					if (dhcp.getOpCode() == DHCP.OPCODE_REPLY) {
+						return ipv4.getSourceAddress();
+					}
+				}
+			}
+ 			*/
 			
 			// bjlee - 2013.10.11
 			return ipv4.getSourceAddress();

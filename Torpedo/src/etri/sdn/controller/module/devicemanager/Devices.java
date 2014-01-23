@@ -478,7 +478,7 @@ public class Devices extends OFModel implements IDeviceService {
 			}
 
 			if (!isEntityAllowed(entity, device.getEntityClass())) {
-				Logger.stderr("PacketIn is not allowed {} {}" + 
+				Logger.stderr("PacketIn is not allowed: " + 
 						device.getEntityClass().getName() + ", " + entity);
 				return null;
 			}
