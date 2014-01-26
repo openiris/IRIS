@@ -1,4 +1,4 @@
-package org.openflow.util;
+package org.openflow.protocol;
 
 /**
  * @author bjlee

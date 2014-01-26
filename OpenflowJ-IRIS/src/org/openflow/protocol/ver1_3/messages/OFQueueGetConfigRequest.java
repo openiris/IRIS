@@ -3,7 +3,7 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import org.openflow.util.OFPort;
+import org.openflow.protocol.OFPort;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFQueueGetConfigRequest extends OFMessage implements org.openflow.protocol.interfaces.OFQueueGetConfigRequest {

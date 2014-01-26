@@ -2,7 +2,8 @@ package org.openflow.protocol.interfaces;
 
 import java.nio.ByteBuffer;
 
-import org.openflow.util.OFPort;
+import org.openflow.protocol.OFPort;
+
 import java.util.List;
 
 public interface OFQueueGetConfigReply extends OFMessage {

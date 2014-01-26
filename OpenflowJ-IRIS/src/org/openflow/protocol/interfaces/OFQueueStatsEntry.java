@@ -2,7 +2,7 @@ package org.openflow.protocol.interfaces;
 
 import java.nio.ByteBuffer;
 
-import org.openflow.util.OFPort;
+import org.openflow.protocol.OFPort;
 
 public interface OFQueueStatsEntry  {
 
