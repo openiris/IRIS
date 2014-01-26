@@ -77,7 +77,14 @@ public class OFStatisticsGroupFeaturesReply extends OFStatisticsReply implements
 		
 	public OFStatisticsGroupFeaturesReply setCapabilities(Set<org.openflow.protocol.interfaces.OFCapabilities> values) {
 		OFCapabilities tmp = OFCapabilities.of(this.capabilities);
-		tmp.and( values );
+		tmp.or( values );
+		this.capabilities = tmp.get();
+		return this;
+	}
+	
+	public OFStatisticsGroupFeaturesReply setCapabilities(org.openflow.protocol.interfaces.OFCapabilities ... values) {
+		OFCapabilities tmp = OFCapabilities.of(this.capabilities);
+		tmp.or( values );
 		this.capabilities = tmp.get();
 		return this;
 	}
@@ -192,6 +199,10 @@ public class OFStatisticsGroupFeaturesReply extends OFStatisticsReply implements
 			
 	
 	
+	
+	public OFStatisticsGroupFeaturesReply dup() {
+		return new OFStatisticsGroupFeaturesReply(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);

@@ -6,12 +6,14 @@ import java.nio.ByteBuffer;
 
 public interface OFActionExperimenter extends OFAction {
 
-	public int getExperimenterId();
 	public OFActionExperimenter setExperimenterId(int value);
+	public int getExperimenterId();
 	public boolean isExperimenterIdSupported();
-	public byte[] getData();
 	public OFActionExperimenter setData(byte[] value);
+	public byte[] getData();
 	public boolean isDataSupported();
+	
+	public OFActionExperimenter dup();
 
     public void readFrom(ByteBuffer data);
 

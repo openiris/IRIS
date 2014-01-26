@@ -84,6 +84,10 @@ public class OFMeterBand   implements org.openflow.protocol.interfaces.OFMeterBa
 	
 	
 	
+	public OFMeterBand dup() {
+		return new OFMeterBand(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         this.type = OFMeterBandType.valueOf(OFMeterBandType.readFrom(data));
 		this.length = data.getShort();

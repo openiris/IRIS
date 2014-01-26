@@ -6,24 +6,26 @@ import java.nio.ByteBuffer;
 
 public interface OFGetAsyncRequest extends OFMessage {
 
-	public int getPacketInMaskEqualMaster();
 	public OFGetAsyncRequest setPacketInMaskEqualMaster(int value);
+	public int getPacketInMaskEqualMaster();
 	public boolean isPacketInMaskEqualMasterSupported();
-	public int getPacketInMaskSlave();
 	public OFGetAsyncRequest setPacketInMaskSlave(int value);
+	public int getPacketInMaskSlave();
 	public boolean isPacketInMaskSlaveSupported();
-	public int getPortStatusMaskEqualMaster();
 	public OFGetAsyncRequest setPortStatusMaskEqualMaster(int value);
+	public int getPortStatusMaskEqualMaster();
 	public boolean isPortStatusMaskEqualMasterSupported();
-	public int getPortStatusMaskSlave();
 	public OFGetAsyncRequest setPortStatusMaskSlave(int value);
+	public int getPortStatusMaskSlave();
 	public boolean isPortStatusMaskSlaveSupported();
-	public int getFlowRemovedMaskEqualMaster();
 	public OFGetAsyncRequest setFlowRemovedMaskEqualMaster(int value);
+	public int getFlowRemovedMaskEqualMaster();
 	public boolean isFlowRemovedMaskEqualMasterSupported();
-	public int getFlowRemovedMaskSlave();
 	public OFGetAsyncRequest setFlowRemovedMaskSlave(int value);
+	public int getFlowRemovedMaskSlave();
 	public boolean isFlowRemovedMaskSlaveSupported();
+	
+	public OFGetAsyncRequest dup();
 
     public void readFrom(ByteBuffer data);
 

@@ -67,6 +67,10 @@ public class OFExperimenter extends OFMessage implements org.openflow.protocol.i
 	
 	
 	
+	public OFExperimenter dup() {
+		return new OFExperimenter(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

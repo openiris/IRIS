@@ -39,6 +39,10 @@ public class OFQueuePropertyMinRate extends OFQueueProperty implements org.openf
 	
 	
 	
+	public OFQueuePropertyMinRate dup() {
+		return new OFQueuePropertyMinRate(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.rate = data.getShort();

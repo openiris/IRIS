@@ -7,18 +7,20 @@ import java.util.List;
 
 public interface OFPacketQueue  {
 
-	public int getQueueId();
 	public OFPacketQueue setQueueId(int value);
+	public int getQueueId();
 	public boolean isQueueIdSupported();
-	public short getLength();
 	public OFPacketQueue setLength(short value);
+	public short getLength();
 	public boolean isLengthSupported();
-	public List<OFQueueProperty> getProperties();
 	public OFPacketQueue setProperties(List<OFQueueProperty> value);
+	public List<OFQueueProperty> getProperties();
 	public boolean isPropertiesSupported();
-	public OFPort getPort();
 	public OFPacketQueue setPort(OFPort value);
+	public OFPort getPort();
 	public boolean isPortSupported();
+	
+	public OFPacketQueue dup();
 
     public void readFrom(ByteBuffer data);
 

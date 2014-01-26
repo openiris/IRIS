@@ -54,6 +54,10 @@ public class OFTableMod extends OFMessage implements org.openflow.protocol.inter
 	
 	
 	
+	public OFTableMod dup() {
+		return new OFTableMod(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.table_id = data.get();

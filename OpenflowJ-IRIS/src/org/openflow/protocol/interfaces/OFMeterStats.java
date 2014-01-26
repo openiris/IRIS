@@ -6,30 +6,32 @@ import java.util.List;
 
 public interface OFMeterStats  {
 
-	public int getMeterId();
 	public OFMeterStats setMeterId(int value);
+	public int getMeterId();
 	public boolean isMeterIdSupported();
-	public short getLength();
 	public OFMeterStats setLength(short value);
+	public short getLength();
 	public boolean isLengthSupported();
-	public int getFlowCount();
 	public OFMeterStats setFlowCount(int value);
+	public int getFlowCount();
 	public boolean isFlowCountSupported();
-	public long getPacketInCount();
 	public OFMeterStats setPacketInCount(long value);
+	public long getPacketInCount();
 	public boolean isPacketInCountSupported();
-	public long getByteInCount();
 	public OFMeterStats setByteInCount(long value);
+	public long getByteInCount();
 	public boolean isByteInCountSupported();
-	public int getDurationSec();
 	public OFMeterStats setDurationSec(int value);
+	public int getDurationSec();
 	public boolean isDurationSecSupported();
-	public int getDurationNsec();
 	public OFMeterStats setDurationNsec(int value);
+	public int getDurationNsec();
 	public boolean isDurationNsecSupported();
-	public List<OFMeterBandStats> getBandStats();
 	public OFMeterStats setBandStats(List<OFMeterBandStats> value);
+	public List<OFMeterBandStats> getBandStats();
 	public boolean isBandStatsSupported();
+	
+	public OFMeterStats dup();
 
     public void readFrom(ByteBuffer data);
 

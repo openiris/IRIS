@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 public interface OFStatisticsTableRequest extends OFStatisticsRequest {
 
 	
+	
+	public OFStatisticsTableRequest dup();
 
     public void readFrom(ByteBuffer data);
 

@@ -41,6 +41,10 @@ public class OFInstructionWriteActions extends OFInstruction implements org.open
 	
 	
 	
+	public OFInstructionWriteActions dup() {
+		return new OFInstructionWriteActions(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

@@ -37,6 +37,10 @@ public class OFActionSetField extends OFAction implements org.openflow.protocol.
 	
 	
 	
+	public OFActionSetField dup() {
+		return new OFActionSetField(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		if (this.field == null) this.field = new OFOxm();

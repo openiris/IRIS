@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFActionSetMplsTtl extends OFAction {
 
-	public byte getMplsTtl();
 	public OFActionSetMplsTtl setMplsTtl(byte value);
+	public byte getMplsTtl();
 	public boolean isMplsTtlSupported();
+	
+	public OFActionSetMplsTtl dup();
 
     public void readFrom(ByteBuffer data);
 

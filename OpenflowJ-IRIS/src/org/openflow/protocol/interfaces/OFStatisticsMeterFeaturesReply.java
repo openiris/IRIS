@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFStatisticsMeterFeaturesReply extends OFStatisticsReply {
 
-	public OFMeterFeatures getFeatures();
 	public OFStatisticsMeterFeaturesReply setFeatures(OFMeterFeatures value);
+	public OFMeterFeatures getFeatures();
 	public boolean isFeaturesSupported();
+	
+	public OFStatisticsMeterFeaturesReply dup();
 
     public void readFrom(ByteBuffer data);
 

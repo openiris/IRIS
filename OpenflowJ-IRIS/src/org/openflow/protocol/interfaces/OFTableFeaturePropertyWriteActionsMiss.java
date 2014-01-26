@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface OFTableFeaturePropertyWriteActionsMiss extends OFTableFeatureProperty {
 
-	public List<OFActionId> getActionIds();
 	public OFTableFeaturePropertyWriteActionsMiss setActionIds(List<OFActionId> value);
+	public List<OFActionId> getActionIds();
 	public boolean isActionIdsSupported();
+	
+	public OFTableFeaturePropertyWriteActionsMiss dup();
 
     public void readFrom(ByteBuffer data);
 

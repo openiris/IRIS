@@ -40,6 +40,10 @@ public class OFTableFeaturePropertyWriteActions extends OFTableFeatureProperty i
 	
 	
 	
+	public OFTableFeaturePropertyWriteActions dup() {
+		return new OFTableFeaturePropertyWriteActions(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

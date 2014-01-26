@@ -25,6 +25,10 @@ public class OFStatisticsTableRequest extends OFStatisticsRequest implements org
 	
 	
 	
+	public OFStatisticsTableRequest dup() {
+		return new OFStatisticsTableRequest(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

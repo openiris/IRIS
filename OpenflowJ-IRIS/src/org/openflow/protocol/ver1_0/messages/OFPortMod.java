@@ -104,6 +104,10 @@ public class OFPortMod extends OFMessage implements org.openflow.protocol.interf
 	
 	
 	
+	public OFPortMod dup() {
+		return new OFPortMod(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.port_no = OFPortNo.valueOf(OFPortNo.readFrom(data));

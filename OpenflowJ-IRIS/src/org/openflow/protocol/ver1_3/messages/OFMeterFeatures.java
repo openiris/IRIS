@@ -77,7 +77,14 @@ public class OFMeterFeatures   implements org.openflow.protocol.interfaces.OFMet
 		
 	public OFMeterFeatures setCapabilities(Set<org.openflow.protocol.interfaces.OFCapabilities> values) {
 		OFCapabilities tmp = OFCapabilities.of(this.capabilities);
-		tmp.and( values );
+		tmp.or( values );
+		this.capabilities = tmp.get();
+		return this;
+	}
+	
+	public OFMeterFeatures setCapabilities(org.openflow.protocol.interfaces.OFCapabilities ... values) {
+		OFCapabilities tmp = OFCapabilities.of(this.capabilities);
+		tmp.or( values );
 		this.capabilities = tmp.get();
 		return this;
 	}
@@ -114,6 +121,10 @@ public class OFMeterFeatures   implements org.openflow.protocol.interfaces.OFMet
 			
 	
 	
+	
+	public OFMeterFeatures dup() {
+		return new OFMeterFeatures(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         this.max_meter = data.getInt();

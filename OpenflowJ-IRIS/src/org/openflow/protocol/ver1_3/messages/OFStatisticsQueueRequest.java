@@ -58,6 +58,10 @@ public class OFStatisticsQueueRequest extends OFStatisticsRequest implements org
 	
 	
 	
+	public OFStatisticsQueueRequest dup() {
+		return new OFStatisticsQueueRequest(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.port_no = OFPortNo.valueOf(OFPortNo.readFrom(data));

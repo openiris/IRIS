@@ -55,6 +55,10 @@ public class OFQueueProperty   implements org.openflow.protocol.interfaces.OFQue
 	
 	
 	
+	public OFQueueProperty dup() {
+		return new OFQueueProperty(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         this.type = OFQueuePropertyType.valueOf(OFQueuePropertyType.readFrom(data));
 		this.length = data.getShort();

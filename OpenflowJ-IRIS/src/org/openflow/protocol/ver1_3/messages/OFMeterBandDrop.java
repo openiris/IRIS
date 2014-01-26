@@ -24,6 +24,10 @@ public class OFMeterBandDrop extends OFMeterBand implements org.openflow.protoco
 	
 	
 	
+	public OFMeterBandDrop dup() {
+		return new OFMeterBandDrop(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.pad_1th = data.getInt();

@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFStatisticsGroupRequest extends OFStatisticsRequest {
 
-	public int getGroupId();
 	public OFStatisticsGroupRequest setGroupId(int value);
+	public int getGroupId();
 	public boolean isGroupIdSupported();
+	
+	public OFStatisticsGroupRequest dup();
 
     public void readFrom(ByteBuffer data);
 

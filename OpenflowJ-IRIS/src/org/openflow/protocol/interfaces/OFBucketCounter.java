@@ -6,12 +6,14 @@ import java.nio.ByteBuffer;
 
 public interface OFBucketCounter  {
 
-	public long getPacketCount();
 	public OFBucketCounter setPacketCount(long value);
+	public long getPacketCount();
 	public boolean isPacketCountSupported();
-	public long getByteCount();
 	public OFBucketCounter setByteCount(long value);
+	public long getByteCount();
 	public boolean isByteCountSupported();
+	
+	public OFBucketCounter dup();
 
     public void readFrom(ByteBuffer data);
 

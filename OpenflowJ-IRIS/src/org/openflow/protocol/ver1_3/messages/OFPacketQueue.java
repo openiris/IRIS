@@ -85,6 +85,10 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
 	
 	
 	
+	public OFPacketQueue dup() {
+		return new OFPacketQueue(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		this.queue_id = data.getInt();

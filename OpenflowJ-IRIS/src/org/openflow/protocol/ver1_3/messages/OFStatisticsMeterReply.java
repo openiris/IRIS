@@ -41,6 +41,10 @@ public class OFStatisticsMeterReply extends OFStatisticsReply implements org.ope
 	
 	
 	
+	public OFStatisticsMeterReply dup() {
+		return new OFStatisticsMeterReply(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

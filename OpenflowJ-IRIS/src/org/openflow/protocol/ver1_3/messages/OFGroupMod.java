@@ -97,6 +97,10 @@ public class OFGroupMod extends OFMessage implements org.openflow.protocol.inter
 	
 	
 	
+	public OFGroupMod dup() {
+		return new OFGroupMod(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

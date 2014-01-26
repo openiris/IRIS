@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 public interface OFMeterBandDrop extends OFMeterBand {
 
 	
+	
+	public OFMeterBandDrop dup();
 
     public void readFrom(ByteBuffer data);
 

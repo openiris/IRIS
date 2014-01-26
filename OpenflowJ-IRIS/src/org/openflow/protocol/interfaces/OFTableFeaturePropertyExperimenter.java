@@ -6,15 +6,17 @@ import java.nio.ByteBuffer;
 
 public interface OFTableFeaturePropertyExperimenter extends OFTableFeatureProperty {
 
-	public int getExperimenterId();
 	public OFTableFeaturePropertyExperimenter setExperimenterId(int value);
+	public int getExperimenterId();
 	public boolean isExperimenterIdSupported();
-	public int getSubtype();
 	public OFTableFeaturePropertyExperimenter setSubtype(int value);
+	public int getSubtype();
 	public boolean isSubtypeSupported();
-	public byte[] getExperimenterData();
 	public OFTableFeaturePropertyExperimenter setExperimenterData(byte[] value);
+	public byte[] getExperimenterData();
 	public boolean isExperimenterDataSupported();
+	
+	public OFTableFeaturePropertyExperimenter dup();
 
     public void readFrom(ByteBuffer data);
 

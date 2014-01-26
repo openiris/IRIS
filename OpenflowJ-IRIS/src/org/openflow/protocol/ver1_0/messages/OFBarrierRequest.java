@@ -24,6 +24,10 @@ public class OFBarrierRequest extends OFMessage implements org.openflow.protocol
 	
 	
 	
+	public OFBarrierRequest dup() {
+		return new OFBarrierRequest(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

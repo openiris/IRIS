@@ -39,6 +39,10 @@ public class OFActionSetNwTtl extends OFAction implements org.openflow.protocol.
 	
 	
 	
+	public OFActionSetNwTtl dup() {
+		return new OFActionSetNwTtl(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.nw_ttl = data.get();

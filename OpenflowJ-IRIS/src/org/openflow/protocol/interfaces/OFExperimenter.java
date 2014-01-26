@@ -6,15 +6,17 @@ import java.nio.ByteBuffer;
 
 public interface OFExperimenter extends OFMessage {
 
-	public int getExperimenterId();
 	public OFExperimenter setExperimenterId(int value);
+	public int getExperimenterId();
 	public boolean isExperimenterIdSupported();
-	public int getSubtype();
 	public OFExperimenter setSubtype(int value);
+	public int getSubtype();
 	public boolean isSubtypeSupported();
-	public byte[] getData();
 	public OFExperimenter setData(byte[] value);
+	public byte[] getData();
 	public boolean isDataSupported();
+	
+	public OFExperimenter dup();
 
     public void readFrom(ByteBuffer data);
 

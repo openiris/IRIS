@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFQueuePropertyMinRate extends OFQueueProperty {
 
-	public short getRate();
 	public OFQueuePropertyMinRate setRate(short value);
+	public short getRate();
 	public boolean isRateSupported();
+	
+	public OFQueuePropertyMinRate dup();
 
     public void readFrom(ByteBuffer data);
 

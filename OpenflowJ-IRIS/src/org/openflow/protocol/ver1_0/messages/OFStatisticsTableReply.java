@@ -41,6 +41,10 @@ public class OFStatisticsTableReply extends OFStatisticsReply implements org.ope
 	
 	
 	
+	public OFStatisticsTableReply dup() {
+		return new OFStatisticsTableReply(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

@@ -38,6 +38,10 @@ public class OFActionSetTpDst extends OFAction implements org.openflow.protocol.
 	
 	
 	
+	public OFActionSetTpDst dup() {
+		return new OFActionSetTpDst(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.tp_port = data.getShort();

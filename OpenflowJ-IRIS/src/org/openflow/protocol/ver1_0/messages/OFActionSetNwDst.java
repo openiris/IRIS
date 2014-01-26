@@ -37,6 +37,10 @@ public class OFActionSetNwDst extends OFAction implements org.openflow.protocol.
 	
 	
 	
+	public OFActionSetNwDst dup() {
+		return new OFActionSetNwDst(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.nw_addr = data.getInt();

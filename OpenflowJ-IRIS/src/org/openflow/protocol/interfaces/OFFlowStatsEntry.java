@@ -6,48 +6,50 @@ import java.util.List;
 
 public interface OFFlowStatsEntry  {
 
-	public short getLength();
 	public OFFlowStatsEntry setLength(short value);
+	public short getLength();
 	public boolean isLengthSupported();
-	public byte getTableId();
 	public OFFlowStatsEntry setTableId(byte value);
+	public byte getTableId();
 	public boolean isTableIdSupported();
-	public OFMatch getMatch();
 	public OFFlowStatsEntry setMatch(OFMatch value);
+	public OFMatch getMatch();
 	public boolean isMatchSupported();
-	public int getDurationSec();
 	public OFFlowStatsEntry setDurationSec(int value);
+	public int getDurationSec();
 	public boolean isDurationSecSupported();
-	public int getDurationNsec();
 	public OFFlowStatsEntry setDurationNsec(int value);
+	public int getDurationNsec();
 	public boolean isDurationNsecSupported();
-	public short getPriority();
 	public OFFlowStatsEntry setPriority(short value);
+	public short getPriority();
 	public boolean isPrioritySupported();
-	public short getIdleTimeout();
 	public OFFlowStatsEntry setIdleTimeout(short value);
+	public short getIdleTimeout();
 	public boolean isIdleTimeoutSupported();
-	public short getHardTimeout();
 	public OFFlowStatsEntry setHardTimeout(short value);
+	public short getHardTimeout();
 	public boolean isHardTimeoutSupported();
-	public long getCookie();
 	public OFFlowStatsEntry setCookie(long value);
+	public long getCookie();
 	public boolean isCookieSupported();
-	public long getPacketCount();
 	public OFFlowStatsEntry setPacketCount(long value);
+	public long getPacketCount();
 	public boolean isPacketCountSupported();
-	public long getByteCount();
 	public OFFlowStatsEntry setByteCount(long value);
+	public long getByteCount();
 	public boolean isByteCountSupported();
-	public List<OFAction> getActions();
 	public OFFlowStatsEntry setActions(List<OFAction> value);
+	public List<OFAction> getActions();
 	public boolean isActionsSupported();
-	public short getFlags();
 	public OFFlowStatsEntry setFlags(short value);
+	public short getFlags();
 	public boolean isFlagsSupported();
-	public List<OFInstruction> getInstructions();
 	public OFFlowStatsEntry setInstructions(List<OFInstruction> value);
+	public List<OFInstruction> getInstructions();
 	public boolean isInstructionsSupported();
+	
+	public OFFlowStatsEntry dup();
 
     public void readFrom(ByteBuffer data);
 

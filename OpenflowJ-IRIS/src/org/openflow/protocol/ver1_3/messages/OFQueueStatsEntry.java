@@ -125,6 +125,10 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 	
 	
 	
+	public OFQueueStatsEntry dup() {
+		return new OFQueueStatsEntry(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         this.port_number = data.getInt();
 		this.queue_id = data.getInt();

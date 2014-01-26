@@ -8,48 +8,53 @@ import java.util.Set;
 
 public interface OFFlowMod extends OFMessage {
 
-	public OFMatch getMatch();
 	public OFFlowMod setMatch(OFMatch value);
+	public OFMatch getMatch();
 	public boolean isMatchSupported();
-	public long getCookie();
 	public OFFlowMod setCookie(long value);
+	public long getCookie();
 	public boolean isCookieSupported();
-	public OFFlowModCommand getCommand();
 	public OFFlowMod setCommand(OFFlowModCommand value);
+	public OFFlowModCommand getCommand();
 	public boolean isCommandSupported();
-	public short getIdleTimeout();
 	public OFFlowMod setIdleTimeout(short value);
+	public short getIdleTimeout();
 	public boolean isIdleTimeoutSupported();
-	public short getHardTimeout();
 	public OFFlowMod setHardTimeout(short value);
+	public short getHardTimeout();
 	public boolean isHardTimeoutSupported();
-	public short getPriority();
 	public OFFlowMod setPriority(short value);
+	public short getPriority();
 	public boolean isPrioritySupported();
-	public int getBufferId();
 	public OFFlowMod setBufferId(int value);
+	public int getBufferId();
 	public boolean isBufferIdSupported();
-	public OFPort getOutPort();
 	public OFFlowMod setOutPort(OFPort value);
+	public OFPort getOutPort();
 	public boolean isOutPortSupported();
-	public Set<OFFlowModFlags> getFlags();
 	public OFFlowMod setFlags(Set<OFFlowModFlags> value);
+	public Set<OFFlowModFlags> getFlags();
 	public boolean isFlagsSupported();
-	public List<OFAction> getActions();
+	public OFFlowMod setFlags(OFFlowModFlags ... value);
+	public OFFlowMod setFlagsWire(short value);
+	public short getFlagsWire();
 	public OFFlowMod setActions(List<OFAction> value);
+	public List<OFAction> getActions();
 	public boolean isActionsSupported();
-	public long getCookieMask();
 	public OFFlowMod setCookieMask(long value);
+	public long getCookieMask();
 	public boolean isCookieMaskSupported();
-	public byte getTableId();
 	public OFFlowMod setTableId(byte value);
+	public byte getTableId();
 	public boolean isTableIdSupported();
-	public int getOutGroup();
 	public OFFlowMod setOutGroup(int value);
+	public int getOutGroup();
 	public boolean isOutGroupSupported();
-	public List<OFInstruction> getInstructions();
 	public OFFlowMod setInstructions(List<OFInstruction> value);
+	public List<OFInstruction> getInstructions();
 	public boolean isInstructionsSupported();
+	
+	public OFFlowMod dup();
 
     public void readFrom(ByteBuffer data);
 

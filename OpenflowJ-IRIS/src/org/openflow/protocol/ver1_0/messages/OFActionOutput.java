@@ -53,6 +53,10 @@ public class OFActionOutput extends OFAction implements org.openflow.protocol.in
 	
 	
 	
+	public OFActionOutput dup() {
+		return new OFActionOutput(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.port = data.getShort();

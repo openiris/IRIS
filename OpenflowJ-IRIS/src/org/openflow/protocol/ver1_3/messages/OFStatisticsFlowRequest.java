@@ -117,6 +117,10 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 	
 	
 	
+	public OFStatisticsFlowRequest dup() {
+		return new OFStatisticsFlowRequest(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.table_id = data.get();

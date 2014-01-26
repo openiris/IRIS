@@ -144,6 +144,10 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 	
 	
 	
+	public OFTableFeatures dup() {
+		return new OFTableFeatures(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		this.length = data.getShort();

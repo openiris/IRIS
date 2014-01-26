@@ -6,15 +6,17 @@ import java.nio.ByteBuffer;
 
 public interface OFVendor extends OFMessage {
 
-	public int getVendorId();
 	public OFVendor setVendorId(int value);
+	public int getVendorId();
 	public boolean isVendorIdSupported();
-	public int getSubtype();
 	public OFVendor setSubtype(int value);
+	public int getSubtype();
 	public boolean isSubtypeSupported();
-	public byte[] getData();
 	public OFVendor setData(byte[] value);
+	public byte[] getData();
 	public boolean isDataSupported();
+	
+	public OFVendor dup();
 
     public void readFrom(ByteBuffer data);
 

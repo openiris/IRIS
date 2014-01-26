@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFQueuePropertyMaxRate extends OFQueueProperty {
 
-	public short getRate();
 	public OFQueuePropertyMaxRate setRate(short value);
+	public short getRate();
 	public boolean isRateSupported();
+	
+	public OFQueuePropertyMaxRate dup();
 
     public void readFrom(ByteBuffer data);
 

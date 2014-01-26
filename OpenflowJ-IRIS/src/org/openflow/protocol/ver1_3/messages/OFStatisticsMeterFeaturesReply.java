@@ -38,6 +38,10 @@ public class OFStatisticsMeterFeaturesReply extends OFStatisticsReply implements
 	
 	
 	
+	public OFStatisticsMeterFeaturesReply dup() {
+		return new OFStatisticsMeterFeaturesReply(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		if (this.features == null) this.features = new OFMeterFeatures();

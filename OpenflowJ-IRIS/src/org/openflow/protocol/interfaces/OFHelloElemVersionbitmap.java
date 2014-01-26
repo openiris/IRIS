@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface OFHelloElemVersionbitmap extends OFHelloElem {
 
-	public List<Integer> getBitmaps();
 	public OFHelloElemVersionbitmap setBitmaps(List<Integer> value);
+	public List<Integer> getBitmaps();
 	public boolean isBitmapsSupported();
+	
+	public OFHelloElemVersionbitmap dup();
 
     public void readFrom(ByteBuffer data);
 

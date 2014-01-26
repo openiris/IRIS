@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFActionGroup extends OFAction {
 
-	public int getGroupId();
 	public OFActionGroup setGroupId(int value);
+	public int getGroupId();
 	public boolean isGroupIdSupported();
+	
+	public OFActionGroup dup();
 
     public void readFrom(ByteBuffer data);
 

@@ -6,36 +6,41 @@ import java.util.Set;
 
 public interface OFStatisticsGroupFeaturesReply extends OFStatisticsReply {
 
-	public int getTypes();
 	public OFStatisticsGroupFeaturesReply setTypes(int value);
+	public int getTypes();
 	public boolean isTypesSupported();
-	public Set<OFCapabilities> getCapabilities();
 	public OFStatisticsGroupFeaturesReply setCapabilities(Set<OFCapabilities> value);
+	public Set<OFCapabilities> getCapabilities();
 	public boolean isCapabilitiesSupported();
-	public int getMaxGroupsAll();
+	public OFStatisticsGroupFeaturesReply setCapabilities(OFCapabilities ... value);
+	public OFStatisticsGroupFeaturesReply setCapabilitiesWire(int value);
+	public int getCapabilitiesWire();
 	public OFStatisticsGroupFeaturesReply setMaxGroupsAll(int value);
+	public int getMaxGroupsAll();
 	public boolean isMaxGroupsAllSupported();
-	public int getMaxGroupsSelect();
 	public OFStatisticsGroupFeaturesReply setMaxGroupsSelect(int value);
+	public int getMaxGroupsSelect();
 	public boolean isMaxGroupsSelectSupported();
-	public int getMaxGroupsIndirect();
 	public OFStatisticsGroupFeaturesReply setMaxGroupsIndirect(int value);
+	public int getMaxGroupsIndirect();
 	public boolean isMaxGroupsIndirectSupported();
-	public int getMaxGroupsFf();
 	public OFStatisticsGroupFeaturesReply setMaxGroupsFf(int value);
+	public int getMaxGroupsFf();
 	public boolean isMaxGroupsFfSupported();
-	public int getActionsAll();
 	public OFStatisticsGroupFeaturesReply setActionsAll(int value);
+	public int getActionsAll();
 	public boolean isActionsAllSupported();
-	public int getActionsSelect();
 	public OFStatisticsGroupFeaturesReply setActionsSelect(int value);
+	public int getActionsSelect();
 	public boolean isActionsSelectSupported();
-	public int getActionsIndirect();
 	public OFStatisticsGroupFeaturesReply setActionsIndirect(int value);
+	public int getActionsIndirect();
 	public boolean isActionsIndirectSupported();
-	public int getActionsFf();
 	public OFStatisticsGroupFeaturesReply setActionsFf(int value);
+	public int getActionsFf();
 	public boolean isActionsFfSupported();
+	
+	public OFStatisticsGroupFeaturesReply dup();
 
     public void readFrom(ByteBuffer data);
 

@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFActionSetVlanPcp extends OFAction {
 
-	public byte getVlanPcp();
 	public OFActionSetVlanPcp setVlanPcp(byte value);
+	public byte getVlanPcp();
 	public boolean isVlanPcpSupported();
+	
+	public OFActionSetVlanPcp dup();
 
     public void readFrom(ByteBuffer data);
 

@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface OFTableFeaturePropertyInstructions extends OFTableFeatureProperty {
 
-	public List<OFInstruction> getInstructionIds();
 	public OFTableFeaturePropertyInstructions setInstructionIds(List<OFInstruction> value);
+	public List<OFInstruction> getInstructionIds();
 	public boolean isInstructionIdsSupported();
+	
+	public OFTableFeaturePropertyInstructions dup();
 
     public void readFrom(ByteBuffer data);
 

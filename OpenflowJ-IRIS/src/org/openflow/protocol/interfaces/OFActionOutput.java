@@ -6,12 +6,14 @@ import org.openflow.util.OFPort;
 
 public interface OFActionOutput extends OFAction {
 
-	public OFPort getPort();
 	public OFActionOutput setPort(OFPort value);
+	public OFPort getPort();
 	public boolean isPortSupported();
-	public short getMaxLength();
 	public OFActionOutput setMaxLength(short value);
+	public short getMaxLength();
 	public boolean isMaxLengthSupported();
+	
+	public OFActionOutput dup();
 
     public void readFrom(ByteBuffer data);
 

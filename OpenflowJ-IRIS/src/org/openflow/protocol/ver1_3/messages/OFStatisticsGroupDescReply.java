@@ -41,6 +41,10 @@ public class OFStatisticsGroupDescReply extends OFStatisticsReply implements org
 	
 	
 	
+	public OFStatisticsGroupDescReply dup() {
+		return new OFStatisticsGroupDescReply(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

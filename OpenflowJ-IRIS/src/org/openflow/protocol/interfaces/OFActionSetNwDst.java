@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFActionSetNwDst extends OFAction {
 
-	public int getNwAddr();
 	public OFActionSetNwDst setNwAddr(int value);
+	public int getNwAddr();
 	public boolean isNwAddrSupported();
+	
+	public OFActionSetNwDst dup();
 
     public void readFrom(ByteBuffer data);
 

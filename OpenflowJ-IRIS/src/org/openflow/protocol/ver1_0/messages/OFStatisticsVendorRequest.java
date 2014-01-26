@@ -53,6 +53,10 @@ public class OFStatisticsVendorRequest extends OFStatisticsRequest implements or
 	
 	
 	
+	public OFStatisticsVendorRequest dup() {
+		return new OFStatisticsVendorRequest(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

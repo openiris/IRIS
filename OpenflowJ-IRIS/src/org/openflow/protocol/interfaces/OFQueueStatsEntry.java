@@ -6,27 +6,29 @@ import org.openflow.util.OFPort;
 
 public interface OFQueueStatsEntry  {
 
-	public OFPort getPortNumber();
 	public OFQueueStatsEntry setPortNumber(OFPort value);
+	public OFPort getPortNumber();
 	public boolean isPortNumberSupported();
-	public int getQueueId();
 	public OFQueueStatsEntry setQueueId(int value);
+	public int getQueueId();
 	public boolean isQueueIdSupported();
-	public long getTransmitBytes();
 	public OFQueueStatsEntry setTransmitBytes(long value);
+	public long getTransmitBytes();
 	public boolean isTransmitBytesSupported();
-	public long getTransmitPackets();
 	public OFQueueStatsEntry setTransmitPackets(long value);
+	public long getTransmitPackets();
 	public boolean isTransmitPacketsSupported();
-	public long getTransmitErrors();
 	public OFQueueStatsEntry setTransmitErrors(long value);
+	public long getTransmitErrors();
 	public boolean isTransmitErrorsSupported();
-	public int getDurationSec();
 	public OFQueueStatsEntry setDurationSec(int value);
+	public int getDurationSec();
 	public boolean isDurationSecSupported();
-	public int getDurationNsec();
 	public OFQueueStatsEntry setDurationNsec(int value);
+	public int getDurationNsec();
 	public boolean isDurationNsecSupported();
+	
+	public OFQueueStatsEntry dup();
 
     public void readFrom(ByteBuffer data);
 

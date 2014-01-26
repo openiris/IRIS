@@ -6,21 +6,23 @@ import java.nio.ByteBuffer;
 
 public interface OFOxm  {
 
-	public OFOxmClass getOxmClass();
 	public OFOxm setOxmClass(OFOxmClass value);
+	public OFOxmClass getOxmClass();
 	public boolean isOxmClassSupported();
-	public byte getField();
 	public OFOxm setField(byte value);
+	public byte getField();
 	public boolean isFieldSupported();
-	public byte getBitmask();
 	public OFOxm setBitmask(byte value);
+	public byte getBitmask();
 	public boolean isBitmaskSupported();
-	public byte getPayloadLength();
 	public OFOxm setPayloadLength(byte value);
+	public byte getPayloadLength();
 	public boolean isPayloadLengthSupported();
-	public byte[] getData();
 	public OFOxm setData(byte[] value);
+	public byte[] getData();
 	public boolean isDataSupported();
+	
+	public OFOxm dup();
 
     public void readFrom(ByteBuffer data);
 

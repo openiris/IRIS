@@ -117,6 +117,10 @@ public class OFStatisticsAggregateRequest extends OFStatisticsRequest implements
 	
 	
 	
+	public OFStatisticsAggregateRequest dup() {
+		return new OFStatisticsAggregateRequest(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.table_id = data.get();

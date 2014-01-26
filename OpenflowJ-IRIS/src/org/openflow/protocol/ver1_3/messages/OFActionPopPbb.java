@@ -24,6 +24,10 @@ public class OFActionPopPbb extends OFAction implements org.openflow.protocol.in
 	
 	
 	
+	public OFActionPopPbb dup() {
+		return new OFActionPopPbb(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.pad_1th = data.getInt();

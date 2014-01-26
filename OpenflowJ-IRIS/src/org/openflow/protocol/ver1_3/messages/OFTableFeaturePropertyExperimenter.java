@@ -67,6 +67,10 @@ public class OFTableFeaturePropertyExperimenter extends OFTableFeatureProperty i
 	
 	
 	
+	public OFTableFeaturePropertyExperimenter dup() {
+		return new OFTableFeaturePropertyExperimenter(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface OFHello extends OFMessage {
 
-	public List<OFHelloElem> getElements();
 	public OFHello setElements(List<OFHelloElem> value);
+	public List<OFHelloElem> getElements();
 	public boolean isElementsSupported();
+	
+	public OFHello dup();
 
     public void readFrom(ByteBuffer data);
 

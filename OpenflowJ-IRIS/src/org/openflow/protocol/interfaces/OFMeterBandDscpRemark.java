@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFMeterBandDscpRemark extends OFMeterBand {
 
-	public byte getPrecLevel();
 	public OFMeterBandDscpRemark setPrecLevel(byte value);
+	public byte getPrecLevel();
 	public boolean isPrecLevelSupported();
+	
+	public OFMeterBandDscpRemark dup();
 
     public void readFrom(ByteBuffer data);
 

@@ -65,7 +65,14 @@ public class OFStatisticsReply extends OFStatistics implements org.openflow.prot
 		
 	public OFStatisticsReply setFlags(Set<org.openflow.protocol.interfaces.OFStatisticsReplyFlags> values) {
 		OFStatisticsReplyFlags tmp = OFStatisticsReplyFlags.of(this.flags);
-		tmp.and( values );
+		tmp.or( values );
+		this.flags = tmp.get();
+		return this;
+	}
+	
+	public OFStatisticsReply setFlags(org.openflow.protocol.interfaces.OFStatisticsReplyFlags ... values) {
+		OFStatisticsReplyFlags tmp = OFStatisticsReplyFlags.of(this.flags);
+		tmp.or( values );
 		this.flags = tmp.get();
 		return this;
 	}
@@ -76,6 +83,10 @@ public class OFStatisticsReply extends OFStatistics implements org.openflow.prot
 		
 	
 	
+	
+	public OFStatisticsReply dup() {
+		return new OFStatisticsReply(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);

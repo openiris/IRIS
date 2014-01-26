@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface OFTableFeaturePropertyWriteSetfieldMiss extends OFTableFeatureProperty {
 
-	public List<Integer> getOxmIds();
 	public OFTableFeaturePropertyWriteSetfieldMiss setOxmIds(List<Integer> value);
+	public List<Integer> getOxmIds();
 	public boolean isOxmIdsSupported();
+	
+	public OFTableFeaturePropertyWriteSetfieldMiss dup();
 
     public void readFrom(ByteBuffer data);
 

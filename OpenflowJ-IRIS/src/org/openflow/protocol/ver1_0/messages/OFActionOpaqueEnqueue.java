@@ -55,6 +55,10 @@ public class OFActionOpaqueEnqueue extends OFAction implements org.openflow.prot
 	
 	
 	
+	public OFActionOpaqueEnqueue dup() {
+		return new OFActionOpaqueEnqueue(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.port = data.getShort();

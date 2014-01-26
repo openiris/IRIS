@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFActionSetNwTos extends OFAction {
 
-	public byte getNwTos();
 	public OFActionSetNwTos setNwTos(byte value);
+	public byte getNwTos();
 	public boolean isNwTosSupported();
+	
+	public OFActionSetNwTos dup();
 
     public void readFrom(ByteBuffer data);
 

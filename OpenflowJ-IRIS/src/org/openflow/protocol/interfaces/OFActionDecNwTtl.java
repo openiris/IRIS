@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 public interface OFActionDecNwTtl extends OFAction {
 
 	
+	
+	public OFActionDecNwTtl dup();
 
     public void readFrom(ByteBuffer data);
 

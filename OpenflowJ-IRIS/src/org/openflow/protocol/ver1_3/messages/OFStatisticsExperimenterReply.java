@@ -68,6 +68,10 @@ public class OFStatisticsExperimenterReply extends OFStatisticsReply implements 
 	
 	
 	
+	public OFStatisticsExperimenterReply dup() {
+		return new OFStatisticsExperimenterReply(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

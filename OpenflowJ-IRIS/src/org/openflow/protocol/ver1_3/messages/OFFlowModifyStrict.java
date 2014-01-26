@@ -25,6 +25,10 @@ public class OFFlowModifyStrict extends OFFlowMod implements org.openflow.protoc
 	
 	
 	
+	public OFFlowModifyStrict dup() {
+		return new OFFlowModifyStrict(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

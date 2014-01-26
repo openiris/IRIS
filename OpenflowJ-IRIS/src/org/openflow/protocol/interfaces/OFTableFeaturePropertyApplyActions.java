@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface OFTableFeaturePropertyApplyActions extends OFTableFeatureProperty {
 
-	public List<OFActionId> getActionIds();
 	public OFTableFeaturePropertyApplyActions setActionIds(List<OFActionId> value);
+	public List<OFActionId> getActionIds();
 	public boolean isActionIdsSupported();
+	
+	public OFTableFeaturePropertyApplyActions dup();
 
     public void readFrom(ByteBuffer data);
 

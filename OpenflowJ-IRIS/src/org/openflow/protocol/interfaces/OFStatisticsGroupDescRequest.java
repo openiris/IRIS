@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 public interface OFStatisticsGroupDescRequest extends OFStatisticsRequest {
 
 	
+	
+	public OFStatisticsGroupDescRequest dup();
 
     public void readFrom(ByteBuffer data);
 

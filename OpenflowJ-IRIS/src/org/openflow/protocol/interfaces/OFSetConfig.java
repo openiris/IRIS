@@ -6,12 +6,14 @@ import java.nio.ByteBuffer;
 
 public interface OFSetConfig extends OFMessage {
 
-	public short getFlags();
 	public OFSetConfig setFlags(short value);
+	public short getFlags();
 	public boolean isFlagsSupported();
-	public short getMissSendLength();
 	public OFSetConfig setMissSendLength(short value);
+	public short getMissSendLength();
 	public boolean isMissSendLengthSupported();
+	
+	public OFSetConfig dup();
 
     public void readFrom(ByteBuffer data);
 

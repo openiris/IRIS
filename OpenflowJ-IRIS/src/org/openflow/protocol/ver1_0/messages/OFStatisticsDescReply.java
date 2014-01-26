@@ -98,6 +98,10 @@ public class OFStatisticsDescReply extends OFStatisticsReply implements org.open
 	
 	
 	
+	public OFStatisticsDescReply dup() {
+		return new OFStatisticsDescReply(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.manufacturer_description = StringByteSerializer.readFrom(data, 256);

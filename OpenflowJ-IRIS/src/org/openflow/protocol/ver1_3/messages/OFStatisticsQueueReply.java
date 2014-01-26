@@ -41,6 +41,10 @@ public class OFStatisticsQueueReply extends OFStatisticsReply implements org.ope
 	
 	
 	
+	public OFStatisticsQueueReply dup() {
+		return new OFStatisticsQueueReply(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

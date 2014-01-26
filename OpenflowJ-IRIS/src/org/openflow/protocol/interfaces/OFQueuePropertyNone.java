@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 public interface OFQueuePropertyNone extends OFQueueProperty {
 
 	
+	
+	public OFQueuePropertyNone dup();
 
     public void readFrom(ByteBuffer data);
 

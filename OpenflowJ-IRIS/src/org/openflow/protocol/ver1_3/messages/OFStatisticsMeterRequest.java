@@ -39,6 +39,10 @@ public class OFStatisticsMeterRequest extends OFStatisticsRequest implements org
 	
 	
 	
+	public OFStatisticsMeterRequest dup() {
+		return new OFStatisticsMeterRequest(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.meter_id = data.getInt();

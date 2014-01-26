@@ -24,6 +24,10 @@ public class OFActionCopyTtlOut extends OFAction implements org.openflow.protoco
 	
 	
 	
+	public OFActionCopyTtlOut dup() {
+		return new OFActionCopyTtlOut(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.pad_1th = data.getInt();

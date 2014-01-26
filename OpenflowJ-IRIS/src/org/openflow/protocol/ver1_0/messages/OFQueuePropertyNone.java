@@ -24,6 +24,10 @@ public class OFQueuePropertyNone extends OFQueueProperty implements org.openflow
 	
 	
 	
+	public OFQueuePropertyNone dup() {
+		return new OFQueuePropertyNone(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

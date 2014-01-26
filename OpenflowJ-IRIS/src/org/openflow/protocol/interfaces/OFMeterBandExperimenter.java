@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFMeterBandExperimenter extends OFMeterBand {
 
-	public int getExperimenterId();
 	public OFMeterBandExperimenter setExperimenterId(int value);
+	public int getExperimenterId();
 	public boolean isExperimenterIdSupported();
+	
+	public OFMeterBandExperimenter dup();
 
     public void readFrom(ByteBuffer data);
 

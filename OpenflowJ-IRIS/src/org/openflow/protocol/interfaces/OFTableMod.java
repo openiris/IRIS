@@ -6,12 +6,14 @@ import java.nio.ByteBuffer;
 
 public interface OFTableMod extends OFMessage {
 
-	public byte getTableId();
 	public OFTableMod setTableId(byte value);
+	public byte getTableId();
 	public boolean isTableIdSupported();
-	public int getConfig();
 	public OFTableMod setConfig(int value);
+	public int getConfig();
 	public boolean isConfigSupported();
+	
+	public OFTableMod dup();
 
     public void readFrom(ByteBuffer data);
 

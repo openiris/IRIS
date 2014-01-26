@@ -80,13 +80,13 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public byte[] getName() {
-		throw new UnsupportedOperationException("getName is not supported operation");
+	public OFTableStatsEntry setName(byte[] value) {
+		throw new UnsupportedOperationException("setName is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFTableStatsEntry setName(byte[] value) {
-		throw new UnsupportedOperationException("setName is not supported operation");
+	public byte[] getName() {
+		throw new UnsupportedOperationException("getName is not supported operation");
 	}
 	
 	public boolean isNameSupported() {
@@ -94,13 +94,13 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public Set<org.openflow.protocol.interfaces.OFFlowWildcards> getWildcards() {
-		throw new UnsupportedOperationException("getWildcards is not supported operation");
+	public OFTableStatsEntry setWildcards(Set<org.openflow.protocol.interfaces.OFFlowWildcards> value) {
+		throw new UnsupportedOperationException("setWildcards is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFTableStatsEntry setWildcards(Set<org.openflow.protocol.interfaces.OFFlowWildcards> value) {
-		throw new UnsupportedOperationException("setWildcards is not supported operation");
+	public Set<org.openflow.protocol.interfaces.OFFlowWildcards> getWildcards() {
+		throw new UnsupportedOperationException("getWildcards is not supported operation");
 	}
 	
 	public boolean isWildcardsSupported() {
@@ -108,13 +108,32 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public int getMaxEntries() {
-		throw new UnsupportedOperationException("getMaxEntries is not supported operation");
+	public OFTableStatsEntry setWildcards(org.openflow.protocol.interfaces.OFFlowWildcards ... value) {
+		throw new UnsupportedOperationException("setWildcards is not supported operation");
+	}
+	
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public OFTableStatsEntry setWildcardsWire(int value) {
+		throw new UnsupportedOperationException("setWildcardsWire is not supported operation");
+	}
+	
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public int getWildcardsWire() {
+		throw new UnsupportedOperationException("getWildcardsWire is not supported operation");
+	}
+	
+	public boolean isWildcardsWireSupported() {
+		return false;
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
 	public OFTableStatsEntry setMaxEntries(int value) {
 		throw new UnsupportedOperationException("setMaxEntries is not supported operation");
+	}
+	
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public int getMaxEntries() {
+		throw new UnsupportedOperationException("getMaxEntries is not supported operation");
 	}
 	
 	public boolean isMaxEntriesSupported() {
@@ -123,6 +142,10 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 	
 	
 	
+	
+	public OFTableStatsEntry dup() {
+		return new OFTableStatsEntry(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         this.table_id = data.get();

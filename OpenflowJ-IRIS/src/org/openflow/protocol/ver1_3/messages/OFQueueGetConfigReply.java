@@ -57,6 +57,10 @@ public class OFQueueGetConfigReply extends OFMessage implements org.openflow.pro
 	
 	
 	
+	public OFQueueGetConfigReply dup() {
+		return new OFQueueGetConfigReply(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

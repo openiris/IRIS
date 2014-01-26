@@ -6,12 +6,14 @@ import java.nio.ByteBuffer;
 
 public interface OFRoleRequest extends OFMessage {
 
-	public int getRole();
 	public OFRoleRequest setRole(int value);
+	public int getRole();
 	public boolean isRoleSupported();
-	public long getGenerationId();
 	public OFRoleRequest setGenerationId(long value);
+	public long getGenerationId();
 	public boolean isGenerationIdSupported();
+	
+	public OFRoleRequest dup();
 
     public void readFrom(ByteBuffer data);
 

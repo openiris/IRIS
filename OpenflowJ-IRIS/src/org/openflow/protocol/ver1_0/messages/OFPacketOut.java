@@ -99,13 +99,13 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFPort getInPort() {
-		throw new UnsupportedOperationException("getInPort is not supported operation");
+	public OFPacketOut setInPort(OFPort value) {
+		throw new UnsupportedOperationException("setInPort is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFPacketOut setInPort(OFPort value) {
-		throw new UnsupportedOperationException("setInPort is not supported operation");
+	public OFPort getInPort() {
+		throw new UnsupportedOperationException("getInPort is not supported operation");
 	}
 	
 	public boolean isInPortSupported() {
@@ -114,6 +114,10 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 	
 	
 	
+	
+	public OFPacketOut dup() {
+		return new OFPacketOut(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();

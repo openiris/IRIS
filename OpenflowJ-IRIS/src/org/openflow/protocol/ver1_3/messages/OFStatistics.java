@@ -23,6 +23,10 @@ public class OFStatistics extends OFMessage implements org.openflow.protocol.int
 	
 	
 	
+	public OFStatistics dup() {
+		return new OFStatistics(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

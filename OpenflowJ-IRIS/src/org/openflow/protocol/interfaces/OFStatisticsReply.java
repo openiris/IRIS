@@ -6,12 +6,17 @@ import java.util.Set;
 
 public interface OFStatisticsReply extends OFStatistics {
 
-	public OFStatisticsType getStatisticsType();
 	public OFStatisticsReply setStatisticsType(OFStatisticsType value);
+	public OFStatisticsType getStatisticsType();
 	public boolean isStatisticsTypeSupported();
-	public Set<OFStatisticsReplyFlags> getFlags();
 	public OFStatisticsReply setFlags(Set<OFStatisticsReplyFlags> value);
+	public Set<OFStatisticsReplyFlags> getFlags();
 	public boolean isFlagsSupported();
+	public OFStatisticsReply setFlags(OFStatisticsReplyFlags ... value);
+	public OFStatisticsReply setFlagsWire(short value);
+	public short getFlagsWire();
+	
+	public OFStatisticsReply dup();
 
     public void readFrom(ByteBuffer data);
 

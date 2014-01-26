@@ -126,6 +126,10 @@ public class OFMessage   implements org.openflow.protocol.interfaces.OFMessage {
 	
 	
 	
+	public OFMessage dup() {
+		return new OFMessage(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         this.version = data.get();
 		this.type = OFMessageType.valueOf(OFMessageType.readFrom(data));

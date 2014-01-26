@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface OFStatisticsGroupDescReply extends OFStatisticsReply {
 
-	public List<OFGroupDescStatsEntry> getEntries();
 	public OFStatisticsGroupDescReply setEntries(List<OFGroupDescStatsEntry> value);
+	public List<OFGroupDescStatsEntry> getEntries();
 	public boolean isEntriesSupported();
+	
+	public OFStatisticsGroupDescReply dup();
 
     public void readFrom(ByteBuffer data);
 

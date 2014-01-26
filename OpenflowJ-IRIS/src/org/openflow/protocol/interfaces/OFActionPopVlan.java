@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 public interface OFActionPopVlan extends OFAction {
 
 	
+	
+	public OFActionPopVlan dup();
 
     public void readFrom(ByteBuffer data);
 

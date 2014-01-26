@@ -41,6 +41,10 @@ public class OFStatisticsPortReply extends OFStatisticsReply implements org.open
 	
 	
 	
+	public OFStatisticsPortReply dup() {
+		return new OFStatisticsPortReply(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

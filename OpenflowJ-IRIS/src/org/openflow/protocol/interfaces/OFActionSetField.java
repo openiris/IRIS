@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFActionSetField extends OFAction {
 
-	public OFOxm getField();
 	public OFActionSetField setField(OFOxm value);
+	public OFOxm getField();
 	public boolean isFieldSupported();
+	
+	public OFActionSetField dup();
 
     public void readFrom(ByteBuffer data);
 

@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface OFTableFeaturePropertyNextTablesMiss extends OFTableFeatureProperty {
 
-	public List<Byte> getNextTableIds();
 	public OFTableFeaturePropertyNextTablesMiss setNextTableIds(List<Byte> value);
+	public List<Byte> getNextTableIds();
 	public boolean isNextTableIdsSupported();
+	
+	public OFTableFeaturePropertyNextTablesMiss dup();
 
     public void readFrom(ByteBuffer data);
 

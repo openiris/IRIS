@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFRoleReply extends OFMessage {
 
-	public byte[] getData();
 	public OFRoleReply setData(byte[] value);
+	public byte[] getData();
 	public boolean isDataSupported();
+	
+	public OFRoleReply dup();
 
     public void readFrom(ByteBuffer data);
 

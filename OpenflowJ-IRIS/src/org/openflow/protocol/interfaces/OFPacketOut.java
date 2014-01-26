@@ -7,24 +7,26 @@ import java.util.List;
 
 public interface OFPacketOut extends OFMessage {
 
-	public int getBufferId();
 	public OFPacketOut setBufferId(int value);
+	public int getBufferId();
 	public boolean isBufferIdSupported();
-	public OFPort getInputPort();
 	public OFPacketOut setInputPort(OFPort value);
+	public OFPort getInputPort();
 	public boolean isInputPortSupported();
-	public short getActionsLength();
 	public OFPacketOut setActionsLength(short value);
+	public short getActionsLength();
 	public boolean isActionsLengthSupported();
-	public List<OFAction> getActions();
 	public OFPacketOut setActions(List<OFAction> value);
+	public List<OFAction> getActions();
 	public boolean isActionsSupported();
-	public byte[] getData();
 	public OFPacketOut setData(byte[] value);
+	public byte[] getData();
 	public boolean isDataSupported();
-	public OFPort getInPort();
 	public OFPacketOut setInPort(OFPort value);
+	public OFPort getInPort();
 	public boolean isInPortSupported();
+	
+	public OFPacketOut dup();
 
     public void readFrom(ByteBuffer data);
 

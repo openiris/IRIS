@@ -37,6 +37,10 @@ public class OFRoleReply extends OFMessage implements org.openflow.protocol.inte
 	
 	
 	
+	public OFRoleReply dup() {
+		return new OFRoleReply(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

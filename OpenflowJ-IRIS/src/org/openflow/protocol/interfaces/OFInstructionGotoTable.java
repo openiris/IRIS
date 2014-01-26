@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFInstructionGotoTable extends OFInstruction {
 
-	public byte getTableId();
 	public OFInstructionGotoTable setTableId(byte value);
+	public byte getTableId();
 	public boolean isTableIdSupported();
+	
+	public OFInstructionGotoTable dup();
 
     public void readFrom(ByteBuffer data);
 

@@ -24,6 +24,10 @@ public class OFFeaturesRequest extends OFMessage implements org.openflow.protoco
 	
 	
 	
+	public OFFeaturesRequest dup() {
+		return new OFFeaturesRequest(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

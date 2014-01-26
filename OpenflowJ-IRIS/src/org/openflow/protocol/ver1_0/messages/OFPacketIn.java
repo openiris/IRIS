@@ -103,13 +103,13 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public byte getTableId() {
-		throw new UnsupportedOperationException("getTableId is not supported operation");
+	public OFPacketIn setTableId(byte value) {
+		throw new UnsupportedOperationException("setTableId is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFPacketIn setTableId(byte value) {
-		throw new UnsupportedOperationException("setTableId is not supported operation");
+	public byte getTableId() {
+		throw new UnsupportedOperationException("getTableId is not supported operation");
 	}
 	
 	public boolean isTableIdSupported() {
@@ -117,13 +117,13 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public long getCookie() {
-		throw new UnsupportedOperationException("getCookie is not supported operation");
+	public OFPacketIn setCookie(long value) {
+		throw new UnsupportedOperationException("setCookie is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFPacketIn setCookie(long value) {
-		throw new UnsupportedOperationException("setCookie is not supported operation");
+	public long getCookie() {
+		throw new UnsupportedOperationException("getCookie is not supported operation");
 	}
 	
 	public boolean isCookieSupported() {
@@ -131,13 +131,13 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public org.openflow.protocol.interfaces.OFMatch getMatch() {
-		throw new UnsupportedOperationException("getMatch is not supported operation");
+	public OFPacketIn setMatch(org.openflow.protocol.interfaces.OFMatch value) {
+		throw new UnsupportedOperationException("setMatch is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFPacketIn setMatch(org.openflow.protocol.interfaces.OFMatch value) {
-		throw new UnsupportedOperationException("setMatch is not supported operation");
+	public org.openflow.protocol.interfaces.OFMatch getMatch() {
+		throw new UnsupportedOperationException("getMatch is not supported operation");
 	}
 	
 	public boolean isMatchSupported() {
@@ -146,6 +146,10 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 	
 	
 	
+	
+	public OFPacketIn dup() {
+		return new OFPacketIn(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();

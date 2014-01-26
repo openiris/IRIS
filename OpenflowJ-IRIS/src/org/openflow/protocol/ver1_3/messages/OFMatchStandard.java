@@ -24,6 +24,10 @@ public class OFMatchStandard extends OFMatch implements org.openflow.protocol.in
 	
 	
 	
+	public OFMatchStandard dup() {
+		return new OFMatchStandard(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

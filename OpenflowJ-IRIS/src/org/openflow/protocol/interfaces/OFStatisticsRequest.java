@@ -6,12 +6,17 @@ import java.util.Set;
 
 public interface OFStatisticsRequest extends OFStatistics {
 
-	public OFStatisticsType getStatisticsType();
 	public OFStatisticsRequest setStatisticsType(OFStatisticsType value);
+	public OFStatisticsType getStatisticsType();
 	public boolean isStatisticsTypeSupported();
-	public Set<OFStatisticsRequestFlags> getFlags();
 	public OFStatisticsRequest setFlags(Set<OFStatisticsRequestFlags> value);
+	public Set<OFStatisticsRequestFlags> getFlags();
 	public boolean isFlagsSupported();
+	public OFStatisticsRequest setFlags(OFStatisticsRequestFlags ... value);
+	public OFStatisticsRequest setFlagsWire(short value);
+	public short getFlagsWire();
+	
+	public OFStatisticsRequest dup();
 
     public void readFrom(ByteBuffer data);
 

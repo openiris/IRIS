@@ -6,15 +6,17 @@ import java.nio.ByteBuffer;
 
 public interface OFTableFeaturePropertyExperimenterMiss extends OFTableFeatureProperty {
 
-	public int getExperimenterId();
 	public OFTableFeaturePropertyExperimenterMiss setExperimenterId(int value);
+	public int getExperimenterId();
 	public boolean isExperimenterIdSupported();
-	public int getSubtype();
 	public OFTableFeaturePropertyExperimenterMiss setSubtype(int value);
+	public int getSubtype();
 	public boolean isSubtypeSupported();
-	public byte[] getExperimenterData();
 	public OFTableFeaturePropertyExperimenterMiss setExperimenterData(byte[] value);
+	public byte[] getExperimenterData();
 	public boolean isExperimenterDataSupported();
+	
+	public OFTableFeaturePropertyExperimenterMiss dup();
 
     public void readFrom(ByteBuffer data);
 

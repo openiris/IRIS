@@ -40,6 +40,10 @@ public class OFActionSetDlSrc extends OFAction implements org.openflow.protocol.
 	
 	
 	
+	public OFActionSetDlSrc dup() {
+		return new OFActionSetDlSrc(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		if ( this.dl_addr == null ) this.dl_addr = new byte[6];

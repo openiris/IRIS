@@ -7,12 +7,14 @@ import java.util.List;
 
 public interface OFQueueGetConfigReply extends OFMessage {
 
-	public OFPort getPort();
 	public OFQueueGetConfigReply setPort(OFPort value);
+	public OFPort getPort();
 	public boolean isPortSupported();
-	public List<OFPacketQueue> getQueues();
 	public OFQueueGetConfigReply setQueues(List<OFPacketQueue> value);
+	public List<OFPacketQueue> getQueues();
 	public boolean isQueuesSupported();
+	
+	public OFQueueGetConfigReply dup();
 
     public void readFrom(ByteBuffer data);
 

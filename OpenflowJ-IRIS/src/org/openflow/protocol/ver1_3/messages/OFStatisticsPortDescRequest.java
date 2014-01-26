@@ -25,6 +25,10 @@ public class OFStatisticsPortDescRequest extends OFStatisticsRequest implements 
 	
 	
 	
+	public OFStatisticsPortDescRequest dup() {
+		return new OFStatisticsPortDescRequest(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

@@ -7,30 +7,35 @@ import java.util.Set;
 
 public interface OFFeaturesReply extends OFMessage {
 
-	public long getDatapathId();
 	public OFFeaturesReply setDatapathId(long value);
+	public long getDatapathId();
 	public boolean isDatapathIdSupported();
-	public int getNBuffers();
 	public OFFeaturesReply setNBuffers(int value);
+	public int getNBuffers();
 	public boolean isNBuffersSupported();
-	public byte getNTables();
 	public OFFeaturesReply setNTables(byte value);
+	public byte getNTables();
 	public boolean isNTablesSupported();
-	public Set<OFCapabilities> getCapabilities();
 	public OFFeaturesReply setCapabilities(Set<OFCapabilities> value);
+	public Set<OFCapabilities> getCapabilities();
 	public boolean isCapabilitiesSupported();
-	public int getActions();
+	public OFFeaturesReply setCapabilities(OFCapabilities ... value);
+	public OFFeaturesReply setCapabilitiesWire(int value);
+	public int getCapabilitiesWire();
 	public OFFeaturesReply setActions(int value);
+	public int getActions();
 	public boolean isActionsSupported();
-	public List<OFPortDesc> getPorts();
 	public OFFeaturesReply setPorts(List<OFPortDesc> value);
+	public List<OFPortDesc> getPorts();
 	public boolean isPortsSupported();
-	public byte getAuxiliaryId();
 	public OFFeaturesReply setAuxiliaryId(byte value);
+	public byte getAuxiliaryId();
 	public boolean isAuxiliaryIdSupported();
-	public int getReserved();
 	public OFFeaturesReply setReserved(int value);
+	public int getReserved();
 	public boolean isReservedSupported();
+	
+	public OFFeaturesReply dup();
 
     public void readFrom(ByteBuffer data);
 

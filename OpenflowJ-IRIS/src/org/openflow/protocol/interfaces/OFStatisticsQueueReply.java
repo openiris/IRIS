@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface OFStatisticsQueueReply extends OFStatisticsReply {
 
-	public List<OFQueueStatsEntry> getEntries();
 	public OFStatisticsQueueReply setEntries(List<OFQueueStatsEntry> value);
+	public List<OFQueueStatsEntry> getEntries();
 	public boolean isEntriesSupported();
+	
+	public OFStatisticsQueueReply dup();
 
     public void readFrom(ByteBuffer data);
 

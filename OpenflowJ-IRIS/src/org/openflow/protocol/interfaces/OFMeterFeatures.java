@@ -6,21 +6,26 @@ import java.util.Set;
 
 public interface OFMeterFeatures  {
 
-	public int getMaxMeter();
 	public OFMeterFeatures setMaxMeter(int value);
+	public int getMaxMeter();
 	public boolean isMaxMeterSupported();
-	public int getBandTypes();
 	public OFMeterFeatures setBandTypes(int value);
+	public int getBandTypes();
 	public boolean isBandTypesSupported();
-	public Set<OFCapabilities> getCapabilities();
 	public OFMeterFeatures setCapabilities(Set<OFCapabilities> value);
+	public Set<OFCapabilities> getCapabilities();
 	public boolean isCapabilitiesSupported();
-	public byte getMaxBands();
+	public OFMeterFeatures setCapabilities(OFCapabilities ... value);
+	public OFMeterFeatures setCapabilitiesWire(int value);
+	public int getCapabilitiesWire();
 	public OFMeterFeatures setMaxBands(byte value);
+	public byte getMaxBands();
 	public boolean isMaxBandsSupported();
-	public byte getMaxColor();
 	public OFMeterFeatures setMaxColor(byte value);
+	public byte getMaxColor();
 	public boolean isMaxColorSupported();
+	
+	public OFMeterFeatures dup();
 
     public void readFrom(ByteBuffer data);
 

@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFActionSetDlDst extends OFAction {
 
-	public byte[] getDlAddr();
 	public OFActionSetDlDst setDlAddr(byte[] value);
+	public byte[] getDlAddr();
 	public boolean isDlAddrSupported();
+	
+	public OFActionSetDlDst dup();
 
     public void readFrom(ByteBuffer data);
 

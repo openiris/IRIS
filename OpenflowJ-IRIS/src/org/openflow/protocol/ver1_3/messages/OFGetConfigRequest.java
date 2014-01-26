@@ -24,6 +24,10 @@ public class OFGetConfigRequest extends OFMessage implements org.openflow.protoc
 	
 	
 	
+	public OFGetConfigRequest dup() {
+		return new OFGetConfigRequest(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

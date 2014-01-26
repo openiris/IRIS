@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface OFStatisticsFlowReply extends OFStatisticsReply {
 
-	public List<OFFlowStatsEntry> getEntries();
 	public OFStatisticsFlowReply setEntries(List<OFFlowStatsEntry> value);
+	public List<OFFlowStatsEntry> getEntries();
 	public boolean isEntriesSupported();
+	
+	public OFStatisticsFlowReply dup();
 
     public void readFrom(ByteBuffer data);
 

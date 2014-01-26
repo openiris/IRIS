@@ -94,13 +94,13 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public int getDurationSec() {
-		throw new UnsupportedOperationException("getDurationSec is not supported operation");
+	public OFQueueStatsEntry setDurationSec(int value) {
+		throw new UnsupportedOperationException("setDurationSec is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFQueueStatsEntry setDurationSec(int value) {
-		throw new UnsupportedOperationException("setDurationSec is not supported operation");
+	public int getDurationSec() {
+		throw new UnsupportedOperationException("getDurationSec is not supported operation");
 	}
 	
 	public boolean isDurationSecSupported() {
@@ -108,13 +108,13 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public int getDurationNsec() {
-		throw new UnsupportedOperationException("getDurationNsec is not supported operation");
+	public OFQueueStatsEntry setDurationNsec(int value) {
+		throw new UnsupportedOperationException("setDurationNsec is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFQueueStatsEntry setDurationNsec(int value) {
-		throw new UnsupportedOperationException("setDurationNsec is not supported operation");
+	public int getDurationNsec() {
+		throw new UnsupportedOperationException("getDurationNsec is not supported operation");
 	}
 	
 	public boolean isDurationNsecSupported() {
@@ -123,6 +123,10 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 	
 	
 	
+	
+	public OFQueueStatsEntry dup() {
+		return new OFQueueStatsEntry(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         this.port_number = data.getShort();

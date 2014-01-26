@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 public interface OFFeaturesRequest extends OFMessage {
 
 	
+	
+	public OFFeaturesRequest dup();
 
     public void readFrom(ByteBuffer data);
 

@@ -24,6 +24,10 @@ public class OFActionDecMplsTtl extends OFAction implements org.openflow.protoco
 	
 	
 	
+	public OFActionDecMplsTtl dup() {
+		return new OFActionDecMplsTtl(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.pad_1th = data.getInt();

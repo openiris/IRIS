@@ -24,6 +24,10 @@ public class OFActionStripVlan extends OFAction implements org.openflow.protocol
 	
 	
 	
+	public OFActionStripVlan dup() {
+		return new OFActionStripVlan(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.pad_1th = data.getInt();

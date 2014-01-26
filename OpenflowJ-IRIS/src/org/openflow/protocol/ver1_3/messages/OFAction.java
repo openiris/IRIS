@@ -54,6 +54,10 @@ public class OFAction   implements org.openflow.protocol.interfaces.OFAction {
 	
 	
 	
+	public OFAction dup() {
+		return new OFAction(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         this.type = OFActionType.valueOf(OFActionType.readFrom(data));
 		this.length = data.getShort();

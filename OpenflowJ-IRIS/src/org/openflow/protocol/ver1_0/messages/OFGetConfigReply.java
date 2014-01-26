@@ -50,13 +50,13 @@ public class OFGetConfigReply extends OFMessage implements org.openflow.protocol
 	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public short getMissSendLen() {
-		throw new UnsupportedOperationException("getMissSendLen is not supported operation");
+	public OFGetConfigReply setMissSendLen(short value) {
+		throw new UnsupportedOperationException("setMissSendLen is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFGetConfigReply setMissSendLen(short value) {
-		throw new UnsupportedOperationException("setMissSendLen is not supported operation");
+	public short getMissSendLen() {
+		throw new UnsupportedOperationException("getMissSendLen is not supported operation");
 	}
 	
 	public boolean isMissSendLenSupported() {
@@ -65,6 +65,10 @@ public class OFGetConfigReply extends OFMessage implements org.openflow.protocol
 	
 	
 	
+	
+	public OFGetConfigReply dup() {
+		return new OFGetConfigReply(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);

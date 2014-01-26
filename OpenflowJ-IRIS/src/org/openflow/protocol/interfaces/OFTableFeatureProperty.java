@@ -6,12 +6,14 @@ import java.nio.ByteBuffer;
 
 public interface OFTableFeatureProperty  {
 
-	public OFTableFeaturePropertyType getType();
 	public OFTableFeatureProperty setType(OFTableFeaturePropertyType value);
+	public OFTableFeaturePropertyType getType();
 	public boolean isTypeSupported();
-	public short getLength();
 	public OFTableFeatureProperty setLength(short value);
+	public short getLength();
 	public boolean isLengthSupported();
+	
+	public OFTableFeatureProperty dup();
 
     public void readFrom(ByteBuffer data);
 

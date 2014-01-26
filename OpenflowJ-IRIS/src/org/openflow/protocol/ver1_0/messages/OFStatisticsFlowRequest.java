@@ -68,13 +68,13 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public int getOutGroup() {
-		throw new UnsupportedOperationException("getOutGroup is not supported operation");
+	public OFStatisticsFlowRequest setOutGroup(int value) {
+		throw new UnsupportedOperationException("setOutGroup is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFStatisticsFlowRequest setOutGroup(int value) {
-		throw new UnsupportedOperationException("setOutGroup is not supported operation");
+	public int getOutGroup() {
+		throw new UnsupportedOperationException("getOutGroup is not supported operation");
 	}
 	
 	public boolean isOutGroupSupported() {
@@ -82,13 +82,13 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public long getCookie() {
-		throw new UnsupportedOperationException("getCookie is not supported operation");
+	public OFStatisticsFlowRequest setCookie(long value) {
+		throw new UnsupportedOperationException("setCookie is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFStatisticsFlowRequest setCookie(long value) {
-		throw new UnsupportedOperationException("setCookie is not supported operation");
+	public long getCookie() {
+		throw new UnsupportedOperationException("getCookie is not supported operation");
 	}
 	
 	public boolean isCookieSupported() {
@@ -96,13 +96,13 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public long getCookieMask() {
-		throw new UnsupportedOperationException("getCookieMask is not supported operation");
+	public OFStatisticsFlowRequest setCookieMask(long value) {
+		throw new UnsupportedOperationException("setCookieMask is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFStatisticsFlowRequest setCookieMask(long value) {
-		throw new UnsupportedOperationException("setCookieMask is not supported operation");
+	public long getCookieMask() {
+		throw new UnsupportedOperationException("getCookieMask is not supported operation");
 	}
 	
 	public boolean isCookieMaskSupported() {
@@ -111,6 +111,10 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 	
 	
 	
+	
+	public OFStatisticsFlowRequest dup() {
+		return new OFStatisticsFlowRequest(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);

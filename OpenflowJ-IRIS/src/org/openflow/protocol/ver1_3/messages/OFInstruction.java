@@ -54,6 +54,10 @@ public class OFInstruction   implements org.openflow.protocol.interfaces.OFInstr
 	
 	
 	
+	public OFInstruction dup() {
+		return new OFInstruction(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         this.type = OFInstructionType.valueOf(OFInstructionType.readFrom(data));
 		this.length = data.getShort();

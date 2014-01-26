@@ -6,12 +6,14 @@ import java.nio.ByteBuffer;
 
 public interface OFInstructionWriteMetadata extends OFInstruction {
 
-	public long getMetadata();
 	public OFInstructionWriteMetadata setMetadata(long value);
+	public long getMetadata();
 	public boolean isMetadataSupported();
-	public long getMetadataMask();
 	public OFInstructionWriteMetadata setMetadataMask(long value);
+	public long getMetadataMask();
 	public boolean isMetadataMaskSupported();
+	
+	public OFInstructionWriteMetadata dup();
 
     public void readFrom(ByteBuffer data);
 

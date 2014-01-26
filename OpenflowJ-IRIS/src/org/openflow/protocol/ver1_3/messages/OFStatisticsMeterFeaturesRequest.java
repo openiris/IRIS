@@ -25,6 +25,10 @@ public class OFStatisticsMeterFeaturesRequest extends OFStatisticsRequest implem
 	
 	
 	
+	public OFStatisticsMeterFeaturesRequest dup() {
+		return new OFStatisticsMeterFeaturesRequest(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

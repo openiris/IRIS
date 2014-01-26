@@ -6,12 +6,14 @@ import java.nio.ByteBuffer;
 
 public interface OFStatisticsVendorRequest extends OFStatisticsRequest {
 
-	public OFVendor getVendor();
 	public OFStatisticsVendorRequest setVendor(OFVendor value);
+	public OFVendor getVendor();
 	public boolean isVendorSupported();
-	public byte[] getData();
 	public OFStatisticsVendorRequest setData(byte[] value);
+	public byte[] getData();
 	public boolean isDataSupported();
+	
+	public OFStatisticsVendorRequest dup();
 
     public void readFrom(ByteBuffer data);
 

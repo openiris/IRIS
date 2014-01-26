@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFActionPushPbb extends OFAction {
 
-	public short getEthertype();
 	public OFActionPushPbb setEthertype(short value);
+	public short getEthertype();
 	public boolean isEthertypeSupported();
+	
+	public OFActionPushPbb dup();
 
     public void readFrom(ByteBuffer data);
 

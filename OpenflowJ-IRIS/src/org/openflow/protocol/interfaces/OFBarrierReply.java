@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 public interface OFBarrierReply extends OFMessage {
 
 	
+	
+	public OFBarrierReply dup();
 
     public void readFrom(ByteBuffer data);
 

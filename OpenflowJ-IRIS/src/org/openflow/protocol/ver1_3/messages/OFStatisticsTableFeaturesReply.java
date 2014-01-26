@@ -41,6 +41,10 @@ public class OFStatisticsTableFeaturesReply extends OFStatisticsReply implements
 	
 	
 	
+	public OFStatisticsTableFeaturesReply dup() {
+		return new OFStatisticsTableFeaturesReply(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

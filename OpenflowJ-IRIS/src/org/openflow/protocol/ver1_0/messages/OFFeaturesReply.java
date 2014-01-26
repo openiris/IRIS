@@ -99,7 +99,14 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		
 	public OFFeaturesReply setCapabilities(Set<org.openflow.protocol.interfaces.OFCapabilities> values) {
 		OFCapabilities tmp = OFCapabilities.of(this.capabilities);
-		tmp.and( values );
+		tmp.or( values );
+		this.capabilities = tmp.get();
+		return this;
+	}
+	
+	public OFFeaturesReply setCapabilities(org.openflow.protocol.interfaces.OFCapabilities ... values) {
+		OFCapabilities tmp = OFCapabilities.of(this.capabilities);
+		tmp.or( values );
 		this.capabilities = tmp.get();
 		return this;
 	}
@@ -135,13 +142,13 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public byte getAuxiliaryId() {
-		throw new UnsupportedOperationException("getAuxiliaryId is not supported operation");
+	public OFFeaturesReply setAuxiliaryId(byte value) {
+		throw new UnsupportedOperationException("setAuxiliaryId is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFFeaturesReply setAuxiliaryId(byte value) {
-		throw new UnsupportedOperationException("setAuxiliaryId is not supported operation");
+	public byte getAuxiliaryId() {
+		throw new UnsupportedOperationException("getAuxiliaryId is not supported operation");
 	}
 	
 	public boolean isAuxiliaryIdSupported() {
@@ -149,13 +156,13 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public int getReserved() {
-		throw new UnsupportedOperationException("getReserved is not supported operation");
+	public OFFeaturesReply setReserved(int value) {
+		throw new UnsupportedOperationException("setReserved is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFFeaturesReply setReserved(int value) {
-		throw new UnsupportedOperationException("setReserved is not supported operation");
+	public int getReserved() {
+		throw new UnsupportedOperationException("getReserved is not supported operation");
 	}
 	
 	public boolean isReservedSupported() {
@@ -164,6 +171,10 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 	
 	
 	
+	
+	public OFFeaturesReply dup() {
+		return new OFFeaturesReply(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();

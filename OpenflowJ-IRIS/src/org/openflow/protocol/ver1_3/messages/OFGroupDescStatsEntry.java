@@ -83,6 +83,10 @@ public class OFGroupDescStatsEntry   implements org.openflow.protocol.interfaces
 	
 	
 	
+	public OFGroupDescStatsEntry dup() {
+		return new OFGroupDescStatsEntry(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		this.length = data.getShort();

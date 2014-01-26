@@ -6,12 +6,14 @@ import java.nio.ByteBuffer;
 
 public interface OFHelloElem  {
 
-	public OFHelloElemType getType();
 	public OFHelloElem setType(OFHelloElemType value);
+	public OFHelloElemType getType();
 	public boolean isTypeSupported();
-	public short getLength();
 	public OFHelloElem setLength(short value);
+	public short getLength();
 	public boolean isLengthSupported();
+	
+	public OFHelloElem dup();
 
     public void readFrom(ByteBuffer data);
 

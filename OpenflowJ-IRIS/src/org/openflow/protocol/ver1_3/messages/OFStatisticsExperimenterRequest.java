@@ -68,6 +68,10 @@ public class OFStatisticsExperimenterRequest extends OFStatisticsRequest impleme
 	
 	
 	
+	public OFStatisticsExperimenterRequest dup() {
+		return new OFStatisticsExperimenterRequest(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

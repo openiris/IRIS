@@ -41,6 +41,10 @@ public class OFStatisticsTableFeaturesRequest extends OFStatisticsRequest implem
 	
 	
 	
+	public OFStatisticsTableFeaturesRequest dup() {
+		return new OFStatisticsTableFeaturesRequest(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

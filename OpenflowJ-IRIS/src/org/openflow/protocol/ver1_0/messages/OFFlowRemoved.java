@@ -163,13 +163,13 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public byte getTableId() {
-		throw new UnsupportedOperationException("getTableId is not supported operation");
+	public OFFlowRemoved setTableId(byte value) {
+		throw new UnsupportedOperationException("setTableId is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFFlowRemoved setTableId(byte value) {
-		throw new UnsupportedOperationException("setTableId is not supported operation");
+	public byte getTableId() {
+		throw new UnsupportedOperationException("getTableId is not supported operation");
 	}
 	
 	public boolean isTableIdSupported() {
@@ -177,13 +177,13 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public short getHardTimeout() {
-		throw new UnsupportedOperationException("getHardTimeout is not supported operation");
+	public OFFlowRemoved setHardTimeout(short value) {
+		throw new UnsupportedOperationException("setHardTimeout is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFFlowRemoved setHardTimeout(short value) {
-		throw new UnsupportedOperationException("setHardTimeout is not supported operation");
+	public short getHardTimeout() {
+		throw new UnsupportedOperationException("getHardTimeout is not supported operation");
 	}
 	
 	public boolean isHardTimeoutSupported() {
@@ -192,6 +192,10 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 	
 	
 	
+	
+	public OFFlowRemoved dup() {
+		return new OFFlowRemoved(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);

@@ -40,6 +40,10 @@ public class OFTableFeaturePropertyMatch extends OFTableFeatureProperty implemen
 	
 	
 	
+	public OFTableFeaturePropertyMatch dup() {
+		return new OFTableFeaturePropertyMatch(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

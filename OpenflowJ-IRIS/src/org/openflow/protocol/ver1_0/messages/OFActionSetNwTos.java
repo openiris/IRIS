@@ -39,6 +39,10 @@ public class OFActionSetNwTos extends OFAction implements org.openflow.protocol.
 	
 	
 	
+	public OFActionSetNwTos dup() {
+		return new OFActionSetNwTos(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.nw_tos = data.get();

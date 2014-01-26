@@ -72,6 +72,10 @@ public class OFError extends OFMessage implements org.openflow.protocol.interfac
 	
 	
 	
+	public OFError dup() {
+		return new OFError(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

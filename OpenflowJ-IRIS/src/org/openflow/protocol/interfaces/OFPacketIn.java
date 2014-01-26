@@ -6,30 +6,32 @@ import org.openflow.util.OFPort;
 
 public interface OFPacketIn extends OFMessage {
 
-	public int getBufferId();
 	public OFPacketIn setBufferId(int value);
+	public int getBufferId();
 	public boolean isBufferIdSupported();
-	public short getTotalLength();
 	public OFPacketIn setTotalLength(short value);
+	public short getTotalLength();
 	public boolean isTotalLengthSupported();
-	public OFPort getInputPort();
 	public OFPacketIn setInputPort(OFPort value);
+	public OFPort getInputPort();
 	public boolean isInputPortSupported();
-	public OFPacketInReason getReason();
 	public OFPacketIn setReason(OFPacketInReason value);
+	public OFPacketInReason getReason();
 	public boolean isReasonSupported();
-	public byte[] getData();
 	public OFPacketIn setData(byte[] value);
+	public byte[] getData();
 	public boolean isDataSupported();
-	public byte getTableId();
 	public OFPacketIn setTableId(byte value);
+	public byte getTableId();
 	public boolean isTableIdSupported();
-	public long getCookie();
 	public OFPacketIn setCookie(long value);
+	public long getCookie();
 	public boolean isCookieSupported();
-	public OFMatch getMatch();
 	public OFPacketIn setMatch(OFMatch value);
+	public OFMatch getMatch();
 	public boolean isMatchSupported();
+	
+	public OFPacketIn dup();
 
     public void readFrom(ByteBuffer data);
 

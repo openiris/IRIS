@@ -25,6 +25,10 @@ public class OFFlowDeleteStrict extends OFFlowMod implements org.openflow.protoc
 	
 	
 	
+	public OFFlowDeleteStrict dup() {
+		return new OFFlowDeleteStrict(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

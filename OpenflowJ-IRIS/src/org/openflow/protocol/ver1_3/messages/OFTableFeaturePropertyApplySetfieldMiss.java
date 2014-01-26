@@ -40,6 +40,10 @@ public class OFTableFeaturePropertyApplySetfieldMiss extends OFTableFeaturePrope
 	
 	
 	
+	public OFTableFeaturePropertyApplySetfieldMiss dup() {
+		return new OFTableFeaturePropertyApplySetfieldMiss(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

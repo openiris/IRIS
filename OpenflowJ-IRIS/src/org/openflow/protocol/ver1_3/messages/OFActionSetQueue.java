@@ -37,6 +37,10 @@ public class OFActionSetQueue extends OFAction implements org.openflow.protocol.
 	
 	
 	
+	public OFActionSetQueue dup() {
+		return new OFActionSetQueue(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.queue_id = data.getInt();

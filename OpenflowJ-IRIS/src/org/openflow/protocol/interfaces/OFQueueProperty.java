@@ -6,12 +6,14 @@ import java.nio.ByteBuffer;
 
 public interface OFQueueProperty  {
 
-	public OFQueuePropertyType getType();
 	public OFQueueProperty setType(OFQueuePropertyType value);
+	public OFQueuePropertyType getType();
 	public boolean isTypeSupported();
-	public short getLength();
 	public OFQueueProperty setLength(short value);
+	public short getLength();
 	public boolean isLengthSupported();
+	
+	public OFQueueProperty dup();
 
     public void readFrom(ByteBuffer data);
 

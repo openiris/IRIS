@@ -38,6 +38,10 @@ public class OFActionPushMpls extends OFAction implements org.openflow.protocol.
 	
 	
 	
+	public OFActionPushMpls dup() {
+		return new OFActionPushMpls(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.ethertype = data.getShort();

@@ -54,6 +54,10 @@ public class OFTableFeatureProperty   implements org.openflow.protocol.interface
 	
 	
 	
+	public OFTableFeatureProperty dup() {
+		return new OFTableFeatureProperty(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         this.type = OFTableFeaturePropertyType.valueOf(OFTableFeaturePropertyType.readFrom(data));
 		this.length = data.getShort();

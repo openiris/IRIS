@@ -217,13 +217,13 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public List<org.openflow.protocol.interfaces.OFAction> getActions() {
-		throw new UnsupportedOperationException("getActions is not supported operation");
+	public OFFlowStatsEntry setActions(List<org.openflow.protocol.interfaces.OFAction> value) {
+		throw new UnsupportedOperationException("setActions is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFFlowStatsEntry setActions(List<org.openflow.protocol.interfaces.OFAction> value) {
-		throw new UnsupportedOperationException("setActions is not supported operation");
+	public List<org.openflow.protocol.interfaces.OFAction> getActions() {
+		throw new UnsupportedOperationException("getActions is not supported operation");
 	}
 	
 	public boolean isActionsSupported() {
@@ -232,6 +232,10 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 	
 	
 	
+	
+	public OFFlowStatsEntry dup() {
+		return new OFFlowStatsEntry(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();

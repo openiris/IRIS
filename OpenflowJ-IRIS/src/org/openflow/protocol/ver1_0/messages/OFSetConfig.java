@@ -52,6 +52,10 @@ public class OFSetConfig extends OFMessage implements org.openflow.protocol.inte
 	
 	
 	
+	public OFSetConfig dup() {
+		return new OFSetConfig(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.flags = data.getShort();

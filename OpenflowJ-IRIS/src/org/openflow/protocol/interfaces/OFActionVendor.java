@@ -6,12 +6,14 @@ import java.nio.ByteBuffer;
 
 public interface OFActionVendor extends OFAction {
 
-	public int getVendorId();
 	public OFActionVendor setVendorId(int value);
+	public int getVendorId();
 	public boolean isVendorIdSupported();
-	public byte[] getData();
 	public OFActionVendor setData(byte[] value);
+	public byte[] getData();
 	public boolean isDataSupported();
+	
+	public OFActionVendor dup();
 
     public void readFrom(ByteBuffer data);
 

@@ -7,21 +7,23 @@ import java.util.List;
 
 public interface OFBucket  {
 
-	public short getLength();
 	public OFBucket setLength(short value);
+	public short getLength();
 	public boolean isLengthSupported();
-	public short getWeight();
 	public OFBucket setWeight(short value);
+	public short getWeight();
 	public boolean isWeightSupported();
-	public OFPort getWatchPort();
 	public OFBucket setWatchPort(OFPort value);
+	public OFPort getWatchPort();
 	public boolean isWatchPortSupported();
-	public int getWatchGroup();
 	public OFBucket setWatchGroup(int value);
+	public int getWatchGroup();
 	public boolean isWatchGroupSupported();
-	public List<OFAction> getActions();
 	public OFBucket setActions(List<OFAction> value);
+	public List<OFAction> getActions();
 	public boolean isActionsSupported();
+	
+	public OFBucket dup();
 
     public void readFrom(ByteBuffer data);
 

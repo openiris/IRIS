@@ -38,6 +38,10 @@ public class OFActionSetVlanId extends OFAction implements org.openflow.protocol
 	
 	
 	
+	public OFActionSetVlanId dup() {
+		return new OFActionSetVlanId(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.vlan_id = data.getShort();

@@ -144,6 +144,10 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 	
 	
 	
+	public OFMeterStats dup() {
+		return new OFMeterStats(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		this.meter_id = data.getInt();

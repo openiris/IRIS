@@ -215,13 +215,13 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public long getReceiveCrcErrors() {
-		throw new UnsupportedOperationException("getReceiveCrcErrors is not supported operation");
+	public OFPortStatsEntry setReceiveCrcErrors(long value) {
+		throw new UnsupportedOperationException("setReceiveCrcErrors is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFPortStatsEntry setReceiveCrcErrors(long value) {
-		throw new UnsupportedOperationException("setReceiveCrcErrors is not supported operation");
+	public long getReceiveCrcErrors() {
+		throw new UnsupportedOperationException("getReceiveCrcErrors is not supported operation");
 	}
 	
 	public boolean isReceiveCrcErrorsSupported() {
@@ -229,13 +229,13 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public int getDurationSec() {
-		throw new UnsupportedOperationException("getDurationSec is not supported operation");
+	public OFPortStatsEntry setDurationSec(int value) {
+		throw new UnsupportedOperationException("setDurationSec is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFPortStatsEntry setDurationSec(int value) {
-		throw new UnsupportedOperationException("setDurationSec is not supported operation");
+	public int getDurationSec() {
+		throw new UnsupportedOperationException("getDurationSec is not supported operation");
 	}
 	
 	public boolean isDurationSecSupported() {
@@ -243,13 +243,13 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public int getDurationNsec() {
-		throw new UnsupportedOperationException("getDurationNsec is not supported operation");
+	public OFPortStatsEntry setDurationNsec(int value) {
+		throw new UnsupportedOperationException("setDurationNsec is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFPortStatsEntry setDurationNsec(int value) {
-		throw new UnsupportedOperationException("setDurationNsec is not supported operation");
+	public int getDurationNsec() {
+		throw new UnsupportedOperationException("getDurationNsec is not supported operation");
 	}
 	
 	public boolean isDurationNsecSupported() {
@@ -258,6 +258,10 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 	
 	
 	
+	
+	public OFPortStatsEntry dup() {
+		return new OFPortStatsEntry(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         this.port_number = data.getShort();

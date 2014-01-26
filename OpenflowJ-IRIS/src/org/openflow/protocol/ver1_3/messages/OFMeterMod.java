@@ -90,6 +90,10 @@ public class OFMeterMod extends OFMessage implements org.openflow.protocol.inter
 	
 	
 	
+	public OFMeterMod dup() {
+		return new OFMeterMod(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

@@ -5,6 +5,8 @@ import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
 import org.openflow.util.OFPort;
+import java.util.HashSet;
+import java.util.Set;
 
 public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc {
     public static int MINIMUM_LENGTH = 48;
@@ -75,32 +77,82 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		return true;
 	}
 			
-	public int getConfig() {
+	public int getConfigWire() {
 		return this.config;
 	}
 	
-	public OFPortDesc setConfig(int config) {
+	public OFPortDesc setConfigWire(int config) {
 		this.config = config;
+		return this;
+	}
+	
+	public Set<org.openflow.protocol.interfaces.OFPortConfig> getConfig() {
+		OFPortConfig tmp = OFPortConfig.of(this.config);
+		Set<org.openflow.protocol.interfaces.OFPortConfig> ret = new HashSet<org.openflow.protocol.interfaces.OFPortConfig>();
+		for ( org.openflow.protocol.interfaces.OFPortConfig v : org.openflow.protocol.interfaces.OFPortConfig.values() ) {
+			if (tmp.has(v)) {
+				ret.add(v);
+			}
+		}
+		return ret;
+	}
+		
+	public OFPortDesc setConfig(Set<org.openflow.protocol.interfaces.OFPortConfig> values) {
+		OFPortConfig tmp = OFPortConfig.of(this.config);
+		tmp.or( values );
+		this.config = tmp.get();
+		return this;
+	}
+	
+	public OFPortDesc setConfig(org.openflow.protocol.interfaces.OFPortConfig ... values) {
+		OFPortConfig tmp = OFPortConfig.of(this.config);
+		tmp.or( values );
+		this.config = tmp.get();
 		return this;
 	}
 	
 	public boolean isConfigSupported() {
 		return true;
 	}
-			
-	public int getState() {
+		
+	public int getStateWire() {
 		return this.state;
 	}
 	
-	public OFPortDesc setState(int state) {
+	public OFPortDesc setStateWire(int state) {
 		this.state = state;
+		return this;
+	}
+	
+	public Set<org.openflow.protocol.interfaces.OFPortState> getState() {
+		OFPortState tmp = OFPortState.of(this.state);
+		Set<org.openflow.protocol.interfaces.OFPortState> ret = new HashSet<org.openflow.protocol.interfaces.OFPortState>();
+		for ( org.openflow.protocol.interfaces.OFPortState v : org.openflow.protocol.interfaces.OFPortState.values() ) {
+			if (tmp.has(v)) {
+				ret.add(v);
+			}
+		}
+		return ret;
+	}
+		
+	public OFPortDesc setState(Set<org.openflow.protocol.interfaces.OFPortState> values) {
+		OFPortState tmp = OFPortState.of(this.state);
+		tmp.or( values );
+		this.state = tmp.get();
+		return this;
+	}
+	
+	public OFPortDesc setState(org.openflow.protocol.interfaces.OFPortState ... values) {
+		OFPortState tmp = OFPortState.of(this.state);
+		tmp.or( values );
+		this.state = tmp.get();
 		return this;
 	}
 	
 	public boolean isStateSupported() {
 		return true;
 	}
-			
+		
 	public int getCurrentFeatures() {
 		return this.current_features;
 	}
@@ -154,13 +206,13 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public int getCurrSpeed() {
-		throw new UnsupportedOperationException("getCurrSpeed is not supported operation");
+	public OFPortDesc setCurrSpeed(int value) {
+		throw new UnsupportedOperationException("setCurrSpeed is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFPortDesc setCurrSpeed(int value) {
-		throw new UnsupportedOperationException("setCurrSpeed is not supported operation");
+	public int getCurrSpeed() {
+		throw new UnsupportedOperationException("getCurrSpeed is not supported operation");
 	}
 	
 	public boolean isCurrSpeedSupported() {
@@ -168,13 +220,13 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public int getMaxSpeed() {
-		throw new UnsupportedOperationException("getMaxSpeed is not supported operation");
+	public OFPortDesc setMaxSpeed(int value) {
+		throw new UnsupportedOperationException("setMaxSpeed is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFPortDesc setMaxSpeed(int value) {
-		throw new UnsupportedOperationException("setMaxSpeed is not supported operation");
+	public int getMaxSpeed() {
+		throw new UnsupportedOperationException("getMaxSpeed is not supported operation");
 	}
 	
 	public boolean isMaxSpeedSupported() {
@@ -183,6 +235,10 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 	
 	
 	
+	
+	public OFPortDesc dup() {
+		return new OFPortDesc(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         this.port = data.getShort();

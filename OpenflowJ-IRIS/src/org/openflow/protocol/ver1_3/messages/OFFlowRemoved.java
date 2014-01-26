@@ -193,6 +193,10 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 	
 	
 	
+	public OFFlowRemoved dup() {
+		return new OFFlowRemoved(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.cookie = data.getLong();

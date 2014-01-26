@@ -54,6 +54,10 @@ public class OFHelloElem   implements org.openflow.protocol.interfaces.OFHelloEl
 	
 	
 	
+	public OFHelloElem dup() {
+		return new OFHelloElem(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         this.type = OFHelloElemType.valueOf(OFHelloElemType.readFrom(data));
 		this.length = data.getShort();

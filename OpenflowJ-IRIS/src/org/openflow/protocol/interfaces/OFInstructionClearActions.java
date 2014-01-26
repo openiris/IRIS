@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 public interface OFInstructionClearActions extends OFInstruction {
 
 	
+	
+	public OFInstructionClearActions dup();
 
     public void readFrom(ByteBuffer data);
 

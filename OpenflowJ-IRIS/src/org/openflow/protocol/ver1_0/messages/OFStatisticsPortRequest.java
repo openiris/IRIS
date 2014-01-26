@@ -45,6 +45,10 @@ public class OFStatisticsPortRequest extends OFStatisticsRequest implements org.
 	
 	
 	
+	public OFStatisticsPortRequest dup() {
+		return new OFStatisticsPortRequest(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.port_no = OFPortNo.valueOf(OFPortNo.readFrom(data));

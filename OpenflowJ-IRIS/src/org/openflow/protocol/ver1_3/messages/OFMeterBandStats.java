@@ -49,6 +49,10 @@ public class OFMeterBandStats   implements org.openflow.protocol.interfaces.OFMe
 	
 	
 	
+	public OFMeterBandStats dup() {
+		return new OFMeterBandStats(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         this.packet_band_count = data.getLong();
 		this.byte_band_count = data.getLong();

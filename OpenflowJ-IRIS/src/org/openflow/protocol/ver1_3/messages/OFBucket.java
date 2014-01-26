@@ -99,6 +99,10 @@ public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
 	
 	
 	
+	public OFBucket dup() {
+		return new OFBucket(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		this.length = data.getShort();

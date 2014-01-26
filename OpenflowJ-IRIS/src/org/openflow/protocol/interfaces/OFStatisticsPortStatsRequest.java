@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFStatisticsPortStatsRequest extends OFStatisticsRequest {
 
-	public OFPortNo getPortNo();
 	public OFStatisticsPortStatsRequest setPortNo(OFPortNo value);
+	public OFPortNo getPortNo();
 	public boolean isPortNoSupported();
+	
+	public OFStatisticsPortStatsRequest dup();
 
     public void readFrom(ByteBuffer data);
 

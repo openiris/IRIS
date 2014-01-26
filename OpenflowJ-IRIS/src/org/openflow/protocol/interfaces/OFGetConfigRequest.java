@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 public interface OFGetConfigRequest extends OFMessage {
 
 	
+	
+	public OFGetConfigRequest dup();
 
     public void readFrom(ByteBuffer data);
 

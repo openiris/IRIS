@@ -38,6 +38,10 @@ public class OFActionPushPbb extends OFAction implements org.openflow.protocol.i
 	
 	
 	
+	public OFActionPushPbb dup() {
+		return new OFActionPushPbb(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.ethertype = data.getShort();

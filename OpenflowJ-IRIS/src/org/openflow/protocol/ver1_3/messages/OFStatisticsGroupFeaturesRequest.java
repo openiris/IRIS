@@ -25,6 +25,10 @@ public class OFStatisticsGroupFeaturesRequest extends OFStatisticsRequest implem
 	
 	
 	
+	public OFStatisticsGroupFeaturesRequest dup() {
+		return new OFStatisticsGroupFeaturesRequest(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

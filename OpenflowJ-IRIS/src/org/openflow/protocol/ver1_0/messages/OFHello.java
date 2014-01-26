@@ -22,13 +22,13 @@ public class OFHello extends OFMessage implements org.openflow.protocol.interfac
     }
 
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public List<org.openflow.protocol.interfaces.OFHelloElem> getElements() {
-		throw new UnsupportedOperationException("getElements is not supported operation");
+	public OFHello setElements(List<org.openflow.protocol.interfaces.OFHelloElem> value) {
+		throw new UnsupportedOperationException("setElements is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFHello setElements(List<org.openflow.protocol.interfaces.OFHelloElem> value) {
-		throw new UnsupportedOperationException("setElements is not supported operation");
+	public List<org.openflow.protocol.interfaces.OFHelloElem> getElements() {
+		throw new UnsupportedOperationException("getElements is not supported operation");
 	}
 	
 	public boolean isElementsSupported() {
@@ -37,6 +37,10 @@ public class OFHello extends OFMessage implements org.openflow.protocol.interfac
 	
 	
 	
+	
+	public OFHello dup() {
+		return new OFHello(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);

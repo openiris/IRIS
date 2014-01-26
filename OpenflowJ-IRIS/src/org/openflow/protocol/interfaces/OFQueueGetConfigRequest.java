@@ -6,9 +6,11 @@ import org.openflow.util.OFPort;
 
 public interface OFQueueGetConfigRequest extends OFMessage {
 
-	public OFPort getPort();
 	public OFQueueGetConfigRequest setPort(OFPort value);
+	public OFPort getPort();
 	public boolean isPortSupported();
+	
+	public OFQueueGetConfigRequest dup();
 
     public void readFrom(ByteBuffer data);
 

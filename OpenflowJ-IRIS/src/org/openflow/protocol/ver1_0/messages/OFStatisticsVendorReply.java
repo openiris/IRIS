@@ -53,6 +53,10 @@ public class OFStatisticsVendorReply extends OFStatisticsReply implements org.op
 	
 	
 	
+	public OFStatisticsVendorReply dup() {
+		return new OFStatisticsVendorReply(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

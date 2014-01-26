@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 public interface OFStatisticsPortDescRequest extends OFStatisticsRequest {
 
 	
+	
+	public OFStatisticsPortDescRequest dup();
 
     public void readFrom(ByteBuffer data);
 

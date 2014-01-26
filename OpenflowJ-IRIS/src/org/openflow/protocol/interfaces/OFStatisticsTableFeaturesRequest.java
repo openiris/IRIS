@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface OFStatisticsTableFeaturesRequest extends OFStatisticsRequest {
 
-	public List<OFTableFeatures> getEntries();
 	public OFStatisticsTableFeaturesRequest setEntries(List<OFTableFeatures> value);
+	public List<OFTableFeatures> getEntries();
 	public boolean isEntriesSupported();
+	
+	public OFStatisticsTableFeaturesRequest dup();
 
     public void readFrom(ByteBuffer data);
 

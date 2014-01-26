@@ -6,12 +6,14 @@ import java.nio.ByteBuffer;
 
 public interface OFStatisticsQueueRequest extends OFStatisticsRequest {
 
-	public OFPortNo getPortNo();
 	public OFStatisticsQueueRequest setPortNo(OFPortNo value);
+	public OFPortNo getPortNo();
 	public boolean isPortNoSupported();
-	public int getQueueId();
 	public OFStatisticsQueueRequest setQueueId(int value);
+	public int getQueueId();
 	public boolean isQueueIdSupported();
+	
+	public OFStatisticsQueueRequest dup();
 
     public void readFrom(ByteBuffer data);
 

@@ -6,12 +6,14 @@ import java.nio.ByteBuffer;
 
 public interface OFMeterBandStats  {
 
-	public long getPacketBandCount();
 	public OFMeterBandStats setPacketBandCount(long value);
+	public long getPacketBandCount();
 	public boolean isPacketBandCountSupported();
-	public long getByteBandCount();
 	public OFMeterBandStats setByteBandCount(long value);
+	public long getByteBandCount();
 	public boolean isByteBandCountSupported();
+	
+	public OFMeterBandStats dup();
 
     public void readFrom(ByteBuffer data);
 

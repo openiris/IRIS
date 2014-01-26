@@ -6,30 +6,32 @@ import java.util.List;
 
 public interface OFGroupStatsEntry  {
 
-	public short getLength();
 	public OFGroupStatsEntry setLength(short value);
+	public short getLength();
 	public boolean isLengthSupported();
-	public int getGroupId();
 	public OFGroupStatsEntry setGroupId(int value);
+	public int getGroupId();
 	public boolean isGroupIdSupported();
-	public int getRefCount();
 	public OFGroupStatsEntry setRefCount(int value);
+	public int getRefCount();
 	public boolean isRefCountSupported();
-	public long getPacketCount();
 	public OFGroupStatsEntry setPacketCount(long value);
+	public long getPacketCount();
 	public boolean isPacketCountSupported();
-	public long getByteCount();
 	public OFGroupStatsEntry setByteCount(long value);
+	public long getByteCount();
 	public boolean isByteCountSupported();
-	public int getDurationSec();
 	public OFGroupStatsEntry setDurationSec(int value);
+	public int getDurationSec();
 	public boolean isDurationSecSupported();
-	public int getDurationNsec();
 	public OFGroupStatsEntry setDurationNsec(int value);
+	public int getDurationNsec();
 	public boolean isDurationNsecSupported();
-	public List<OFBucketCounter> getBucketStats();
 	public OFGroupStatsEntry setBucketStats(List<OFBucketCounter> value);
+	public List<OFBucketCounter> getBucketStats();
 	public boolean isBucketStatsSupported();
+	
+	public OFGroupStatsEntry dup();
 
     public void readFrom(ByteBuffer data);
 

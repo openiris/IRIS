@@ -40,6 +40,10 @@ public class OFHello extends OFMessage implements org.openflow.protocol.interfac
 	
 	
 	
+	public OFHello dup() {
+		return new OFHello(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

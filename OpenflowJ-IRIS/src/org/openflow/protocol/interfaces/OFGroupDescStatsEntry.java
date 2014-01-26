@@ -6,18 +6,20 @@ import java.util.List;
 
 public interface OFGroupDescStatsEntry  {
 
-	public short getLength();
 	public OFGroupDescStatsEntry setLength(short value);
+	public short getLength();
 	public boolean isLengthSupported();
-	public byte getType();
 	public OFGroupDescStatsEntry setType(byte value);
+	public byte getType();
 	public boolean isTypeSupported();
-	public int getGroupId();
 	public OFGroupDescStatsEntry setGroupId(int value);
+	public int getGroupId();
 	public boolean isGroupIdSupported();
-	public List<OFBucket> getBuckets();
 	public OFGroupDescStatsEntry setBuckets(List<OFBucket> value);
+	public List<OFBucket> getBuckets();
 	public boolean isBucketsSupported();
+	
+	public OFGroupDescStatsEntry dup();
 
     public void readFrom(ByteBuffer data);
 

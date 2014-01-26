@@ -37,6 +37,10 @@ public class OFActionGroup extends OFAction implements org.openflow.protocol.int
 	
 	
 	
+	public OFActionGroup dup() {
+		return new OFActionGroup(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.group_id = data.getInt();

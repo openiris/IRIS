@@ -6,15 +6,17 @@ import java.nio.ByteBuffer;
 
 public interface OFStatisticsAggregateReply extends OFStatisticsReply {
 
-	public long getPacketCount();
 	public OFStatisticsAggregateReply setPacketCount(long value);
+	public long getPacketCount();
 	public boolean isPacketCountSupported();
-	public long getByteCount();
 	public OFStatisticsAggregateReply setByteCount(long value);
+	public long getByteCount();
 	public boolean isByteCountSupported();
-	public int getFlowCount();
 	public OFStatisticsAggregateReply setFlowCount(int value);
+	public int getFlowCount();
 	public boolean isFlowCountSupported();
+	
+	public OFStatisticsAggregateReply dup();
 
     public void readFrom(ByteBuffer data);
 

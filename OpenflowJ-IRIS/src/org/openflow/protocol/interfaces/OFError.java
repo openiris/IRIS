@@ -6,15 +6,17 @@ import java.nio.ByteBuffer;
 
 public interface OFError extends OFMessage {
 
-	public OFErrorCode getErrorCode();
 	public OFError setErrorCode(OFErrorCode value);
+	public OFErrorCode getErrorCode();
 	public boolean isErrorCodeSupported();
-	public short getSubcode();
 	public OFError setSubcode(short value);
+	public short getSubcode();
 	public boolean isSubcodeSupported();
-	public byte[] getData();
 	public OFError setData(byte[] value);
+	public byte[] getData();
 	public boolean isDataSupported();
+	
+	public OFError dup();
 
     public void readFrom(ByteBuffer data);
 

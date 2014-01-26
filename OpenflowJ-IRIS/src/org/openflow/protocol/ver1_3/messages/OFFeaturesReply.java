@@ -109,7 +109,14 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		
 	public OFFeaturesReply setCapabilities(Set<org.openflow.protocol.interfaces.OFCapabilities> values) {
 		OFCapabilities tmp = OFCapabilities.of(this.capabilities);
-		tmp.and( values );
+		tmp.or( values );
+		this.capabilities = tmp.get();
+		return this;
+	}
+	
+	public OFFeaturesReply setCapabilities(org.openflow.protocol.interfaces.OFCapabilities ... values) {
+		OFCapabilities tmp = OFCapabilities.of(this.capabilities);
+		tmp.or( values );
 		this.capabilities = tmp.get();
 		return this;
 	}
@@ -132,13 +139,13 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public int getActions() {
-		throw new UnsupportedOperationException("getActions is not supported operation");
+	public OFFeaturesReply setActions(int value) {
+		throw new UnsupportedOperationException("setActions is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFFeaturesReply setActions(int value) {
-		throw new UnsupportedOperationException("setActions is not supported operation");
+	public int getActions() {
+		throw new UnsupportedOperationException("getActions is not supported operation");
 	}
 	
 	public boolean isActionsSupported() {
@@ -146,13 +153,13 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public List<org.openflow.protocol.interfaces.OFPortDesc> getPorts() {
-		throw new UnsupportedOperationException("getPorts is not supported operation");
+	public OFFeaturesReply setPorts(List<org.openflow.protocol.interfaces.OFPortDesc> value) {
+		throw new UnsupportedOperationException("setPorts is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFFeaturesReply setPorts(List<org.openflow.protocol.interfaces.OFPortDesc> value) {
-		throw new UnsupportedOperationException("setPorts is not supported operation");
+	public List<org.openflow.protocol.interfaces.OFPortDesc> getPorts() {
+		throw new UnsupportedOperationException("getPorts is not supported operation");
 	}
 	
 	public boolean isPortsSupported() {
@@ -161,6 +168,10 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 	
 	
 	
+	
+	public OFFeaturesReply dup() {
+		return new OFFeaturesReply(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);

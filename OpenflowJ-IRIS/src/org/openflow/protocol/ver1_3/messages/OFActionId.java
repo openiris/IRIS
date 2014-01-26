@@ -50,6 +50,10 @@ public class OFActionId   implements org.openflow.protocol.interfaces.OFActionId
 	
 	
 	
+	public OFActionId dup() {
+		return new OFActionId(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         this.type = data.getShort();
 		this.length = data.getShort();

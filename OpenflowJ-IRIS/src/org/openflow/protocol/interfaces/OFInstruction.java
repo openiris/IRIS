@@ -6,12 +6,14 @@ import java.nio.ByteBuffer;
 
 public interface OFInstruction  {
 
-	public OFInstructionType getType();
 	public OFInstruction setType(OFInstructionType value);
+	public OFInstructionType getType();
 	public boolean isTypeSupported();
-	public short getLength();
 	public OFInstruction setLength(short value);
+	public short getLength();
 	public boolean isLengthSupported();
+	
+	public OFInstruction dup();
 
     public void readFrom(ByteBuffer data);
 

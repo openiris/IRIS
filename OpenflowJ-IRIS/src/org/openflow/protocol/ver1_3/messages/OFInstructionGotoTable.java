@@ -39,6 +39,10 @@ public class OFInstructionGotoTable extends OFInstruction implements org.openflo
 	
 	
 	
+	public OFInstructionGotoTable dup() {
+		return new OFInstructionGotoTable(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.table_id = data.get();

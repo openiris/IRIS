@@ -6,15 +6,17 @@ import java.nio.ByteBuffer;
 
 public interface OFStatisticsExperimenterReply extends OFStatisticsReply {
 
-	public int getExperimenterId();
 	public OFStatisticsExperimenterReply setExperimenterId(int value);
+	public int getExperimenterId();
 	public boolean isExperimenterIdSupported();
-	public int getExperimentType();
 	public OFStatisticsExperimenterReply setExperimentType(int value);
+	public int getExperimentType();
 	public boolean isExperimentTypeSupported();
-	public byte[] getData();
 	public OFStatisticsExperimenterReply setData(byte[] value);
+	public byte[] getData();
 	public boolean isDataSupported();
+	
+	public OFStatisticsExperimenterReply dup();
 
     public void readFrom(ByteBuffer data);
 

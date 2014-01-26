@@ -6,12 +6,14 @@ import java.nio.ByteBuffer;
 
 public interface OFPortStatus extends OFMessage {
 
-	public byte getReason();
-	public OFPortStatus setReason(byte value);
+	public OFPortStatus setReason(OFPortReason value);
+	public OFPortReason getReason();
 	public boolean isReasonSupported();
-	public OFPortDesc getDesc();
 	public OFPortStatus setDesc(OFPortDesc value);
+	public OFPortDesc getDesc();
 	public boolean isDescSupported();
+	
+	public OFPortStatus dup();
 
     public void readFrom(ByteBuffer data);
 

@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface OFTableFeaturePropertyWildcards extends OFTableFeatureProperty {
 
-	public List<Integer> getOxmIds();
 	public OFTableFeaturePropertyWildcards setOxmIds(List<Integer> value);
+	public List<Integer> getOxmIds();
 	public boolean isOxmIdsSupported();
+	
+	public OFTableFeaturePropertyWildcards dup();
 
     public void readFrom(ByteBuffer data);
 

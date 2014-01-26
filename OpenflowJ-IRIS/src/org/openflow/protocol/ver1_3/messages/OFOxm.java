@@ -99,6 +99,10 @@ public class OFOxm   implements org.openflow.protocol.interfaces.OFOxm {
 	
 	
 	
+	public OFOxm dup() {
+		return new OFOxm(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         this.oxm_class = OFOxmClass.valueOf(OFOxmClass.readFrom(data));
 		this.field_bitmask = data.get();

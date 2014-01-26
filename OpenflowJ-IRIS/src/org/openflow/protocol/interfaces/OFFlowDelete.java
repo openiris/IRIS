@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 public interface OFFlowDelete extends OFFlowMod {
 
 	
+	
+	public OFFlowDelete dup();
 
     public void readFrom(ByteBuffer data);
 

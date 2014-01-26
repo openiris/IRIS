@@ -25,6 +25,10 @@ public class OFStatisticsGroupDescRequest extends OFStatisticsRequest implements
 	
 	
 	
+	public OFStatisticsGroupDescRequest dup() {
+		return new OFStatisticsGroupDescRequest(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

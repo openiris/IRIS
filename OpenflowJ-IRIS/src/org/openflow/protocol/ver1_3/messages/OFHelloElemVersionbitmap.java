@@ -40,6 +40,10 @@ public class OFHelloElemVersionbitmap extends OFHelloElem implements org.openflo
 	
 	
 	
+	public OFHelloElemVersionbitmap dup() {
+		return new OFHelloElemVersionbitmap(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

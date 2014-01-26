@@ -24,6 +24,10 @@ public class OFInstructionClearActions extends OFInstruction implements org.open
 	
 	
 	
+	public OFInstructionClearActions dup() {
+		return new OFInstructionClearActions(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.pad_1th = data.getInt();

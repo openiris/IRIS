@@ -24,6 +24,10 @@ public class OFActionPopVlan extends OFAction implements org.openflow.protocol.i
 	
 	
 	
+	public OFActionPopVlan dup() {
+		return new OFActionPopVlan(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.pad_1th = data.getInt();

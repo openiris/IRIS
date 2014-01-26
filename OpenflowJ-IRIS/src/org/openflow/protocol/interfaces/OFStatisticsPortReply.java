@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface OFStatisticsPortReply extends OFStatisticsReply {
 
-	public List<OFPortStatsEntry> getEntries();
 	public OFStatisticsPortReply setEntries(List<OFPortStatsEntry> value);
+	public List<OFPortStatsEntry> getEntries();
 	public boolean isEntriesSupported();
+	
+	public OFStatisticsPortReply dup();
 
     public void readFrom(ByteBuffer data);
 

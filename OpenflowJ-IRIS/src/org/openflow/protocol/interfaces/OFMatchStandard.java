@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 public interface OFMatchStandard extends OFMatch {
 
 	
+	
+	public OFMatchStandard dup();
 
     public void readFrom(ByteBuffer data);
 

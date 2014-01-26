@@ -53,6 +53,10 @@ public class OFQueuePropertyExperimenter extends OFQueueProperty implements org.
 	
 	
 	
+	public OFQueuePropertyExperimenter dup() {
+		return new OFQueuePropertyExperimenter(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

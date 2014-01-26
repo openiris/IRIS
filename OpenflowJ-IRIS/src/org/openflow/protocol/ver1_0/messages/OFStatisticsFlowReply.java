@@ -41,6 +41,10 @@ public class OFStatisticsFlowReply extends OFStatisticsReply implements org.open
 	
 	
 	
+	public OFStatisticsFlowReply dup() {
+		return new OFStatisticsFlowReply(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

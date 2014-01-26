@@ -39,6 +39,10 @@ public class OFStatisticsGroupRequest extends OFStatisticsRequest implements org
 	
 	
 	
+	public OFStatisticsGroupRequest dup() {
+		return new OFStatisticsGroupRequest(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.group_id = data.getInt();

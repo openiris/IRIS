@@ -40,6 +40,10 @@ public class OFTableFeaturePropertyNextTables extends OFTableFeatureProperty imp
 	
 	
 	
+	public OFTableFeaturePropertyNextTables dup() {
+		return new OFTableFeaturePropertyNextTables(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

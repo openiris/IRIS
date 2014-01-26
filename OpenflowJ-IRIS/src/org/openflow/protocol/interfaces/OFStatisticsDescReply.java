@@ -6,21 +6,23 @@ import java.nio.ByteBuffer;
 
 public interface OFStatisticsDescReply extends OFStatisticsReply {
 
-	public String getManufacturerDescription();
 	public OFStatisticsDescReply setManufacturerDescription(String value);
+	public String getManufacturerDescription();
 	public boolean isManufacturerDescriptionSupported();
-	public String getHardwareDescription();
 	public OFStatisticsDescReply setHardwareDescription(String value);
+	public String getHardwareDescription();
 	public boolean isHardwareDescriptionSupported();
-	public String getSoftwareDescription();
 	public OFStatisticsDescReply setSoftwareDescription(String value);
+	public String getSoftwareDescription();
 	public boolean isSoftwareDescriptionSupported();
-	public String getSerialNumber();
 	public OFStatisticsDescReply setSerialNumber(String value);
+	public String getSerialNumber();
 	public boolean isSerialNumberSupported();
-	public String getDatapathDescription();
 	public OFStatisticsDescReply setDatapathDescription(String value);
+	public String getDatapathDescription();
 	public boolean isDatapathDescriptionSupported();
+	
+	public OFStatisticsDescReply dup();
 
     public void readFrom(ByteBuffer data);
 

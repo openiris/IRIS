@@ -82,7 +82,14 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		
 	public OFTableStatsEntry setWildcards(Set<org.openflow.protocol.interfaces.OFFlowWildcards> values) {
 		OFFlowWildcards tmp = OFFlowWildcards.of(this.wildcards);
-		tmp.and( values );
+		tmp.or( values );
+		this.wildcards = tmp.get();
+		return this;
+	}
+	
+	public OFTableStatsEntry setWildcards(org.openflow.protocol.interfaces.OFFlowWildcards ... values) {
+		OFFlowWildcards tmp = OFFlowWildcards.of(this.wildcards);
+		tmp.or( values );
 		this.wildcards = tmp.get();
 		return this;
 	}
@@ -145,6 +152,10 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 			
 	
 	
+	
+	public OFTableStatsEntry dup() {
+		return new OFTableStatsEntry(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         this.table_id = data.get();

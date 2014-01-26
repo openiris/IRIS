@@ -25,6 +25,10 @@ public class OFStatisticsDescRequest extends OFStatisticsRequest implements org.
 	
 	
 	
+	public OFStatisticsDescRequest dup() {
+		return new OFStatisticsDescRequest(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
     }

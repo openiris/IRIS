@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFEchoReply extends OFMessage {
 
-	public byte[] getData();
 	public OFEchoReply setData(byte[] value);
+	public byte[] getData();
 	public boolean isDataSupported();
+	
+	public OFEchoReply dup();
 
     public void readFrom(ByteBuffer data);
 

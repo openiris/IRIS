@@ -67,6 +67,10 @@ public class OFTableFeaturePropertyExperimenterMiss extends OFTableFeatureProper
 	
 	
 	
+	public OFTableFeaturePropertyExperimenterMiss dup() {
+		return new OFTableFeaturePropertyExperimenterMiss(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

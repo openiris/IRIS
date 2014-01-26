@@ -6,18 +6,20 @@ import java.nio.ByteBuffer;
 
 public interface OFMessage extends org.openflow.protocol.OFMessage {
 
-	public byte getVersion();
 	public OFMessage setVersion(byte value);
+	public byte getVersion();
 	public boolean isVersionSupported();
-	public OFMessageType getType();
 	public OFMessage setType(OFMessageType value);
+	public OFMessageType getType();
 	public boolean isTypeSupported();
-	public short getLength();
 	public OFMessage setLength(short value);
+	public short getLength();
 	public boolean isLengthSupported();
-	public int getXid();
 	public OFMessage setXid(int value);
+	public int getXid();
 	public boolean isXidSupported();
+	
+	public OFMessage dup();
 
     public void readFrom(ByteBuffer data);
 

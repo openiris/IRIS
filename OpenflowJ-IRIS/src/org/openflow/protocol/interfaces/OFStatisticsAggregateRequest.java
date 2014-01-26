@@ -6,24 +6,26 @@ import org.openflow.util.OFPort;
 
 public interface OFStatisticsAggregateRequest extends OFStatisticsRequest {
 
-	public OFMatch getMatch();
 	public OFStatisticsAggregateRequest setMatch(OFMatch value);
+	public OFMatch getMatch();
 	public boolean isMatchSupported();
-	public byte getTableId();
 	public OFStatisticsAggregateRequest setTableId(byte value);
+	public byte getTableId();
 	public boolean isTableIdSupported();
-	public OFPort getOutPort();
 	public OFStatisticsAggregateRequest setOutPort(OFPort value);
+	public OFPort getOutPort();
 	public boolean isOutPortSupported();
-	public int getOutGroup();
 	public OFStatisticsAggregateRequest setOutGroup(int value);
+	public int getOutGroup();
 	public boolean isOutGroupSupported();
-	public long getCookie();
 	public OFStatisticsAggregateRequest setCookie(long value);
+	public long getCookie();
 	public boolean isCookieSupported();
-	public long getCookieMask();
 	public OFStatisticsAggregateRequest setCookieMask(long value);
+	public long getCookieMask();
 	public boolean isCookieMaskSupported();
+	
+	public OFStatisticsAggregateRequest dup();
 
     public void readFrom(ByteBuffer data);
 

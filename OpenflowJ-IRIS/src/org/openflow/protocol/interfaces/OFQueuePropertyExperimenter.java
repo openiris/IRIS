@@ -6,12 +6,14 @@ import java.nio.ByteBuffer;
 
 public interface OFQueuePropertyExperimenter extends OFQueueProperty {
 
-	public int getExperimenterId();
 	public OFQueuePropertyExperimenter setExperimenterId(int value);
+	public int getExperimenterId();
 	public boolean isExperimenterIdSupported();
-	public byte[] getData();
 	public OFQueuePropertyExperimenter setData(byte[] value);
+	public byte[] getData();
 	public boolean isDataSupported();
+	
+	public OFQueuePropertyExperimenter dup();
 
     public void readFrom(ByteBuffer data);
 

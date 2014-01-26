@@ -38,6 +38,10 @@ public class OFActionPopMpls extends OFAction implements org.openflow.protocol.i
 	
 	
 	
+	public OFActionPopMpls dup() {
+		return new OFActionPopMpls(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.ethertype = data.getShort();

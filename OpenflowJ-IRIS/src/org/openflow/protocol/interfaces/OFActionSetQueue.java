@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFActionSetQueue extends OFAction {
 
-	public int getQueueId();
 	public OFActionSetQueue setQueueId(int value);
+	public int getQueueId();
 	public boolean isQueueIdSupported();
+	
+	public OFActionSetQueue dup();
 
     public void readFrom(ByteBuffer data);
 

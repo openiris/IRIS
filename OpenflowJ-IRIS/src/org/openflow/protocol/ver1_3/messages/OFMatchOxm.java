@@ -55,13 +55,13 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public Set<org.openflow.protocol.interfaces.OFFlowWildcards> getWildcards() {
-		throw new UnsupportedOperationException("getWildcards is not supported operation");
+	public OFMatchOxm setWildcards(Set<org.openflow.protocol.interfaces.OFFlowWildcards> value) {
+		throw new UnsupportedOperationException("setWildcards is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFMatchOxm setWildcards(Set<org.openflow.protocol.interfaces.OFFlowWildcards> value) {
-		throw new UnsupportedOperationException("setWildcards is not supported operation");
+	public Set<org.openflow.protocol.interfaces.OFFlowWildcards> getWildcards() {
+		throw new UnsupportedOperationException("getWildcards is not supported operation");
 	}
 	
 	public boolean isWildcardsSupported() {
@@ -69,8 +69,22 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFPort getInputPort() {
-		throw new UnsupportedOperationException("getInputPort is not supported operation");
+	public OFMatchOxm setWildcards(org.openflow.protocol.interfaces.OFFlowWildcards ... value) {
+		throw new UnsupportedOperationException("setWildcards is not supported operation");
+	}
+	
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public OFMatchOxm setWildcardsWire(int value) {
+		throw new UnsupportedOperationException("setWildcardsWire is not supported operation");
+	}
+	
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public int getWildcardsWire() {
+		throw new UnsupportedOperationException("getWildcardsWire is not supported operation");
+	}
+	
+	public boolean isWildcardsWireSupported() {
+		return false;
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
@@ -78,13 +92,13 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("setInputPort is not supported operation");
 	}
 	
-	public boolean isInputPortSupported() {
-		return false;
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public OFPort getInputPort() {
+		throw new UnsupportedOperationException("getInputPort is not supported operation");
 	}
 	
-	@org.codehaus.jackson.annotate.JsonIgnore
-	public byte[] getDataLayerSource() {
-		throw new UnsupportedOperationException("getDataLayerSource is not supported operation");
+	public boolean isInputPortSupported() {
+		return false;
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
@@ -92,13 +106,13 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("setDataLayerSource is not supported operation");
 	}
 	
-	public boolean isDataLayerSourceSupported() {
-		return false;
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public byte[] getDataLayerSource() {
+		throw new UnsupportedOperationException("getDataLayerSource is not supported operation");
 	}
 	
-	@org.codehaus.jackson.annotate.JsonIgnore
-	public byte[] getDataLayerDestination() {
-		throw new UnsupportedOperationException("getDataLayerDestination is not supported operation");
+	public boolean isDataLayerSourceSupported() {
+		return false;
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
@@ -106,13 +120,13 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("setDataLayerDestination is not supported operation");
 	}
 	
-	public boolean isDataLayerDestinationSupported() {
-		return false;
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public byte[] getDataLayerDestination() {
+		throw new UnsupportedOperationException("getDataLayerDestination is not supported operation");
 	}
 	
-	@org.codehaus.jackson.annotate.JsonIgnore
-	public short getDataLayerVirtualLan() {
-		throw new UnsupportedOperationException("getDataLayerVirtualLan is not supported operation");
+	public boolean isDataLayerDestinationSupported() {
+		return false;
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
@@ -120,13 +134,13 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("setDataLayerVirtualLan is not supported operation");
 	}
 	
-	public boolean isDataLayerVirtualLanSupported() {
-		return false;
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public short getDataLayerVirtualLan() {
+		throw new UnsupportedOperationException("getDataLayerVirtualLan is not supported operation");
 	}
 	
-	@org.codehaus.jackson.annotate.JsonIgnore
-	public byte getDataLayerVirtualLanPriorityCodePoint() {
-		throw new UnsupportedOperationException("getDataLayerVirtualLanPriorityCodePoint is not supported operation");
+	public boolean isDataLayerVirtualLanSupported() {
+		return false;
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
@@ -134,13 +148,13 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("setDataLayerVirtualLanPriorityCodePoint is not supported operation");
 	}
 	
-	public boolean isDataLayerVirtualLanPriorityCodePointSupported() {
-		return false;
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public byte getDataLayerVirtualLanPriorityCodePoint() {
+		throw new UnsupportedOperationException("getDataLayerVirtualLanPriorityCodePoint is not supported operation");
 	}
 	
-	@org.codehaus.jackson.annotate.JsonIgnore
-	public short getDataLayerType() {
-		throw new UnsupportedOperationException("getDataLayerType is not supported operation");
+	public boolean isDataLayerVirtualLanPriorityCodePointSupported() {
+		return false;
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
@@ -148,13 +162,13 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("setDataLayerType is not supported operation");
 	}
 	
-	public boolean isDataLayerTypeSupported() {
-		return false;
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public short getDataLayerType() {
+		throw new UnsupportedOperationException("getDataLayerType is not supported operation");
 	}
 	
-	@org.codehaus.jackson.annotate.JsonIgnore
-	public byte getNetworkTypeOfService() {
-		throw new UnsupportedOperationException("getNetworkTypeOfService is not supported operation");
+	public boolean isDataLayerTypeSupported() {
+		return false;
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
@@ -162,13 +176,13 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("setNetworkTypeOfService is not supported operation");
 	}
 	
-	public boolean isNetworkTypeOfServiceSupported() {
-		return false;
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public byte getNetworkTypeOfService() {
+		throw new UnsupportedOperationException("getNetworkTypeOfService is not supported operation");
 	}
 	
-	@org.codehaus.jackson.annotate.JsonIgnore
-	public byte getNetworkProtocol() {
-		throw new UnsupportedOperationException("getNetworkProtocol is not supported operation");
+	public boolean isNetworkTypeOfServiceSupported() {
+		return false;
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
@@ -176,13 +190,13 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("setNetworkProtocol is not supported operation");
 	}
 	
-	public boolean isNetworkProtocolSupported() {
-		return false;
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public byte getNetworkProtocol() {
+		throw new UnsupportedOperationException("getNetworkProtocol is not supported operation");
 	}
 	
-	@org.codehaus.jackson.annotate.JsonIgnore
-	public int getNetworkSource() {
-		throw new UnsupportedOperationException("getNetworkSource is not supported operation");
+	public boolean isNetworkProtocolSupported() {
+		return false;
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
@@ -190,13 +204,13 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("setNetworkSource is not supported operation");
 	}
 	
-	public boolean isNetworkSourceSupported() {
-		return false;
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public int getNetworkSource() {
+		throw new UnsupportedOperationException("getNetworkSource is not supported operation");
 	}
 	
-	@org.codehaus.jackson.annotate.JsonIgnore
-	public int getNetworkDestination() {
-		throw new UnsupportedOperationException("getNetworkDestination is not supported operation");
+	public boolean isNetworkSourceSupported() {
+		return false;
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
@@ -204,13 +218,13 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("setNetworkDestination is not supported operation");
 	}
 	
-	public boolean isNetworkDestinationSupported() {
-		return false;
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public int getNetworkDestination() {
+		throw new UnsupportedOperationException("getNetworkDestination is not supported operation");
 	}
 	
-	@org.codehaus.jackson.annotate.JsonIgnore
-	public short getTransportSource() {
-		throw new UnsupportedOperationException("getTransportSource is not supported operation");
+	public boolean isNetworkDestinationSupported() {
+		return false;
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
@@ -218,18 +232,23 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("setTransportSource is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public short getTransportSource() {
+		throw new UnsupportedOperationException("getTransportSource is not supported operation");
+	}
+	
 	public boolean isTransportSourceSupported() {
 		return false;
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public short getTransportDestination() {
-		throw new UnsupportedOperationException("getTransportDestination is not supported operation");
+	public OFMatchOxm setTransportDestination(short value) {
+		throw new UnsupportedOperationException("setTransportDestination is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFMatchOxm setTransportDestination(short value) {
-		throw new UnsupportedOperationException("setTransportDestination is not supported operation");
+	public short getTransportDestination() {
+		throw new UnsupportedOperationException("getTransportDestination is not supported operation");
 	}
 	
 	public boolean isTransportDestinationSupported() {
@@ -238,19 +257,19 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 	
 	
 	public static class Builder 
-	implements	org.openflow.util.Builder<org.openflow.protocol.interfaces.OFMatch>,
-				org.openflow.protocol.interfaces.OFMatch.Builder, 
-				org.openflow.protocol.interfaces.OFMatchOxm.Builder {
+	implements	org.openflow.protocol.interfaces.OFMatch.Builder {
 	
 		static byte[] mac_mask = { (byte)0xff, (byte)0xff, (byte)0xff, 
 								   (byte)0xff, (byte)0xff, (byte)0xff };
 		
 		private OFMatchOxm object;
-		Byte network_protocol;
 		
 		public Builder() {
 			this.object = new OFMatchOxm();
-			this.network_protocol = null;
+		}
+		
+		public Builder setValue(org.openflow.protocol.interfaces.OFOxmMatchFields match_field, byte mask, byte[] data) {
+			return setValue(OFOxmMatchFields.from(match_field), mask, data);
 		}
 		
 		public Builder setValue(OFOxmMatchFields match_field, byte mask, byte[] data) {
@@ -273,9 +292,19 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			return this;
 		}
 		
+		public org.openflow.protocol.interfaces.OFOxm getValue(org.openflow.protocol.interfaces.OFOxmMatchFields match_field) {
+			return object.getOxmFromIndex(match_field);
+		}
+		
+		public boolean isSetValueSupported() { return true; }
+		
 		public Builder setOxmFields(List<org.openflow.protocol.interfaces.OFOxm> oxm_fields) {
 			this.object.setOxmFields(oxm_fields);
 			return this;
+		}
+		
+		public List<org.openflow.protocol.interfaces.OFOxm> getOxmFields() {
+			return this.object.getOxmFields();
 		}
 		
 		public boolean isOxmFieldsSupported() {
@@ -286,12 +315,41 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			throw new UnsupportedOperationException("setWildcards(Set<org.openflow.protocol.interfaces.OFFlowWildcards> value) is not supported for this version.");
 		}
 		
+		public Set<org.openflow.protocol.interfaces.OFFlowWildcards> getWildcards() {
+			throw new UnsupportedOperationException("getWildcards is not supported for this version.");
+		}
+		
 		public boolean isWildcardsSupported() {
+			return false;
+		}
+		
+		public Builder setWildcards(org.openflow.protocol.interfaces.OFFlowWildcards ... value) {
+			throw new UnsupportedOperationException("setWildcards(org.openflow.protocol.interfaces.OFFlowWildcards ... value) is not supported for this version.");
+		}
+		
+		public Builder setWildcardsWire(int value) {
+			throw new UnsupportedOperationException("setWildcardsWire(int value) is not supported for this version.");
+		}
+		
+		public int getWildcardsWire() {
+			throw new UnsupportedOperationException("getWildcardsWire is not supported for this version.");
+		}
+		
+		public boolean isWildcardsWireSupported() {
 			return false;
 		}
 		
 		public Builder setInputPort(OFPort value) {
 			return setValue(OFOxmMatchFields.OFB_IN_PORT, (byte) 0, ByteBuffer.allocate(4).putInt(value.get()).array());
+		}
+		
+		public OFPort getInputPort() {
+			org.openflow.protocol.interfaces.OFOxm oxm = 
+					getValue(org.openflow.protocol.interfaces.OFOxmMatchFields.OFB_IN_PORT);
+			if ( oxm == null || oxm.getData() == null ) {
+				return null;
+			}
+			return OFPort.of(ByteBuffer.allocate(4).put(oxm.getData()).getInt());
 		}
 		
 		public boolean isInputPortSupported() {
@@ -304,6 +362,17 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			return setValue(OFOxmMatchFields.OFB_ETH_SRC, (byte) 1, mac);
 		}
 		
+		public byte[] getDataLayerSource() {
+			org.openflow.protocol.interfaces.OFOxm oxm = 
+					getValue(org.openflow.protocol.interfaces.OFOxmMatchFields.OFB_ETH_SRC);
+			if ( oxm == null || oxm.getData() == null ) {
+				return null;
+			}
+			byte[] ret = new byte[6];
+			System.arraycopy(oxm.getData(), 0, ret, 0, 6);
+			return ret;
+		}
+		
 		public boolean isDataLayerSourceSupported() {
 			return true;
 		}
@@ -314,6 +383,17 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			return setValue(OFOxmMatchFields.OFB_ETH_DST, (byte) 1, mac);
 		}
 		
+		public byte[] getDataLayerDestination() {
+			org.openflow.protocol.interfaces.OFOxm oxm = 
+					getValue(org.openflow.protocol.interfaces.OFOxmMatchFields.OFB_ETH_DST);
+			if ( oxm == null || oxm.getData() == null ) {
+				return null;
+			}
+			byte[] ret = new byte[6];
+			System.arraycopy(oxm.getData(), 0, ret, 0, 6);
+			return ret;
+		}
+		
 		public boolean isDataLayerDestinationSupported() {
 			return true;
 		}
@@ -322,13 +402,30 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			return setValue(OFOxmMatchFields.OFB_VLAN_VID, (byte) 0, ByteBuffer.allocate(2).putShort(value).array());
 		}
 		
+		public short getDataLayerVirtualLan() {
+			org.openflow.protocol.interfaces.OFOxm oxm = 
+					getValue(org.openflow.protocol.interfaces.OFOxmMatchFields.OFB_VLAN_PCP);
+			if ( oxm == null || oxm.getData() == null ) {
+				return (short) 0;
+			}
+			return ByteBuffer.allocate(2).put(oxm.getData()).getShort();
+		}
+		
 		public boolean isDataLayerVirtualLanSupported() {
 			return true;
 		}
 		
 		public Builder setDataLayerVirtualLanPriorityCodePoint(byte value) {
-			
 			return setValue(OFOxmMatchFields.OFB_VLAN_PCP, (byte) 0, new byte[] { value });
+		}
+		
+		public byte getDataLayerVirtualLanPriorityCodePoint() {
+			org.openflow.protocol.interfaces.OFOxm oxm = 
+					getValue(org.openflow.protocol.interfaces.OFOxmMatchFields.OFB_VLAN_PCP);
+			if ( oxm == null || oxm.getData() == null ) {
+				return (byte) 0;
+			}
+			return oxm.getData()[0];
 		}
 		
 		public boolean isDataLayerVirtualLanPriorityCodePointSupported() {
@@ -339,13 +436,30 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			return setValue(OFOxmMatchFields.OFB_ETH_TYPE, (byte) 0, ByteBuffer.allocate(2).putShort(value).array());
 		}
 		
+		public short getDataLayerType() {
+			org.openflow.protocol.interfaces.OFOxm oxm = 
+					getValue(org.openflow.protocol.interfaces.OFOxmMatchFields.OFB_VLAN_PCP);
+			if ( oxm == null || oxm.getData() == null ) {
+				return (short) 0;
+			}
+			return ByteBuffer.allocate(2).put(oxm.getData()).getShort();
+		}
+		
 		public boolean isDataLayerTypeSupported() {
 			return true;
 		}
 		
 		public Builder setNetworkTypeOfService(byte value) {
-			
 			return setValue(OFOxmMatchFields.OFB_IP_DSCP, (byte) 0, new byte[] { value });
+		}
+		
+		public byte getNetworkTypeOfService() {
+			org.openflow.protocol.interfaces.OFOxm oxm = 
+					getValue(org.openflow.protocol.interfaces.OFOxmMatchFields.OFB_IP_DSCP);
+			if ( oxm == null || oxm.getData() == null ) {
+				return (byte) 0;
+			}
+			return oxm.getData()[0];
 		}
 		
 		public boolean isNetworkTypeOfServiceSupported() {
@@ -353,8 +467,16 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		}
 		
 		public Builder setNetworkProtocol(byte value) {
-			this.network_protocol = value;
 			return setValue(OFOxmMatchFields.OFB_IP_PROTO, (byte) 0, new byte[] { value });
+		}
+		
+		public byte getNetworkProtocol() {
+			org.openflow.protocol.interfaces.OFOxm oxm = 
+					getValue(org.openflow.protocol.interfaces.OFOxmMatchFields.OFB_IP_PROTO);
+			if ( oxm == null || oxm.getData() == null ) {
+				return (byte) 0;
+			}
+			return oxm.getData()[0];
 		}
 		
 		public boolean isNetworkProtocolSupported() {
@@ -365,6 +487,15 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			return setValue(OFOxmMatchFields.OFB_IPV4_SRC, (byte) 1, ByteBuffer.allocate(8).putInt(value).putInt(0xffffffff).array());
 		}
 		
+		public int getNetworkSource() {
+			org.openflow.protocol.interfaces.OFOxm oxm = 
+					getValue(org.openflow.protocol.interfaces.OFOxmMatchFields.OFB_IPV4_SRC);
+			if ( oxm == null || oxm.getData() == null ) {
+				return (byte) 0;
+			}
+			return ByteBuffer.allocate(8).put(oxm.getData()).getInt();
+		}
+		
 		public boolean isNetworkSourceSupported() {
 			return true;
 		}
@@ -373,15 +504,22 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			return setValue(OFOxmMatchFields.OFB_IPV4_DST, (byte) 1, ByteBuffer.allocate(8).putInt(value).putInt(0xffffffff).array());
 		}
 		
+		public int getNetworkDestination() {
+			org.openflow.protocol.interfaces.OFOxm oxm = 
+					getValue(org.openflow.protocol.interfaces.OFOxmMatchFields.OFB_IPV4_DST);
+			if ( oxm == null || oxm.getData() == null ) {
+				return (byte) 0;
+			}
+			return ByteBuffer.allocate(8).put(oxm.getData()).getInt();
+		}
+		
 		public boolean isNetworkDestinationSupported() {
 			return true;
 		}
 		
 		public Builder setTransportSource(short source) {
-			if ( this.network_protocol == null ) {
-				throw new IllegalStateException("Before calling setTransportSource, you should first call setNetworkProtocol()");
-			}
-			switch (this.network_protocol) {
+			byte network_protocol = this.getNetworkProtocol();
+			switch ( network_protocol ) {
 			case (byte) 6:
 				return setValue(OFOxmMatchFields.OFB_TCP_SRC, (byte) 0, ByteBuffer.allocate(2).putShort(source).array());
 			case (byte) 17:
@@ -391,8 +529,34 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			case (byte) 1:
 				return setValue(OFOxmMatchFields.OFB_ICMPV4_TYPE, (byte) 0, new byte[] { (byte)source });
 			default:
-				throw new IllegalStateException("Network protocol is wrongfully set to " + this.network_protocol);
+				throw new IllegalStateException("Network protocol is wrongfully set to " + network_protocol);
 			}
+		}
+		
+		public short getTransportSource() {
+			byte network_protocol = this.getNetworkProtocol();
+			org.openflow.protocol.interfaces.OFOxmMatchFields match_field = null;
+			switch ( network_protocol ) {
+			case (byte) 6:
+				match_field = org.openflow.protocol.interfaces.OFOxmMatchFields.OFB_TCP_SRC;
+				break;
+			case (byte) 17:
+				match_field = org.openflow.protocol.interfaces.OFOxmMatchFields.OFB_UDP_SRC;
+				break;
+			case (byte) 132:
+				match_field = org.openflow.protocol.interfaces.OFOxmMatchFields.OFB_SCTP_SRC;
+				break;
+			case (byte) 1:
+				match_field = org.openflow.protocol.interfaces.OFOxmMatchFields.OFB_ICMPV4_CODE;
+				break;
+			default:
+				throw new IllegalStateException("Network protocol is wrongfully set to " + network_protocol);
+			}
+			org.openflow.protocol.interfaces.OFOxm oxm = getValue(match_field);
+			if ( oxm == null || oxm.getData() == null ) {
+				return (short) 0;
+			}
+			return ByteBuffer.allocate(2).put(oxm.getData()).getShort();
 		}
 		
 		public boolean isTransportSourceSupported() {
@@ -400,10 +564,8 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		}
 		
 		public Builder setTransportDestination(short destination) {
-			if ( this.network_protocol == null ) {
-				throw new IllegalStateException("Before calling setTransportDestination, you should first call setNetworkProtocol()");
-			}
-			switch (this.network_protocol) {
+			byte network_protocol = this.getNetworkProtocol();
+			switch ( network_protocol ) {
 			case (byte) 6:
 				return setValue(OFOxmMatchFields.OFB_TCP_DST, (byte) 0, ByteBuffer.allocate(2).putShort(destination).array());
 			case (byte) 17:
@@ -413,8 +575,34 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			case (byte) 1:
 				return setValue(OFOxmMatchFields.OFB_ICMPV4_CODE, (byte) 0, new byte[] { (byte)destination });
 			default:
-				throw new IllegalStateException("Network protocol is wrongfully set to " + this.network_protocol);
+				throw new IllegalStateException("Network protocol is wrongfully set to " + network_protocol);
 			}
+		}
+		
+		public short getTransportDestination() {
+			byte network_protocol = this.getNetworkProtocol();
+			org.openflow.protocol.interfaces.OFOxmMatchFields match_field = null;
+			switch ( network_protocol ) {
+			case (byte) 6:
+				match_field = org.openflow.protocol.interfaces.OFOxmMatchFields.OFB_TCP_DST;
+				break;
+			case (byte) 17:
+				match_field = org.openflow.protocol.interfaces.OFOxmMatchFields.OFB_UDP_DST;
+				break;
+			case (byte) 132:
+				match_field = org.openflow.protocol.interfaces.OFOxmMatchFields.OFB_SCTP_DST;
+				break;
+			case (byte) 1:
+				match_field = org.openflow.protocol.interfaces.OFOxmMatchFields.OFB_ICMPV4_CODE;
+				break;
+			default:
+				throw new IllegalStateException("Network protocol is wrongfully set to " + network_protocol);
+			}
+			org.openflow.protocol.interfaces.OFOxm oxm = getValue(match_field);
+			if ( oxm == null || oxm.getData() == null ) {
+				return (short) 0;
+			}
+			return ByteBuffer.allocate(2).put(oxm.getData()).getShort();
 		}
 		
 		public boolean isTransportDestinationSupported() {
@@ -425,6 +613,10 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		public org.openflow.protocol.interfaces.OFMatch build() {
 			return object;
 		}
+	}
+	
+	public OFMatchOxm dup() {
+		return new OFMatchOxm(this);
 	}
 	
     public void readFrom(ByteBuffer data) {

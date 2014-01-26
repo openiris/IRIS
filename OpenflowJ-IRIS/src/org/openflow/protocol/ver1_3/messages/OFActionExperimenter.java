@@ -52,6 +52,10 @@ public class OFActionExperimenter extends OFAction implements org.openflow.proto
 	
 	
 	
+	public OFActionExperimenter dup() {
+		return new OFActionExperimenter(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

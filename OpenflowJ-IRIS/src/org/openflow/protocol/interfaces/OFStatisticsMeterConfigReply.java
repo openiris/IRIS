@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface OFStatisticsMeterConfigReply extends OFStatisticsReply {
 
-	public List<OFMeterBand> getEntries();
 	public OFStatisticsMeterConfigReply setEntries(List<OFMeterBand> value);
+	public List<OFMeterBand> getEntries();
 	public boolean isEntriesSupported();
+	
+	public OFStatisticsMeterConfigReply dup();
 
     public void readFrom(ByteBuffer data);
 

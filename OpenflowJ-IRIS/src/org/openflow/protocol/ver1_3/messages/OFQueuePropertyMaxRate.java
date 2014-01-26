@@ -39,6 +39,10 @@ public class OFQueuePropertyMaxRate extends OFQueueProperty implements org.openf
 	
 	
 	
+	public OFQueuePropertyMaxRate dup() {
+		return new OFQueuePropertyMaxRate(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.rate = data.getShort();

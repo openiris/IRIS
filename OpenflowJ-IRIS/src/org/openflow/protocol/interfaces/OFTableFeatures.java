@@ -6,30 +6,32 @@ import java.util.List;
 
 public interface OFTableFeatures  {
 
-	public short getLength();
 	public OFTableFeatures setLength(short value);
+	public short getLength();
 	public boolean isLengthSupported();
-	public byte getTableId();
 	public OFTableFeatures setTableId(byte value);
+	public byte getTableId();
 	public boolean isTableIdSupported();
-	public byte[] getName();
 	public OFTableFeatures setName(byte[] value);
+	public byte[] getName();
 	public boolean isNameSupported();
-	public long getMetadataMatch();
 	public OFTableFeatures setMetadataMatch(long value);
+	public long getMetadataMatch();
 	public boolean isMetadataMatchSupported();
-	public long getMetadataWrite();
 	public OFTableFeatures setMetadataWrite(long value);
+	public long getMetadataWrite();
 	public boolean isMetadataWriteSupported();
-	public int getConfig();
 	public OFTableFeatures setConfig(int value);
+	public int getConfig();
 	public boolean isConfigSupported();
-	public int getMaxEntries();
 	public OFTableFeatures setMaxEntries(int value);
+	public int getMaxEntries();
 	public boolean isMaxEntriesSupported();
-	public List<OFTableFeatureProperty> getProperties();
 	public OFTableFeatures setProperties(List<OFTableFeatureProperty> value);
+	public List<OFTableFeatureProperty> getProperties();
 	public boolean isPropertiesSupported();
+	
+	public OFTableFeatures dup();
 
     public void readFrom(ByteBuffer data);
 

@@ -39,6 +39,10 @@ public class OFActionSetMplsTtl extends OFAction implements org.openflow.protoco
 	
 	
 	
+	public OFActionSetMplsTtl dup() {
+		return new OFActionSetMplsTtl(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.mpls_ttl = data.get();

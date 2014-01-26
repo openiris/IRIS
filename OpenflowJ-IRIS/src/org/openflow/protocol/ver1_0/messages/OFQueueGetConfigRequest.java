@@ -39,6 +39,10 @@ public class OFQueueGetConfigRequest extends OFMessage implements org.openflow.p
 	
 	
 	
+	public OFQueueGetConfigRequest dup() {
+		return new OFQueueGetConfigRequest(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.port = data.getShort();

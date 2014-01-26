@@ -6,18 +6,20 @@ import java.util.List;
 
 public interface OFGroupMod extends OFMessage {
 
-	public OFGroupModCommand getCommand();
 	public OFGroupMod setCommand(OFGroupModCommand value);
+	public OFGroupModCommand getCommand();
 	public boolean isCommandSupported();
-	public OFGroupCategory getGroupCategory();
 	public OFGroupMod setGroupCategory(OFGroupCategory value);
+	public OFGroupCategory getGroupCategory();
 	public boolean isGroupCategorySupported();
-	public int getGroupId();
 	public OFGroupMod setGroupId(int value);
+	public int getGroupId();
 	public boolean isGroupIdSupported();
-	public List<OFBucket> getBuckets();
 	public OFGroupMod setBuckets(List<OFBucket> value);
+	public List<OFBucket> getBuckets();
 	public boolean isBucketsSupported();
+	
+	public OFGroupMod dup();
 
     public void readFrom(ByteBuffer data);
 

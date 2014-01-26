@@ -6,39 +6,41 @@ import java.nio.ByteBuffer;
 
 public interface OFFlowRemoved extends OFMessage {
 
-	public OFMatch getMatch();
 	public OFFlowRemoved setMatch(OFMatch value);
+	public OFMatch getMatch();
 	public boolean isMatchSupported();
-	public long getCookie();
 	public OFFlowRemoved setCookie(long value);
+	public long getCookie();
 	public boolean isCookieSupported();
-	public short getPriority();
 	public OFFlowRemoved setPriority(short value);
+	public short getPriority();
 	public boolean isPrioritySupported();
-	public OFFlowRemovedReason getReason();
 	public OFFlowRemoved setReason(OFFlowRemovedReason value);
+	public OFFlowRemovedReason getReason();
 	public boolean isReasonSupported();
-	public int getDurationSec();
 	public OFFlowRemoved setDurationSec(int value);
+	public int getDurationSec();
 	public boolean isDurationSecSupported();
-	public int getDurationNsec();
 	public OFFlowRemoved setDurationNsec(int value);
+	public int getDurationNsec();
 	public boolean isDurationNsecSupported();
-	public short getIdleTimeout();
 	public OFFlowRemoved setIdleTimeout(short value);
+	public short getIdleTimeout();
 	public boolean isIdleTimeoutSupported();
-	public long getPacketCount();
 	public OFFlowRemoved setPacketCount(long value);
+	public long getPacketCount();
 	public boolean isPacketCountSupported();
-	public long getByteCount();
 	public OFFlowRemoved setByteCount(long value);
+	public long getByteCount();
 	public boolean isByteCountSupported();
-	public byte getTableId();
 	public OFFlowRemoved setTableId(byte value);
+	public byte getTableId();
 	public boolean isTableIdSupported();
-	public short getHardTimeout();
 	public OFFlowRemoved setHardTimeout(short value);
+	public short getHardTimeout();
 	public boolean isHardTimeoutSupported();
+	
+	public OFFlowRemoved dup();
 
     public void readFrom(ByteBuffer data);
 

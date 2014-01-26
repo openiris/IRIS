@@ -6,21 +6,23 @@ import java.nio.ByteBuffer;
 
 public interface OFPortMod extends OFMessage {
 
-	public OFPortNo getPortNo();
 	public OFPortMod setPortNo(OFPortNo value);
+	public OFPortNo getPortNo();
 	public boolean isPortNoSupported();
-	public byte[] getHwAddr();
 	public OFPortMod setHwAddr(byte[] value);
+	public byte[] getHwAddr();
 	public boolean isHwAddrSupported();
-	public int getConfig();
 	public OFPortMod setConfig(int value);
+	public int getConfig();
 	public boolean isConfigSupported();
-	public int getMask();
 	public OFPortMod setMask(int value);
+	public int getMask();
 	public boolean isMaskSupported();
-	public int getAdvertise();
 	public OFPortMod setAdvertise(int value);
+	public int getAdvertise();
 	public boolean isAdvertiseSupported();
+	
+	public OFPortMod dup();
 
     public void readFrom(ByteBuffer data);
 

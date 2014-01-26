@@ -37,6 +37,10 @@ public class OFEchoReply extends OFMessage implements org.openflow.protocol.inte
 	
 	
 	
+	public OFEchoReply dup() {
+		return new OFEchoReply(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

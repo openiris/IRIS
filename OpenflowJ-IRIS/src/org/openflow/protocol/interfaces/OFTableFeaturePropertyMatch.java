@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface OFTableFeaturePropertyMatch extends OFTableFeatureProperty {
 
-	public List<Integer> getOxmIds();
 	public OFTableFeaturePropertyMatch setOxmIds(List<Integer> value);
+	public List<Integer> getOxmIds();
 	public boolean isOxmIdsSupported();
+	
+	public OFTableFeaturePropertyMatch dup();
 
     public void readFrom(ByteBuffer data);
 

@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 public interface OFActionPopPbb extends OFAction {
 
 	
+	
+	public OFActionPopPbb dup();
 
     public void readFrom(ByteBuffer data);
 

@@ -38,6 +38,10 @@ public class OFActionPushVlan extends OFAction implements org.openflow.protocol.
 	
 	
 	
+	public OFActionPushVlan dup() {
+		return new OFActionPushVlan(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.ethertype = data.getShort();

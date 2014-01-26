@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 public interface OFActionStripVlan extends OFAction {
 
 	
+	
+	public OFActionStripVlan dup();
 
     public void readFrom(ByteBuffer data);
 

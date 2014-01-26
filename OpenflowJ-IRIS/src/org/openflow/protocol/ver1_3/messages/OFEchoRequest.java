@@ -37,6 +37,10 @@ public class OFEchoRequest extends OFMessage implements org.openflow.protocol.in
 	
 	
 	
+	public OFEchoRequest dup() {
+		return new OFEchoRequest(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

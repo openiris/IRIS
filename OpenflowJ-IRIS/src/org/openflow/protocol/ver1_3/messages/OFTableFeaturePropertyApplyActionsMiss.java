@@ -40,6 +40,10 @@ public class OFTableFeaturePropertyApplyActionsMiss extends OFTableFeatureProper
 	
 	
 	
+	public OFTableFeaturePropertyApplyActionsMiss dup() {
+		return new OFTableFeaturePropertyApplyActionsMiss(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

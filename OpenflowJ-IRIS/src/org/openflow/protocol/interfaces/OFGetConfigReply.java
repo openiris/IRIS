@@ -6,15 +6,17 @@ import java.nio.ByteBuffer;
 
 public interface OFGetConfigReply extends OFMessage {
 
-	public short getFlags();
 	public OFGetConfigReply setFlags(short value);
+	public short getFlags();
 	public boolean isFlagsSupported();
-	public short getMissSendLength();
 	public OFGetConfigReply setMissSendLength(short value);
+	public short getMissSendLength();
 	public boolean isMissSendLengthSupported();
-	public short getMissSendLen();
 	public OFGetConfigReply setMissSendLen(short value);
+	public short getMissSendLen();
 	public boolean isMissSendLenSupported();
+	
+	public OFGetConfigReply dup();
 
     public void readFrom(ByteBuffer data);
 

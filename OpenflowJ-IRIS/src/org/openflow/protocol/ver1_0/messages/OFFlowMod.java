@@ -177,7 +177,14 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		
 	public OFFlowMod setFlags(Set<org.openflow.protocol.interfaces.OFFlowModFlags> values) {
 		OFFlowModFlags tmp = OFFlowModFlags.of(this.flags);
-		tmp.and( values );
+		tmp.or( values );
+		this.flags = tmp.get();
+		return this;
+	}
+	
+	public OFFlowMod setFlags(org.openflow.protocol.interfaces.OFFlowModFlags ... values) {
+		OFFlowModFlags tmp = OFFlowModFlags.of(this.flags);
+		tmp.or( values );
 		this.flags = tmp.get();
 		return this;
 	}
@@ -200,13 +207,13 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public long getCookieMask() {
-		throw new UnsupportedOperationException("getCookieMask is not supported operation");
+	public OFFlowMod setCookieMask(long value) {
+		throw new UnsupportedOperationException("setCookieMask is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFFlowMod setCookieMask(long value) {
-		throw new UnsupportedOperationException("setCookieMask is not supported operation");
+	public long getCookieMask() {
+		throw new UnsupportedOperationException("getCookieMask is not supported operation");
 	}
 	
 	public boolean isCookieMaskSupported() {
@@ -214,13 +221,13 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public byte getTableId() {
-		throw new UnsupportedOperationException("getTableId is not supported operation");
+	public OFFlowMod setTableId(byte value) {
+		throw new UnsupportedOperationException("setTableId is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFFlowMod setTableId(byte value) {
-		throw new UnsupportedOperationException("setTableId is not supported operation");
+	public byte getTableId() {
+		throw new UnsupportedOperationException("getTableId is not supported operation");
 	}
 	
 	public boolean isTableIdSupported() {
@@ -228,13 +235,13 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public int getOutGroup() {
-		throw new UnsupportedOperationException("getOutGroup is not supported operation");
+	public OFFlowMod setOutGroup(int value) {
+		throw new UnsupportedOperationException("setOutGroup is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFFlowMod setOutGroup(int value) {
-		throw new UnsupportedOperationException("setOutGroup is not supported operation");
+	public int getOutGroup() {
+		throw new UnsupportedOperationException("getOutGroup is not supported operation");
 	}
 	
 	public boolean isOutGroupSupported() {
@@ -242,13 +249,13 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public List<org.openflow.protocol.interfaces.OFInstruction> getInstructions() {
-		throw new UnsupportedOperationException("getInstructions is not supported operation");
+	public OFFlowMod setInstructions(List<org.openflow.protocol.interfaces.OFInstruction> value) {
+		throw new UnsupportedOperationException("setInstructions is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFFlowMod setInstructions(List<org.openflow.protocol.interfaces.OFInstruction> value) {
-		throw new UnsupportedOperationException("setInstructions is not supported operation");
+	public List<org.openflow.protocol.interfaces.OFInstruction> getInstructions() {
+		throw new UnsupportedOperationException("getInstructions is not supported operation");
 	}
 	
 	public boolean isInstructionsSupported() {
@@ -257,6 +264,10 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 	
 	
 	
+	
+	public OFFlowMod dup() {
+		return new OFFlowMod(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();

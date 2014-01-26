@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFActionSetTpDst extends OFAction {
 
-	public short getTpPort();
 	public OFActionSetTpDst setTpPort(short value);
+	public short getTpPort();
 	public boolean isTpPortSupported();
+	
+	public OFActionSetTpDst dup();
 
     public void readFrom(ByteBuffer data);
 

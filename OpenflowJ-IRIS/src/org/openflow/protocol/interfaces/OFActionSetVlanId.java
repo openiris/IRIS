@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFActionSetVlanId extends OFAction {
 
-	public short getVlanId();
 	public OFActionSetVlanId setVlanId(short value);
+	public short getVlanId();
 	public boolean isVlanIdSupported();
+	
+	public OFActionSetVlanId dup();
 
     public void readFrom(ByteBuffer data);
 

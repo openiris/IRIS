@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFActionPushVlan extends OFAction {
 
-	public short getEthertype();
 	public OFActionPushVlan setEthertype(short value);
+	public short getEthertype();
 	public boolean isEthertypeSupported();
+	
+	public OFActionPushVlan dup();
 
     public void readFrom(ByteBuffer data);
 

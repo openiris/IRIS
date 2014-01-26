@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface OFTableFeaturePropertyNextTables extends OFTableFeatureProperty {
 
-	public List<Byte> getNextTableIds();
 	public OFTableFeaturePropertyNextTables setNextTableIds(List<Byte> value);
+	public List<Byte> getNextTableIds();
 	public boolean isNextTableIdsSupported();
+	
+	public OFTableFeaturePropertyNextTables dup();
 
     public void readFrom(ByteBuffer data);
 

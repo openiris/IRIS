@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 
 public interface OFStatisticsMeterConfigRequest extends OFStatisticsRequest {
 
-	public int getMeterId();
 	public OFStatisticsMeterConfigRequest setMeterId(int value);
+	public int getMeterId();
 	public boolean isMeterIdSupported();
+	
+	public OFStatisticsMeterConfigRequest dup();
 
     public void readFrom(ByteBuffer data);
 

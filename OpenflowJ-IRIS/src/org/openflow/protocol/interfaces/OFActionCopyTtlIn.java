@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 public interface OFActionCopyTtlIn extends OFAction {
 
 	
+	
+	public OFActionCopyTtlIn dup();
 
     public void readFrom(ByteBuffer data);
 

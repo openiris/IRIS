@@ -6,12 +6,14 @@ import java.nio.ByteBuffer;
 
 public interface OFActionId  {
 
-	public short getType();
 	public OFActionId setType(short value);
+	public short getType();
 	public boolean isTypeSupported();
-	public short getLength();
 	public OFActionId setLength(short value);
+	public short getLength();
 	public boolean isLengthSupported();
+	
+	public OFActionId dup();
 
     public void readFrom(ByteBuffer data);
 

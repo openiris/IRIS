@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface OFInstructionWriteActions extends OFInstruction {
 
-	public List<OFAction> getActions();
 	public OFInstructionWriteActions setActions(List<OFAction> value);
+	public List<OFAction> getActions();
 	public boolean isActionsSupported();
+	
+	public OFInstructionWriteActions dup();
 
     public void readFrom(ByteBuffer data);
 

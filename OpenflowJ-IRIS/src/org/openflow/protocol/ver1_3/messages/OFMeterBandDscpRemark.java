@@ -39,6 +39,10 @@ public class OFMeterBandDscpRemark extends OFMeterBand implements org.openflow.p
 	
 	
 	
+	public OFMeterBandDscpRemark dup() {
+		return new OFMeterBandDscpRemark(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.prec_level = data.get();

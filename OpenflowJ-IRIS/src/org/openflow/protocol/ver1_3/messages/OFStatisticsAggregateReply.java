@@ -69,6 +69,10 @@ public class OFStatisticsAggregateReply extends OFStatisticsReply implements org
 	
 	
 	
+	public OFStatisticsAggregateReply dup() {
+		return new OFStatisticsAggregateReply(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.packet_count = data.getLong();

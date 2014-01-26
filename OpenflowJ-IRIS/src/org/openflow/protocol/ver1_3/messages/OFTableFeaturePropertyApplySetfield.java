@@ -40,6 +40,10 @@ public class OFTableFeaturePropertyApplySetfield extends OFTableFeatureProperty 
 	
 	
 	
+	public OFTableFeaturePropertyApplySetfield dup() {
+		return new OFTableFeaturePropertyApplySetfield(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

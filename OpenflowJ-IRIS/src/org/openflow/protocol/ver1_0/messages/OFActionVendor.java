@@ -52,6 +52,10 @@ public class OFActionVendor extends OFAction implements org.openflow.protocol.in
 	
 	
 	
+	public OFActionVendor dup() {
+		return new OFActionVendor(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
 		super.readFrom(data);

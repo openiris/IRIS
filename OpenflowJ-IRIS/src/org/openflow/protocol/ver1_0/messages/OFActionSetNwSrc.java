@@ -37,6 +37,10 @@ public class OFActionSetNwSrc extends OFAction implements org.openflow.protocol.
 	
 	
 	
+	public OFActionSetNwSrc dup() {
+		return new OFActionSetNwSrc(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.nw_addr = data.getInt();

@@ -244,13 +244,13 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public long getReceiveCrcErr() {
-		throw new UnsupportedOperationException("getReceiveCrcErr is not supported operation");
+	public OFPortStatsEntry setReceiveCrcErr(long value) {
+		throw new UnsupportedOperationException("setReceiveCrcErr is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFPortStatsEntry setReceiveCrcErr(long value) {
-		throw new UnsupportedOperationException("setReceiveCrcErr is not supported operation");
+	public long getReceiveCrcErr() {
+		throw new UnsupportedOperationException("getReceiveCrcErr is not supported operation");
 	}
 	
 	public boolean isReceiveCrcErrSupported() {
@@ -259,6 +259,10 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 	
 	
 	
+	
+	public OFPortStatsEntry dup() {
+		return new OFPortStatsEntry(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         this.port_number = data.getInt();

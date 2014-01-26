@@ -210,7 +210,14 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		
 	public OFFlowMod setFlags(Set<org.openflow.protocol.interfaces.OFFlowModFlags> values) {
 		OFFlowModFlags tmp = OFFlowModFlags.of(this.flags);
-		tmp.and( values );
+		tmp.or( values );
+		this.flags = tmp.get();
+		return this;
+	}
+	
+	public OFFlowMod setFlags(org.openflow.protocol.interfaces.OFFlowModFlags ... values) {
+		OFFlowModFlags tmp = OFFlowModFlags.of(this.flags);
+		tmp.or( values );
 		this.flags = tmp.get();
 		return this;
 	}
@@ -246,13 +253,13 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public List<org.openflow.protocol.interfaces.OFAction> getActions() {
-		throw new UnsupportedOperationException("getActions is not supported operation");
+	public OFFlowMod setActions(List<org.openflow.protocol.interfaces.OFAction> value) {
+		throw new UnsupportedOperationException("setActions is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFFlowMod setActions(List<org.openflow.protocol.interfaces.OFAction> value) {
-		throw new UnsupportedOperationException("setActions is not supported operation");
+	public List<org.openflow.protocol.interfaces.OFAction> getActions() {
+		throw new UnsupportedOperationException("getActions is not supported operation");
 	}
 	
 	public boolean isActionsSupported() {
@@ -261,6 +268,10 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 	
 	
 	
+	
+	public OFFlowMod dup() {
+		return new OFFlowMod(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();

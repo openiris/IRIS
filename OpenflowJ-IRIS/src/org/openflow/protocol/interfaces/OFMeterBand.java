@@ -6,18 +6,20 @@ import java.nio.ByteBuffer;
 
 public interface OFMeterBand  {
 
-	public OFMeterBandType getType();
 	public OFMeterBand setType(OFMeterBandType value);
+	public OFMeterBandType getType();
 	public boolean isTypeSupported();
-	public short getLength();
 	public OFMeterBand setLength(short value);
+	public short getLength();
 	public boolean isLengthSupported();
-	public int getRate();
 	public OFMeterBand setRate(int value);
+	public int getRate();
 	public boolean isRateSupported();
-	public int getBurstSize();
 	public OFMeterBand setBurstSize(int value);
+	public int getBurstSize();
 	public boolean isBurstSizeSupported();
+	
+	public OFMeterBand dup();
 
     public void readFrom(ByteBuffer data);
 

@@ -37,6 +37,10 @@ public class OFInstructionMeter extends OFInstruction implements org.openflow.pr
 	
 	
 	
+	public OFInstructionMeter dup() {
+		return new OFInstructionMeter(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
 		this.meter_id = data.getInt();

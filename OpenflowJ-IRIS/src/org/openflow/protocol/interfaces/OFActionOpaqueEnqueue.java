@@ -6,12 +6,14 @@ import org.openflow.util.OFPort;
 
 public interface OFActionOpaqueEnqueue extends OFAction {
 
-	public OFPort getPort();
 	public OFActionOpaqueEnqueue setPort(OFPort value);
+	public OFPort getPort();
 	public boolean isPortSupported();
-	public int getQueueId();
 	public OFActionOpaqueEnqueue setQueueId(int value);
+	public int getQueueId();
 	public boolean isQueueIdSupported();
+	
+	public OFActionOpaqueEnqueue dup();
 
     public void readFrom(ByteBuffer data);
 

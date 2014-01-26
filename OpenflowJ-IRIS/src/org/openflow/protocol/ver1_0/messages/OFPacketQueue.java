@@ -67,13 +67,13 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
 	}
 			
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFPort getPort() {
-		throw new UnsupportedOperationException("getPort is not supported operation");
+	public OFPacketQueue setPort(OFPort value) {
+		throw new UnsupportedOperationException("setPort is not supported operation");
 	}
 	
 	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFPacketQueue setPort(OFPort value) {
-		throw new UnsupportedOperationException("setPort is not supported operation");
+	public OFPort getPort() {
+		throw new UnsupportedOperationException("getPort is not supported operation");
 	}
 	
 	public boolean isPortSupported() {
@@ -82,6 +82,10 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
 	
 	
 	
+	
+	public OFPacketQueue dup() {
+		return new OFPacketQueue(this);
+	}
 	
     public void readFrom(ByteBuffer data) {
         int mark = data.position();
