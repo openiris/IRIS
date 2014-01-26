@@ -42,8 +42,8 @@ import org.openflow.protocol.interfaces.OFStatisticsReply;
 import org.openflow.protocol.interfaces.OFStatisticsRequest;
 import org.openflow.protocol.interfaces.OFStatisticsType;
 import org.openflow.util.HexString;
-import org.openflow.util.OFFlowWildcard;
-import org.openflow.util.OFPort;
+import org.openflow.protocol.OFBFlowWildcard;
+import org.openflow.protocol.OFPort;
 import org.openflow.util.U16;
 import org.openflow.util.U8;
 
@@ -619,7 +619,7 @@ public class OFProtocol {
 		ret.setInputPort(OFPort.of(inputPort));
 	
 		if ( ret.isWildcardsSupported() && inputPort == OFPort.ALL.get() ) {
-			// ret.wildcards |= OFFlowWildcards.IN_PORT
+			// ret.wildcards |= OFBFlowWildcards.IN_PORT
 			ret.setWildcards( OFFlowWildcards.IN_PORT );
 		}
 		
@@ -749,12 +749,12 @@ public class OFProtocol {
 					int mask = 32 - prefix;
 					if (which.equals(STR_NW_DST)) {
 						match.setNetworkDestination(ip);
-						match.setWildcardsWire((match.getWildcardsWire() & ~OFFlowWildcard.NW_DST_MASK) | 
-								(mask << OFFlowWildcard.NW_DST_SHIFT));
+						match.setWildcardsWire((match.getWildcardsWire() & ~OFBFlowWildcard.NW_DST_MASK) | 
+								(mask << OFBFlowWildcard.NW_DST_SHIFT));
 					} else if (which.equals(STR_NW_SRC)) {
 						match.setNetworkSource(ip);
-						match.setWildcardsWire((match.getWildcardsWire() & ~OFFlowWildcard.NW_SRC_MASK) | 
-								(mask << OFFlowWildcard.NW_SRC_SHIFT));
+						match.setWildcardsWire((match.getWildcardsWire() & ~OFBFlowWildcard.NW_SRC_MASK) | 
+								(mask << OFBFlowWildcard.NW_SRC_SHIFT));
 					}
 				} else {
 					int mask = 0x80000000 >> (prefix-1);
@@ -836,17 +836,17 @@ public class OFProtocol {
 					if (values[0].equals(STR_IN_PORT) || values[0].equals("input_port")) {
 						ret.setInputPort(OFPort.of(Integer.valueOf(values[1])));
 						if ( ret.isWildcardsSupported() )
-							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFFlowWildcard.IN_PORT);
+							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.IN_PORT);
 					} else if (values[0].equals(STR_DL_DST)
 							|| values[0].equals("eth_dst")) {
 						ret.setDataLayerDestination(HexString.fromHexString(values[1]));
 						if ( ret.isWildcardsSupported() )
-							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFFlowWildcard.DL_DST);
+							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.DL_DST);
 					} else if (values[0].equals(STR_DL_SRC)
 							|| values[0].equals("eth_src")) {
 						ret.setDataLayerSource(HexString.fromHexString(values[1]));
 						if ( ret.isWildcardsSupported() )
-							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFFlowWildcard.DL_SRC);
+							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.DL_SRC);
 					} else if (values[0].equals(STR_DL_TYPE)
 							|| values[0].equals("eth_type")) {
 						if (values[1].startsWith("0x"))
@@ -854,7 +854,7 @@ public class OFProtocol {
 						else
 							ret.setDataLayerType(U16.t(Integer.valueOf(values[1])));
 						if ( ret.isWildcardsSupported() )
-							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFFlowWildcard.DL_TYPE);
+							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.DL_TYPE);
 					} else if (values[0].equals(STR_DL_VLAN)) {
 						if (values[1].contains("0x")) {
 							ret.setDataLayerVirtualLan(U16.t(Integer.valueOf(values[1].replaceFirst("0x", ""), 16)));
@@ -862,11 +862,11 @@ public class OFProtocol {
 							ret.setDataLayerVirtualLan(U16.t(Integer.valueOf(values[1])));
 						}
 						if ( ret.isWildcardsSupported() )
-							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFFlowWildcard.DL_VLAN);
+							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.DL_VLAN);
 					} else if (values[0].equals(STR_DL_VLAN_PCP)) {
 						ret.setDataLayerVirtualLanPriorityCodePoint(U8.t(Short.valueOf(values[1])));
 						if ( ret.isWildcardsSupported() )
-							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFFlowWildcard.DL_VLAN_PCP);
+							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.DL_VLAN_PCP);
 					} else if (values[0].equals(STR_NW_DST)
 							|| values[0].equals("ip_dst"))
 						setFromCIDR(ret, values[1], STR_NW_DST);
@@ -875,19 +875,19 @@ public class OFProtocol {
 					else if (values[0].equals(STR_NW_PROTO)) {
 						ret.setNetworkProtocol(U8.t(Short.valueOf(values[1])));
 						if ( ret.isWildcardsSupported() )
-							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFFlowWildcard.NW_PROTO);
+							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.NW_PROTO);
 					} else if (values[0].equals(STR_NW_TOS)) {
 						ret.setNetworkTypeOfService(U8.t(Short.valueOf(values[1])));
 						if ( ret.isWildcardsSupported() )
-							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFFlowWildcard.NW_TOS);
+							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.NW_TOS);
 					} else if (values[0].equals(STR_TP_DST)) {
 						ret.setTransportDestination(U16.t(Integer.valueOf(values[1])));
 						if ( ret.isWildcardsSupported() )
-							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFFlowWildcard.TP_DST);
+							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.TP_DST);
 					} else if (values[0].equals(STR_TP_SRC)) {
 						ret.setTransportSource(U16.t(Integer.valueOf(values[1])));
 						if ( ret.isWildcardsSupported() )
-							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFFlowWildcard.TP_SRC);
+							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.TP_SRC);
 					} else
 						throw new IllegalArgumentException("unknown token " + tokens[i]
 								+ " parsing " + match);
