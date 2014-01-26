@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.ver1_0.messages.OFPacketIn;
 import org.openflow.protocol.interfaces.OFMessageType;
+import org.openflow.protocol.interfaces.OFPacketIn;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
@@ -22,11 +22,11 @@ import etri.sdn.controller.module.routing.IRoutingDecision;
 import etri.sdn.controller.module.routing.RoutingDecision;
 import etri.sdn.controller.module.storagemanager.IStorageService;
 import etri.sdn.controller.module.storagemanager.OFMStorageManager;
+import etri.sdn.controller.protocol.OFProtocol;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.Ethernet;
 import etri.sdn.controller.protocol.packet.IPv4;
-import etri.sdn.controller.protocol.version.VersionAdaptor10;
 import etri.sdn.controller.util.Logger;
 
 /**
@@ -50,7 +50,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
     protected int subnet_mask = IPv4.toIPv4Address("255.255.255.0");
     
     @SuppressWarnings("unused")
-	private VersionAdaptor10 version_adaptor_10;
+	private OFProtocol protocol;
 
     // constant strings for storage/parsing
     public static final String TABLE_NAME = "controller_firewallrules";
@@ -481,7 +481,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
 		this.dbName = conf.getString("storage-default-db");
 		this.collectionName = firewallStorage.getName();
 		
-		this.version_adaptor_10 = (VersionAdaptor10)getController().getVersionAdaptor((byte)0x01);
+		this.protocol = getController().getProtocol();
 		
 		rules = new ArrayList<FirewallRule>();
         
@@ -493,9 +493,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
         		new OFMFilter() {
         			@Override
         			public boolean filter(OFMessage m) {
-        				if ( m.getVersion() == (byte)0x01 )
-        					return true;
-        				return false;
+        				return true;
         			}
 		});
         
