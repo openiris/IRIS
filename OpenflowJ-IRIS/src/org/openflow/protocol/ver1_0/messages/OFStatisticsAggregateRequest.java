@@ -67,6 +67,48 @@ public class OFStatisticsAggregateRequest extends OFStatisticsRequest implements
 		return true;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public int getOutGroup() {
+		throw new UnsupportedOperationException("getOutGroup is not supported operation");
+	}
+	
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public OFStatisticsAggregateRequest setOutGroup(int value) {
+		throw new UnsupportedOperationException("setOutGroup is not supported operation");
+	}
+	
+	public boolean isOutGroupSupported() {
+		return false;
+	}
+	
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public long getCookie() {
+		throw new UnsupportedOperationException("getCookie is not supported operation");
+	}
+	
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public OFStatisticsAggregateRequest setCookie(long value) {
+		throw new UnsupportedOperationException("setCookie is not supported operation");
+	}
+	
+	public boolean isCookieSupported() {
+		return false;
+	}
+	
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public long getCookieMask() {
+		throw new UnsupportedOperationException("getCookieMask is not supported operation");
+	}
+	
+	@org.codehaus.jackson.annotate.JsonIgnore
+	public OFStatisticsAggregateRequest setCookieMask(long value) {
+		throw new UnsupportedOperationException("setCookieMask is not supported operation");
+	}
+	
+	public boolean isCookieMaskSupported() {
+		return false;
+	}
+	
 	
 	
 	

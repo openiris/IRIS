@@ -137,18 +137,18 @@ public enum OFMessageType {
       		return new OFTableMod();
     	}
     }),
-	MULTIPART_REQUEST	(18, org.openflow.protocol.interfaces.OFMessageType.MULTIPART_REQUEST, 
-	OFMultipartRequest.class, 
+	STATISTICS_REQUEST	(18, org.openflow.protocol.interfaces.OFMessageType.STATISTICS_REQUEST, 
+	OFStatisticsRequest.class, 
 	new Instantiable<OFMessage>() {
     	public OFMessage instantiate() {
-      		return new OFMultipartRequest();
+      		return new OFStatisticsRequest();
     	}
     }),
-	MULTIPART_REPLY	(19, org.openflow.protocol.interfaces.OFMessageType.MULTIPART_REPLY, 
-	OFMultipartReply.class, 
+	STATISTICS_REPLY	(19, org.openflow.protocol.interfaces.OFMessageType.STATISTICS_REPLY, 
+	OFStatisticsReply.class, 
 	new Instantiable<OFMessage>() {
     	public OFMessage instantiate() {
-      		return new OFMultipartReply();
+      		return new OFStatisticsReply();
     	}
     }),
 	BARRIER_REQUEST	(20, org.openflow.protocol.interfaces.OFMessageType.BARRIER_REQUEST, 

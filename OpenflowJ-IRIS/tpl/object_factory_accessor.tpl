@@ -1,16 +1,14 @@
-	public OF${object_name} create${object_name}() {
+	public static OF${object_name} create${object_name}(byte version) {
 		switch(version) {
 		$cases
-		default:
-			throw new IllegalStateException("Version " + this.version + " does not support OF${object_name}.");
+		default: return null;
 		}
 	}
 	
-	public OF${object_name} as${object_name}(OFMessage m) {
+	public static OF${object_name} as${object_name}(byte version, org.openflow.protocol.OFMessage m) {
 		switch(version) {
 		$as_cases
-		default:
-			throw new IllegalStateException("Version " + this.version + " does not support OF${object_name}.");
+		default: return null;
 		}
 	}
 	

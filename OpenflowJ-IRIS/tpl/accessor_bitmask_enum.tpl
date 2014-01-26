@@ -20,7 +20,14 @@
 		
 	public $class_name set${method_name}(Set<org.openflow.protocol.interfaces.${class_type}> values) {
 		${class_type} tmp = ${class_type}.of(this.$variable_name);
-		tmp.and( values );
+		tmp.or( values );
+		this.$variable_name = tmp.get();
+		return this;
+	}
+	
+	public $class_name set${method_name}(org.openflow.protocol.interfaces.${class_type} ... values) {
+		${class_type} tmp = ${class_type}.of(this.$variable_name);
+		tmp.or( values );
 		this.$variable_name = tmp.get();
 		return this;
 	}

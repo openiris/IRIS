@@ -22,6 +22,10 @@ public class $typename $inherit_method $supertype $implements {
 	
 	$builder
 	
+	public $typename dup() {
+		return new $typename(this);
+	}
+	
     public void readFrom(ByteBuffer data) {
         $readfrom
     }

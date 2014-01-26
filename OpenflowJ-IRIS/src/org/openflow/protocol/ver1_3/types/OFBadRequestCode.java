@@ -9,7 +9,7 @@ public enum OFBadRequestCode {
   
 	BAD_VERSION(0, org.openflow.protocol.interfaces.OFBadRequestCode.BAD_VERSION),
 	BAD_TYPE(1, org.openflow.protocol.interfaces.OFBadRequestCode.BAD_TYPE),
-	BAD_MULTIPART(2, org.openflow.protocol.interfaces.OFBadRequestCode.BAD_MULTIPART),
+	BAD_statistics(2, org.openflow.protocol.interfaces.OFBadRequestCode.BAD_statistics),
 	BAD_EXPERIMENTER(3, org.openflow.protocol.interfaces.OFBadRequestCode.BAD_EXPERIMENTER),
 	BAD_EXP_TYPE(4, org.openflow.protocol.interfaces.OFBadRequestCode.BAD_EXP_TYPE),
 	EPERM(5, org.openflow.protocol.interfaces.OFBadRequestCode.EPERM),
@@ -20,7 +20,7 @@ public enum OFBadRequestCode {
 	IS_SLAVE(10, org.openflow.protocol.interfaces.OFBadRequestCode.IS_SLAVE),
 	BAD_PORT(11, org.openflow.protocol.interfaces.OFBadRequestCode.BAD_PORT),
 	BAD_PACKET(12, org.openflow.protocol.interfaces.OFBadRequestCode.BAD_PACKET),
-	MULTIPART_BUFFER_OVERFLOW(13, org.openflow.protocol.interfaces.OFBadRequestCode.MULTIPART_BUFFER_OVERFLOW);
+	statistics_BUFFER_OVERFLOW(13, org.openflow.protocol.interfaces.OFBadRequestCode.statistics_BUFFER_OVERFLOW);
   
 	private static Map<Short, OFBadRequestCode> __index;
 	static Map<Short, org.openflow.protocol.interfaces.OFBadRequestCode> __compatMapping;

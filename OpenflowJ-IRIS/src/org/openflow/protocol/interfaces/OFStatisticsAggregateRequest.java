@@ -15,6 +15,15 @@ public interface OFStatisticsAggregateRequest extends OFStatisticsRequest {
 	public OFPort getOutPort();
 	public OFStatisticsAggregateRequest setOutPort(OFPort value);
 	public boolean isOutPortSupported();
+	public int getOutGroup();
+	public OFStatisticsAggregateRequest setOutGroup(int value);
+	public boolean isOutGroupSupported();
+	public long getCookie();
+	public OFStatisticsAggregateRequest setCookie(long value);
+	public boolean isCookieSupported();
+	public long getCookieMask();
+	public OFStatisticsAggregateRequest setCookieMask(long value);
+	public boolean isCookieMaskSupported();
 
     public void readFrom(ByteBuffer data);
 

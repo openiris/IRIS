@@ -4,6 +4,17 @@
 			return setValue(OFOxmMatchFields.${match_field}, (byte) ${mask}, mac);
 		}
 		
+		public byte[] get${method_name}() {
+			org.openflow.protocol.interfaces.OFOxm oxm = 
+					getValue(org.openflow.protocol.interfaces.OFOxmMatchFields.${match_field});
+			if ( oxm == null || oxm.getData() == null ) {
+				return null;
+			}
+			byte[] ret = new byte[6];
+			System.arraycopy(oxm.getData(), 0, ret, 0, 6);
+			return ret;
+		}
+		
 		public boolean is${method_name}Supported() {
 			return true;
 		}

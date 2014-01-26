@@ -3,6 +3,10 @@
 			return this;
 		}
 		
+		public List<org.openflow.protocol.interfaces.OFOxm> get${method_name}() {
+			return this.object.getOxmFields();
+		}
+		
 		public boolean is${method_name}Supported() {
 			return true;
 		}

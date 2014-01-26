@@ -1,11 +1,21 @@
 package org.openflow.protocol.interfaces;
 
 public enum OFStatisticsType {
+	METER_CONFIG,
+	GROUP,
 	VENDOR,
+	PORT_STATS,
+	TABLE_FEATURES,
 	FLOW,
+	GROUP_DESC,
+	METER,
 	QUEUE,
+	METER_FEATURES,
+	EXPERIMENTER,
+	PORT_DESC,
 	AGGREGATE,
 	TABLE,
+	GROUP_FEATURES,
 	PORT,
 	DESC
 }

@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_0.types.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class OFStatisticsReply extends OFStatistics implements org.openflow.protocol.interfaces.OFStatisticsReply {
     public static int MINIMUM_LENGTH = 12;
@@ -41,19 +43,37 @@ public class OFStatisticsReply extends OFStatistics implements org.openflow.prot
 		return true;
 	}
 	
-	public short getFlags() {
+	public short getFlagsWire() {
 		return this.flags;
 	}
 	
-	public OFStatisticsReply setFlags(short flags) {
+	public OFStatisticsReply setFlagsWire(short flags) {
 		this.flags = flags;
+		return this;
+	}
+	
+	public Set<org.openflow.protocol.interfaces.OFStatisticsReplyFlags> getFlags() {
+		OFStatisticsReplyFlags tmp = OFStatisticsReplyFlags.of(this.flags);
+		Set<org.openflow.protocol.interfaces.OFStatisticsReplyFlags> ret = new HashSet<org.openflow.protocol.interfaces.OFStatisticsReplyFlags>();
+		for ( org.openflow.protocol.interfaces.OFStatisticsReplyFlags v : org.openflow.protocol.interfaces.OFStatisticsReplyFlags.values() ) {
+			if (tmp.has(v)) {
+				ret.add(v);
+			}
+		}
+		return ret;
+	}
+		
+	public OFStatisticsReply setFlags(Set<org.openflow.protocol.interfaces.OFStatisticsReplyFlags> values) {
+		OFStatisticsReplyFlags tmp = OFStatisticsReplyFlags.of(this.flags);
+		tmp.and( values );
+		this.flags = tmp.get();
 		return this;
 	}
 	
 	public boolean isFlagsSupported() {
 		return true;
 	}
-			
+		
 	
 	
 	

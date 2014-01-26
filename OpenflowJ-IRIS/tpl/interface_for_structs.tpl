@@ -7,6 +7,8 @@ $imports
 public interface $typename $inherit {
 
 	$accessors
+	
+	public $typename dup();
 
     public void readFrom(ByteBuffer data);
 

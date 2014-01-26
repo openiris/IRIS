@@ -224,6 +224,16 @@ enum ofp_statistics_type(wire_type=uint16_t, request=ofp_message_type.OFPT_STATI
     OFPST_VENDOR = 0xffff,
 };
 
+// added for compliance with 1.3 >= 
+enum ofp_statistics_request_flags(wire_type=uint16_t, bitmask=True) {
+	OFPMPF_REQ_NONE = 0x0,
+};
+
+// added for compliance with 1.3 >=
+enum ofp_statistics_reply_flags(wire_type=uint16_t, bitmask=True) {
+	OFPMPF_REPLY_NONE = 0x0,
+};
+
 enum ofp_packet_in_reason(wire_type=uint8_t) {
     OFPR_NO_MATCH = 0,
     OFPR_ACTION = 1,

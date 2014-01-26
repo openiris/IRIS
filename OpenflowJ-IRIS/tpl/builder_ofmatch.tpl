@@ -1,13 +1,17 @@
 	public static class Builder 
-	implements	org.openflow.util.Builder<org.openflow.protocol.interfaces.$builder_returntype>,
-				org.openflow.protocol.interfaces.OFMatch.Builder, 
-				org.openflow.protocol.interfaces.OFMatchOxm.Builder {
+	implements	org.openflow.protocol.interfaces.OFMatch.Builder {
 	
 		private $classname object;
 		
 		public Builder() {
 			object = new $classname();
 		}
+		
+		public Builder setValue(org.openflow.protocol.interfaces.OFOxmMatchFields match_field, byte mask, byte[] data) {
+			throw new UnsupportedOperationException("setValue is not supported");
+		}
+		
+		public boolean isSetValueSupported() { return false; }
 		
 		$builder_accessors
 		

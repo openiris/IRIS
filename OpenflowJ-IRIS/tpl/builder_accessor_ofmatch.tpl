@@ -3,6 +3,10 @@
 			return this;
 		}
 		
+		public $variable_type get${method_name}() {
+			return object.get${method_name}();
+		}
+		
 		public boolean is${method_name}Supported() {
 			return true;
 		}

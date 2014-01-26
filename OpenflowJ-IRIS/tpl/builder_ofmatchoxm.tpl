@@ -1,17 +1,17 @@
 	public static class Builder 
-	implements	org.openflow.util.Builder<org.openflow.protocol.interfaces.$builder_returntype>,
-				org.openflow.protocol.interfaces.OFMatch.Builder, 
-				org.openflow.protocol.interfaces.OFMatchOxm.Builder {
+	implements	org.openflow.protocol.interfaces.OFMatch.Builder {
 	
 		static byte[] mac_mask = { (byte)0xff, (byte)0xff, (byte)0xff, 
 								   (byte)0xff, (byte)0xff, (byte)0xff };
 		
 		private $classname object;
-		Byte network_protocol;
 		
 		public Builder() {
 			this.object = new $classname();
-			this.network_protocol = null;
+		}
+		
+		public Builder setValue(org.openflow.protocol.interfaces.OFOxmMatchFields match_field, byte mask, byte[] data) {
+			return setValue(OFOxmMatchFields.from(match_field), mask, data);
 		}
 		
 		public Builder setValue(OFOxmMatchFields match_field, byte mask, byte[] data) {
@@ -33,6 +33,12 @@
 			
 			return this;
 		}
+		
+		public org.openflow.protocol.interfaces.OFOxm getValue(org.openflow.protocol.interfaces.OFOxmMatchFields match_field) {
+			return object.getOxmFromIndex(match_field);
+		}
+		
+		public boolean isSetValueSupported() { return true; }
 		
 		$builder_accessors
 		

@@ -17,11 +17,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import org.openflow.protocol.OFMessage;
 import org.openflow.protocol.interfaces.OFMessageType;
-import org.openflow.protocol.ver1_0.messages.OFAction;
+import org.openflow.protocol.interfaces.OFPacketIn;
 import org.openflow.protocol.ver1_0.messages.OFActionOutput;
-import org.openflow.protocol.ver1_0.messages.OFPacketIn;
 import org.openflow.protocol.ver1_0.messages.OFPacketOut;
-import org.openflow.protocol.ver1_0.messages.OFPortDesc;
+import org.openflow.protocol.interfaces.OFPortDesc;
 import org.openflow.protocol.ver1_0.messages.OFPortStatus;
 import org.openflow.protocol.ver1_0.types.OFPortConfig;
 import org.openflow.protocol.ver1_0.types.OFPortNo;
@@ -35,6 +34,7 @@ import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
+import etri.sdn.controller.PortInformation;
 import etri.sdn.controller.module.linkdiscovery.ILinkDiscoveryListener.LDUpdate;
 import etri.sdn.controller.module.linkdiscovery.ILinkDiscoveryListener.UpdateOperation;
 import etri.sdn.controller.protocol.io.Connection;
@@ -215,9 +215,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 
 					@Override
 					public boolean filter(OFMessage m) {
-						if ( m.getVersion() != (byte)0x01 ) {
-							return false;
-						}
+						// we process all PACKET_IN regardless of its version.
 						OFPacketIn pi = (OFPacketIn) m;
 						
 						// this checks if the Packet-In is for LLDP!
@@ -238,7 +236,8 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 				new OFMFilter() {
 					@Override
 					public boolean filter(OFMessage m) {
-						return m.getVersion() == (byte)0x01;
+						// we process all PORT_STATUS messages regardless of their verison.
+						return true;
 					}
 				}
 		);

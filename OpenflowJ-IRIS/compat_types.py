@@ -65,15 +65,23 @@ class InterfaceDeclarations:
     self.interface = interface
     self.declarations = list( interface.declarations )
     
+  def match(self, name_list, declaration):
+    for x in name_list:
+      if declaration.find(x) >= 0:
+        return True
+    return False
+    
   def remove_matching_declaration(self, variable_type, variable_name):
     ''' 
     This method removes matching declarations within self.declarations.
     '''
-    get_method_name = spec.Spec.convert_to_camel(variable_name, 0, 'get')+'('
-    set_method_name = spec.Spec.convert_to_camel(variable_name, 0, 'set')+'('
-    is_method_name = spec.Spec.convert_to_camel(variable_name, 0, 'is') + 'Supported'
+    method_names = [spec.Spec.convert_to_camel(variable_name, 0, 'get')+'(',
+                    spec.Spec.convert_to_camel(variable_name, 0, 'set')+'(',
+                    spec.Spec.convert_to_camel(variable_name, 0, 'is') + 'Supported',
+                    spec.Spec.convert_to_camel(variable_name, 0, 'get')+'Wire(',
+                    spec.Spec.convert_to_camel(variable_name, 0, 'set')+'Wire(']
     
-    self.declarations = [ x for x in self.declarations if x.find(get_method_name) < 0 and x.find(set_method_name) < 0 and x.find(is_method_name) < 0]
+    self.declarations = [ x for x in self.declarations if not self.match(method_names, x) ]
     
   def merge(self, interface_decls):
     self.declarations = self.declarations + interface_decls.declarations
@@ -113,6 +121,8 @@ class InterfaceForStruct(Interface):
     for i in struct['body']:
       if not i.get('name', None): continue
       
+      bitmask_set = None
+      
       if i['type'] == 'List': 
         return_type = 'List<%s>' % i['inner']
         self.imports.add('import java.util.List;')
@@ -127,6 +137,8 @@ class InterfaceForStruct(Interface):
           if t:
             if isinstance(t, openflow_types.Enum) and t.is_bitmask_enum():
               return_type = 'Set<%s>' % prefixed_type
+              bitmask_set = '%s ...' % prefixed_type
+              wire_type = t.get_java_representation();
               self.imports.add('import java.util.Set;')
             else:
               return_type = prefixed_type
@@ -149,16 +161,20 @@ class InterfaceForStruct(Interface):
           get_signature = 'public %s get%s();' % (return_type, spec.Spec.convert_to_camel( bitfield[0] ))
           set_signature = 'public %s set%s(%s value);' % (this_name, spec.Spec.convert_to_camel( bitfield[0] ), return_type) 
           is_signature = 'public boolean is%sSupported();' % spec.Spec.convert_to_camel( bitfield[0] )
-          ret.append(get_signature)
           ret.append(set_signature)
+          ret.append(get_signature)
           ret.append(is_signature)
       else:
         get_signature = 'public %s get%s();' % (return_type, spec.Spec.convert_to_camel( i['name'] ))
         set_signature = 'public %s set%s(%s value);' % (this_name, spec.Spec.convert_to_camel( i['name'] ), return_type) 
         is_signature = 'public boolean is%sSupported();' % spec.Spec.convert_to_camel( i['name'] )
-        ret.append(get_signature)
         ret.append(set_signature)
+        ret.append(get_signature)
         ret.append(is_signature)
+        if bitmask_set:
+          ret.append('public %s set%s(%s value);' % (this_name, spec.Spec.convert_to_camel( i['name'] ), bitmask_set))
+          ret.append('public %s set%sWire(%s value);' % (this_name, spec.Spec.convert_to_camel( i['name'] ), wire_type))
+          ret.append('public %s get%sWire();' % (wire_type, spec.Spec.convert_to_camel( i['name'])))
     
     return ret
   
@@ -180,6 +196,9 @@ class InterfaceForStruct(Interface):
   def retrieve_set_declarations(self):
     return [x for x in self.declarations if re.search(r'\bset', x)]
   
+  def retrieve_get_declarations(self):
+    return [x for x in self.declarations if re.search(r'\bget(\w+)\(\)', x)]
+  
   def retrieve_is_declarations(self):
     return [x for x in self.declarations if re.search(r'\bis\w+Supported', x)]
   
@@ -189,6 +208,7 @@ class InterfaceForStruct(Interface):
     if (self.name == 'OFMatch' and self.struct.spec.get_version() == '1.0') or self.name == 'OFMatchOxm':
       template = Template.get_template('tpl/interface_for_structs_ofmatch.tpl')
       set_accessors = self.retrieve_set_declarations()
+      get_accessors = self.retrieve_get_declarations()
       is_accessors = self.retrieve_is_declarations()
       for name in [ 'OFMatch', 'OFMatchOxm' ]:
         set_accessors = [re.sub(r'\b%s\b' % name, 'Builder', x) for x in set_accessors]
@@ -205,7 +225,7 @@ class InterfaceForStruct(Interface):
                                          'imports':'\n'.join(self.imports),
                                          'inherit':inherit,
                                          'accessors':'\n\n\t'.join(self.declarations),
-                                         'builder_accessors':'\n\t\t'.join(set_accessors + is_accessors)})
+                                         'builder_accessors':'\n\t\t'.join(get_accessors + set_accessors + is_accessors)})
     else:
       result = template.safe_substitute({'typename':self.name, 
                                          'imports':'\n'.join(self.imports),

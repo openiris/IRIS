@@ -721,6 +721,7 @@ class Struct(Type):
           method_name = self.spec.convert_to_camel(variable_name)
           # this is for changing the return type of port number-related methods.
           r = variable_type
+          b1 = None
           if r in ['short', 'int']:
             if i['name'].endswith('port') or i['name'].endswith('port_number'):
               if i['name'].find('tp') < 0 and i['name'].find('transport') < 0:
@@ -729,14 +730,24 @@ class Struct(Type):
                 
           rtype = self.spec.get_type(r)
           if isinstance(rtype, Enum) and rtype.is_bitmask_enum():
-            r = 'Set<org.openflow.protocol.interfaces.%s>' % r
+            b1 = 'org.openflow.protocol.interfaces.%s ...' % r
+            b2 = 'Set<org.openflow.protocol.interfaces.%s>' % r
+            b3 = rtype.get_java_representation();
             imports.add('import java.util.Set;')
                 
           if self.name == 'OFMatch' and self.spec.get_version() == '1.0':
-            tpl = Template.get_template('tpl/builder_accessor_ofmatch.tpl')
-            result = tpl.safe_substitute({'method_name':method_name,
-                                         'variable_type':r,
-                                         'variable_name':variable_name})
+            if b1:
+              tpl = Template.get_template('tpl/builder_accessor_ofmatch_bitmask.tpl')
+              result = tpl.safe_substitute({'method_name':method_name,
+                                            'variable_type1':b2,
+                                            'variable_type2':b1,
+                                            'variable_type3':b3,
+                                            'variable_name':variable_name})
+            else:
+              tpl = Template.get_template('tpl/builder_accessor_ofmatch.tpl')
+              result = tpl.safe_substitute({'method_name':method_name,
+                                           'variable_type':r,
+                                           'variable_name':variable_name})
             builder_accessors.append(result.lstrip())
           elif self.name == 'OFMatchOxm':
             if i.get('inner', None) and i['inner'] == 'OFOxm':
@@ -1138,25 +1149,33 @@ class Struct(Type):
     
     # since now that the conversion is done, for each of the method, we supply the default 
     # implementation that returns the UnsupportedExceptionOperation
-    t = Template.get_template('tpl/accessor_null.tpl')
     for decl in if_decls:
-      p = re.search(r'getOxmFromIndex', decl)
+      d = decl.strip(';')
+      if d.find('Set') >= 0: imports.add('import java.util.Set;')
+      
+      p = re.search(r'(getOxmFromIndex)|(setOxmToIndex)', decl)
       if p:
-        nt = Template.get_template('tpl/accessor_null_oxmindex.tpl')
-        r = nt.safe_substitute({})
-        accessors.append(r)
+        if p.group(1):
+          nt = Template.get_template('tpl/accessor_null_oxmindex.tpl')
+          r = nt.safe_substitute({})
+          accessors.append(r)
       else:
-        p = re.search(r'([<>\[\]\.\w]+)\s+\bget(\w+)\b', decl)
+        p = re.search(r'([<>\[\]\.\w]+)\s+\bget(\w+)\b|\bset(\w+)\b\((.+)\)', decl)
         if p:
           return_type = p.group(1)
-          method_name = p.group(2)
-          d = decl.strip(';')
-          r = t.safe_substitute({'class_name': self.name, 
-                                 'return_type':return_type, 'method_name':method_name})
-          accessors.append(r)
-          if d.find('Set') >= 0:
-            imports.add('import java.util.Set;')
-    
+          if return_type:
+            t = Template.get_template('tpl/accessor_null_get.tpl')
+            method_name = p.group(2)
+            r = t.safe_substitute({'return_type':return_type, 'method_name':method_name})
+            accessors.append(r)
+          else:
+            t = Template.get_template('tpl/accessor_null_set.tpl')
+            method_name = p.group(3)
+            arg_list = p.group(4)
+            r = t.safe_substitute({'class_name':self.name, 'method_name':method_name,
+                                   'arg_list':arg_list})
+            accessors.append(r)
+            
     # add readfrom lines if there is alignment considerations such as 
     # align(8) at the end of struct.
     if self.align > 0: 
@@ -1217,13 +1236,20 @@ class Struct(Type):
         #
         # create null accessors and append
         #
+        mname_set = set()
         for x in interface_decls.declarations:
           if re.search(r'\bset', x):    # we need set methods only
             # we first get the method signature.
             method_name = re.search(r'\b(set.+)\Z', x).group(1).rstrip(';')
-            mname = re.search(r'\bset(\w+)\b', x).group(1)
+            method = re.search(r'\bset(\w+)\b\(([\[\]<>\.\w]+)\s.+\)', x)
+            if not method:
+              print method_name 
+              continue
+            mname = method.group(1)
+            return_type = method.group(2)
             # and we conver the name to include interface prefix.
             imethod_name = re.sub(r'\b(OF\w+)\b', r'org.openflow.protocol.interfaces.\1', method_name)
+            ireturn_type = re.sub(r'\b(OF\w+)\b', r'org.openflow.protocol.interfaces.\1', return_type)
             
             if self.name == 'OFMatchOxm' and len([x for x in ['InputPort', 'DataLayer', 'Network', 'Transport'] if method_name.find(x) >= 0]) > 0:
               # for the method names which needs a special care, we does it by loading specialized templates for each.
@@ -1288,10 +1314,24 @@ class Struct(Type):
                               
               if result: builder_accessors.append(result.lstrip())                            
             else:
-              tpl = Template.get_template('tpl/builder_accessor_null.tpl')
-              # in other case, we create the null accessor and append it.
-              result = tpl.safe_substitute({'method_signature':imethod_name, 'method_name':mname})
-              builder_accessors.append(result.lstrip())
+              tpl1 = Template.get_template('tpl/builder_accessor_null_set.tpl')
+              tpl2 = Template.get_template('tpl/builder_accessor_null_get.tpl')
+              tpl3 = Template.get_template('tpl/builder_accessor_null_is.tpl')
+              
+              if imethod_name.find('...') >= 0:
+                result1 = tpl1.safe_substitute({'method_signature':imethod_name})
+                builder_accessors.append(result1.lstrip())
+              else:
+                # in other case, we create the null accessor and append it.
+                result1 = tpl1.safe_substitute({'method_signature':imethod_name})
+                result2 = tpl2.safe_substitute({'method_name':mname,
+                                                'return_type':ireturn_type})
+                builder_accessors.append(result1.lstrip())
+                builder_accessors.append(result2.lstrip())
+              if not mname in mname_set:
+                result3 = tpl3.safe_substitute({'method_name':mname})
+                mname_set.add(mname)
+                builder_accessors.append(result3.lstrip())
               
             
             

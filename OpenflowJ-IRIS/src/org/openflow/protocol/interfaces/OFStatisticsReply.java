@@ -2,15 +2,15 @@ package org.openflow.protocol.interfaces;
 
 import java.nio.ByteBuffer;
 
-
+import java.util.Set;
 
 public interface OFStatisticsReply extends OFStatistics {
 
 	public OFStatisticsType getStatisticsType();
 	public OFStatisticsReply setStatisticsType(OFStatisticsType value);
 	public boolean isStatisticsTypeSupported();
-	public short getFlags();
-	public OFStatisticsReply setFlags(short value);
+	public Set<OFStatisticsReplyFlags> getFlags();
+	public OFStatisticsReply setFlags(Set<OFStatisticsReplyFlags> value);
 	public boolean isFlagsSupported();
 
     public void readFrom(ByteBuffer data);

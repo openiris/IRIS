@@ -73,10 +73,10 @@ public class VersionedMessageParser implements OFMessageParser {
             		org.openflow.protocol.ver1_3.types.OFMessageType.valueOf(demux.getType());
             	
             	switch (t13) {
-            	case MULTIPART_REQUEST:
-            	case MULTIPART_REPLY:
-            		org.openflow.protocol.ver1_3.messages.OFMultipart mn = 
-            			org.openflow.protocol.ver1_3.types.OFMultipartType.valueOf(subtype, t13).newInstance(t13);
+            	case STATISTICS_REQUEST:
+            	case STATISTICS_REPLY:
+            		org.openflow.protocol.ver1_3.messages.OFStatistics mn = 
+            			org.openflow.protocol.ver1_3.types.OFStatisticsType.valueOf(subtype, t13).newInstance(t13);
             		mn.readFrom(data);
             		results.add(mn);
             		break;

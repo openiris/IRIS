@@ -15,6 +15,15 @@ public interface OFStatisticsFlowRequest extends OFStatisticsRequest {
 	public OFPort getOutPort();
 	public OFStatisticsFlowRequest setOutPort(OFPort value);
 	public boolean isOutPortSupported();
+	public int getOutGroup();
+	public OFStatisticsFlowRequest setOutGroup(int value);
+	public boolean isOutGroupSupported();
+	public long getCookie();
+	public OFStatisticsFlowRequest setCookie(long value);
+	public boolean isCookieSupported();
+	public long getCookieMask();
+	public OFStatisticsFlowRequest setCookieMask(long value);
+	public boolean isCookieMaskSupported();
 
     public void readFrom(ByteBuffer data);
 
