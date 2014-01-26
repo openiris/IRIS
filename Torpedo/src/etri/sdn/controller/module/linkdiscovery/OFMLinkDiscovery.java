@@ -202,7 +202,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		// initialize Links object with proper manager reference.
 		this.links = new Links(this);
 		
-		protocol = (OFProtocol)getController().getProtocol();
+		this.protocol = getController().getProtocol();
 		
 		// initialize controller TLV
 		setControllerTLV();
