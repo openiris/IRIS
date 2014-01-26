@@ -20,24 +20,24 @@ package etri.sdn.controller.module.forwarding;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
-//import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.openflow.protocol.OFBFlowWildcard;
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.ver1_0.messages.OFAction;
-import org.openflow.protocol.ver1_0.messages.OFActionOutput;
-import org.openflow.protocol.ver1_0.messages.OFFlowMod;
-import org.openflow.protocol.ver1_0.messages.OFMatch;
-import org.openflow.protocol.ver1_0.messages.OFPacketIn;
-import org.openflow.protocol.ver1_0.messages.OFPacketOut;
-import org.openflow.protocol.ver1_0.types.OFFlowModCommand;
-import org.openflow.protocol.ver1_0.types.OFFlowModFlags;
-import org.openflow.protocol.ver1_0.types.OFFlowWildcards;
-import org.openflow.protocol.ver1_0.types.OFMessageType;
-import org.openflow.util.OFPort;
+import org.openflow.protocol.OFPort;
+import org.openflow.protocol.factory.OFMessageFactory;
+import org.openflow.protocol.interfaces.OFAction;
+import org.openflow.protocol.interfaces.OFActionOutput;
+import org.openflow.protocol.interfaces.OFFlowMod;
+import org.openflow.protocol.interfaces.OFFlowModCommand;
+import org.openflow.protocol.interfaces.OFFlowModFlags;
+import org.openflow.protocol.interfaces.OFMatch;
+import org.openflow.protocol.interfaces.OFMessageType;
+import org.openflow.protocol.interfaces.OFPacketIn;
+import org.openflow.protocol.interfaces.OFPacketOut;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFModule;
@@ -50,15 +50,16 @@ import etri.sdn.controller.module.routing.IRoutingDecision;
 import etri.sdn.controller.module.routing.IRoutingService;
 import etri.sdn.controller.module.routing.Route;
 import etri.sdn.controller.module.topologymanager.ITopologyService;
+import etri.sdn.controller.protocol.OFProtocol;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.Ethernet;
 import etri.sdn.controller.protocol.packet.IPacket;
-import etri.sdn.controller.protocol.version.VersionAdaptor10;
 import etri.sdn.controller.util.AppCookie;
 import etri.sdn.controller.util.Logger;
 import etri.sdn.controller.util.OFMessageDamper;
 import etri.sdn.controller.util.TimedCache;
+//import java.util.EnumSet;
 
 /**
  * Abstract base class for implementing a forwarding module. Forwarding is responsible
@@ -78,14 +79,13 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 
 	protected OFMessageDamper messageDamper;
 	
-	VersionAdaptor10 version_adaptor_10;
+	OFProtocol protocol;
 
 	// for broadcast loop suppression
 	protected boolean broadcastCacheFeature = true;
-	public final int prime1 = 2633;  // for hash calculation
-	public final static int prime2 = 4357;  // for hash calculation
-	public TimedCache<Long> broadcastCache =
-			new TimedCache<Long>(100, 5*1000);  // 5 seconds interval;
+	public final int prime1 = 2633;  												// for hash calculation
+	public final static int prime2 = 4357;  										// for hash calculation
+	public TimedCache<Long> broadcastCache = new TimedCache<Long>(100, 5*1000);  	// 5 seconds interval;
 
 	// flow-mod - for use in the cookie
 	public static final int FORWARDING_APP_ID = 2; // TODO: This must be managed
@@ -93,14 +93,11 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 	public long appCookie = AppCookie.makeCookie(FORWARDING_APP_ID, 0);
 
 	// Comparator for sorting by SwitchCluster
-	public Comparator<SwitchPort> clusterIdComparator =
-			new Comparator<SwitchPort>() {
+	public Comparator<SwitchPort> clusterIdComparator =	new Comparator<SwitchPort>() {
 		@Override
 		public int compare(SwitchPort d1, SwitchPort d2) {
-			Long d1ClusterId = 
-					topology.getL2DomainId(d1.getSwitchDPID());
-			Long d2ClusterId = 
-					topology.getL2DomainId(d2.getSwitchDPID());
+			Long d1ClusterId = topology.getL2DomainId(d1.getSwitchDPID());
+			Long d2ClusterId = topology.getL2DomainId(d2.getSwitchDPID());
 			return d1ClusterId.compareTo(d2ClusterId);
 		}
 	};
@@ -115,10 +112,10 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			deviceManager.addListener(this);
 		}
 		
-		version_adaptor_10 = (VersionAdaptor10) getController().getVersionAdaptor((byte)0x01);
+		this.protocol = getController().getProtocol();
 		
-		HashSet<Byte> set = new HashSet<Byte>();
-		set.add(OFMessageType.FLOW_MOD.getTypeValue());
+		HashSet<OFMessageType> set = new HashSet<OFMessageType>();
+		set.add(OFMessageType.FLOW_MOD);
 		messageDamper = new OFMessageDamper(OFMESSAGE_DAMPER_CAPACITY, 
 				set, OFMESSAGE_DAMPER_TIMEOUT);
 	}
@@ -142,7 +139,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 	@Override
 	protected boolean handleMessage(Connection conn, MessageContext cntx, OFMessage msg, List<OFMessage> outgoing) {
 		
-		switch ( OFMessageType.valueOf(msg.getTypeByte()) ) {
+		switch ( msg.getType() ) {
 		case PACKET_IN:
 			IRoutingDecision decision = null;
 			if (cntx != null) {
@@ -170,8 +167,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 	 * @param cntx the {@link MessageContext}
 	 */
 	public abstract boolean
-	processPacketInMessage(Connection conn, OFPacketIn pi,
-			IRoutingDecision decision, MessageContext cntx);
+	processPacketInMessage(Connection conn, OFPacketIn pi, IRoutingDecision decision, MessageContext cntx);
 	
 	@Override
 	protected boolean handleDisconnect(Connection conn) {
@@ -208,25 +204,24 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			MessageContext cntx,
 			boolean reqeustFlowRemovedNotifn,
 			boolean doFlush,
-			short   flowModCommand) {
+			OFFlowModCommand   flowModCommand) {
 
 		boolean srcSwitchIncluded = false;
-//		OFFlowMod fm = (OFFlowMod) conn.getFactory().getMessage(OFType.FLOW_MOD);
-		OFFlowMod fm = (OFFlowMod) OFMessageType.FLOW_MOD.newInstance();
+		OFFlowMod fm = OFMessageFactory.createFlowAdd(conn.getSwitch().getVersion());
 		
-		OFActionOutput action = new OFActionOutput();
+		List<OFAction> actions = new ArrayList<OFAction>();
+		OFActionOutput action = OFMessageFactory.createActionOutput(conn.getSwitch().getVersion());
 		action.setMaxLength((short)0xffff);
-		List<org.openflow.protocol.interfaces.OFAction> actions = new ArrayList<org.openflow.protocol.interfaces.OFAction>();
 		actions.add(action);
 
 		fm.setIdleTimeout(FLOWMOD_DEFAULT_IDLE_TIMEOUT)
 		.setHardTimeout(FLOWMOD_DEFAULT_HARD_TIMEOUT)
 		.setBufferId(0xffffffff /* OFPacketOut.BUFFER_ID_NONE */)
 		.setCookie(cookie)
-		.setCommand(OFFlowModCommand.valueOf(flowModCommand))
+		.setCommand(flowModCommand)
 		.setMatch(match)
 		.setActions(actions)
-		.setLengthU(OFFlowMod.MINIMUM_LENGTH+OFActionOutput.MINIMUM_LENGTH);
+		.setLength( fm.computeLength() );
 
 		List<NodePortTuple> switchPortList = route.getPath();
 
@@ -253,16 +248,15 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 				// Don't set the flag for ARP messages - TODO generalize check
 				if ((reqeustFlowRemovedNotifn)
 						&& (match.getDataLayerType() != Ethernet.TYPE_ARP)) {
-//					fm.setFlags(OFFlowMod.OFPFF_SEND_FLOW_REM);
-					fm.setFlagsWire(OFFlowModFlags.SEND_FLOW_REM);
-					match.setWildcards(fm.getMatch().getWildcards());
+					fm.setFlags(OFFlowModFlags.SEND_FLOW_REM);
+					if ( match.isWildcardsSupported() ) 
+						match.setWildcards(fm.getMatch().getWildcards());
 				}
 			}
 
 			short outPort = switchPortList.get(indx).getPortId();
 			short inPort = switchPortList.get(indx-1).getPortId();
 			// set input and output ports on the switch
-//			fm.getMatch().setInputPort(inPort);
 			fm.getMatch().setInputPort(OFPort.of(inPort));
 			((OFActionOutput)fm.getActions().get(0)).setPort(OFPort.of(outPort));
 
@@ -290,8 +284,8 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 				Logger.stderr("Failure writing flow mod" + e.toString());
 			}
 
-//			fm = fm.clone();
-			fm = new OFFlowMod(fm);
+			// clone the OFFlowMod object
+			fm = fm.dup();
 		}
 
 		return srcSwitchIncluded;
@@ -307,12 +301,10 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 	 * @return a clone of {@link OFMatch} instance
 	 */
 	protected OFMatch wildcard(OFMatch match, IOFSwitch sw, Integer wildcard_hints) {
-		if (wildcard_hints != null) {
-//			return ((OFMatch) match.clone()).setWildcards(wildcard_hints.intValue());
-			return new OFMatch().setWildcardsWire(wildcard_hints);
+		if (wildcard_hints != null && match.isWildcardsSupported() ) {
+			return match.dup().setWildcardsWire(wildcard_hints);
 		}
-//		return match.clone();
-		return new OFMatch(match);
+		return match.dup();
 	}
 
 	/**
@@ -327,7 +319,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 	 * @param cntx the {@link MessageContext}
 	 */
 	protected void pushPacket(Connection conn, OFMatch match, OFPacketIn pi, 
-			short outport, MessageContext cntx) {
+			int outport, MessageContext cntx) {
 
 		if (pi == null) {
 			return;
@@ -339,37 +331,26 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 		// The assumption here is (sw) is the switch that generated the packet-in. 
 		// If the input port is the same as output port, then the packet-out should be ignored.
 		if (pi.getInputPort().get() == outport) {
-//			if (log.isDebugEnabled()) {
-//				log.debug("Attempting to do packet-out to the same " + 
-//						"interface as packet-in. Dropping packet. " + 
-//						" SrcSwitch={}, match = {}, pi={}", 
-//						new Object[]{sw, match, pi});
-//			}
 			return;
 		}
 
-//			if (log.isTraceEnabled()) {
-//				log.trace("PacketOut srcSwitch={} match={} pi={}", 
-//						new Object[] {sw, match, pi});
-//			}
 
-//		OFPacketOut po = (OFPacketOut) conn.getFactory().getMessage(OFType.PACKET_OUT);
-		OFPacketOut po = (OFPacketOut) OFMessageType.PACKET_OUT.newInstance();
+		OFPacketOut po = OFMessageFactory.createPacketOut(pi.getVersion());
 
 		// set actions
-		List<org.openflow.protocol.interfaces.OFAction> actions = new ArrayList<org.openflow.protocol.interfaces.OFAction>();
-		OFActionOutput action_output = new OFActionOutput();
+		List<OFAction> actions = new ArrayList<OFAction>();
+		OFActionOutput action_output = OFMessageFactory.createActionOutput(pi.getVersion());
 		actions.add( action_output.setPort(OFPort.of(outport)).setMaxLength((short)0xffff) );
-//		actions.add(new OFActionOutput(outport, (short) 0xffff));
 		
 		po
 		.setActions(actions)
-		.setActionsLength((short) OFActionOutput.MINIMUM_LENGTH);
-		short poLength = (short) (po.getActionsLength() + OFPacketOut.MINIMUM_LENGTH);
+		.setActionsLength( action_output.computeLength() );
+		
+		short poLength = po.computeLength();
 
 		// If the switch doens't support buffering set the buffer id to be none
 		// otherwise it'll be the the buffer id of the PacketIn
-		if ( version_adaptor_10.getSwitchInformation(conn.getSwitch()).getBuffers() == 0 ) {
+		if ( protocol.getSwitchInformation(conn.getSwitch()).getBuffers() == 0 ) {
 //		if (conn.getSwitch().getBuffers() == 0) {
 			// We set the PI buffer id here so we don't have to check again below
 			pi.setBufferId( 0xffffffff /* OFPacketOut.BUFFER_ID_NONE */ );
@@ -425,23 +406,16 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			short outPort, 
 			MessageContext cntx) {
 
-//		if (log.isTraceEnabled()) {
-//			log.trace("PacketOut srcSwitch={} inPort={} outPort={}", 
-//					new Object[] {sw, inPort, outPort});
-//		}
-
-//		OFPacketOut po = (OFPacketOut) conn.getFactory().getMessage(OFType.PACKET_OUT);
-		OFPacketOut po = (OFPacketOut) OFMessageType.PACKET_OUT.newInstance();
+		OFPacketOut po = OFMessageFactory.createPacketOut(sw.getVersion());
 
 		// set actions
-		List<org.openflow.protocol.interfaces.OFAction> actions = new ArrayList<org.openflow.protocol.interfaces.OFAction>();
-		OFActionOutput action_output = new OFActionOutput();
-//		actions.add(new OFActionOutput(outPort, (short) 0xffff));
+		List<OFAction> actions = new ArrayList<OFAction>();
+		OFActionOutput action_output = OFMessageFactory.createActionOutput(sw.getVersion());
 		actions.add( action_output.setPort(OFPort.of(outPort)).setMaxLength((short)0xffff) );
 
 		po.setActions(actions)
-		.setActionsLength((short) OFActionOutput.MINIMUM_LENGTH);
-		short poLength = (short) (po.getActionsLength() + OFPacketOut.MINIMUM_LENGTH);
+		.setActionsLength( action_output.computeLength() );
+		short poLength = po.computeLength();
 
 		// set buffer_id, in_port
 		po.setBufferId(bufferId);
@@ -458,7 +432,6 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			}
 			byte[] packetData = packet.serialize();
 			poLength += packetData.length;
-//			po.setPacketData(packetData);
 			po.setData(packetData);
 		}
 
@@ -492,37 +465,32 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			Set<Integer> outPorts,
 			MessageContext cntx) {
 		//setting actions
-		List<org.openflow.protocol.interfaces.OFAction> actions = new ArrayList<org.openflow.protocol.interfaces.OFAction>();
+		List<OFAction> actions = new ArrayList<OFAction>();
 
 		Iterator<Integer> j = outPorts.iterator();
 
+		short actions_length = 0;
 		while (j.hasNext())
 		{
-			OFActionOutput action_output = new OFActionOutput();
+			OFActionOutput action_output = 
+					OFMessageFactory.createActionOutput(conn.getSwitch().getVersion());
 			action_output.setPort(OFPort.of(j.next().shortValue())).setMaxLength((short)0);
-//			actions.add(new OFActionOutput(j.next().shortValue(), 
-//					(short) 0));
 			actions.add(action_output);
+			actions_length += action_output.computeLength();
 		}
 
-//		OFPacketOut po = (OFPacketOut)conn.getFactory().getMessage(OFType.PACKET_OUT);
-		OFPacketOut po = (OFPacketOut) OFMessageType.PACKET_OUT.newInstance();
+		OFPacketOut po = OFMessageFactory.createPacketOut(conn.getSwitch().getVersion());
 		
 		po.setActions(actions);
-		po.setActionsLength((short) (OFActionOutput.MINIMUM_LENGTH * 
-				outPorts.size()));
+		po.setActionsLength(actions_length);
 
 		// set buffer-id to BUFFER_ID_NONE, and set in-port to OFPP_NONE
 		po.setBufferId( 0xffffffff /* OFPacketOut.BUFFER_ID_NONE */);
 		po.setInputPort(OFPort.of(inPort));
-
+		
 		// data (note buffer_id is always BUFFER_ID_NONE) and length
-		short poLength = (short)(po.getActionsLength() + 
-				OFPacketOut.MINIMUM_LENGTH);
-		poLength += packetData.length;
-//		po.setPacketData(packetData);
 		po.setData(packetData);
-		po.setLength(poLength);
+		po.setLength(po.computeLength());
 		
 //		System.out.println("FB PacketOut 2 YYYYYYYYYYYYYY " + po.toString());
 
@@ -559,7 +527,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			short inPort,
 			Set<Integer> outPorts,
 			MessageContext cntx) {
-//		packetOutMultiPort(pi.getPacketData(), conn, inPort, outPorts, cntx);
+
 		packetOutMultiPort(pi.getData(), conn, inPort, outPorts, cntx);
 	}
 
@@ -664,26 +632,25 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 //				new Object[] { sw, sw_tup.getPort(), new Long(host_mac) });
 
 		// Create flow-mod based on packet-in and src-switch
-//		OFFlowMod fm = (OFFlowMod) sw.getConnection().getFactory().getMessage(OFType.FLOW_MOD);
-		OFFlowMod fm = (OFFlowMod) OFMessageType.FLOW_MOD.newInstance();
+		OFFlowMod fm = OFMessageFactory.createFlowMod(sw.getVersion());
 		
-		OFMatch match = new OFMatch();
-		List<org.openflow.protocol.interfaces.OFAction> actions = new ArrayList<org.openflow.protocol.interfaces.OFAction>(); // Set no action to
+		OFMatch.Builder match = OFMessageFactory.createMatchBuilder(sw.getVersion());
+		List<OFAction> actions = new ArrayList<OFAction>(); // Set no action to
+		
 		// drop
-		match.setDataLayerSource(Ethernet.toByteArray(host_mac))
+		match
+		.setDataLayerSource(Ethernet.toByteArray(host_mac))
 		.setInputPort(OFPort.of(inputPort))
-//		.setWildcards(OFMatch.OFPFW_ALL & ~OFMatch.OFPFW_DL_SRC
-//				& ~OFMatch.OFPFW_IN_PORT);
-		.setWildcardsWire(OFFlowWildcards.ALL & ~OFFlowWildcards.DL_SRC & ~OFFlowWildcards.IN_PORT);
+		.setWildcardsWire(OFBFlowWildcard.ALL & ~OFBFlowWildcard.DL_SRC & ~OFBFlowWildcard.IN_PORT);
 		
 		fm.setCookie(cookie)
 		.setHardTimeout((short) hardTimeout)
 		.setIdleTimeout(FLOWMOD_DEFAULT_IDLE_TIMEOUT)
 		.setHardTimeout(FLOWMOD_DEFAULT_HARD_TIMEOUT)
 		.setBufferId( 0xffffffff /* OFPacketOut.BUFFER_ID_NONE */)
-		.setMatch(match)
+		.setMatch(match.build())
 		.setActions(actions)
-		.setLengthU(OFFlowMod.MINIMUM_LENGTH); // +OFActionOutput.MINIMUM_LENGTH);
+		.setLength(fm.computeLength()); // +OFActionOutput.MINIMUM_LENGTH);
 
 //		log.debug("write drop flow-mod sw={} match={} flow-mod={}",
 //				new Object[] { sw, match, fm });

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.openflow.protocol.OFMessage;
+import org.openflow.protocol.interfaces.OFMessageType;
 //import org.openflow.protocol.OFType;
 
 import etri.sdn.controller.protocol.io.Connection;
@@ -77,7 +78,7 @@ public final class OFMessageDamper {
     
     private TimedCache<DamperEntry> cache;
 //    private EnumSet<OFType> msgTypesToCache;
-    private Set<Byte> msgTypesToCache;
+    private Set<OFMessageType> msgTypesToCache;
     /**
      * 
      * @param capacity the maximum number of messages that should be 
@@ -89,7 +90,7 @@ public final class OFMessageDamper {
      * timeout ms ago. 
      */
     public OFMessageDamper(int capacity, 
-                           Set<Byte> typesToDampen,  
+                           Set<OFMessageType> typesToDampen,  
                            int timeout) {
         cache = new TimedCache<DamperEntry>(capacity, timeout);
 //        msgTypesToCache = EnumSet.copyOf(typesToDampen);
@@ -105,7 +106,7 @@ public final class OFMessageDamper {
      * @throws IOException
      */
     public boolean write(Connection conn, OFMessage msg) throws IOException {
-        if (! msgTypesToCache.contains(msg.getTypeByte())) {
+        if (! msgTypesToCache.contains(msg.getType())) {
             conn.write(msg);
             return true;
         }

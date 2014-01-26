@@ -23,18 +23,20 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.openflow.protocol.OFBFlowWildcard;
 import org.openflow.protocol.OFMessage;
+import org.openflow.protocol.factory.OFMessageFactory;
 import org.openflow.protocol.interfaces.OFMessageType;
-import org.openflow.protocol.ver1_0.messages.OFAction;
-import org.openflow.protocol.ver1_0.messages.OFActionOutput;
-import org.openflow.protocol.ver1_0.messages.OFFlowMod;
-import org.openflow.protocol.ver1_0.messages.OFMatch;
-import org.openflow.protocol.ver1_0.messages.OFPacketIn;
-import org.openflow.protocol.ver1_0.messages.OFPacketOut;
-import org.openflow.protocol.ver1_0.types.OFFlowModCommand;
-import org.openflow.protocol.ver1_0.types.OFFlowWildcards;
-import org.openflow.protocol.ver1_0.types.OFPortNo;
-import org.openflow.util.OFPort;
+import org.openflow.protocol.interfaces.OFAction;
+import org.openflow.protocol.interfaces.OFActionOutput;
+import org.openflow.protocol.interfaces.OFFlowMod;
+import org.openflow.protocol.interfaces.OFMatch;
+import org.openflow.protocol.interfaces.OFPacketIn;
+import org.openflow.protocol.interfaces.OFPacketOut;
+import org.openflow.protocol.interfaces.OFFlowModCommand;
+import org.openflow.protocol.interfaces.OFFlowWildcards;
+import org.openflow.protocol.interfaces.OFPortNo;
+import org.openflow.protocol.OFPort;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
@@ -46,10 +48,10 @@ import etri.sdn.controller.module.routing.IRoutingDecision;
 import etri.sdn.controller.module.routing.IRoutingService;
 import etri.sdn.controller.module.routing.Route;
 import etri.sdn.controller.module.topologymanager.ITopologyService;
+import etri.sdn.controller.protocol.OFProtocol;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.Ethernet;
-import etri.sdn.controller.protocol.version.VersionAdaptor10;
 import etri.sdn.controller.util.AppCookie;
 import etri.sdn.controller.util.Logger;
 
@@ -64,7 +66,7 @@ import etri.sdn.controller.util.Logger;
  */
 public class Forwarding extends ForwardingBase {
 	
-	VersionAdaptor10 version_adaptor_10;
+	OFProtocol protocol;
 	
 	/**
 	 * Initializes this module. As this module processes all PACKET_IN messages,
@@ -78,16 +80,14 @@ public class Forwarding extends ForwardingBase {
 		this.routingEngine = (IRoutingService) getModule(IRoutingService.class);
 		this.topology = (ITopologyService) getModule(ITopologyService.class);
 		
-		version_adaptor_10 = (VersionAdaptor10) getController().getVersionAdaptor((byte)0x01);
+		this.protocol = getController().getProtocol();
 		
 		registerFilter(
 			OFMessageType.PACKET_IN, 
 			new OFMFilter() {
 				@Override
 				public boolean filter(OFMessage m) {
-					if ( m.getVersion() == (byte)0x01 )
-						return true;
-					return false;
+					return true;
 				}
 			}
 		);
@@ -161,17 +161,14 @@ public class Forwarding extends ForwardingBase {
 	 */
 	protected void doDropFlow(IOFSwitch sw, OFPacketIn pi, IRoutingDecision decision, MessageContext cntx) {
 		// initialize match structure and populate it using the packet
-//		OFMatch match = new OFMatch();
-//		match.loadFromPacket(pi.getPacketData(), pi.getInPort());
-		OFMatch match = version_adaptor_10.loadOFMatchFromPacket(pi.getData(), (short)pi.getInputPort().get());
+		OFMatch match = protocol.loadOFMatchFromPacket(sw, pi.getData(), (short)pi.getInputPort().get());
 		if (decision.getWildcards() != null) {
 			match.setWildcardsWire(decision.getWildcards());
 		}
 
 		// Create flow-mod based on packet-in and src-switch
-		OFFlowMod fm = new OFFlowMod();
+		OFFlowMod fm = OFMessageFactory.createFlowMod(pi.getVersion());
 		
-//		List<OFAction> actions = new ArrayList<OFAction>(); // Set no action to
 		// drop
 		long cookie = AppCookie.makeCookie(FORWARDING_APP_ID, 0);
 
@@ -181,7 +178,7 @@ public class Forwarding extends ForwardingBase {
 		.setBufferId(0xffffffff /* OFPacketOut.BUFFER_ID_NONE */)
 		.setMatch(match)
 		.setActions(Collections.<org.openflow.protocol.interfaces.OFAction>emptyList())
-		.setLengthU(OFFlowMod.MINIMUM_LENGTH); // +OFActionOutput.MINIMUM_LENGTH);
+		.setLength(fm.computeLength()); // +OFActionOutput.MINIMUM_LENGTH);
 
 		try {
 			Logger.debug("write drop flow-mod sw={} match={} flow-mod={}", 
@@ -206,9 +203,8 @@ public class Forwarding extends ForwardingBase {
 	protected void doForwardFlow(IOFSwitch sw, OFPacketIn pi, 
 			MessageContext cntx,
 			boolean requestFlowRemovedNotifn) {    
-//		OFMatch match = new OFMatch();
-//		match.loadFromPacket(pi.getPacketData(), pi.getInPort());
-		OFMatch match = version_adaptor_10.loadOFMatchFromPacket(pi.getData(), (short)pi.getInputPort().get());
+
+		OFMatch match = protocol.loadOFMatchFromPacket(sw, pi.getData(), (short)pi.getInputPort().get());
 
 		// Check if we have the location of the destination
 		IDevice dstDevice = (IDevice) cntx.get(MessageContext.DST_DEVICE);
@@ -307,17 +303,17 @@ public class Forwarding extends ForwardingBase {
 								wildcard_hints = ((Integer) sw
 										.getAttribute(IOFSwitch.PROP_FASTWILDCARDS))
 										.intValue()
-										& ~OFFlowWildcards.IN_PORT
-										& ~OFFlowWildcards.DL_VLAN
-										& ~OFFlowWildcards.DL_SRC
-										& ~OFFlowWildcards.DL_DST
-										& ~OFFlowWildcards.NW_SRC_MASK
-										& ~OFFlowWildcards.NW_DST_MASK;
+										& ~OFBFlowWildcard.IN_PORT
+										& ~OFBFlowWildcard.DL_VLAN
+										& ~OFBFlowWildcard.DL_SRC
+										& ~OFBFlowWildcard.DL_DST
+										& ~OFBFlowWildcard.NW_SRC_MASK
+										& ~OFBFlowWildcard.NW_DST_MASK;
 							}
 
 							pushRoute(sw.getConnection(), route, match, wildcard_hints, pi, sw.getId(), cookie, 
 									cntx, requestFlowRemovedNotifn, false,
-									OFFlowModCommand.ADD.getValue());
+									OFFlowModCommand.ADD);
 						}
 					}
 					iSrcDaps++;
@@ -353,31 +349,26 @@ public class Forwarding extends ForwardingBase {
 		}
 
 		// Set Action to flood
-		OFPacketOut po = new OFPacketOut();
+		OFPacketOut po = OFMessageFactory.createPacketOut(pi.getVersion());
 		
-		List<org.openflow.protocol.interfaces.OFAction> actions = new ArrayList<org.openflow.protocol.interfaces.OFAction>();
+		List<OFAction> actions = new ArrayList<OFAction>();
+		OFActionOutput action_output = OFMessageFactory.createActionOutput(pi.getVersion());
 		if (sw.hasAttribute(IOFSwitch.PROP_SUPPORTS_OFPP_FLOOD)) {
-			OFActionOutput action_output = new OFActionOutput();
-			action_output.setPort(OFPort.of(OFPortNo.FLOOD.getValue())).setMaxLength((short)0xffff);
-			actions.add(action_output);
+			action_output.setPort(OFPort.FLOOD).setMaxLength((short)0xffff);
 		} else {
-			OFActionOutput action_output = new OFActionOutput();
-			action_output.setPort(OFPort.of(OFPortNo.ALL.getValue())).setMaxLength((short)0xffff);
-			actions.add(action_output);
+			action_output.setPort(OFPort.ALL).setMaxLength((short)0xffff);
 		}
+		actions.add(action_output);
 		po.setActions(actions);
-		po.setActionsLength((short) OFActionOutput.MINIMUM_LENGTH);
+		po.setActionsLength(action_output.computeLength());
 
 		// set buffer-id, in-port and packet-data based on packet-in
-		short poLength = (short)(po.getActionsLength() + OFPacketOut.MINIMUM_LENGTH);
 		po.setBufferId(pi.getBufferId());
 		po.setInputPort(pi.getInputPort());
 		if (pi.getBufferId() == 0xffffffff /*OFPacketOut.BUFFER_ID_NONE */ ) {
-			byte[] packetData = pi.getData();
-			poLength += packetData.length;
-			po.setData(packetData);
+			po.setData( pi.getData() );
 		}
-		po.setLength(poLength);
+		po.setLength( po.computeLength() );
 
 		try {
 //			if (log.isTraceEnabled()) {
