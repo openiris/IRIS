@@ -18,13 +18,11 @@ import java.util.concurrent.TransferQueue;
 
 import org.openflow.protocol.OFMessage;
 
+import etri.sdn.controller.protocol.OFProtocol;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFHandler;
 import etri.sdn.controller.protocol.io.IOFProtocolServer;
 import etri.sdn.controller.protocol.io.IOFSwitch;
-import etri.sdn.controller.protocol.version.VersionAdaptor;
-import etri.sdn.controller.protocol.version.VersionAdaptor10;
-import etri.sdn.controller.protocol.version.VersionAdaptor13;
 import etri.sdn.controller.util.Logger;
 
 /**
@@ -177,21 +175,14 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 		 *              of this function is not used by {@link QP#run()}.
 		 */
 		private boolean process(Connection conn, List<OFMessage> msgs) {
-			VersionAdaptor vadp = null;
 
+			OFProtocol protocol = this.controller.getProtocol();
+			
 			for (OFMessage m : msgs) {
 //				System.out.println(m.toString());
 				context.getStorage().clear();
 
-				if ( vadp == null ) {
-					vadp = version_adaptors.get(m.getVersion());
-					if ( vadp == null ) {
-						Logger.debug("Cannot find suitable version adaptor for version " + m.getVersion());
-						return false;
-					}
-				}
-				
-				if ( !vadp.process(conn, context, m) ) {
+				if ( !protocol.process(conn, context, m) ) {
 					return false;
 				}
 
@@ -209,9 +200,7 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 	 * Protocol Server object, which is currently {@link TcpServer}.
 	 */
 	private IOFProtocolServer server = null;
-	
-	private Map<Byte/*version*/, VersionAdaptor> version_adaptors = new ConcurrentHashMap<Byte, VersionAdaptor>();
-	private byte max_version = (byte)0x00;
+	private OFProtocol protocol = null;
 
 	/**
 	 * OFController constructor.
@@ -236,24 +225,15 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 		else {
 			this.role = null;
 		}
+
+		this.protocol = new OFProtocol(this);
+	}
+	
+	@Override
+	public OFProtocol getProtocol() {
+		return this.protocol;
+	}
 		
-		setVersionAdaptor(VersionAdaptor10.VERSION, new VersionAdaptor10(this));
-		setVersionAdaptor(VersionAdaptor13.VERSION, new VersionAdaptor13(this));
-	}
-	
-	@Override
-	public VersionAdaptor getVersionAdaptor(byte version) {
-		return version_adaptors.get(version);
-	}
-	
-	@Override
-	public void setVersionAdaptor(byte version, VersionAdaptor adaptor) {
-		if (version > max_version) {
-			max_version = version;
-		}
-		version_adaptors.put(version, adaptor);
-	}
-	
 	/**
 	 * Every controller implementation that inherits OFController should implement this function
 	 * to handle all the chores related to the controller initialization. 
@@ -356,9 +336,7 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 	 */
 	@Override
 	public final boolean handleConnectedEvent(Connection conn) {
-		VersionAdaptor va = getVersionAdaptor(this.max_version);
-		// This will handle the initial HELLO handshaking to the switch.
-		return va.handleConnectedEvent(conn);
+		return this.protocol.handleConnectedEvent(conn);
 	}
 	
 	/**

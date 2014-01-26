@@ -298,6 +298,10 @@ public interface IOFSwitch {
      */
     public Map<Short, Long> getPortBroadcastHits();
     
+	public byte getVersion();
+	
+	public void setVersion(byte version);
+    
 //    /**
 //     * query statistics to the switch.
 //     * @param req

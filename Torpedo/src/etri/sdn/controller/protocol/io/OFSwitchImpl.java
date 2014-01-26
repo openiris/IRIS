@@ -64,6 +64,7 @@ public final class OFSwitchImpl implements IOFSwitch {
 		"persists or occurs repeatedly, it likely indicates a defect " +
 		"in the switch HA implementation.";
 
+	private byte version;
 	private ConcurrentMap<Object, Object> attributes;
 	private Date connectedSince;
 	private Connection conn;
@@ -99,6 +100,7 @@ public final class OFSwitchImpl implements IOFSwitch {
 	private long datapathId;
 
 	public OFSwitchImpl() {
+		this.version = (byte) 0x01;		// IS THIS PROPER INITIALIZATION?
 		this.stringId = null;
 		this.attributes = new ConcurrentHashMap<Object, Object>();
 		this.connectedSince = new Date();
@@ -117,6 +119,16 @@ public final class OFSwitchImpl implements IOFSwitch {
 		this.setAttribute(PROP_FASTWILDCARDS, new Integer(0x3fffff)	/* OFPFW_ALL */);
 		this.setAttribute(PROP_SUPPORTS_OFPP_FLOOD, new Boolean(true));
 		this.setAttribute(PROP_SUPPORTS_OFPP_TABLE, new Boolean(true));
+	}
+	
+	@Override
+	public void setVersion(byte v) {
+		this.version = v;
+	}
+	
+	@Override
+	public byte getVersion() {
+		return this.version;
 	}
 	
 	@Override

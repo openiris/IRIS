@@ -102,6 +102,7 @@ public final class Connection {
 	}
 
 	public synchronized boolean write(OFMessage fm) {
+		if ( fm == null ) return true;
 		
 		if ( fm.getXid() == 0 ) {
 			fm.setXid(sw.getNextTransactionId());
