@@ -1,6 +1,6 @@
 package org.openflow.protocol;
 
-public class OFBFlowWildcard {
+public abstract class OFBFlowWildcard {
 	public static int	IN_PORT	=	0x1;
 	public static int	DL_VLAN	=	0x2;
 	public static int	DL_SRC	=	0x4;
