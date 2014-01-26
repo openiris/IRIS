@@ -11,19 +11,20 @@ import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.Interval;
 import org.joda.time.Period;
-import org.openflow.protocol.ver1_0.messages.OFFeaturesReply;
-import org.openflow.protocol.ver1_0.messages.OFFlowStatsEntry;
-import org.openflow.protocol.ver1_0.messages.OFMatch;
-import org.openflow.protocol.ver1_0.messages.OFPortStatsEntry;
-import org.openflow.protocol.ver1_0.messages.OFStatisticsAggregateReply;
-import org.openflow.protocol.ver1_0.messages.OFStatisticsAggregateRequest;
-import org.openflow.protocol.ver1_0.messages.OFStatisticsDescReply;
-import org.openflow.protocol.ver1_0.messages.OFStatisticsFlowReply;
-import org.openflow.protocol.ver1_0.messages.OFStatisticsFlowRequest;
-import org.openflow.protocol.ver1_0.messages.OFStatisticsPortReply;
-import org.openflow.protocol.ver1_0.messages.OFStatisticsPortRequest;
-import org.openflow.protocol.ver1_0.messages.OFStatisticsReply;
-import org.openflow.protocol.ver1_0.types.OFPortNo;
+import org.openflow.protocol.factory.OFMessageFactory;
+import org.openflow.protocol.interfaces.OFFeaturesReply;
+import org.openflow.protocol.interfaces.OFFlowStatsEntry;
+import org.openflow.protocol.interfaces.OFMatch;
+import org.openflow.protocol.interfaces.OFPortStatsEntry;
+import org.openflow.protocol.interfaces.OFStatisticsAggregateReply;
+import org.openflow.protocol.interfaces.OFStatisticsAggregateRequest;
+import org.openflow.protocol.interfaces.OFStatisticsDescReply;
+import org.openflow.protocol.interfaces.OFStatisticsFlowReply;
+import org.openflow.protocol.interfaces.OFStatisticsFlowRequest;
+import org.openflow.protocol.interfaces.OFStatisticsPortReply;
+import org.openflow.protocol.interfaces.OFStatisticsPortRequest;
+import org.openflow.protocol.interfaces.OFStatisticsReply;
+import org.openflow.protocol.interfaces.OFPortNo;
 import org.openflow.util.HexString;
 import org.openflow.util.OFPort;
 import org.restlet.Request;
@@ -32,8 +33,8 @@ import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 
 import etri.sdn.controller.OFModel;
+import etri.sdn.controller.protocol.OFProtocol;
 import etri.sdn.controller.protocol.io.IOFSwitch;
-import etri.sdn.controller.protocol.version.VersionAdaptor10;
 
 /**
  * Model that represents the internal data of {@link OFMStateManager}. 
@@ -46,7 +47,7 @@ public class State extends OFModel {
 	private OFMStateManager manager;
 	private long timeInitiated;
 	private long totalMemory;
-	private VersionAdaptor10 version_adaptor_10;
+	private OFProtocol protocol;
 	
 	/**
 	 * Create the State instance.
@@ -58,7 +59,7 @@ public class State extends OFModel {
 		this.timeInitiated = Calendar.getInstance().getTimeInMillis();
 		this.totalMemory = Runtime.getRuntime().totalMemory();
 		
-		this.version_adaptor_10 = (VersionAdaptor10) manager.getController().getVersionAdaptor((byte)0x01);
+		this.protocol = (OFProtocol) manager.getController().getProtocol();
 	}
 	
 	/**
@@ -140,27 +141,19 @@ public class State extends OFModel {
 						return;		// switch is not completely set up.
 					}
 					
-//					OFStatisticsRequest req = new OFStatisticsRequest();
-//					req.setStatisticType(OFStatisticsType.AGGREGATE);
-//					int requestLength = req.getLengthU();
-//					OFAggregateStatisticsRequest specificReq = new OFAggregateStatisticsRequest();
-//					OFMatch match = new OFMatch();
-//	                match.setWildcards(0xffffffff);
-//	                specificReq.setMatch(match);
-//	                specificReq.setOutPort(OFPort.NONE.getValue());
-//	                specificReq.setTableId((byte) 0xff);
-//	                req.setStatistics(Collections.singletonList((OFStatistics)specificReq));
-//	                requestLength += specificReq.getLength();
-//	                req.setLengthU(requestLength);
-					OFStatisticsAggregateRequest req = new OFStatisticsAggregateRequest();
-					OFMatch match = new OFMatch();
-					match.setWildcardsWire(0xffffffff);
-					req.setMatch(match);
-					req.setOutPort(OFPort.of(OFPortNo.NONE.getValue()));
-					req.setTableId((byte)0xff);					
+					OFStatisticsAggregateRequest req = 
+							OFMessageFactory.createStatisticsAggregateRequest(sw.getVersion());
+					if ( req.isMatchSupported() ) {
+						OFMatch.Builder match = OFMessageFactory.createMatchBuilder(sw.getVersion());
+						match.setWildcardsWire(0xffffffff);
+						req.setMatch(match.build());
+					}
+					if ( req.isOutPortSupported() ) 
+						req.setOutPort(OFPort.NONE);
+					if ( req.isTableIdSupported() ) 
+						req.setTableId((byte)0xff);					
 	                
-//	                List<OFStatistics> reply = sw.getSwitchStatistics( req );
-					List<OFStatisticsReply> reply = version_adaptor_10.getSwitchStatistics(sw, req);
+					List<OFStatisticsReply> reply = protocol.getSwitchStatistics(sw, req);
 					
 	                HashMap<String, List<OFStatisticsReply>> output = new HashMap<String, List<OFStatisticsReply>>();
 	                if ( reply != null && ! reply.isEmpty() ) {
@@ -197,27 +190,19 @@ public class State extends OFModel {
 						return;		// switch is not completely set up.
 					}
 					
-//					OFStatisticsRequest req = new OFStatisticsRequest();
-//					req.setStatisticType(OFStatisticsType.AGGREGATE);
-//					int requestLength = req.getLengthU();
-//					OFAggregateStatisticsRequest specificReq = new OFAggregateStatisticsRequest();
-//					OFMatch match = new OFMatch();
-//	                match.setWildcards(0xffffffff);
-//	                specificReq.setMatch(match);
-//	                specificReq.setOutPort(OFPort.NONE.getValue());
-//	                specificReq.setTableId((byte) 0xff);
-//	                req.setStatistics(Collections.singletonList((OFStatistics)specificReq));
-//	                requestLength += specificReq.getLength();
-//	                req.setLengthU(requestLength);
-					OFStatisticsAggregateRequest req = new OFStatisticsAggregateRequest();
-					OFMatch match = new OFMatch();
-					match.setWildcardsWire(0xffffffff);
-					req.setMatch(match);
-					req.setOutPort(OFPort.of(OFPortNo.NONE.getValue()));
-					req.setTableId((byte)0xff);
+					OFStatisticsAggregateRequest req = 
+							OFMessageFactory.createStatisticsAggregateRequest(sw.getVersion());
+					if ( req.isMatchSupported() ) {
+						OFMatch.Builder match = OFMessageFactory.createMatchBuilder(sw.getVersion());
+						match.setWildcardsWire(0xffffffff);
+						req.setMatch(match.build());
+					}
+					if ( req.isOutPortSupported() )
+						req.setOutPort(OFPort.NONE);
+					if ( req.isTableIdSupported() )
+						req.setTableId((byte)0xff);
 	                
-//	                List<OFStatistics> reply = sw.getSwitchStatistics( req );
-					List<OFStatisticsReply> reply = version_adaptor_10.getSwitchStatistics(sw, req);
+					List<OFStatisticsReply> reply = protocol.getSwitchStatistics(sw, req);
 	                int flowCount = 0;
 					long packetCount = 0;
 					long byteCount = 0;
@@ -235,7 +220,7 @@ public class State extends OFModel {
 	                StringWriter sWriter = new StringWriter();
 	                JsonFactory f = new JsonFactory();
 	                JsonGenerator g = null;
-	                OFStatisticsDescReply desc = version_adaptor_10.getDescription(sw);
+	                OFStatisticsDescReply desc = protocol.getDescription(sw);
 	                
 	                try {
 	                	g = f.createJsonGenerator(sWriter);
@@ -299,22 +284,10 @@ public class State extends OFModel {
 						resultValues = new java.util.LinkedList<org.openflow.protocol.interfaces.OFPortStatsEntry>() 
 					);
 
-//					OFStatisticsRequest req = new OFStatisticsRequest();
-//					req.setStatisticType(OFStatisticsType.PORT);
-//					int requestLength = req.getLengthU();
-//					
-//					OFPortStatisticsRequest specificReq = new OFPortStatisticsRequest();
-//	                specificReq.setPortNumber((short)OFPort.NONE.getValue());
-//	                req.setStatistics(Collections.singletonList((OFStatistics)specificReq));
-//	                requestLength += specificReq.getLength();
-//
-//					req.setLengthU( requestLength );
-					
-					OFStatisticsPortRequest req = new OFStatisticsPortRequest();
+					OFStatisticsPortRequest req = OFMessageFactory.createStatisticsPortRequest(sw.getVersion());
 					req.setPortNo(OFPortNo.NONE);
 
-//					List<OFStatistics> reply = sw.getSwitchStatistics( req );
-					List<OFStatisticsReply> reply = version_adaptor_10.getSwitchStatistics(sw, req);
+					List<OFStatisticsReply> reply = protocol.getSwitchStatistics(sw, req);
 					
 					for ( OFStatisticsReply s : reply ) {
 						if ( s instanceof OFStatisticsPortReply ) {
@@ -356,7 +329,7 @@ public class State extends OFModel {
 					}
 					
 //					OFFeaturesReply reply = sw.getFeaturesReply();
-					OFFeaturesReply reply = version_adaptor_10.getFeaturesReply(sw);
+					OFFeaturesReply reply = protocol.getFeaturesReply(sw);
 					
 					HashMap<String, OFFeaturesReply> result = new HashMap<String, OFFeaturesReply>();
 					result.put( switchIdStr, reply );
@@ -402,31 +375,20 @@ public class State extends OFModel {
 					List<org.openflow.protocol.interfaces.OFFlowStatsEntry> resultValues = 
 						new java.util.LinkedList<org.openflow.protocol.interfaces.OFFlowStatsEntry>();
 					result.put(switchIdStr, resultValues);
-					
-//					OFStatisticsRequest req = new OFStatisticsRequest();
-//					req.setStatisticType(OFStatisticsType.FLOW);
-//					int requestLength = req.getLengthU();
-//					
-//					OFFlowStatisticsRequest specificReq = new OFFlowStatisticsRequest();
-//	                OFMatch match = new OFMatch();
-//	                match.setWildcards(0xffffffff);
-//	                specificReq.setMatch(match);
-//	                specificReq.setOutPort(OFPort.NONE.getValue());
-//	                specificReq.setTableId((byte) 0xff);
-//	                req.setStatistics(Collections.singletonList((OFStatistics)specificReq));
-//	                requestLength += specificReq.getLength();
-//	                
-//	                req.setLengthU( requestLength );
-					
-					OFStatisticsFlowRequest req = new OFStatisticsFlowRequest();
-					OFMatch match = new OFMatch();
-					match.setWildcardsWire(0xffffffff);
-					req.setMatch(match);
-					req.setOutPort(OFPort.of(OFPortNo.NONE.getValue()));
-					req.setTableId((byte)0xff);
+										
+					OFStatisticsFlowRequest req = OFMessageFactory.createStatisticsFlowRequest(sw.getVersion());
+					if ( req.isMatchSupported() ) {
+						OFMatch.Builder match = OFMessageFactory.createMatchBuilder(sw.getVersion());
+						match.setWildcardsWire(0xffffffff);
+						req.setMatch(match.build());
+					}
+					if ( req.isOutPortSupported() ) 
+						req.setOutPort(OFPort.NONE);
+					if ( req.isTableIdSupported() )
+						req.setTableId((byte)0xff);
 
 //					List<OFStatistics> reply = sw.getSwitchStatistics( req );
-					List<OFStatisticsReply> reply = version_adaptor_10.getSwitchStatistics(sw, req);
+					List<OFStatisticsReply> reply = protocol.getSwitchStatistics(sw, req);
 					for ( OFStatisticsReply s : reply ) {
 						if ( s instanceof OFStatisticsFlowReply ) {
 							resultValues.addAll( ((OFStatisticsFlowReply)s).getEntries() );
