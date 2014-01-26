@@ -33,7 +33,7 @@ public class TopologyInstance {
 	public static final int MAX_PATH_WEIGHT = Integer.MAX_VALUE - MAX_LINK_WEIGHT - 1;
 	public static final int PATH_CACHE_SIZE = 1000;
 
-	protected Map<Long, Set<Short>> switchPorts; // Set of ports for each switch
+	protected Map<Long, Set<Integer>> switchPorts; // Set of ports for each switch
 	/** Set of switch ports that are marked as blocked.  A set of blocked
 	 * switch ports may be provided at the time of instantiation. In addition,
 	 * we may add additional ports to this set.
@@ -58,7 +58,7 @@ public class TopologyInstance {
 
 	public TopologyInstance() {
 		this.switches = new HashSet<Long>();
-		this.switchPorts = new HashMap<Long, Set<Short>>();
+		this.switchPorts = new HashMap<Long, Set<Integer>>();
 		this.switchPortLinks = new HashMap<NodePortTuple, Set<Link>>();
 		this.broadcastDomainPorts = new HashSet<NodePortTuple>();
 		this.tunnelPorts = new HashSet<NodePortTuple>();
@@ -66,11 +66,11 @@ public class TopologyInstance {
 		this.blockedLinks = new HashSet<Link>();
 	}
 
-	public TopologyInstance(Map<Long, Set<Short>> switchPorts,
+	public TopologyInstance(Map<Long, Set<Integer>> switchPorts,
 			Map<NodePortTuple, Set<Link>> switchPortLinks)
 	{
 		this.switches = new HashSet<Long>(switchPorts.keySet());
-		this.switchPorts = new HashMap<Long, Set<Short>>(switchPorts);
+		this.switchPorts = new HashMap<Long, Set<Integer>>(switchPorts);
 		this.switchPortLinks = new HashMap<NodePortTuple, 
 				Set<Link>>(switchPortLinks);
 		this.broadcastDomainPorts = new HashSet<NodePortTuple>();
@@ -81,7 +81,7 @@ public class TopologyInstance {
 		clusters = new HashSet<Cluster>();
 		switchClusterMap = new HashMap<Long, Cluster>();
 	}
-	public TopologyInstance(Map<Long, Set<Short>> switchPorts,
+	public TopologyInstance(Map<Long, Set<Integer>> switchPorts,
 			Set<NodePortTuple> blockedPorts,
 			Map<NodePortTuple, Set<Link>> switchPortLinks,
 			Set<NodePortTuple> broadcastDomainPorts,
@@ -89,9 +89,9 @@ public class TopologyInstance {
 
 		// copy these structures
 		this.switches = new HashSet<Long>(switchPorts.keySet());
-		this.switchPorts = new HashMap<Long, Set<Short>>();
+		this.switchPorts = new HashMap<Long, Set<Integer>>();
 		for(long sw: switchPorts.keySet()) {
-			this.switchPorts.put(sw, new HashSet<Short>(switchPorts.get(sw)));
+			this.switchPorts.put(sw, new HashSet<Integer>(switchPorts.get(sw)));
 		}
 
 		this.blockedPorts = new HashSet<NodePortTuple>(blockedPorts);
@@ -172,7 +172,7 @@ public class TopologyInstance {
 	protected void addLinksToOpenflowDomains() {
 		for(long s: switches) {
 			if (switchPorts.get(s) == null) continue;
-			for (short p: switchPorts.get(s)) {
+			for (int p: switchPorts.get(s)) {
 				NodePortTuple np = new NodePortTuple(s, p);
 				if (switchPortLinks.get(np) == null) continue;
 				if (isBroadcastDomainPort(np)) continue;
@@ -271,7 +271,7 @@ public class TopologyInstance {
 
 		// Traverse the graph through every outgoing link.
 		if (switchPorts.get(currSw) != null){
-			for(Short p: switchPorts.get(currSw)) {
+			for(Integer p: switchPorts.get(currSw)) {
 				Set<Link> lset = switchPortLinks.get(new NodePortTuple(currSw, p));
 				if (lset == null) continue;
 				for(Link l:lset) {
@@ -752,7 +752,7 @@ public class TopologyInstance {
 		return switches;
 	}
 
-	public Set<Short> getPortsWithLinks(long sw) {
+	public Set<Integer> getPortsWithLinks(long sw) {
 		return switchPorts.get(sw);
 	}
 

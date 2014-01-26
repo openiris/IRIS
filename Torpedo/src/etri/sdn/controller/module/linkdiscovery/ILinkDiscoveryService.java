@@ -76,7 +76,7 @@ public interface ILinkDiscoveryService extends IService {
     /**
      * Get the set of quarantined ports on a switch
      */
-    public Set<Short> getQuarantinedPorts(long sw);
+    public Set<Integer> getQuarantinedPorts(long sw);
 
     /**
      * Get the status of auto port fast feature.

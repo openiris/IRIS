@@ -99,8 +99,8 @@ public interface ITopologyService extends IService {
      * @param sw The switch DPID in long
      * @return The set of ports on this switch
      */
-    public Set<Short> getPortsWithLinks(long sw);
-    public Set<Short> getPortsWithLinks(long sw, boolean tunnelEnabled);
+    public Set<Integer> getPortsWithLinks(long sw);
+    public Set<Integer> getPortsWithLinks(long sw, boolean tunnelEnabled);
 
     /** Get broadcast ports on a target switch for a given attachmentpoint
      * point port.
@@ -202,5 +202,5 @@ public interface ITopologyService extends IService {
     /**
      * Switch methods
      */
-    public Set<Short> getPorts(long sw);
+    public Set<Integer> getPorts(long sw);
 }

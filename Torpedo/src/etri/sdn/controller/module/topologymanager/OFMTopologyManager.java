@@ -12,13 +12,13 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.openflow.protocol.OFMessage;
+import org.openflow.protocol.OFPort;
+import org.openflow.protocol.factory.OFMessageFactory;
+import org.openflow.protocol.interfaces.OFAction;
+import org.openflow.protocol.interfaces.OFActionOutput;
 import org.openflow.protocol.interfaces.OFMessageType;
-import org.openflow.protocol.ver1_0.messages.OFAction;
-import org.openflow.protocol.ver1_0.messages.OFActionOutput;
-import org.openflow.protocol.ver1_0.messages.OFPacketIn;
-import org.openflow.protocol.ver1_0.messages.OFPacketOut;
-import org.openflow.protocol.ver1_0.types.OFPortNo;
-import org.openflow.util.OFPort;
+import org.openflow.protocol.interfaces.OFPacketIn;
+import org.openflow.protocol.interfaces.OFPacketOut;
 
 import etri.sdn.controller.IOFTask;
 import etri.sdn.controller.MessageContext;
@@ -32,12 +32,12 @@ import etri.sdn.controller.module.linkdiscovery.Link;
 import etri.sdn.controller.module.linkdiscovery.NodePortTuple;
 import etri.sdn.controller.module.routing.IRoutingService;
 import etri.sdn.controller.module.routing.Route;
+import etri.sdn.controller.protocol.OFProtocol;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.BSN;
 import etri.sdn.controller.protocol.packet.Ethernet;
 import etri.sdn.controller.protocol.packet.LLDP;
-import etri.sdn.controller.protocol.version.VersionAdaptor10;
 import etri.sdn.controller.util.Logger;
 
 /**
@@ -52,7 +52,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	/** 
 	 * Set of ports for each switch
 	 */
-	protected Map<Long, Set<Short>> switchPorts;
+	protected Map<Long, Set<Integer>> switchPorts;
 
 	/**
 	 * Set of links organized by node port tuple
@@ -102,9 +102,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	
 	private Topology topologyModel;
 	
-	private VersionAdaptor10 version_adaptor_10;
-
-//	IOFTask updateTask = null;
+	private OFProtocol protocol;
 
 	@Override
 	public void initialize() {
@@ -114,7 +112,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		linkDiscovery = (ILinkDiscoveryService) getModule(ILinkDiscoveryService.class);
 		linkDiscovery.addListener(this);
 		
-		version_adaptor_10 = (VersionAdaptor10) getController().getVersionAdaptor((byte)0x01);
+		protocol = (OFProtocol) getController().getProtocol();
 
 		registerModule(ITopologyService.class, this);
 		registerModule(IRoutingService.class, this);
@@ -133,37 +131,8 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 				}
 		);
 
-//		updateTask = new IOFTask() {
-//
-//			@Override
-//			public boolean execute() {
-//				Logger.stderr("initiate periodic topology update");
-//				updateTopology();
-//				return false;
-//			}
-//
-//		};
-
 		init();
 		initiatePeriodicTopologyUpdate();
-
-//				new Thread() {
-//					@Override
-//					public void run() {
-//		
-//						for(int i = 0; i < 1000; i++) {
-//							try {
-//								Thread.sleep(1000);
-//							} catch (InterruptedException e) {
-//								// 
-//								e.printStackTrace();
-//							}
-//							currentInstance.printTopology();
-//						}
-//					}
-//		
-//				}.start();
-
 	}
 	
 	protected void initiatePeriodicTopologyUpdate() {
@@ -183,7 +152,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	}
 
 	public void init() {
-		switchPorts = new HashMap<Long,Set<Short>>();
+		switchPorts = new HashMap<Long,Set<Integer>>();
 		switchPortLinks = new HashMap<NodePortTuple, Set<Link>>();
 		directLinks = new HashMap<NodePortTuple, Set<Link>>();
 		portBroadcastDomainLinks = new HashMap<NodePortTuple, Set<Link>>();
@@ -193,7 +162,6 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		appliedUpdates = new ArrayList<LDUpdate>();
 		clearCurrentTopology();
 	}
-
 
 	public boolean updateTopology() {
 		boolean newInstanceFlag;
@@ -289,44 +257,35 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	 * @param sw
 	 * @param ports
 	 */
-	public void doMultiActionPacketOut(byte[] packetData, IOFSwitch sw, Set<Short> ports) {
+	public void doMultiActionPacketOut(byte[] packetData, IOFSwitch sw, Set<Integer> ports) {
 
 		if (ports == null) return;
 		if (packetData == null || packetData.length <= 0) return;
 
-//		OFPacketOut po = (OFPacketOut) OFMessageType.PACKET_OUT.newInstance();
-//		OFPacketOut po = (OFPacketOut) sw.getConnection().getFactory().getMessage(OFType.PACKET_OUT);
-		OFPacketOut po = new OFPacketOut();
+		OFPacketOut po = OFMessageFactory.createPacketOut(sw.getVersion());
 
-		List<org.openflow.protocol.interfaces.OFAction> actions = 
-				new ArrayList<org.openflow.protocol.interfaces.OFAction>();
-		for(short p: ports) {
-			OFActionOutput action_out = new OFActionOutput();
+		List<OFAction> actions = new ArrayList<OFAction>();
+		short actions_length = 0;
+		for( int p: ports ) {
+			OFActionOutput action_out = OFMessageFactory.createActionOutput(sw.getVersion());
 			action_out.setPort(OFPort.of(p));
 			action_out.setMaxLength((short) 0);
-//			actions.add(new OFActionOutput(p, (short) 0));
+			action_out.setLength( actions_length += action_out.computeLength() );
 			actions.add(action_out);
 		}
 
 		// set actions
 		po.setActions(actions);
 		// set action length
-		po.setActionsLength((short) (OFActionOutput.MINIMUM_LENGTH * ports.size()));
+		po.setActionsLength(actions_length);
 		// set buffer-id to BUFFER_ID_NONE
 		po.setBufferId(0xffffffff /* BUFFER_ID_NONE */);
 		// set in-port to OFPP_NONE
-		po.setInputPort(OFPort.of(OFPortNo.NONE.getValue()));
-
+		po.setInputPort(OFPort.NONE);
 		// set packet data
-//		po.setPacketData(packetData);
 		po.setData(packetData);
-
-		// compute and set packet length.
-		short poLength = (short)(OFPacketOut.MINIMUM_LENGTH + 
-				po.getActionsLength() + 
-				packetData.length);
-
-		po.setLength(poLength);
+		// set packet length.
+		po.setLength( po.computeLength() );
 
 		sw.getConnection().write(po);
 	}
@@ -357,19 +316,19 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		for(long sid: switches) {
 			IOFSwitch sw = controller.getSwitch(sid); //floodlightProvider.getSwitches().get(sid);
 			if (sw == null) continue;
-			Collection<Short> enabledPorts = version_adaptor_10.getEnabledPortNumbers(sw);
+			Collection<Integer> enabledPorts = protocol.getEnabledPortNumbers(sw);
 			if (enabledPorts == null)
 				continue;
-			Set<Short> ports = new HashSet<Short>();
+			Set<Integer> ports = new HashSet<Integer>();
 			ports.addAll(enabledPorts);
 
 			// all the ports known to topology // without tunnels.
 			// out of these, we need to choose only those that are 
 			// broadcast port, otherwise, we should eliminate.
-			Set<Short> portsKnownToTopo = ti.getPortsWithLinks(sid);
+			Set<Integer> portsKnownToTopo = ti.getPortsWithLinks(sid);
 
 			if (portsKnownToTopo != null) {
-				for(short p: portsKnownToTopo) {
+				for(int p: portsKnownToTopo) {
 					NodePortTuple npt = 
 						new NodePortTuple(sid, p);
 					if (ti.isBroadcastDomainPort(npt) == false) {
@@ -437,11 +396,11 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 
 	public void addSwitch(long sid) {
 		if (switchPorts.containsKey(sid) == false) {
-			switchPorts.put(sid, new HashSet<Short>());
+			switchPorts.put(sid, new HashSet<Integer>());
 		}
 	}
 
-	private void addPortToSwitch(long s, short p) {
+	private void addPortToSwitch(long s, int p) {
 		addSwitch(s);
 		switchPorts.get(s).add(p);
 	}
@@ -475,8 +434,8 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		}
 	}
 
-	public void addOrUpdateLink(long srcId, short srcPort, long dstId, 
-			short dstPort, LinkType type) {
+	public void addOrUpdateLink(long srcId, int srcPort, long dstId, 
+								int dstPort, LinkType type) {
 		boolean flag1 = false, flag2 = false;
 
 		Link link = new Link(srcId, srcPort, dstId, dstPort);
@@ -542,8 +501,8 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		}
 	}
 
-	public void removeLink(long srcId, short srcPort,
-			long dstId, short dstPort) {
+	public void removeLink(long srcId, int srcPort,
+						   long dstId, int dstPort) {
 		Link link = new Link(srcId, srcPort, dstId, dstPort);
 		removeLink(link);
 	}
@@ -735,7 +694,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		if (sw == null) return false;
 		
 //		return (sw.portEnabled(port));
-		return version_adaptor_10.portEnabled(sw, port);
+		return protocol.portEnabled(sw, port);
 	}
 
 	@Override
@@ -823,12 +782,12 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	}
 
 	@Override
-	public Set<Short> getPortsWithLinks(long sw) {
+	public Set<Integer> getPortsWithLinks(long sw) {
 		return getPortsWithLinks(sw, true);
 	}
 
 	@Override
-	public Set<Short> getPortsWithLinks(long sw, boolean tunnelEnabled) {
+	public Set<Integer> getPortsWithLinks(long sw, boolean tunnelEnabled) {
 		TopologyInstance ti = getCurrentInstance(tunnelEnabled);
 		return ti.getPortsWithLinks(sw);
 	}
@@ -948,17 +907,17 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	}
 
 	@Override
-	public Set<Short> getPorts(long sw) {
-		Set<Short> ports = new HashSet<Short>();
+	public Set<Integer> getPorts(long sw) {
+		Set<Integer> ports = new HashSet<Integer>();
 		IOFSwitch iofSwitch = controller.getSwitch(sw);
 		if (iofSwitch == null) return null;
 
 //		Collection<Short> ofpList = iofSwitch.getEnabledPortNumbers();
-		Collection<Short> ofpList = version_adaptor_10.getEnabledPortNumbers(iofSwitch);
+		Collection<Integer> ofpList = protocol.getEnabledPortNumbers(iofSwitch);
 		
 		if (ofpList == null) return null;
 
-		Set<Short> qPorts = linkDiscovery.getQuarantinedPorts(sw);
+		Set<Integer> qPorts = linkDiscovery.getQuarantinedPorts(sw);
 		if (qPorts != null)
 			ofpList.removeAll(qPorts);
 

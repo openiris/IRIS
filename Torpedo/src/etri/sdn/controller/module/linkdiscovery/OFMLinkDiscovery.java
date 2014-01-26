@@ -1128,7 +1128,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	}
 
 	@Override
-	public Set<Short> getQuarantinedPorts(long sw) {
+	public Set<Integer> getQuarantinedPorts(long sw) {
 		// TODO Auto-generated method stub
 		return null;
 	}
