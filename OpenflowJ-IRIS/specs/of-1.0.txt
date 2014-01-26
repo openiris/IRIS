@@ -393,8 +393,8 @@ struct of_port_desc {
     uint16_t port;
     of_mac_addr_t hw_addr;
     of_port_name_t name;
-    uint32_t config;
-    uint32_t state;
+    of_port_config_t config;
+    of_port_state_t state;
     uint32_t current_features;
     uint32_t advertised_features;
     uint32_t supported_features;
@@ -427,7 +427,7 @@ struct of_port_status : of_header {
     uint8_t type == 12;
     uint16_t length;
     uint32_t xid;
-    uint8_t reason;
+    of_port_reason_t reason;
     pad(7);
     of_port_desc_t desc;
 };
