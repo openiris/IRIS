@@ -56,8 +56,8 @@ final class OFPhysicalPortSerializer extends JsonSerializer<OFPortDesc> {
 		jgen.writeNumberField("portNumber", port.getPort().get());
 		jgen.writeStringField("hardwareAddress", HexString.toHexString(port.getHwAddr()));
 		jgen.writeStringField("name", new String(port.getName()));
-		jgen.writeNumberField("config", port.getConfig());
-		jgen.writeNumberField("state", port.getState());
+		jgen.writeNumberField("config", port.getConfigWire());
+		jgen.writeNumberField("state", port.getStateWire());
 		jgen.writeNumberField("currentFeatures", port.getCurrentFeatures());
 		jgen.writeNumberField("advertisedFeatures", port.getAdvertisedFeatures());
 		jgen.writeNumberField("supportedFeatures", port.getSupportedFeatures());

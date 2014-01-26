@@ -8,7 +8,7 @@ import org.codehaus.jackson.Version;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 import org.codehaus.jackson.map.module.SimpleModule;
-import org.openflow.util.OFPort;
+import org.openflow.protocol.OFPort;
 
 /**
  * A Custom Serializer for OFFeaturesReply (FEATURES_REPLY) message.
