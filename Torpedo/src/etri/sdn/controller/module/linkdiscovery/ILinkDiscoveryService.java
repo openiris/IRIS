@@ -66,12 +66,12 @@ public interface ILinkDiscoveryService extends IService {
     /**
      * Adds a switch port to suppress lldp set
      */
-    public void AddToSuppressLLDPs(long sw, short port);
+    public void AddToSuppressLLDPs(long sw, int port);
 
     /**
      * Removes a switch port from suppress lldp set
      */
-    public void RemoveFromSuppressLLDPs(long sw, short port);
+    public void RemoveFromSuppressLLDPs(long sw, int port);
 
     /**
      * Get the set of quarantined ports on a switch
