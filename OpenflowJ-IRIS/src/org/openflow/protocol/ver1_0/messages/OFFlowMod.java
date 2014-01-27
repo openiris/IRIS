@@ -4,9 +4,8 @@ import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
 import java.util.LinkedList;
-import java.util.Set;
-
 import org.openflow.protocol.OFPort;
+import java.util.Set;
 import org.openflow.protocol.ver1_0.types.*;
 import java.util.HashSet;
 import java.util.List;

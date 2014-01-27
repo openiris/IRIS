@@ -3,10 +3,10 @@ package org.openflow.protocol.ver1_0.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import org.openflow.protocol.OFPort;
 import org.openflow.protocol.ver1_0.types.*;
-import java.util.LinkedList;
 import java.util.List;
+import org.openflow.protocol.OFPort;
+import java.util.LinkedList;
 
 public class OFPacketOut extends OFMessage implements org.openflow.protocol.interfaces.OFPacketOut {
     public static int MINIMUM_LENGTH = 16;
@@ -98,20 +98,6 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 		return true;
 	}
 			
-	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFPacketOut setInPort(OFPort value) {
-		throw new UnsupportedOperationException("setInPort is not supported operation");
-	}
-	
-	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFPort getInPort() {
-		throw new UnsupportedOperationException("getInPort is not supported operation");
-	}
-	
-	public boolean isInPortSupported() {
-		return false;
-	}
-	
 	
 	
 	

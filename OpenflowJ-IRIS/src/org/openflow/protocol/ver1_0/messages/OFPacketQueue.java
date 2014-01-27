@@ -3,8 +3,8 @@ package org.openflow.protocol.ver1_0.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import org.openflow.protocol.OFPort;
 import org.openflow.protocol.ver1_0.types.*;
+import org.openflow.protocol.OFPort;
 import java.util.LinkedList;
 import java.util.List;
 

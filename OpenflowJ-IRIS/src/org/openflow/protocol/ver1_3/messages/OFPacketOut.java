@@ -3,17 +3,16 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import org.openflow.protocol.OFPort;
 import org.openflow.protocol.ver1_3.types.*;
+import java.util.List;
+import org.openflow.protocol.OFPort;
+import java.util.LinkedList;
 
 public class OFPacketOut extends OFMessage implements org.openflow.protocol.interfaces.OFPacketOut {
     public static int MINIMUM_LENGTH = 24;
 
     int  buffer_id;
-	int  in_port;
+	int  input_port;
 	short  actions_length;
 	int pad_1th;
 	short pad_2th;
@@ -29,7 +28,7 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
     public OFPacketOut(OFPacketOut other) {
     	super(other);
 		this.buffer_id = other.buffer_id;
-		this.in_port = other.in_port;
+		this.input_port = other.input_port;
 		this.actions_length = other.actions_length;
 		this.actions = (other.actions == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFAction>();
 		for ( org.openflow.protocol.interfaces.OFAction i : other.actions ) { this.actions.add( new OFAction((OFAction)i) ); }
@@ -49,16 +48,16 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 		return true;
 	}
 			
-	public OFPort getInPort() {
-		return new OFPort(this.in_port);
+	public OFPort getInputPort() {
+		return new OFPort(this.input_port);
 	}
 	
-	public OFPacketOut setInPort(OFPort port) {
-		this.in_port = (int) port.get();
+	public OFPacketOut setInputPort(OFPort port) {
+		this.input_port = (int) port.get();
 		return this;
 	}
 	
-	public boolean isInPortSupported() {
+	public boolean isInputPortSupported() {
 		return true;
 	}
 	
@@ -101,20 +100,6 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 		return true;
 	}
 			
-	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFPacketOut setInputPort(OFPort value) {
-		throw new UnsupportedOperationException("setInputPort is not supported operation");
-	}
-	
-	@org.codehaus.jackson.annotate.JsonIgnore
-	public OFPort getInputPort() {
-		throw new UnsupportedOperationException("getInputPort is not supported operation");
-	}
-	
-	public boolean isInputPortSupported() {
-		return false;
-	}
-	
 	
 	
 	
@@ -126,7 +111,7 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
         int mark = data.position();
 		super.readFrom(data);
 		this.buffer_id = data.getInt();
-		this.in_port = data.getInt();
+		this.input_port = data.getInt();
 		this.actions_length = data.getShort();
 		this.pad_1th = data.getInt();
 		this.pad_2th = data.getShort();
@@ -147,7 +132,7 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
     public void writeTo(ByteBuffer data) {
     	super.writeTo(data);
         data.putInt(this.buffer_id);
-		data.putInt(this.in_port);
+		data.putInt(this.input_port);
 		data.putShort(this.actions_length);
 		data.putInt(this.pad_1th);
 		data.putShort(this.pad_2th);
@@ -157,7 +142,7 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 
     public String toString() {
         return super.toString() +  ":OFPacketOut-"+":buffer_id=" + U32.f(buffer_id) + 
-		":in_port=" + U32.f(in_port) + 
+		":input_port=" + U32.f(input_port) + 
 		":actions_length=" + U16.f(actions_length) + 
 		":actions=" + actions.toString() + 
 		":data=" + java.util.Arrays.toString(data);
@@ -188,7 +173,7 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 		final int prime = 2017;
 		int result = super.hashCode() * prime;
 		result = prime * result + (int) buffer_id;
-		result = prime * result + (int) in_port;
+		result = prime * result + (int) input_port;
 		result = prime * result + (int) actions_length;
 		result = prime * result + ((actions == null)?0:actions.hashCode());
 		result = prime * result + ((data == null)?0:java.util.Arrays.hashCode(data));
@@ -209,7 +194,7 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
         }
         OFPacketOut other = (OFPacketOut) obj;
 		if ( buffer_id != other.buffer_id ) return false;
-		if ( in_port != other.in_port ) return false;
+		if ( input_port != other.input_port ) return false;
 		if ( actions_length != other.actions_length ) return false;
 		if ( actions == null && other.actions != null ) { return false; }
 		else if ( !actions.equals(other.actions) ) { return false; }

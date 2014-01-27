@@ -2,9 +2,8 @@ package org.openflow.protocol.interfaces;
 
 import java.nio.ByteBuffer;
 
-import org.openflow.protocol.OFPort;
-
 import java.util.List;
+import org.openflow.protocol.OFPort;
 
 public interface OFPacketOut extends OFMessage {
 
@@ -23,9 +22,6 @@ public interface OFPacketOut extends OFMessage {
 	public OFPacketOut setData(byte[] value);
 	public byte[] getData();
 	public boolean isDataSupported();
-	public OFPacketOut setInPort(OFPort value);
-	public OFPort getInPort();
-	public boolean isInPortSupported();
 	
 	public OFPacketOut dup();
 

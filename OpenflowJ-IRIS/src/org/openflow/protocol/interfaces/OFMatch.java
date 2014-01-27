@@ -1,11 +1,10 @@
 package org.openflow.protocol.interfaces;
 
 import java.nio.ByteBuffer;
-
-import org.openflow.protocol.OFPort;
 import org.openflow.protocol.interfaces.OFOxmMatchFields;
 
 import java.util.List;
+import org.openflow.protocol.OFPort;
 import java.util.Set;
 
 public interface OFMatch  {

@@ -3,8 +3,8 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import org.openflow.protocol.OFPort;
 import org.openflow.protocol.ver1_3.types.*;
+import org.openflow.protocol.OFPort;
 
 public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.openflow.protocol.interfaces.OFStatisticsFlowRequest {
     public static int MINIMUM_LENGTH = 52;

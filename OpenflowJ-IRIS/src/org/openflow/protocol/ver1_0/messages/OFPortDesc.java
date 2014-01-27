@@ -3,9 +3,9 @@ package org.openflow.protocol.ver1_0.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import org.openflow.protocol.OFPort;
 import org.openflow.protocol.ver1_0.types.*;
 import java.util.HashSet;
+import org.openflow.protocol.OFPort;
 import java.util.Set;
 
 public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc {

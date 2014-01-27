@@ -4,13 +4,12 @@ import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.LinkedList;
-
-import org.openflow.protocol.OFPort;
+import java.util.List;
 import org.openflow.protocol.ver1_3.types.*;
 import java.util.Set;
-import java.util.List;
+import org.openflow.protocol.OFPort;
 import java.util.Map;
+import java.util.LinkedList;
 
 public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfaces.OFMatch, org.openflow.protocol.interfaces.OFMatchOxm {
     public static int MINIMUM_LENGTH = 4;
