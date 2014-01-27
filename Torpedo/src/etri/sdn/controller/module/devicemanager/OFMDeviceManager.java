@@ -212,7 +212,7 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 			if ( oxm == null ) {
 				Logger.debug("Packet-in does not have oxm object for OFB_IN_PORT");
 			}
-			int inputPort = ByteBuffer.allocate(4).put(oxm.getData(), 0, 4).getInt();
+			int inputPort = ByteBuffer.wrap(oxm.getData()).getInt();
 			srcEntity = getSourceEntityFromPacket(eth, sw.getId(), inputPort);
 		}
 		if (srcEntity == null)

@@ -149,7 +149,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 				Logger.debug("Packet-in does not have oxm object for OFB_IN_PORT");
 				throw new AssertionError("pi cannot refer null");
 			}
-			return ByteBuffer.allocate(4).put(oxm.getData(), 0, 4).getInt();
+			return ByteBuffer.wrap(oxm.getData()).getInt();
 		}
 	}
 
