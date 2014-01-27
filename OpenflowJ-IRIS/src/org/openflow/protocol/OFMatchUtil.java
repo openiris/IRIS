@@ -8,27 +8,27 @@ import org.openflow.protocol.interfaces.OFOxmMatchFields;
 
 public abstract class OFMatchUtil {
 
-	public static int getInt(OFMatch match, OFOxmMatchFields field) {
+	public static Integer getInt(OFMatch match, OFOxmMatchFields field) {
 		
 		byte[] data = getData(match, field, 4);
 		
-		if (data == null) return 0;
+		if (data == null) return null;
 		
 		return ByteBuffer.wrap(data).getInt();
 	}
 	
-	public static short getShort(OFMatch match, OFOxmMatchFields field) {
+	public static Short getShort(OFMatch match, OFOxmMatchFields field) {
 		byte[] data = getData(match, field, 2);
 		
-		if (data == null) return 0;
+		if (data == null) return null;
 		
 		return ByteBuffer.wrap(data).getShort();
 	}
 	
-	public static byte getByte(OFMatch match, OFOxmMatchFields field) {
+	public static Byte getByte(OFMatch match, OFOxmMatchFields field) {
 		byte[] data = getData(match, field, 1);
 		
-		if (data == null) return 0;
+		if (data == null) return null;
 		
 		return data[0];
 	}
@@ -38,10 +38,10 @@ public abstract class OFMatchUtil {
 		return data;
 	}
 	
-	public static long getEthAsLong(OFMatch match, OFOxmMatchFields field) {
+	public static Long getEthAsLong(OFMatch match, OFOxmMatchFields field) {
 		byte[] data = getData(match, field, 6);
 		
-		if (data == null) return 0;
+		if (data == null) return null;
 		
 		byte[] tmpArray = new byte[8];
 		tmpArray[0] = tmpArray[1] = 0;
