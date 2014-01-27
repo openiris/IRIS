@@ -636,7 +636,7 @@ class Struct(Type):
           if variable_name.endswith('port') or variable_name.endswith('port_number'):
             if variable_name.find('tp') < 0 and variable_name.find('transport') < 0:
               port_type = 'OFPort'
-              imports.add('import org.openflow.util.OFPort;')  
+              imports.add('import org.openflow.protocol.OFPort;')  
           
         if i.get('bitfields', None):
           for x in i['bitfields']:
@@ -726,7 +726,7 @@ class Struct(Type):
             if i['name'].endswith('port') or i['name'].endswith('port_number'):
               if i['name'].find('tp') < 0 and i['name'].find('transport') < 0:
                 r = 'OFPort'
-                imports.add('import org.openflow.util.OFPort;')
+                imports.add('import org.openflow.protocol.OFPort;')
                 
           rtype = self.spec.get_type(r)
           if isinstance(rtype, Enum) and rtype.is_bitmask_enum():
@@ -1143,7 +1143,7 @@ class Struct(Type):
         imports.add('import java.util.List;')
       if re.search(r'OFPort\b', x) :
         if_decls.append(x)
-        imports.add('import org.openflow.util.OFPort;')
+        imports.add('import org.openflow.protocol.OFPort;')
       else :
         if_decls.append(re.sub(r'(OF\w+)', r'org.openflow.protocol.interfaces.\1', x, 2))
     

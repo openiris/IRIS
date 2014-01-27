@@ -1138,7 +1138,7 @@ struct of_packet_out : of_header {
     uint16_t length;
     uint32_t xid;
     uint32_t buffer_id;
-    uint32_t in_port;
+    uint32_t input_port;
     uint16_t actions_length;
     pad(6);
     list(of_action_t) actions;

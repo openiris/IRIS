@@ -3,10 +3,10 @@ package org.openflow.protocol.ver1_0.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import org.openflow.protocol.OFPort;
 import org.openflow.protocol.ver1_0.types.*;
-import java.util.LinkedList;
 import java.util.List;
+import org.openflow.protocol.OFPort;
+import java.util.LinkedList;
 
 public class OFQueueGetConfigReply extends OFMessage implements org.openflow.protocol.interfaces.OFQueueGetConfigReply {
     public static int MINIMUM_LENGTH = 16;

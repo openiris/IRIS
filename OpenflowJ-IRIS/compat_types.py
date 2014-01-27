@@ -148,7 +148,7 @@ class InterfaceForStruct(Interface):
           if i['name'].endswith('port') or i['name'].endswith('port_number'):
             if i['name'].find('tp') < 0 and i['name'].find('transport') < 0:
               return_type = 'OFPort'
-              self.imports.add('import org.openflow.util.OFPort;')
+              self.imports.add('import org.openflow.protocol.OFPort;')
               
         # this is for changing the return time manually into OFMatch if it is OFMatchOxm
         

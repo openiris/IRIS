@@ -3,11 +3,10 @@ package org.openflow.protocol.ver1_3.messages;
 import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import org.openflow.protocol.OFPort;
 import org.openflow.protocol.ver1_3.types.*;
+import java.util.List;
+import org.openflow.protocol.OFPort;
+import java.util.LinkedList;
 
 public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacketQueue {
     public static int MINIMUM_LENGTH = 16;

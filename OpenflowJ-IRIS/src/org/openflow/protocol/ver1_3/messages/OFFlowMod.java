@@ -4,11 +4,10 @@ import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
 import java.util.LinkedList;
+import org.openflow.protocol.OFPort;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
-
-import org.openflow.protocol.OFPort;
 import org.openflow.protocol.ver1_3.types.*;
 
 public class OFFlowMod extends OFMessage implements org.openflow.protocol.interfaces.OFFlowMod {
