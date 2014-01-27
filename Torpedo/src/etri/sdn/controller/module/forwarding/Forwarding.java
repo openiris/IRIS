@@ -158,8 +158,10 @@ public class Forwarding extends ForwardingBase {
 	 * @param cntx the {@link MessageContext}
 	 */
 	protected void doDropFlow(IOFSwitch sw, OFPacketIn pi, IRoutingDecision decision, MessageContext cntx) {
+		int input_port = getInputPort(pi);
+		
 		// initialize match structure and populate it using the packet
-		OFMatch match = protocol.loadOFMatchFromPacket(sw, pi.getData(), (short)pi.getInputPort().get());
+		OFMatch match = protocol.loadOFMatchFromPacket(sw, pi.getData(), (short) input_port);
 		if ( (decision.getWildcards() != null) && (match.isWildcardsSupported()) ) {
 			match.setWildcardsWire(decision.getWildcards());
 		}
@@ -222,7 +224,9 @@ public class Forwarding extends ForwardingBase {
 			MessageContext cntx,
 			boolean requestFlowRemovedNotifn) {    
 
-		OFMatch match = protocol.loadOFMatchFromPacket(sw, pi.getData(), (short)pi.getInputPort().get());
+		int input_port = getInputPort(pi);
+		
+		OFMatch match = protocol.loadOFMatchFromPacket(sw, pi.getData(), (short)input_port);
 
 		// Check if we have the location of the destination
 		IDevice dstDevice = (IDevice) cntx.get(MessageContext.DST_DEVICE);
@@ -236,7 +240,7 @@ public class Forwarding extends ForwardingBase {
 				return;
 			}
 			if (srcIsland == null) {
-				Logger.stderr("No openflow island found for source {" + sw.getStringId() + "}/{" + pi.getInputPort() + "}");
+				Logger.stderr("No openflow island found for source {" + sw.getStringId() + "}/{" + input_port + "}");
 				return;
 			}
 
@@ -249,8 +253,7 @@ public class Forwarding extends ForwardingBase {
 				Long dstIsland = topology.getL2DomainId(dstSwDpid);
 				if ((dstIsland != null) && dstIsland.equals(srcIsland)) {
 					on_same_island = true;
-					if ((sw.getId() == dstSwDpid) &&
-							(pi.getInputPort().get() == dstDap.getPort())) {
+					if ((sw.getId() == dstSwDpid) && (input_port == dstDap.getPort())) {
 						on_same_if = true;
 					}
 					break;
@@ -266,7 +269,7 @@ public class Forwarding extends ForwardingBase {
 
 			if (on_same_if) {
 				Logger.stdout("Both source and destination are on the same switch/port " + 
-						sw.toString() + "/" + pi.getInputPort() + ", Action = NOP");
+						sw.toString() + "/" + input_port + ", Action = NOP");
 				return;
 			}
 
@@ -357,7 +360,9 @@ public class Forwarding extends ForwardingBase {
 	 * @param cntx the {@link MessageContext}
 	 */
 	protected void doFlood(IOFSwitch sw, OFPacketIn pi, MessageContext cntx) {
-		if (! topology.isIncomingBroadcastAllowed(sw.getId(), (short) pi.getInputPort().get()) ) {
+		int input_port = getInputPort(pi);
+		
+		if (! topology.isIncomingBroadcastAllowed(sw.getId(), (short) input_port) ) {
 //			if (log.isTraceEnabled()) {
 //				log.trace("doFlood, drop broadcast packet, pi={}, " + 
 //						"from a blocked port, srcSwitch=[{},{}], linkInfo={}",
@@ -382,7 +387,7 @@ public class Forwarding extends ForwardingBase {
 
 		// set buffer-id, in-port and packet-data based on packet-in
 		po.setBufferId(pi.getBufferId());
-		po.setInputPort(pi.getInputPort());
+		po.setInputPort(OFPort.of(input_port));
 		if (pi.getBufferId() == 0xffffffff /* OFP_NO_BUFFER */ ) {
 			po.setData( pi.getData() );
 		}

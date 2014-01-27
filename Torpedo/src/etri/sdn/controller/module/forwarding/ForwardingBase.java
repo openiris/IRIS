@@ -18,6 +18,7 @@
 package etri.sdn.controller.module.forwarding;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -40,6 +41,7 @@ import org.openflow.protocol.interfaces.OFInstructionApplyActions;
 import org.openflow.protocol.interfaces.OFInstructionType;
 import org.openflow.protocol.interfaces.OFMatch;
 import org.openflow.protocol.interfaces.OFMessageType;
+import org.openflow.protocol.interfaces.OFOxm;
 import org.openflow.protocol.interfaces.OFOxmMatchFields;
 import org.openflow.protocol.interfaces.OFPacketIn;
 import org.openflow.protocol.interfaces.OFPacketOut;
@@ -132,6 +134,23 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 	protected boolean handleHandshakedEvent(Connection sw, MessageContext context) {
 		// does nothing
 		return true;
+	}
+	
+	protected int getInputPort(OFPacketIn pi) {
+		if ( pi == null ) {
+			throw new AssertionError("pi cannot refer null");
+		}
+		if ( pi.isInputPortSupported() ) {
+			return pi.getInputPort().get();
+		}
+		else {
+			OFOxm oxm = pi.getMatch().getOxmFromIndex(OFOxmMatchFields.OFB_IN_PORT);
+			if ( oxm == null ) {
+				Logger.debug("Packet-in does not have oxm object for OFB_IN_PORT");
+				throw new AssertionError("pi cannot refer null");
+			}
+			return ByteBuffer.allocate(4).put(oxm.getData(), 0, 4).getInt();
+		}
 	}
 
 	/**
@@ -363,14 +382,17 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 
 		if (pi == null) {
 			return;
-		} else if (pi.getInputPort().get() == outport){
+		}
+		int input_port = getInputPort(pi);
+		
+		if ( input_port == outport){
 			Logger.stdout("Packet out not sent as the outport matches inport. " + pi.toString());
 			return;
 		}
 
 		// The assumption here is (sw) is the switch that generated the packet-in. 
 		// If the input port is the same as output port, then the packet-out should be ignored.
-		if (pi.getInputPort().get() == outport) {
+		if ( input_port == outport) {
 			return;
 		}
 
@@ -400,7 +422,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			po.setBufferId(pi.getBufferId());
 		}
 
-		po.setInputPort(pi.getInputPort());
+		po.setInputPort(OFPort.of(input_port));
 
 		// If the buffer id is none or the switch doesn's support buffering
 		// we send the data with the packet out
@@ -617,10 +639,11 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 		Ethernet eth = (Ethernet) cntx.get(MessageContext.ETHER_PAYLOAD);
 
 		Long broadcastHash;
+		int input_port = getInputPort(pi);
 		broadcastHash = topology.getL2DomainId(conn.getSwitch().getId()) * prime1 +
-				pi.getInputPort().get() * prime2 + eth.hashCode();
+				input_port * prime2 + eth.hashCode();
 		if (broadcastCache.update(broadcastHash)) {
-			conn.getSwitch().updateBroadcastCache(broadcastHash, (short) pi.getInputPort().get());
+			conn.getSwitch().updateBroadcastCache(broadcastHash, (short) input_port);
 			return true;
 		} else {
 			return false;
@@ -645,10 +668,12 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 		// Get the hash of the Ethernet packet.
 		Ethernet eth = (Ethernet) cntx.get(MessageContext.ETHER_PAYLOAD);
 
-		long hash =  pi.getInputPort().get() * prime2 + eth.hashCode();
+		int input_port = getInputPort(pi);
+		
+		long hash =  input_port * prime2 + eth.hashCode();
 
 		// some FORWARD_OR_FLOOD packets are unicast with unknown destination mac
-		return conn.getSwitch().updateBroadcastCache(hash, (short) pi.getInputPort().get());
+		return conn.getSwitch().updateBroadcastCache(hash, (short) input_port);
 	}
 
 	/**
