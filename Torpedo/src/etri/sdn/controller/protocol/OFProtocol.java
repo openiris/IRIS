@@ -623,9 +623,11 @@ public class OFProtocol {
 			ret.setWildcards( OFFlowWildcards.IN_PORT );
 		}
 		
+		System.out.println(limit);
 		assert (limit >= 14);
 		// dl dst
 		byte[] eth_dst = new byte[6];
+		System.out.println(packetDataBB + " " + eth_dst + " " + limit);
 		packetDataBB.get(eth_dst);
 		ret.setDataLayerDestination(eth_dst);
 	

@@ -221,7 +221,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 						
 						// this checks if the Packet-In is for LLDP!
 						// This is very important to guarantee maximum performance. (-_-;)
-						if ( pi.getData()[12] != (byte)0x88 || pi.getData()[13] != (byte)0xcc ) {
+						if ( pi.getLength() < (short)14 || (pi.getData()[12] != (byte)0x88 || pi.getData()[13] != (byte)0xcc )) {
 							// this packet is not mine!
 							return false;
 						}
