@@ -25,18 +25,18 @@ import java.util.List;
 
 import org.openflow.protocol.OFBFlowWildcard;
 import org.openflow.protocol.OFMessage;
+import org.openflow.protocol.OFPort;
 import org.openflow.protocol.factory.OFMessageFactory;
-import org.openflow.protocol.interfaces.OFMessageType;
 import org.openflow.protocol.interfaces.OFAction;
 import org.openflow.protocol.interfaces.OFActionOutput;
 import org.openflow.protocol.interfaces.OFFlowMod;
+import org.openflow.protocol.interfaces.OFFlowModCommand;
+import org.openflow.protocol.interfaces.OFInstructionApplyActions;
+import org.openflow.protocol.interfaces.OFInstructionType;
 import org.openflow.protocol.interfaces.OFMatch;
+import org.openflow.protocol.interfaces.OFMessageType;
 import org.openflow.protocol.interfaces.OFPacketIn;
 import org.openflow.protocol.interfaces.OFPacketOut;
-import org.openflow.protocol.interfaces.OFFlowModCommand;
-import org.openflow.protocol.interfaces.OFFlowWildcards;
-import org.openflow.protocol.interfaces.OFPortNo;
-import org.openflow.protocol.OFPort;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
@@ -59,8 +59,6 @@ import etri.sdn.controller.util.Logger;
  * This class implements the forwarding module.
  * This module determines how to handle all PACKET_IN messages
  * according to the routing decision.
- * 
- * <p>Modified the original LearningMac class of Floodlight.
  * 
  * @author jshin
  */
@@ -162,24 +160,44 @@ public class Forwarding extends ForwardingBase {
 	protected void doDropFlow(IOFSwitch sw, OFPacketIn pi, IRoutingDecision decision, MessageContext cntx) {
 		// initialize match structure and populate it using the packet
 		OFMatch match = protocol.loadOFMatchFromPacket(sw, pi.getData(), (short)pi.getInputPort().get());
-		if (decision.getWildcards() != null) {
+		if ( (decision.getWildcards() != null) && (match.isWildcardsSupported()) ) {
 			match.setWildcardsWire(decision.getWildcards());
 		}
 
 		// Create flow-mod based on packet-in and src-switch
 		OFFlowMod fm = OFMessageFactory.createFlowMod(pi.getVersion());
 		
-		// drop
-		long cookie = AppCookie.makeCookie(FORWARDING_APP_ID, 0);
+		if ( fm.isInstructionsSupported() ) {
+			OFInstructionApplyActions instruction = OFMessageFactory.createInstructionApplyActions(pi.getVersion());
+			List<org.openflow.protocol.interfaces.OFInstruction> instructions = new ArrayList<org.openflow.protocol.interfaces.OFInstruction>();
+			instruction.setActions(Collections.<org.openflow.protocol.interfaces.OFAction>emptyList());		// drop
+			instruction.setType(OFInstructionType.APPLY_ACTIONS);
+			instruction.setLength(instruction.computeLength());
+			instructions.clear();
+			instructions.add(instruction);
 
-		fm.setCookie(cookie)
-		.setHardTimeout((short) 0)
-		.setIdleTimeout((short) 5)
-		.setBufferId(0xffffffff /* OFPacketOut.BUFFER_ID_NONE */)
-		.setMatch(match)
-		.setActions(Collections.<org.openflow.protocol.interfaces.OFAction>emptyList())
-		.setLength(fm.computeLength()); // +OFActionOutput.MINIMUM_LENGTH);
+			long cookie = AppCookie.makeCookie(FORWARDING_APP_ID, 0);
 
+			fm.setCookie(cookie)
+			.setHardTimeout((short) 0)
+			.setIdleTimeout((short) 5)
+			.setBufferId(0xffffffff /* OFP_NO_BUFFER */)
+			.setMatch(match)
+			.setInstructions(instructions);
+			fm.setLength(fm.computeLength());
+		} else {
+			// drop
+			long cookie = AppCookie.makeCookie(FORWARDING_APP_ID, 0);
+
+			fm.setCookie(cookie)
+			.setHardTimeout((short) 0)
+			.setIdleTimeout((short) 5)
+			.setBufferId(0xffffffff /* OFP_NO_BUFFER */)
+			.setMatch(match)
+			.setActions(Collections.<org.openflow.protocol.interfaces.OFAction>emptyList())
+			.setLength(fm.computeLength()); // +OFActionOutput.MINIMUM_LENGTH);
+		}
+		
 		try {
 			Logger.debug("write drop flow-mod sw={} match={} flow-mod={}", 
 					new Object[] { sw, match, fm });
@@ -292,7 +310,7 @@ public class Forwarding extends ForwardingBase {
 							long cookie = 
 									AppCookie.makeCookie(FORWARDING_APP_ID, 0);
 
-							// if there is prior routing decision use wildcard                                                     
+							// if there is prior routing decision use wildcard
 							Integer wildcard_hints = null;
 							IRoutingDecision decision = (IRoutingDecision) cntx.get(MessageContext.ROUTING_DECISION);
 							
@@ -365,7 +383,7 @@ public class Forwarding extends ForwardingBase {
 		// set buffer-id, in-port and packet-data based on packet-in
 		po.setBufferId(pi.getBufferId());
 		po.setInputPort(pi.getInputPort());
-		if (pi.getBufferId() == 0xffffffff /*OFPacketOut.BUFFER_ID_NONE */ ) {
+		if (pi.getBufferId() == 0xffffffff /* OFP_NO_BUFFER */ ) {
 			po.setData( pi.getData() );
 		}
 		po.setLength( po.computeLength() );
