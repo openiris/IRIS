@@ -1,5 +1,6 @@
 package etri.sdn.controller.module.firewall;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -10,6 +11,8 @@ import java.util.Map;
 
 import org.openflow.protocol.OFMessage;
 import org.openflow.protocol.interfaces.OFMessageType;
+import org.openflow.protocol.interfaces.OFOxm;
+import org.openflow.protocol.interfaces.OFOxmMatchFields;
 import org.openflow.protocol.interfaces.OFPacketIn;
 
 import etri.sdn.controller.MessageContext;
@@ -101,7 +104,24 @@ public class OFMFirewall extends OFModule implements IFirewallService
 	public String getCollectionName(){
 		return collectionName;
 	}
-    
+
+	protected int getInputPort(OFPacketIn pi) {
+		if ( pi == null ) {
+			throw new AssertionError("pi cannot refer null");
+		}
+		if ( pi.isInputPortSupported() ) {
+			return pi.getInputPort().get();
+		}
+		else {
+			OFOxm oxm = pi.getMatch().getOxmFromIndex(OFOxmMatchFields.OFB_IN_PORT);
+			if ( oxm == null ) {
+				Logger.debug("Packet-in does not have oxm object for OFB_IN_PORT");
+				throw new AssertionError("pi cannot refer null");
+			}
+			return ByteBuffer.wrap(oxm.getData()).getInt();
+		}
+	}
+
     /*
      * Internal methods
      */
@@ -120,6 +140,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
     private boolean processPacketInMessage(IOFSwitch sw, OFPacketIn pi, IRoutingDecision decision, MessageContext cntx){
     	
     	Ethernet eth = (Ethernet) cntx.get(MessageContext.ETHER_PAYLOAD);
+    	int input_port = getInputPort(pi);
     	
     	// Allowing L2 broadcast + ARP broadcast request (also deny malformed
         // broadcasts -> L2 broadcast + L3 unicast)
@@ -137,7 +158,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
 
                 decision = new RoutingDecision(
                 		sw.getId(),
-                		(short) pi.getInputPort().get(), 
+                		(short) input_port, 
                 		(IDevice) cntx.get(MessageContext.SRC_DEVICE),
                         IRoutingDecision.RoutingAction.MULTICAST);
                 decision.addToContext(cntx);
@@ -146,7 +167,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
 
                 decision = new RoutingDecision(
                 		sw.getId(),
-                		(short) pi.getInputPort().get(), 
+                		(short) input_port, 
                 		(IDevice) cntx.get(MessageContext.SRC_DEVICE),
                 		IRoutingDecision.RoutingAction.DROP);
                 decision.addToContext(cntx);
@@ -174,7 +195,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
             if (rule == null || rule.action == FirewallRule.FirewallAction.DENY) {
                 decision = new RoutingDecision(
                 		sw.getId(),
-                		(short) pi.getInputPort().get(), 
+                		(short) input_port, 
                 		(IDevice) cntx.get(MessageContext.SRC_DEVICE),
                         IRoutingDecision.RoutingAction.DROP);
                 decision.setWildcards(match_ret.wildcards);
@@ -190,7 +211,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
             } else {
                 decision = new RoutingDecision(
                 		sw.getId(),
-                		(short) pi.getInputPort().get(), 
+                		(short) input_port, 
                 		(IDevice) cntx.get(MessageContext.SRC_DEVICE),
                         IRoutingDecision.RoutingAction.FORWARD_OR_FLOOD);
                 decision.setWildcards(match_ret.wildcards);
@@ -234,6 +255,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
      */
     protected RuleWildcardsPair matchWithRule(IOFSwitch sw, OFPacketIn pi, MessageContext cntx) {
         FirewallRule matched_rule = null;
+        int input_port = getInputPort(pi);
         
         Ethernet eth = (Ethernet) cntx.get(MessageContext.ETHER_PAYLOAD);
         
@@ -248,7 +270,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
                 rule = iter.next();
 
                 // check if rule matches
-                if (rule.matchesFlow(sw.getId(), (short)pi.getInputPort().get(), eth, wildcards) == true) {
+                if (rule.matchesFlow(sw.getId(), (short)input_port, eth, wildcards) == true) {
                     matched_rule = rule;
                     break;
                 }
