@@ -37,7 +37,7 @@
 			if ( oxm == null || oxm.getData() == null ) {
 				return (short) 0;
 			}
-			return ByteBuffer.allocate(2).put(oxm.getData()).getShort();
+			return ByteBuffer.wrap(oxm.getData()).getShort();
 		}
 		
 		public boolean isTransportSourceSupported() {

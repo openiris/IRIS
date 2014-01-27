@@ -349,7 +349,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			if ( oxm == null || oxm.getData() == null ) {
 				return null;
 			}
-			return OFPort.of(ByteBuffer.allocate(4).put(oxm.getData()).getInt());
+			return OFPort.of(ByteBuffer.wrap(oxm.getData()).getInt());
 		}
 		
 		public boolean isInputPortSupported() {
@@ -408,7 +408,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			if ( oxm == null || oxm.getData() == null ) {
 				return (short) 0;
 			}
-			return ByteBuffer.allocate(2).put(oxm.getData()).getShort();
+			return ByteBuffer.wrap(oxm.getData()).getShort();
 		}
 		
 		public boolean isDataLayerVirtualLanSupported() {
@@ -442,7 +442,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			if ( oxm == null || oxm.getData() == null ) {
 				return (short) 0;
 			}
-			return ByteBuffer.allocate(2).put(oxm.getData()).getShort();
+			return ByteBuffer.wrap(oxm.getData()).getShort();
 		}
 		
 		public boolean isDataLayerTypeSupported() {
@@ -493,7 +493,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			if ( oxm == null || oxm.getData() == null ) {
 				return (byte) 0;
 			}
-			return ByteBuffer.allocate(8).put(oxm.getData()).getInt();
+			return ByteBuffer.wrap(oxm.getData()).getInt();
 		}
 		
 		public boolean isNetworkSourceSupported() {
@@ -510,7 +510,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			if ( oxm == null || oxm.getData() == null ) {
 				return (byte) 0;
 			}
-			return ByteBuffer.allocate(8).put(oxm.getData()).getInt();
+			return ByteBuffer.wrap(oxm.getData()).getInt();
 		}
 		
 		public boolean isNetworkDestinationSupported() {
@@ -556,7 +556,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			if ( oxm == null || oxm.getData() == null ) {
 				return (short) 0;
 			}
-			return ByteBuffer.allocate(2).put(oxm.getData()).getShort();
+			return ByteBuffer.wrap(oxm.getData()).getShort();
 		}
 		
 		public boolean isTransportSourceSupported() {
@@ -602,7 +602,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			if ( oxm == null || oxm.getData() == null ) {
 				return (short) 0;
 			}
-			return ByteBuffer.allocate(2).put(oxm.getData()).getShort();
+			return ByteBuffer.wrap(oxm.getData()).getShort();
 		}
 		
 		public boolean isTransportDestinationSupported() {

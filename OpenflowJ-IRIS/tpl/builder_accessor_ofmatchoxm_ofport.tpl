@@ -8,7 +8,7 @@
 			if ( oxm == null || oxm.getData() == null ) {
 				return null;
 			}
-			return OFPort.of(ByteBuffer.allocate(4).put(oxm.getData()).getInt());
+			return OFPort.of(ByteBuffer.wrap(oxm.getData()).getInt());
 		}
 		
 		public boolean is${method_name}Supported() {

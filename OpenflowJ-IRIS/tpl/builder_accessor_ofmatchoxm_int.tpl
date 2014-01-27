@@ -8,7 +8,7 @@
 			if ( oxm == null || oxm.getData() == null ) {
 				return (byte) 0;
 			}
-			return ByteBuffer.allocate(4).put(oxm.getData()).getInt();
+			return ByteBuffer.wrap(oxm.getData()).getInt();
 		}
 		
 		public boolean is${method_name}Supported() {
