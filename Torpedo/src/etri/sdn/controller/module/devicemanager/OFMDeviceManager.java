@@ -131,6 +131,10 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 				new OFMFilter() {
 					@Override
 					public boolean filter(OFMessage m) {
+						OFPacketIn pi = (OFPacketIn) m;
+						if ( pi.getData() == null || pi.getData().length <= 0 ) {
+							return false;
+						}
 						return true;		// accept all messages regardless versions.
 					}
 				}
