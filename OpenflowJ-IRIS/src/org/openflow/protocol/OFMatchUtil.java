@@ -33,9 +33,8 @@ public abstract class OFMatchUtil {
 		return data[0];
 	}
 	
-	public static byte[] getByteArray(OFMatch match, OFOxmMatchFields field) {
-		byte[] data = getData(match, field, 1);
-		return data;
+	public static byte[] getEth(OFMatch match, OFOxmMatchFields field) {
+		return getData(match, field, 6);
 	}
 	
 	public static Long getEthAsLong(OFMatch match, OFOxmMatchFields field) {
@@ -55,10 +54,13 @@ public abstract class OFMatchUtil {
 			return null;
 		}
 		if ( !match.isOxmFieldsSupported() ) {
+			System.err.println("[OFMatchUtil] Wrong version OFMatch object");
 			return null;
 		}
 		OFOxm oxm = match.getOxmFromIndex(field);
-		if ( oxm == null ) return null;
+		if ( oxm == null ) {
+			return null;
+		}
 		
 		byte[] data = oxm.getData();
 		if ( oxm.getBitmask() != (byte)0 ) {

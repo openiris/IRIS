@@ -8,13 +8,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.openflow.protocol.OFMessage;
+import org.openflow.protocol.OFPort;
 import org.openflow.protocol.interfaces.OFMessageType;
-import org.openflow.protocol.ver1_3.messages.OFAction;
 import org.openflow.protocol.ver1_3.messages.OFActionOutput;
 import org.openflow.protocol.ver1_3.messages.OFFlowMod;
-import org.openflow.protocol.ver1_3.messages.OFInstruction;
 import org.openflow.protocol.ver1_3.messages.OFInstructionApplyActions;
-import org.openflow.protocol.ver1_3.messages.OFMatch;
 import org.openflow.protocol.ver1_3.messages.OFMatchOxm;
 import org.openflow.protocol.ver1_3.messages.OFOxm;
 import org.openflow.protocol.ver1_3.messages.OFPacketIn;
@@ -27,19 +25,17 @@ import org.openflow.protocol.ver1_3.types.OFOxmClass;
 import org.openflow.protocol.ver1_3.types.OFOxmMatchFields;
 import org.openflow.protocol.ver1_3.types.OFPortNo;
 import org.openflow.util.LRULinkedHashMap;
-import org.openflow.util.OFPort;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
+import etri.sdn.controller.protocol.OFProtocol;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.Ethernet;
 import etri.sdn.controller.protocol.packet.IPv4;
-import etri.sdn.controller.protocol.version.VersionAdaptor13;
 import etri.sdn.controller.util.Logger;
-import etri.sdn.controller.util.MACAddress;
 
 /**
  * MAC Learning Module. 
@@ -57,7 +53,7 @@ public final class OFMLearningMac13 extends OFModule {
 			new ConcurrentHashMap<IOFSwitch, Map<MacVlanPair, Short>>();
 
 
-	private VersionAdaptor13 version_adaptor_13;
+	private  OFProtocol version_adaptor_13;
 	
 	// flow-mod - for use in the cookie
 	private static final int LEARNING_SWITCH_APP_ID = 1;
@@ -248,7 +244,8 @@ public final class OFMLearningMac13 extends OFModule {
 
 		// Set buffer_id, in_port, actions_len
 		packetOutMessage.setBufferId(packetInMessage.getBufferId());
-		packetOutMessage.setInPort(OFPort.of(getInputPort));
+//		packetOutMessage.setInPort(OFPort.of(getInputPort));
+		packetOutMessage.setInputPort(OFPort.of(getInputPort));
 		packetOutMessage.setActionsLength((short)OFActionOutput.MINIMUM_LENGTH);
 		packetOutLength += OFActionOutput.MINIMUM_LENGTH;
 
@@ -398,6 +395,7 @@ public final class OFMLearningMac13 extends OFModule {
 		OFOxm ofOxmInPort = new OFOxm();
 		ofOxmInPort.setOxmClass(OFOxmClass.OPENFLOW_BASIC);
 		ofOxmInPort.setField(OFOxmMatchFields.OFB_IN_PORT.getValue()); //OFOxmMatchFields.
+//		ofOxmInPort.setField(OFOxmMatchFields.OFB_IN_PORT.getValue()); //OFOxmMatchFields.
 		ofOxmInPort.setBitmask((byte) 0);
 		ofOxmInPort.setData(IPv4.toIPv4AddressBytes(getInputPortTmp));
 		ofOxmInPort.setPayloadLength((byte) 0x04);
@@ -529,8 +527,9 @@ private short readShort(byte[] data) {
 @Override
 protected void initialize() {
 
-	version_adaptor_13 = (VersionAdaptor13) getController().getVersionAdaptor((byte)0x04);
-
+	//version_adaptor_13 = (VersionAdaptor13) getController().getVersionAdaptor((byte)0x04);
+	this.version_adaptor_13 = getController().getProtocol();
+	
 	registerFilter(
 			OFMessageType.PACKET_IN,
 			new OFMFilter() {

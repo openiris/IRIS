@@ -43,6 +43,6 @@
 		$builder_accessors
 		
 		public org.openflow.protocol.interfaces.OFMatch build() {
-			return object;
+			return object.setLength(object.computeLength());
 		}
 	}
