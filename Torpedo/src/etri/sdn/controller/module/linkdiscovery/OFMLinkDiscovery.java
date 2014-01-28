@@ -221,7 +221,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 						
 						byte[] packet = pi.getData();
 						
-						if ( packet.length < 14 ) {
+						if ( packet == null || packet.length < 14 ) {
 							// this packet is not mine!
 							return false;
 						}
