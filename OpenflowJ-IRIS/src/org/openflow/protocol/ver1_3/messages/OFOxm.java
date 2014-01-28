@@ -43,7 +43,7 @@ public class OFOxm   implements org.openflow.protocol.interfaces.OFOxm {
 	}
 	
 	public byte getField() {
-		byte t__ = (byte)(this.field_bitmask & 0b111111110);
+		byte t__ = (byte)(this.field_bitmask & 0b11111110);
 		return (byte)(t__ >> 1);
 	}
 	

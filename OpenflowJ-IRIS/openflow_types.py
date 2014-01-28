@@ -790,7 +790,7 @@ class Struct(Type):
             for bitfield in bitfields:
               method_name = self.spec.convert_to_camel(bitfield[0])
               shift_amount = type_size*8 - accu - int(bitfield[1])
-              mask = '0b' + '1' * (type_size*8 - accu) + '0' * shift_amount; 
+              mask = '0b' + '1' * (type_size*8 - accu - shift_amount) + '0' * shift_amount; 
               accessor = tpl.safe_substitute({'class_name':self.name, 'return_type':return_type,
                                               'mask': mask,
                                               'variable_name':variable_name, 'method_name':method_name,

@@ -611,7 +611,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		
 		
 		public org.openflow.protocol.interfaces.OFMatch build() {
-			return object;
+			return object.setLength(object.computeLength());
 		}
 	}
 	
