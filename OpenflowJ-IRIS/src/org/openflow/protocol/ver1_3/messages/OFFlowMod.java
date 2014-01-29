@@ -49,7 +49,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		this.flags = other.flags;
 		this.match = new OFMatchOxm((OFMatchOxm)other.match);
 		this.instructions = (other.instructions == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFInstruction>();
-		for ( org.openflow.protocol.interfaces.OFInstruction i : other.instructions ) { this.instructions.add( new OFInstruction((OFInstruction)i) ); }
+		for ( org.openflow.protocol.interfaces.OFInstruction i : other.instructions ) { this.instructions.add( i.dup() ); }
     }
 
 	public long getCookie() {

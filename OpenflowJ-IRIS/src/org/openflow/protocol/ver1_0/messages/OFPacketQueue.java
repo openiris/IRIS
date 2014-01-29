@@ -24,7 +24,7 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
     	this.queue_id = other.queue_id;
 		this.length = other.length;
 		this.properties = (other.properties == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFQueueProperty>();
-		for ( org.openflow.protocol.interfaces.OFQueueProperty i : other.properties ) { this.properties.add( new OFQueueProperty((OFQueueProperty)i) ); }
+		for ( org.openflow.protocol.interfaces.OFQueueProperty i : other.properties ) { this.properties.add( i.dup() ); }
     }
 
 	public int getQueueId() {

@@ -34,7 +34,7 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 		this.duration_sec = other.duration_sec;
 		this.duration_nsec = other.duration_nsec;
 		this.band_stats = (other.band_stats == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFMeterBandStats>();
-		for ( org.openflow.protocol.interfaces.OFMeterBandStats i : other.band_stats ) { this.band_stats.add( new OFMeterBandStats((OFMeterBandStats)i) ); }
+		for ( org.openflow.protocol.interfaces.OFMeterBandStats i : other.band_stats ) { this.band_stats.add( i.dup() ); }
     }
 
 	public int getMeterId() {

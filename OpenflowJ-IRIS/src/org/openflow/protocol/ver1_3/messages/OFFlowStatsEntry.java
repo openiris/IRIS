@@ -44,7 +44,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		this.byte_count = other.byte_count;
 		this.match = new OFMatchOxm((OFMatchOxm)other.match);
 		this.instructions = (other.instructions == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFInstruction>();
-		for ( org.openflow.protocol.interfaces.OFInstruction i : other.instructions ) { this.instructions.add( new OFInstruction((OFInstruction)i) ); }
+		for ( org.openflow.protocol.interfaces.OFInstruction i : other.instructions ) { this.instructions.add( i.dup() ); }
     }
 
 	public short getLength() {

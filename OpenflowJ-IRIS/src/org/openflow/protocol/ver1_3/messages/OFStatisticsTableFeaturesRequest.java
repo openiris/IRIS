@@ -22,7 +22,7 @@ public class OFStatisticsTableFeaturesRequest extends OFStatisticsRequest implem
     public OFStatisticsTableFeaturesRequest(OFStatisticsTableFeaturesRequest other) {
     	super(other);
 		this.entries = (other.entries == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFTableFeatures>();
-		for ( org.openflow.protocol.interfaces.OFTableFeatures i : other.entries ) { this.entries.add( new OFTableFeatures((OFTableFeatures)i) ); }
+		for ( org.openflow.protocol.interfaces.OFTableFeatures i : other.entries ) { this.entries.add( i.dup() ); }
     }
 
 	public List<org.openflow.protocol.interfaces.OFTableFeatures> getEntries() {

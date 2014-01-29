@@ -28,7 +28,7 @@ public class OFGroupMod extends OFMessage implements org.openflow.protocol.inter
 		this.group_category = other.group_category;
 		this.group_id = other.group_id;
 		this.buckets = (other.buckets == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFBucket>();
-		for ( org.openflow.protocol.interfaces.OFBucket i : other.buckets ) { this.buckets.add( new OFBucket((OFBucket)i) ); }
+		for ( org.openflow.protocol.interfaces.OFBucket i : other.buckets ) { this.buckets.add( i.dup() ); }
     }
 
 	public org.openflow.protocol.interfaces.OFGroupModCommand getCommand() {

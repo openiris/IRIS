@@ -25,7 +25,7 @@ public class OFQueueGetConfigReply extends OFMessage implements org.openflow.pro
     	super(other);
 		this.port = other.port;
 		this.queues = (other.queues == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFPacketQueue>();
-		for ( org.openflow.protocol.interfaces.OFPacketQueue i : other.queues ) { this.queues.add( new OFPacketQueue((OFPacketQueue)i) ); }
+		for ( org.openflow.protocol.interfaces.OFPacketQueue i : other.queues ) { this.queues.add( i.dup() ); }
     }
 
 	public OFPort getPort() {

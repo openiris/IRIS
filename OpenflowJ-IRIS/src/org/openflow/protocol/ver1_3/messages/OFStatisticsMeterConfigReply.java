@@ -22,7 +22,7 @@ public class OFStatisticsMeterConfigReply extends OFStatisticsReply implements o
     public OFStatisticsMeterConfigReply(OFStatisticsMeterConfigReply other) {
     	super(other);
 		this.entries = (other.entries == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFMeterBand>();
-		for ( org.openflow.protocol.interfaces.OFMeterBand i : other.entries ) { this.entries.add( new OFMeterBand((OFMeterBand)i) ); }
+		for ( org.openflow.protocol.interfaces.OFMeterBand i : other.entries ) { this.entries.add( i.dup() ); }
     }
 
 	public List<org.openflow.protocol.interfaces.OFMeterBand> getEntries() {

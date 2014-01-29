@@ -687,9 +687,13 @@ class Struct(Type):
         elif self.is_list_type(variable_type):
           inner = i['inner']
           copyconstructor.append('this.%s = (other.%s == null)? null: new Linked%s<%s>();' 
-                                 % (variable_name, variable_name, variable_type, self.convert_to_interface_if_possible(i['inner'])))  
-          copyconstructor.append('for ( %s i : other.%s ) { this.%s.add( new %s((%s)i) ); }' 
-                                 % (self.convert_to_interface_if_possible(inner), variable_name, variable_name, inner, inner))
+                                 % (variable_name, variable_name, variable_type, self.convert_to_interface_if_possible(inner)))
+          if self.spec.get_type(inner):  
+            copyconstructor.append('for ( %s i : other.%s ) { this.%s.add( i.dup() ); }' 
+                                   % (self.convert_to_interface_if_possible(inner), variable_name, variable_name))
+          else:
+            copyconstructor.append('for ( %s i : other.%s ) { this.%s.add( new %s(i) ); }' 
+                                   % (self.convert_to_interface_if_possible(inner), variable_name, variable_name, inner))
         else:
           copyconstructor.append('this.%s = other.%s;' % (variable_name, variable_name))
         

@@ -22,7 +22,7 @@ public class OFStatisticsGroupDescReply extends OFStatisticsReply implements org
     public OFStatisticsGroupDescReply(OFStatisticsGroupDescReply other) {
     	super(other);
 		this.entries = (other.entries == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFGroupDescStatsEntry>();
-		for ( org.openflow.protocol.interfaces.OFGroupDescStatsEntry i : other.entries ) { this.entries.add( new OFGroupDescStatsEntry((OFGroupDescStatsEntry)i) ); }
+		for ( org.openflow.protocol.interfaces.OFGroupDescStatsEntry i : other.entries ) { this.entries.add( i.dup() ); }
     }
 
 	public List<org.openflow.protocol.interfaces.OFGroupDescStatsEntry> getEntries() {

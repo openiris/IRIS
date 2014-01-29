@@ -21,7 +21,7 @@ public class OFTableFeaturePropertyWildcards extends OFTableFeatureProperty impl
     public OFTableFeaturePropertyWildcards(OFTableFeaturePropertyWildcards other) {
     	super(other);
 		this.oxm_ids = (other.oxm_ids == null)? null: new LinkedList<Integer>();
-		for ( Integer i : other.oxm_ids ) { this.oxm_ids.add( new Integer((Integer)i) ); }
+		for ( Integer i : other.oxm_ids ) { this.oxm_ids.add( new Integer(i) ); }
     }
 
 	public List<Integer> getOxmIds() {

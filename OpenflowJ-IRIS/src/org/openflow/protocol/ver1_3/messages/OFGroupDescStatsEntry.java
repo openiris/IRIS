@@ -25,7 +25,7 @@ public class OFGroupDescStatsEntry   implements org.openflow.protocol.interfaces
 		this.type = other.type;
 		this.group_id = other.group_id;
 		this.buckets = (other.buckets == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFBucket>();
-		for ( org.openflow.protocol.interfaces.OFBucket i : other.buckets ) { this.buckets.add( new OFBucket((OFBucket)i) ); }
+		for ( org.openflow.protocol.interfaces.OFBucket i : other.buckets ) { this.buckets.add( i.dup() ); }
     }
 
 	public short getLength() {

@@ -27,7 +27,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
     public OFMatchOxm(OFMatchOxm other) {
     	super(other);
 		this.oxm_fields = (other.oxm_fields == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFOxm>();
-		for ( org.openflow.protocol.interfaces.OFOxm i : other.oxm_fields ) { this.oxm_fields.add( new OFOxm((OFOxm)i) ); }
+		for ( org.openflow.protocol.interfaces.OFOxm i : other.oxm_fields ) { this.oxm_fields.add( i.dup() ); }
     }
 
 	public void addOxmToIndex(org.openflow.protocol.interfaces.OFOxm oxm) {

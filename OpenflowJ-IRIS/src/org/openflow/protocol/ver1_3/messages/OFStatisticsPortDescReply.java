@@ -22,7 +22,7 @@ public class OFStatisticsPortDescReply extends OFStatisticsReply implements org.
     public OFStatisticsPortDescReply(OFStatisticsPortDescReply other) {
     	super(other);
 		this.entries = (other.entries == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFPortDesc>();
-		for ( org.openflow.protocol.interfaces.OFPortDesc i : other.entries ) { this.entries.add( new OFPortDesc((OFPortDesc)i) ); }
+		for ( org.openflow.protocol.interfaces.OFPortDesc i : other.entries ) { this.entries.add( i.dup() ); }
     }
 
 	public List<org.openflow.protocol.interfaces.OFPortDesc> getEntries() {

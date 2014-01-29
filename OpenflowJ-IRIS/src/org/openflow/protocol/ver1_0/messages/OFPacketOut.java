@@ -29,7 +29,7 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 		this.input_port = other.input_port;
 		this.actions_length = other.actions_length;
 		this.actions = (other.actions == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFAction>();
-		for ( org.openflow.protocol.interfaces.OFAction i : other.actions ) { this.actions.add( new OFAction((OFAction)i) ); }
+		for ( org.openflow.protocol.interfaces.OFAction i : other.actions ) { this.actions.add( i.dup() ); }
 		if (other.data != null) { this.data = java.util.Arrays.copyOf(other.data, other.data.length); }
     }
 

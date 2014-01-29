@@ -35,7 +35,7 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		this.capabilities = other.capabilities;
 		this.actions = other.actions;
 		this.ports = (other.ports == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFPortDesc>();
-		for ( org.openflow.protocol.interfaces.OFPortDesc i : other.ports ) { this.ports.add( new OFPortDesc((OFPortDesc)i) ); }
+		for ( org.openflow.protocol.interfaces.OFPortDesc i : other.ports ) { this.ports.add( i.dup() ); }
     }
 
 	public long getDatapathId() {

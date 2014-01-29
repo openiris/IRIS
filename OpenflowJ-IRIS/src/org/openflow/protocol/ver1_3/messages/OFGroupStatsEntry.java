@@ -34,7 +34,7 @@ public class OFGroupStatsEntry   implements org.openflow.protocol.interfaces.OFG
 		this.duration_sec = other.duration_sec;
 		this.duration_nsec = other.duration_nsec;
 		this.bucket_stats = (other.bucket_stats == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFBucketCounter>();
-		for ( org.openflow.protocol.interfaces.OFBucketCounter i : other.bucket_stats ) { this.bucket_stats.add( new OFBucketCounter((OFBucketCounter)i) ); }
+		for ( org.openflow.protocol.interfaces.OFBucketCounter i : other.bucket_stats ) { this.bucket_stats.add( i.dup() ); }
     }
 
 	public short getLength() {

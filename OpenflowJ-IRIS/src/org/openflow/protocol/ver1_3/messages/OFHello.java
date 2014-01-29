@@ -21,7 +21,7 @@ public class OFHello extends OFMessage implements org.openflow.protocol.interfac
     public OFHello(OFHello other) {
     	super(other);
 		this.elements = (other.elements == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFHelloElem>();
-		for ( org.openflow.protocol.interfaces.OFHelloElem i : other.elements ) { this.elements.add( new OFHelloElem((OFHelloElem)i) ); }
+		for ( org.openflow.protocol.interfaces.OFHelloElem i : other.elements ) { this.elements.add( i.dup() ); }
     }
 
 	public List<org.openflow.protocol.interfaces.OFHelloElem> getElements() {

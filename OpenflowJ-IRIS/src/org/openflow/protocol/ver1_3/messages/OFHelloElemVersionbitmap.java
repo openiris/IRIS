@@ -21,7 +21,7 @@ public class OFHelloElemVersionbitmap extends OFHelloElem implements org.openflo
     public OFHelloElemVersionbitmap(OFHelloElemVersionbitmap other) {
     	super(other);
 		this.bitmaps = (other.bitmaps == null)? null: new LinkedList<Integer>();
-		for ( Integer i : other.bitmaps ) { this.bitmaps.add( new Integer((Integer)i) ); }
+		for ( Integer i : other.bitmaps ) { this.bitmaps.add( new Integer(i) ); }
     }
 
 	public List<Integer> getBitmaps() {

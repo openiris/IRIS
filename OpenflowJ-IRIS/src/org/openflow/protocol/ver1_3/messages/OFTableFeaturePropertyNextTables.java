@@ -21,7 +21,7 @@ public class OFTableFeaturePropertyNextTables extends OFTableFeatureProperty imp
     public OFTableFeaturePropertyNextTables(OFTableFeaturePropertyNextTables other) {
     	super(other);
 		this.next_table_ids = (other.next_table_ids == null)? null: new LinkedList<Byte>();
-		for ( Byte i : other.next_table_ids ) { this.next_table_ids.add( new Byte((Byte)i) ); }
+		for ( Byte i : other.next_table_ids ) { this.next_table_ids.add( new Byte(i) ); }
     }
 
 	public List<Byte> getNextTableIds() {

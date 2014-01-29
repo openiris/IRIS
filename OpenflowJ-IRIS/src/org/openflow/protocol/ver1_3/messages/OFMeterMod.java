@@ -27,7 +27,7 @@ public class OFMeterMod extends OFMessage implements org.openflow.protocol.inter
 		this.flags = other.flags;
 		this.meter_id = other.meter_id;
 		this.meters = (other.meters == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFMeterBand>();
-		for ( org.openflow.protocol.interfaces.OFMeterBand i : other.meters ) { this.meters.add( new OFMeterBand((OFMeterBand)i) ); }
+		for ( org.openflow.protocol.interfaces.OFMeterBand i : other.meters ) { this.meters.add( i.dup() ); }
     }
 
 	public org.openflow.protocol.interfaces.OFMeterModCommand getCommand() {

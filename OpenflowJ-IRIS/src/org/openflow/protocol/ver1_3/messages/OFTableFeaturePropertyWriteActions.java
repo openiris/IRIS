@@ -21,7 +21,7 @@ public class OFTableFeaturePropertyWriteActions extends OFTableFeatureProperty i
     public OFTableFeaturePropertyWriteActions(OFTableFeaturePropertyWriteActions other) {
     	super(other);
 		this.action_ids = (other.action_ids == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFActionId>();
-		for ( org.openflow.protocol.interfaces.OFActionId i : other.action_ids ) { this.action_ids.add( new OFActionId((OFActionId)i) ); }
+		for ( org.openflow.protocol.interfaces.OFActionId i : other.action_ids ) { this.action_ids.add( i.dup() ); }
     }
 
 	public List<org.openflow.protocol.interfaces.OFActionId> getActionIds() {

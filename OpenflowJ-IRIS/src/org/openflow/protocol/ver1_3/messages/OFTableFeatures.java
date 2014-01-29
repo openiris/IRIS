@@ -34,7 +34,7 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 		this.config = other.config;
 		this.max_entries = other.max_entries;
 		this.properties = (other.properties == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFTableFeatureProperty>();
-		for ( org.openflow.protocol.interfaces.OFTableFeatureProperty i : other.properties ) { this.properties.add( new OFTableFeatureProperty((OFTableFeatureProperty)i) ); }
+		for ( org.openflow.protocol.interfaces.OFTableFeatureProperty i : other.properties ) { this.properties.add( i.dup() ); }
     }
 
 	public short getLength() {

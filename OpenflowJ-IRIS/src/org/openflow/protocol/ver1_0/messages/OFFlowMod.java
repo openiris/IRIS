@@ -42,7 +42,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		this.out_port = other.out_port;
 		this.flags = other.flags;
 		this.actions = (other.actions == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFAction>();
-		for ( org.openflow.protocol.interfaces.OFAction i : other.actions ) { this.actions.add( new OFAction((OFAction)i) ); }
+		for ( org.openflow.protocol.interfaces.OFAction i : other.actions ) { this.actions.add( i.dup() ); }
     }
 
 	public org.openflow.protocol.interfaces.OFMatch getMatch() {

@@ -21,7 +21,7 @@ public class OFTableFeaturePropertyInstructionsMiss extends OFTableFeatureProper
     public OFTableFeaturePropertyInstructionsMiss(OFTableFeaturePropertyInstructionsMiss other) {
     	super(other);
 		this.instruction_ids = (other.instruction_ids == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFInstruction>();
-		for ( org.openflow.protocol.interfaces.OFInstruction i : other.instruction_ids ) { this.instruction_ids.add( new OFInstruction((OFInstruction)i) ); }
+		for ( org.openflow.protocol.interfaces.OFInstruction i : other.instruction_ids ) { this.instruction_ids.add( i.dup() ); }
     }
 
 	public List<org.openflow.protocol.interfaces.OFInstruction> getInstructionIds() {

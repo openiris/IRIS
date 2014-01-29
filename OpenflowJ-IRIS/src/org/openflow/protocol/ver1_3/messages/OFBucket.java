@@ -28,7 +28,7 @@ public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
 		this.watch_port = other.watch_port;
 		this.watch_group = other.watch_group;
 		this.actions = (other.actions == null)? null: new LinkedList<org.openflow.protocol.interfaces.OFAction>();
-		for ( org.openflow.protocol.interfaces.OFAction i : other.actions ) { this.actions.add( new OFAction((OFAction)i) ); }
+		for ( org.openflow.protocol.interfaces.OFAction i : other.actions ) { this.actions.add( i.dup() ); }
     }
 
 	public short getLength() {
