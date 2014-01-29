@@ -38,7 +38,6 @@ import org.openflow.protocol.interfaces.OFFlowModCommand;
 import org.openflow.protocol.interfaces.OFFlowModFlags;
 import org.openflow.protocol.interfaces.OFInstruction;
 import org.openflow.protocol.interfaces.OFInstructionApplyActions;
-import org.openflow.protocol.interfaces.OFInstructionType;
 import org.openflow.protocol.interfaces.OFMatch;
 import org.openflow.protocol.interfaces.OFMessageType;
 import org.openflow.protocol.interfaces.OFOxm;
@@ -234,7 +233,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			OFFlowModCommand   flowModCommand) {
 
 		boolean srcSwitchIncluded = false;
-		OFFlowMod fm = OFMessageFactory.createFlowAdd(pi.getVersion());
+		OFFlowMod fm = OFMessageFactory.createFlowMod(pi.getVersion());
 
 		if ( fm.isInstructionsSupported() ) {
 			OFInstructionApplyActions instruction = OFMessageFactory.createInstructionApplyActions(pi.getVersion());
@@ -242,21 +241,27 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			OFActionOutput action_output = OFMessageFactory.createActionOutput(pi.getVersion());
 			List<OFAction> actions = new ArrayList<OFAction>();
 
+//			action_output.setType(OFActionType.OUTPUT);			//TODO: modified
 			action_output.setMaxLength((short)0xffff);
+			action_output.setLength(action_output.computeLength());
 			actions.add(action_output);
 			instruction.setActions(actions);
-			instruction.setType(OFInstructionType.APPLY_ACTIONS);
+//			instruction.setType(OFInstructionType.APPLY_ACTIONS);
 			instruction.setLength(instruction.computeLength());
 			instructions.clear();
 			instructions.add(instruction);
 
+//			setCookieMask		//TODO: check fm field
+//			setOutGroup
+//			setOutPort
+			
 			fm.setTableId((byte) 0x0)
 			.setIdleTimeout(FLOWMOD_DEFAULT_IDLE_TIMEOUT)
 			.setHardTimeout(FLOWMOD_DEFAULT_HARD_TIMEOUT)
 			.setCookie(cookie)
 			.setPriority((short) 100)
 			.setBufferId(0xffffffff /* OFP_NO_BUFFER */)		//refers to a packet buffered at the switch and sent to the controller
-			//			.setCommand(OFFlowModCommand.valueOf(flowModCommand))
+//			.setCommand(OFFlowModCommand.valueOf(flowModCommand))
 			.setCommand(flowModCommand)
 			.setMatch(match)
 			.setInstructions(instructions)
@@ -264,8 +269,9 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			fm.setLength(fm.computeLength());
 		} else {
 			List<OFAction> actions = new ArrayList<OFAction>();
-			OFActionOutput action_output = OFMessageFactory.createActionOutput(conn.getSwitch().getVersion());
+			OFActionOutput action_output = OFMessageFactory.createActionOutput(pi.getVersion());
 			action_output.setMaxLength((short)0xffff);
+			action_output.setLength(action_output.computeLength());
 			actions.add(action_output);
 
 			fm.setIdleTimeout(FLOWMOD_DEFAULT_IDLE_TIMEOUT)
@@ -274,8 +280,8 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			.setCookie(cookie)
 			.setCommand(flowModCommand)
 			.setMatch(match)
-			.setActions(actions)
-			.setLength( fm.computeLength() );
+			.setActions(actions);
+			fm.setLength( fm.computeLength() );
 		}
 		
 		List<NodePortTuple> switchPortList = route.getPath();
@@ -317,7 +323,9 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			short inPort = switchPortList.get(indx-1).getPortId();
 			// set input and output ports on the switch
 			fm.getMatch().setInputPort(OFPort.of(inPort));
-			((OFActionOutput)fm.getActions().get(0)).setPort(OFPort.of(outPort));
+			List<OFAction> actions = fm.getActions();
+			OFAction action = actions.get(0);
+			((OFActionOutput)action).setPort(OFPort.of(outPort));
 
 			try {
 //				counterStore.updatePktOutFMCounterStore(sw, fm);
@@ -396,20 +404,19 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			return;
 		}
 
-		OFPacketOut po = OFMessageFactory.createPacketOut(pi.getVersion());
-
 		// set actions
 		OFActionOutput action_output = OFMessageFactory.createActionOutput(pi.getVersion());
 		List<OFAction> actions = new ArrayList<OFAction>();
 
 		action_output.setMaxLength((short)0xffff);
 		action_output.setPort(OFPort.of(outport));
+		action_output.setLength(action_output.computeLength());
 		actions.add(action_output);
 		
+		OFPacketOut po = OFMessageFactory.createPacketOut(pi.getVersion());
 		po
 		.setActions(actions)
 		.setActionsLength( action_output.computeLength() );
-		short poLength = po.computeLength();
 
 		// If the switch doens't support buffering set the buffer id to be none
 		// otherwise it'll be the the buffer id of the PacketIn
@@ -427,17 +434,12 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 		// If the buffer id is none or the switch doesn's support buffering
 		// we send the data with the packet out
 		if (pi.getBufferId() == 0xffffffff /* OFP_NO_BUFFER */) {
-//			byte[] packetData = pi.getPacketData();
 			byte[] packetData = pi.getData();
-			poLength += packetData.length;
-//			po.setPacketData(packetData);
 			po.setData(packetData);
 		}
 		
-		po.setLength(poLength);
+		po.setLength(po.computeLength());
 		
-//		System.err.println ("FB PacketOut XXXXXXXX " + po.toString());
-
 		try {
 //			counterStore.updatePktOutFMCounterStore(sw, po);
 			messageDamper.write(conn, po);
@@ -477,11 +479,11 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 
 		action_output.setMaxLength((short)0xffff);
 		action_output.setPort(OFPort.of(outPort));
+		action_output.setLength(action_output.computeLength());
 		actions.add(action_output);
 		
 		po.setActions(actions)
 		.setActionsLength( action_output.computeLength() );
-		short poLength = po.computeLength();
 
 		// set buffer_id, in_port
 		po.setBufferId(bufferId);
@@ -497,14 +499,11 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 				return;
 			}
 			byte[] packetData = packet.serialize();
-			poLength += packetData.length;
 			po.setData(packetData);
 		}
 
-		po.setLength(poLength);
+		po.setLength(po.computeLength());
 		
-//		System.out.println("FB PacketOut XXXXXXXXXXXXXXX " + po.toString());
-
 		try {
 //			counterStore.updatePktOutFMCounterStore(sw, po);
 			messageDamper.write(conn, po);
@@ -540,7 +539,9 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 		{
 			OFActionOutput action_output = 
 					OFMessageFactory.createActionOutput(conn.getSwitch().getVersion());
-			action_output.setPort(OFPort.of(j.next().shortValue())).setMaxLength((short)0);
+			action_output.setPort(OFPort.of(j.next().shortValue()));
+			action_output.setMaxLength((short)0);
+			action_output.setLength(action_output.computeLength());
 			actions.add(action_output);
 			actions_length += action_output.computeLength();
 		}
@@ -558,8 +559,6 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 		po.setData(packetData);
 		po.setLength(po.computeLength());
 		
-//		System.out.println("FB PacketOut 2 YYYYYYYYYYYYYY " + po.toString());
-
 		try {
 //			counterStore.updatePktOutFMCounterStore(sw, po);
 //			if (log.isTraceEnabled()) {
@@ -712,17 +711,24 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			List<OFInstruction> instructions = new ArrayList<OFInstruction>();
 			OFInstructionApplyActions instruction = OFMessageFactory.createInstructionApplyActions(sw.getVersion());
 			instruction.setActions(Collections.<OFAction>emptyList());	// drop
-			instruction.setType(OFInstructionType.APPLY_ACTIONS);
 			instruction.setLength(instruction.computeLength());
 			instructions.add(instruction);
 			
+//			setCookie		//TODO: field check
+//			setCookieMask
+//			setFlags
+//			setOutGroup
+//			setOutPort
+//			setPriority
+
 			fm.setCookie(cookie)
 			.setTableId((byte) 0x0)
 			.setIdleTimeout(FLOWMOD_DEFAULT_IDLE_TIMEOUT)
 //			.setHardTimeout(FLOWMOD_DEFAULT_HARD_TIMEOUT)
 			.setHardTimeout((short) hardTimeout)
+			.setCommand(OFFlowModCommand.ADD)
 			.setBufferId( 0xffffffff /* OFP_NO_BUFFER */)
-//			.setFlagsWire((short) 0x0001)			//send flow removed message when flow expires or is deleted.		//TODO: need?
+//			.setFlagsWire((short) 0x0001)			//send flow removed message when flow expires or is deleted.
 			.setMatch(blockMatchOxm.build())
 			.setInstructions(instructions);
 			fm.setLength(fm.computeLength());
@@ -744,7 +750,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			.setBufferId( 0xffffffff /* OFP_NO_BUFFER */)
 			.setMatch(match.build())
 			.setActions(actions)
-			.setLength(fm.computeLength()); // +OFActionOutput.MINIMUM_LENGTH);
+			.setLength(fm.computeLength());
 		}
 
 //		log.debug("write drop flow-mod sw={} match={} flow-mod={}",
