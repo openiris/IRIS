@@ -9,6 +9,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterStats {
     public static int MINIMUM_LENGTH = 40;
+    public static int CORE_LENGTH = 40;
 
     int  meter_id;
 	short  length;
@@ -192,7 +193,7 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	if ( this.band_stats != null ) for ( org.openflow.protocol.interfaces.OFMeterBandStats i : this.band_stats ) { len += i.computeLength(); }
+		if ( this.band_stats != null ) for ( org.openflow.protocol.interfaces.OFMeterBandStats i : this.band_stats ) { len += i.computeLength(); }
     	return len;
     }
     

@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_0.types.*;
 
 public class OFActionSetDlSrc extends OFAction implements org.openflow.protocol.interfaces.OFActionSetDlSrc {
     public static int MINIMUM_LENGTH = 16;
+    public static int CORE_LENGTH = 12;
 
     byte[]  dl_addr;
 	int pad_1th;
@@ -65,8 +66,7 @@ public class OFActionSetDlSrc extends OFAction implements org.openflow.protocol.
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFInstruction   implements org.openflow.protocol.interfaces.OFInstruction {
     public static int MINIMUM_LENGTH = 4;
+    public static int CORE_LENGTH = 4;
 
     OFInstructionType  type;
 	short  length;
@@ -77,7 +78,6 @@ public class OFInstruction   implements org.openflow.protocol.interfaces.OFInstr
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	
     	return len;
     }
     

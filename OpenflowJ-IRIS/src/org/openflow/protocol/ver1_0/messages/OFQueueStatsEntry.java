@@ -8,6 +8,7 @@ import org.openflow.protocol.OFPort;
 
 public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQueueStatsEntry {
     public static int MINIMUM_LENGTH = 32;
+    public static int CORE_LENGTH = 32;
 
     short  port_number;
 	short pad_1th;
@@ -158,7 +159,6 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	
     	return len;
     }
     

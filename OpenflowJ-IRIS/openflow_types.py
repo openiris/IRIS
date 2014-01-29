@@ -423,8 +423,20 @@ class Struct(Type):
           else:
             l = 0
         ret += int(l)
-    
     return ret    
+  
+  def get_core_length(self):
+    ret = 0;
+    for i in self.body:
+      l = i['length']
+      if l == None:
+        if i['type'].startswith('OF'):
+          itype = self.spec.get_type(i['type'])
+          l = itype.get_minimum_length()
+        else:
+          l = 0
+      ret += int(l)
+    return ret
     
   def has_field(self, name):
     supertype = self.get_supertype()
@@ -577,13 +589,15 @@ class Struct(Type):
       r = idx_accessor.safe_substitute({})
       accessors.append( r )
       
-      
-    ret['implements'] = 'org.'
+#     ret['implements'] = 'org.'
 
     if self.supertype:
       copyconstructor.append("super(other);");
       constructor.insert(0, 'super();');
       readfroms.append('super.readFrom(data);')
+      computelengths.append('short len = (short)(CORE_LENGTH + super.computeLength());')
+    else:
+      computelengths.append('short len = (short)MINIMUM_LENGTH;')
 
     prev_var = None
     mark_added = False      
@@ -1028,7 +1042,7 @@ class Struct(Type):
                   if itype.has_field('length'):
                     rline = '  i += t.getLength();'
                   else:
-                    rline = '  i += %s.MINIMUM_LENGTH();' % itype.name
+                    rline = '  i += %s.MINIMUM_LENGTH;' % itype.name
                   readfroms.append(rline)
                   rline = '}'
                 elif itype == None:
@@ -1389,6 +1403,7 @@ class Struct(Type):
     importname = 'import ' + packagename[:packagename.rfind('.')] + '.types.*;'
     
     minimumlength = self.get_minimum_length()
+    corelength = self.get_core_length()
     component_map = self.get_struct_components(interface_converter)
     imports = component_map['imports']
     imports.add(importname)
@@ -1402,7 +1417,8 @@ class Struct(Type):
     
     result = template.safe_substitute({
       'typename':typename, 'packagename':packagename, 'imports':imports,
-      'minimumlength':minimumlength, 'declarations':component_map['declarations'],
+      'minimumlength':minimumlength, 'corelength':corelength, 
+      'declarations':component_map['declarations'],
       'constructor':component_map['constructor'],
       'copyconstructor':component_map['copyconstructor'],
       'accessors':component_map['accessors'],

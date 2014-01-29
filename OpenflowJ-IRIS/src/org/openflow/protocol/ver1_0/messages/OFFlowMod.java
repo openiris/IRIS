@@ -12,6 +12,7 @@ import java.util.List;
 
 public class OFFlowMod extends OFMessage implements org.openflow.protocol.interfaces.OFFlowMod {
     public static int MINIMUM_LENGTH = 72;
+    public static int CORE_LENGTH = 64;
 
     org.openflow.protocol.interfaces.OFMatch  match;
 	long  cookie;
@@ -323,8 +324,8 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.actions != null ) for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.actions != null ) for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
     	return len;
     }
     

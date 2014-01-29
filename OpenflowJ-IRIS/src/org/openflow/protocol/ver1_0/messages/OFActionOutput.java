@@ -8,6 +8,7 @@ import org.openflow.protocol.OFPort;
 
 public class OFActionOutput extends OFAction implements org.openflow.protocol.interfaces.OFActionOutput {
     public static int MINIMUM_LENGTH = 8;
+    public static int CORE_LENGTH = 4;
 
     short  port;
 	short  max_length;
@@ -76,8 +77,7 @@ public class OFActionOutput extends OFAction implements org.openflow.protocol.in
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

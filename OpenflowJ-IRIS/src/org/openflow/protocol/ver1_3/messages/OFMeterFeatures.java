@@ -9,6 +9,7 @@ import java.util.Set;
 
 public class OFMeterFeatures   implements org.openflow.protocol.interfaces.OFMeterFeatures {
     public static int MINIMUM_LENGTH = 16;
+    public static int CORE_LENGTH = 16;
 
     int  max_meter;
 	int  band_types;
@@ -156,7 +157,6 @@ public class OFMeterFeatures   implements org.openflow.protocol.interfaces.OFMet
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	
     	return len;
     }
     

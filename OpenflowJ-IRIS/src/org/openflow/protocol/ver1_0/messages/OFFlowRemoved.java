@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_0.types.*;
 
 public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.interfaces.OFFlowRemoved {
     public static int MINIMUM_LENGTH = 88;
+    public static int CORE_LENGTH = 80;
 
     org.openflow.protocol.interfaces.OFMatch  match;
 	long  cookie;
@@ -242,8 +243,7 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

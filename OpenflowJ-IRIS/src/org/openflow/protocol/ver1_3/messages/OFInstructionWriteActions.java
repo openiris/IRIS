@@ -9,6 +9,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFInstructionWriteActions extends OFInstruction implements org.openflow.protocol.interfaces.OFInstructionWriteActions {
     public static int MINIMUM_LENGTH = 8;
+    public static int CORE_LENGTH = 4;
 
     int pad_1th;
 	List<org.openflow.protocol.interfaces.OFAction>  actions;
@@ -73,8 +74,8 @@ public class OFInstructionWriteActions extends OFInstruction implements org.open
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.actions != null ) for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.actions != null ) for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
     	return len;
     }
     

@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_0.types.*;
 
 public class OFQueueProperty   implements org.openflow.protocol.interfaces.OFQueueProperty {
     public static int MINIMUM_LENGTH = 8;
+    public static int CORE_LENGTH = 8;
 
     OFQueuePropertyType  type;
 	short  length;
@@ -80,7 +81,6 @@ public class OFQueueProperty   implements org.openflow.protocol.interfaces.OFQue
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	
     	return len;
     }
     

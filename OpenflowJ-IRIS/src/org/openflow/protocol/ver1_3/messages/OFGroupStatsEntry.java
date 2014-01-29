@@ -9,6 +9,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFGroupStatsEntry   implements org.openflow.protocol.interfaces.OFGroupStatsEntry {
     public static int MINIMUM_LENGTH = 40;
+    public static int CORE_LENGTH = 40;
 
     short  length;
 	short pad_1th;
@@ -192,7 +193,7 @@ public class OFGroupStatsEntry   implements org.openflow.protocol.interfaces.OFG
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	if ( this.bucket_stats != null ) for ( org.openflow.protocol.interfaces.OFBucketCounter i : this.bucket_stats ) { len += i.computeLength(); }
+		if ( this.bucket_stats != null ) for ( org.openflow.protocol.interfaces.OFBucketCounter i : this.bucket_stats ) { len += i.computeLength(); }
     	return len;
     }
     

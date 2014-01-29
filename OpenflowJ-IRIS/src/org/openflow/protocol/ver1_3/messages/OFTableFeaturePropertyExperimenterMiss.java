@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFTableFeaturePropertyExperimenterMiss extends OFTableFeatureProperty implements org.openflow.protocol.interfaces.OFTableFeaturePropertyExperimenterMiss {
     public static int MINIMUM_LENGTH = 12;
+    public static int CORE_LENGTH = 8;
 
     int  experimenter_id;
 	int  subtype;
@@ -95,8 +96,8 @@ public class OFTableFeaturePropertyExperimenterMiss extends OFTableFeatureProper
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.experimenter_data != null ) { len += this.experimenter_data.length; } 
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.experimenter_data != null ) { len += this.experimenter_data.length; } 
     	return len;
     }
     

@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFStatisticsExperimenterReply extends OFStatisticsReply implements org.openflow.protocol.interfaces.OFStatisticsExperimenterReply {
     public static int MINIMUM_LENGTH = 24;
+    public static int CORE_LENGTH = 8;
 
     int  experimenter_id;
 	int  experiment_type;
@@ -96,8 +97,8 @@ public class OFStatisticsExperimenterReply extends OFStatisticsReply implements 
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.data != null ) { len += this.data.length; } 
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.data != null ) { len += this.data.length; } 
     	return len;
     }
     

@@ -9,6 +9,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFTableFeaturePropertyInstructionsMiss extends OFTableFeatureProperty implements org.openflow.protocol.interfaces.OFTableFeaturePropertyInstructionsMiss {
     public static int MINIMUM_LENGTH = 4;
+    public static int CORE_LENGTH = 0;
 
     List<org.openflow.protocol.interfaces.OFInstruction>  instruction_ids;
 
@@ -70,8 +71,8 @@ public class OFTableFeaturePropertyInstructionsMiss extends OFTableFeatureProper
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.instruction_ids != null ) for ( org.openflow.protocol.interfaces.OFInstruction i : this.instruction_ids ) { len += i.computeLength(); }
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.instruction_ids != null ) for ( org.openflow.protocol.interfaces.OFInstruction i : this.instruction_ids ) { len += i.computeLength(); }
     	return len;
     }
     

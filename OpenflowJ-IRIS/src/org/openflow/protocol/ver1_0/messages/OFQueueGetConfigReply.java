@@ -10,6 +10,7 @@ import java.util.LinkedList;
 
 public class OFQueueGetConfigReply extends OFMessage implements org.openflow.protocol.interfaces.OFQueueGetConfigReply {
     public static int MINIMUM_LENGTH = 16;
+    public static int CORE_LENGTH = 8;
 
     short  port;
 	int pad_1th;
@@ -88,8 +89,8 @@ public class OFQueueGetConfigReply extends OFMessage implements org.openflow.pro
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.queues != null ) for ( org.openflow.protocol.interfaces.OFPacketQueue i : this.queues ) { len += i.computeLength(); }
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.queues != null ) for ( org.openflow.protocol.interfaces.OFPacketQueue i : this.queues ) { len += i.computeLength(); }
     	return len;
     }
     

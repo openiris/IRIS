@@ -11,6 +11,7 @@ import java.util.Set;
 
 public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
     public static int MINIMUM_LENGTH = 40;
+    public static int CORE_LENGTH = 40;
 
     int  wildcards;
 	short  input_port;
@@ -546,7 +547,6 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	
     	return len;
     }
     

@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFQueuePropertyMaxRate extends OFQueueProperty implements org.openflow.protocol.interfaces.OFQueuePropertyMaxRate {
     public static int MINIMUM_LENGTH = 16;
+    public static int CORE_LENGTH = 8;
 
     short  rate;
 	int pad_1th;
@@ -63,8 +64,7 @@ public class OFQueuePropertyMaxRate extends OFQueueProperty implements org.openf
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFMeterBandExperimenter extends OFMeterBand implements org.openflow.protocol.interfaces.OFMeterBandExperimenter {
     public static int MINIMUM_LENGTH = 16;
+    public static int CORE_LENGTH = 4;
 
     int  experimenter_id;
 
@@ -57,8 +58,7 @@ public class OFMeterBandExperimenter extends OFMeterBand implements org.openflow
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

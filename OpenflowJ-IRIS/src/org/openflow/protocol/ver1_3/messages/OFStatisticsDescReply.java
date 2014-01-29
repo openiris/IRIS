@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFStatisticsDescReply extends OFStatisticsReply implements org.openflow.protocol.interfaces.OFStatisticsDescReply {
     public static int MINIMUM_LENGTH = 1072;
+    public static int CORE_LENGTH = 1056;
 
     String  manufacturer_description;
 	String  hardware_description;
@@ -130,8 +131,7 @@ public class OFStatisticsDescReply extends OFStatisticsReply implements org.open
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

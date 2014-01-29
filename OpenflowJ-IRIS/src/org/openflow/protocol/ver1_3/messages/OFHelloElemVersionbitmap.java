@@ -9,6 +9,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFHelloElemVersionbitmap extends OFHelloElem implements org.openflow.protocol.interfaces.OFHelloElemVersionbitmap {
     public static int MINIMUM_LENGTH = 4;
+    public static int CORE_LENGTH = 0;
 
     List<Integer>  bitmaps;
 
@@ -63,8 +64,8 @@ public class OFHelloElemVersionbitmap extends OFHelloElem implements org.openflo
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.bitmaps != null ) { len += 4 * this.bitmaps.size(); }
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.bitmaps != null ) { len += 4 * this.bitmaps.size(); }
     	return len;
     }
     

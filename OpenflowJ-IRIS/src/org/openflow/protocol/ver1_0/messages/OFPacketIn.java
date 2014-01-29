@@ -8,6 +8,7 @@ import org.openflow.protocol.OFPort;
 
 public class OFPacketIn extends OFMessage implements org.openflow.protocol.interfaces.OFPacketIn {
     public static int MINIMUM_LENGTH = 18;
+    public static int CORE_LENGTH = 10;
 
     int  buffer_id;
 	short  total_length;
@@ -183,8 +184,8 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.data != null ) { len += this.data.length; } 
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.data != null ) { len += this.data.length; } 
     	return len;
     }
     

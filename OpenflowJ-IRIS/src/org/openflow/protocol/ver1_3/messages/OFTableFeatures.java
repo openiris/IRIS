@@ -9,6 +9,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTableFeatures {
     public static int MINIMUM_LENGTH = 64;
+    public static int CORE_LENGTH = 64;
 
     short  length;
 	byte  table_id;
@@ -200,7 +201,7 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	if ( this.properties != null ) for ( org.openflow.protocol.interfaces.OFTableFeatureProperty i : this.properties ) { len += i.computeLength(); }
+		if ( this.properties != null ) for ( org.openflow.protocol.interfaces.OFTableFeatureProperty i : this.properties ) { len += i.computeLength(); }
     	return len;
     }
     

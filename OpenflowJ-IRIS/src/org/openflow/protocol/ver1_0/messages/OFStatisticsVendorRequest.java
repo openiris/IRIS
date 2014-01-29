@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_0.types.*;
 
 public class OFStatisticsVendorRequest extends OFStatisticsRequest implements org.openflow.protocol.interfaces.OFStatisticsVendorRequest {
     public static int MINIMUM_LENGTH = 16;
+    public static int CORE_LENGTH = 4;
 
     org.openflow.protocol.interfaces.OFVendor  vendor;
 	byte[]  data;
@@ -79,8 +80,8 @@ public class OFStatisticsVendorRequest extends OFStatisticsRequest implements or
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.data != null ) { len += this.data.length; } 
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.data != null ) { len += this.data.length; } 
     	return len;
     }
     

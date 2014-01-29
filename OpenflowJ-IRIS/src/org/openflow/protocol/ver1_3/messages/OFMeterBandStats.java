@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFMeterBandStats   implements org.openflow.protocol.interfaces.OFMeterBandStats {
     public static int MINIMUM_LENGTH = 16;
+    public static int CORE_LENGTH = 16;
 
     long  packet_band_count;
 	long  byte_band_count;
@@ -72,7 +73,6 @@ public class OFMeterBandStats   implements org.openflow.protocol.interfaces.OFMe
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	
     	return len;
     }
     

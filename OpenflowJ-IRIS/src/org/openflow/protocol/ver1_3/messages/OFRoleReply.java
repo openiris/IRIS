@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFRoleReply extends OFMessage implements org.openflow.protocol.interfaces.OFRoleReply {
     public static int MINIMUM_LENGTH = 8;
+    public static int CORE_LENGTH = 0;
 
     byte[]  data;
 
@@ -59,8 +60,8 @@ public class OFRoleReply extends OFMessage implements org.openflow.protocol.inte
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.data != null ) { len += this.data.length; } 
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.data != null ) { len += this.data.length; } 
     	return len;
     }
     

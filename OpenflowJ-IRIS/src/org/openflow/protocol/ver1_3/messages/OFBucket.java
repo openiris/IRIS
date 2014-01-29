@@ -10,6 +10,7 @@ import java.util.LinkedList;
 
 public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
     public static int MINIMUM_LENGTH = 16;
+    public static int CORE_LENGTH = 16;
 
     short  length;
 	short  weight;
@@ -143,7 +144,7 @@ public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	if ( this.actions != null ) for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
+		if ( this.actions != null ) for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
     	return len;
     }
     

@@ -7,6 +7,7 @@ $imports
 
 public class $typename $inherit_method $supertype $implements {
     public static int MINIMUM_LENGTH = $minimumlength;
+    public static int CORE_LENGTH = $corelength;
 
     $declarations
 
@@ -41,7 +42,6 @@ public class $typename $inherit_method $supertype $implements {
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
     	$computelength
     	return len;
     }

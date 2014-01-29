@@ -10,6 +10,7 @@ import java.util.List;
 
 public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacketQueue {
     public static int MINIMUM_LENGTH = 8;
+    public static int CORE_LENGTH = 8;
 
     int  queue_id;
 	short  length;
@@ -121,7 +122,7 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	if ( this.properties != null ) for ( org.openflow.protocol.interfaces.OFQueueProperty i : this.properties ) { len += i.computeLength(); }
+		if ( this.properties != null ) for ( org.openflow.protocol.interfaces.OFQueueProperty i : this.properties ) { len += i.computeLength(); }
     	return len;
     }
     

@@ -9,6 +9,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFMeterMod extends OFMessage implements org.openflow.protocol.interfaces.OFMeterMod {
     public static int MINIMUM_LENGTH = 16;
+    public static int CORE_LENGTH = 8;
 
     OFMeterModCommand  command;
 	short  flags;
@@ -129,8 +130,8 @@ public class OFMeterMod extends OFMessage implements org.openflow.protocol.inter
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.meters != null ) for ( org.openflow.protocol.interfaces.OFMeterBand i : this.meters ) { len += i.computeLength(); }
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.meters != null ) for ( org.openflow.protocol.interfaces.OFMeterBand i : this.meters ) { len += i.computeLength(); }
     	return len;
     }
     

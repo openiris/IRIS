@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_0.types.*;
 
 public class OFVendor extends OFMessage implements org.openflow.protocol.interfaces.OFVendor {
     public static int MINIMUM_LENGTH = 16;
+    public static int CORE_LENGTH = 8;
 
     int  vendor_id;
 	int  subtype;
@@ -95,8 +96,8 @@ public class OFVendor extends OFMessage implements org.openflow.protocol.interfa
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.data != null ) { len += this.data.length; } 
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.data != null ) { len += this.data.length; } 
     	return len;
     }
     

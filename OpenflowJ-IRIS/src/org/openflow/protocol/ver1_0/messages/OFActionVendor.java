@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_0.types.*;
 
 public class OFActionVendor extends OFAction implements org.openflow.protocol.interfaces.OFActionVendor {
     public static int MINIMUM_LENGTH = 8;
+    public static int CORE_LENGTH = 4;
 
     int  vendor_id;
 	byte[]  data;
@@ -77,8 +78,8 @@ public class OFActionVendor extends OFAction implements org.openflow.protocol.in
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.data != null ) { len += this.data.length; } 
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.data != null ) { len += this.data.length; } 
     	return len;
     }
     

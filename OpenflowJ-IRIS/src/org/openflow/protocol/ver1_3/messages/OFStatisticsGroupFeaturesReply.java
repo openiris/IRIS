@@ -9,6 +9,7 @@ import java.util.Set;
 
 public class OFStatisticsGroupFeaturesReply extends OFStatisticsReply implements org.openflow.protocol.interfaces.OFStatisticsGroupFeaturesReply {
     public static int MINIMUM_LENGTH = 56;
+    public static int CORE_LENGTH = 40;
 
     int  types;
 	int  capabilities;
@@ -247,8 +248,7 @@ public class OFStatisticsGroupFeaturesReply extends OFStatisticsReply implements
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

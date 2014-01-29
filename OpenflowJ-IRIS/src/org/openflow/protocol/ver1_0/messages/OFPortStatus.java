@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_0.types.*;
 
 public class OFPortStatus extends OFMessage implements org.openflow.protocol.interfaces.OFPortStatus {
     public static int MINIMUM_LENGTH = 64;
+    public static int CORE_LENGTH = 56;
 
     OFPortReason  reason;
 	int pad_1th;
@@ -90,8 +91,7 @@ public class OFPortStatus extends OFMessage implements org.openflow.protocol.int
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

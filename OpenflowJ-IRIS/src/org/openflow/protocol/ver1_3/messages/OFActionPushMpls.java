@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFActionPushMpls extends OFAction implements org.openflow.protocol.interfaces.OFActionPushMpls {
     public static int MINIMUM_LENGTH = 8;
+    public static int CORE_LENGTH = 4;
 
     short  ethertype;
 	short pad_1th;
@@ -60,8 +61,7 @@ public class OFActionPushMpls extends OFAction implements org.openflow.protocol.
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

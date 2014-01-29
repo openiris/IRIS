@@ -9,6 +9,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFGroupDescStatsEntry   implements org.openflow.protocol.interfaces.OFGroupDescStatsEntry {
     public static int MINIMUM_LENGTH = 8;
+    public static int CORE_LENGTH = 8;
 
     short  length;
 	byte  type;
@@ -117,7 +118,7 @@ public class OFGroupDescStatsEntry   implements org.openflow.protocol.interfaces
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	if ( this.buckets != null ) for ( org.openflow.protocol.interfaces.OFBucket i : this.buckets ) { len += i.computeLength(); }
+		if ( this.buckets != null ) for ( org.openflow.protocol.interfaces.OFBucket i : this.buckets ) { len += i.computeLength(); }
     	return len;
     }
     

@@ -9,6 +9,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFTableFeaturePropertyNextTablesMiss extends OFTableFeatureProperty implements org.openflow.protocol.interfaces.OFTableFeaturePropertyNextTablesMiss {
     public static int MINIMUM_LENGTH = 4;
+    public static int CORE_LENGTH = 0;
 
     List<Byte>  next_table_ids;
 
@@ -63,8 +64,8 @@ public class OFTableFeaturePropertyNextTablesMiss extends OFTableFeatureProperty
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.next_table_ids != null ) { len += 1 * this.next_table_ids.size(); }
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.next_table_ids != null ) { len += 1 * this.next_table_ids.size(); }
     	return len;
     }
     

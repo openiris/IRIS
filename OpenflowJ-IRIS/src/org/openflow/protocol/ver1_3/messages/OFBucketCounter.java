@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFBucketCounter   implements org.openflow.protocol.interfaces.OFBucketCounter {
     public static int MINIMUM_LENGTH = 16;
+    public static int CORE_LENGTH = 16;
 
     long  packet_count;
 	long  byte_count;
@@ -72,7 +73,6 @@ public class OFBucketCounter   implements org.openflow.protocol.interfaces.OFBuc
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	
     	return len;
     }
     

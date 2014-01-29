@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFMatchStandard extends OFMatch implements org.openflow.protocol.interfaces.OFMatchStandard {
     public static int MINIMUM_LENGTH = 4;
+    public static int CORE_LENGTH = 0;
 
     
 
@@ -43,8 +44,7 @@ public class OFMatchStandard extends OFMatch implements org.openflow.protocol.in
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

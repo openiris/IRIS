@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFError extends OFMessage implements org.openflow.protocol.interfaces.OFError {
     public static int MINIMUM_LENGTH = 12;
+    public static int CORE_LENGTH = 4;
 
     OFErrorCode  error_code;
 	short  subcode;
@@ -100,8 +101,8 @@ public class OFError extends OFMessage implements org.openflow.protocol.interfac
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.data != null ) { len += this.data.length; } 
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.data != null ) { len += this.data.length; } 
     	return len;
     }
     

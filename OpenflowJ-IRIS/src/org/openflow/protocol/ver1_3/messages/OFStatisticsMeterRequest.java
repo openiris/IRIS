@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFStatisticsMeterRequest extends OFStatisticsRequest implements org.openflow.protocol.interfaces.OFStatisticsMeterRequest {
     public static int MINIMUM_LENGTH = 24;
+    public static int CORE_LENGTH = 8;
 
     int  meter_id;
 	int pad_1th;
@@ -61,8 +62,7 @@ public class OFStatisticsMeterRequest extends OFStatisticsRequest implements org
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

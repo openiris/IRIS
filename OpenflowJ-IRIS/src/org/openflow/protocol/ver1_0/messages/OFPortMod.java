@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_0.types.*;
 
 public class OFPortMod extends OFMessage implements org.openflow.protocol.interfaces.OFPortMod {
     public static int MINIMUM_LENGTH = 32;
+    public static int CORE_LENGTH = 24;
 
     OFPortNo  port_no;
 	byte[]  hw_addr;
@@ -139,8 +140,7 @@ public class OFPortMod extends OFMessage implements org.openflow.protocol.interf
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

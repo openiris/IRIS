@@ -10,6 +10,7 @@ import java.util.Set;
 
 public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc {
     public static int MINIMUM_LENGTH = 64;
+    public static int CORE_LENGTH = 64;
 
     int  port;
 	int pad_1th;
@@ -296,7 +297,6 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	
     	return len;
     }
     

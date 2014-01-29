@@ -9,6 +9,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFGroupMod extends OFMessage implements org.openflow.protocol.interfaces.OFGroupMod {
     public static int MINIMUM_LENGTH = 16;
+    public static int CORE_LENGTH = 8;
 
     OFGroupModCommand  command;
 	OFGroupCategory  group_category;
@@ -131,8 +132,8 @@ public class OFGroupMod extends OFMessage implements org.openflow.protocol.inter
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.buckets != null ) for ( org.openflow.protocol.interfaces.OFBucket i : this.buckets ) { len += i.computeLength(); }
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.buckets != null ) for ( org.openflow.protocol.interfaces.OFBucket i : this.buckets ) { len += i.computeLength(); }
     	return len;
     }
     

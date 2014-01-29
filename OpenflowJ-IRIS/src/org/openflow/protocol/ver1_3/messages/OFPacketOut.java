@@ -10,6 +10,7 @@ import java.util.LinkedList;
 
 public class OFPacketOut extends OFMessage implements org.openflow.protocol.interfaces.OFPacketOut {
     public static int MINIMUM_LENGTH = 24;
+    public static int CORE_LENGTH = 16;
 
     int  buffer_id;
 	int  input_port;
@@ -150,8 +151,8 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.actions != null ) for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.actions != null ) for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
 		if ( this.data != null ) { len += this.data.length; } 
     	return len;
     }

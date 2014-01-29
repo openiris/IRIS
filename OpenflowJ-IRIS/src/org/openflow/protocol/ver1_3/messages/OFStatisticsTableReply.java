@@ -9,6 +9,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFStatisticsTableReply extends OFStatisticsReply implements org.openflow.protocol.interfaces.OFStatisticsTableReply {
     public static int MINIMUM_LENGTH = 16;
+    public static int CORE_LENGTH = 0;
 
     List<org.openflow.protocol.interfaces.OFTableStatsEntry>  entries;
 
@@ -64,8 +65,8 @@ public class OFStatisticsTableReply extends OFStatisticsReply implements org.ope
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.entries != null ) for ( org.openflow.protocol.interfaces.OFTableStatsEntry i : this.entries ) { len += i.computeLength(); }
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.entries != null ) for ( org.openflow.protocol.interfaces.OFTableStatsEntry i : this.entries ) { len += i.computeLength(); }
     	return len;
     }
     

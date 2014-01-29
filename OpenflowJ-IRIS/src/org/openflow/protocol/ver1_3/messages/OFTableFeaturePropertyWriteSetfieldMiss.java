@@ -9,6 +9,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFTableFeaturePropertyWriteSetfieldMiss extends OFTableFeatureProperty implements org.openflow.protocol.interfaces.OFTableFeaturePropertyWriteSetfieldMiss {
     public static int MINIMUM_LENGTH = 4;
+    public static int CORE_LENGTH = 0;
 
     List<Integer>  oxm_ids;
 
@@ -63,8 +64,8 @@ public class OFTableFeaturePropertyWriteSetfieldMiss extends OFTableFeaturePrope
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.oxm_ids != null ) { len += 4 * this.oxm_ids.size(); }
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.oxm_ids != null ) { len += 4 * this.oxm_ids.size(); }
     	return len;
     }
     

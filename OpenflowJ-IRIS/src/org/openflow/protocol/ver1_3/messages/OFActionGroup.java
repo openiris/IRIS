@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFActionGroup extends OFAction implements org.openflow.protocol.interfaces.OFActionGroup {
     public static int MINIMUM_LENGTH = 8;
+    public static int CORE_LENGTH = 4;
 
     int  group_id;
 
@@ -57,8 +58,7 @@ public class OFActionGroup extends OFAction implements org.openflow.protocol.int
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

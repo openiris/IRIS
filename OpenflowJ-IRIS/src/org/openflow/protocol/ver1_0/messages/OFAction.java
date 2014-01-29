@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_0.types.*;
 
 public class OFAction   implements org.openflow.protocol.interfaces.OFAction {
     public static int MINIMUM_LENGTH = 4;
+    public static int CORE_LENGTH = 4;
 
     OFActionType  type;
 	short  length;
@@ -77,7 +78,6 @@ public class OFAction   implements org.openflow.protocol.interfaces.OFAction {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	
     	return len;
     }
     

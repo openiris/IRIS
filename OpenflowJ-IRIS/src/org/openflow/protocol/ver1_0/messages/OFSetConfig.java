@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_0.types.*;
 
 public class OFSetConfig extends OFMessage implements org.openflow.protocol.interfaces.OFSetConfig {
     public static int MINIMUM_LENGTH = 12;
+    public static int CORE_LENGTH = 4;
 
     short  flags;
 	short  miss_send_length;
@@ -75,8 +76,7 @@ public class OFSetConfig extends OFMessage implements org.openflow.protocol.inte
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

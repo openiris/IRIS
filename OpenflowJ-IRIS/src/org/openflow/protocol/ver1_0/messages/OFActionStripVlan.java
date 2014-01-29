@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_0.types.*;
 
 public class OFActionStripVlan extends OFAction implements org.openflow.protocol.interfaces.OFActionStripVlan {
     public static int MINIMUM_LENGTH = 8;
+    public static int CORE_LENGTH = 4;
 
     int pad_1th;
 
@@ -44,8 +45,7 @@ public class OFActionStripVlan extends OFAction implements org.openflow.protocol
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

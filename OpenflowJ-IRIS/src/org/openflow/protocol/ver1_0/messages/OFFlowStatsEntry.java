@@ -9,6 +9,7 @@ import java.util.List;
 
 public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFlowStatsEntry {
     public static int MINIMUM_LENGTH = 88;
+    public static int CORE_LENGTH = 88;
 
     short  length;
 	byte  table_id;
@@ -303,7 +304,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	if ( this.actions != null ) for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
+		if ( this.actions != null ) for ( org.openflow.protocol.interfaces.OFAction i : this.actions ) { len += i.computeLength(); }
     	return len;
     }
     

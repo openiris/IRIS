@@ -8,6 +8,7 @@ import org.openflow.protocol.OFPort;
 
 public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.openflow.protocol.interfaces.OFStatisticsFlowRequest {
     public static int MINIMUM_LENGTH = 52;
+    public static int CORE_LENGTH = 36;
 
     byte  table_id;
 	short pad_1th;
@@ -159,8 +160,8 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	len += match.lengthDiff();
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		len += match.lengthDiff();
     	return len;
     }
     

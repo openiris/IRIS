@@ -8,6 +8,7 @@ import org.openflow.protocol.OFPort;
 
 public class OFQueueGetConfigRequest extends OFMessage implements org.openflow.protocol.interfaces.OFQueueGetConfigRequest {
     public static int MINIMUM_LENGTH = 12;
+    public static int CORE_LENGTH = 4;
 
     short  port;
 	short pad_1th;
@@ -61,8 +62,7 @@ public class OFQueueGetConfigRequest extends OFMessage implements org.openflow.p
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

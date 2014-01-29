@@ -9,6 +9,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFHello extends OFMessage implements org.openflow.protocol.interfaces.OFHello {
     public static int MINIMUM_LENGTH = 8;
+    public static int CORE_LENGTH = 0;
 
     List<org.openflow.protocol.interfaces.OFHelloElem>  elements;
 
@@ -70,8 +71,8 @@ public class OFHello extends OFMessage implements org.openflow.protocol.interfac
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.elements != null ) for ( org.openflow.protocol.interfaces.OFHelloElem i : this.elements ) { len += i.computeLength(); }
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.elements != null ) for ( org.openflow.protocol.interfaces.OFHelloElem i : this.elements ) { len += i.computeLength(); }
     	return len;
     }
     

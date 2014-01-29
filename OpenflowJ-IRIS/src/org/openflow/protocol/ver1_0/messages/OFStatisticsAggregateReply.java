@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_0.types.*;
 
 public class OFStatisticsAggregateReply extends OFStatisticsReply implements org.openflow.protocol.interfaces.OFStatisticsAggregateReply {
     public static int MINIMUM_LENGTH = 36;
+    public static int CORE_LENGTH = 24;
 
     long  packet_count;
 	long  byte_count;
@@ -97,8 +98,7 @@ public class OFStatisticsAggregateReply extends OFStatisticsReply implements org
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

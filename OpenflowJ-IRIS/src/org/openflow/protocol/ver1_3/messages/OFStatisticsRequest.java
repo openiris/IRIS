@@ -9,6 +9,7 @@ import java.util.Set;
 
 public class OFStatisticsRequest extends OFStatistics implements org.openflow.protocol.interfaces.OFStatisticsRequest {
     public static int MINIMUM_LENGTH = 16;
+    public static int CORE_LENGTH = 8;
 
     OFStatisticsType  statistics_type;
 	short  flags;
@@ -111,8 +112,7 @@ public class OFStatisticsRequest extends OFStatistics implements org.openflow.pr
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

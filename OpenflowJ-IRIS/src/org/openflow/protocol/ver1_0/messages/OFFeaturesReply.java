@@ -11,6 +11,7 @@ import java.util.Set;
 
 public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.interfaces.OFFeaturesReply {
     public static int MINIMUM_LENGTH = 32;
+    public static int CORE_LENGTH = 24;
 
     long  datapath_id;
 	int  n_buffers;
@@ -214,8 +215,8 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.ports != null ) for ( org.openflow.protocol.interfaces.OFPortDesc i : this.ports ) { len += i.computeLength(); }
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.ports != null ) for ( org.openflow.protocol.interfaces.OFPortDesc i : this.ports ) { len += i.computeLength(); }
     	return len;
     }
     

@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFInstructionGotoTable extends OFInstruction implements org.openflow.protocol.interfaces.OFInstructionGotoTable {
     public static int MINIMUM_LENGTH = 8;
+    public static int CORE_LENGTH = 4;
 
     byte  table_id;
 	short pad_1th;
@@ -63,8 +64,7 @@ public class OFInstructionGotoTable extends OFInstruction implements org.openflo
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

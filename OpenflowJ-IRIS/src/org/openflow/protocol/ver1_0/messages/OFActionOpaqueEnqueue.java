@@ -8,6 +8,7 @@ import org.openflow.protocol.OFPort;
 
 public class OFActionOpaqueEnqueue extends OFAction implements org.openflow.protocol.interfaces.OFActionOpaqueEnqueue {
     public static int MINIMUM_LENGTH = 16;
+    public static int CORE_LENGTH = 12;
 
     short  port;
 	int pad_1th;
@@ -82,8 +83,7 @@ public class OFActionOpaqueEnqueue extends OFAction implements org.openflow.prot
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

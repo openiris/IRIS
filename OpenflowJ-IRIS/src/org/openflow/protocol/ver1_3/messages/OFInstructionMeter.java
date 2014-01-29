@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFInstructionMeter extends OFInstruction implements org.openflow.protocol.interfaces.OFInstructionMeter {
     public static int MINIMUM_LENGTH = 8;
+    public static int CORE_LENGTH = 4;
 
     int  meter_id;
 
@@ -57,8 +58,7 @@ public class OFInstructionMeter extends OFInstruction implements org.openflow.pr
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

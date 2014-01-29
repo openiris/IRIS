@@ -13,6 +13,7 @@ import java.util.LinkedList;
 
 public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfaces.OFMatch, org.openflow.protocol.interfaces.OFMatchOxm {
     public static int MINIMUM_LENGTH = 4;
+    public static int CORE_LENGTH = 0;
 
     private Map<org.openflow.protocol.interfaces.OFOxmMatchFields, org.openflow.protocol.interfaces.OFOxm> index = 
 		new ConcurrentHashMap<org.openflow.protocol.interfaces.OFOxmMatchFields, org.openflow.protocol.interfaces.OFOxm>();
@@ -642,8 +643,8 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.oxm_fields != null ) for ( org.openflow.protocol.interfaces.OFOxm i : this.oxm_fields ) { len += i.computeLength(); }
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.oxm_fields != null ) for ( org.openflow.protocol.interfaces.OFOxm i : this.oxm_fields ) { len += i.computeLength(); }
     	return len;
     }
     

@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFMessage   implements org.openflow.protocol.interfaces.OFMessage {
     public static int MINIMUM_LENGTH = 8;
+    public static int CORE_LENGTH = 8;
 
     byte  version;
 	OFMessageType  type;
@@ -155,7 +156,6 @@ public class OFMessage   implements org.openflow.protocol.interfaces.OFMessage {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	
     	return len;
     }
     

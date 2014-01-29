@@ -9,6 +9,7 @@ import java.util.List;
 
 public class OFStatisticsFlowReply extends OFStatisticsReply implements org.openflow.protocol.interfaces.OFStatisticsFlowReply {
     public static int MINIMUM_LENGTH = 12;
+    public static int CORE_LENGTH = 0;
 
     List<org.openflow.protocol.interfaces.OFFlowStatsEntry>  entries;
 
@@ -64,8 +65,8 @@ public class OFStatisticsFlowReply extends OFStatisticsReply implements org.open
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.entries != null ) for ( org.openflow.protocol.interfaces.OFFlowStatsEntry i : this.entries ) { len += i.computeLength(); }
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.entries != null ) for ( org.openflow.protocol.interfaces.OFFlowStatsEntry i : this.entries ) { len += i.computeLength(); }
     	return len;
     }
     

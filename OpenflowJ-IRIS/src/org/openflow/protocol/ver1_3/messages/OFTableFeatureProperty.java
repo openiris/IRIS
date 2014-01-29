@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFTableFeatureProperty   implements org.openflow.protocol.interfaces.OFTableFeatureProperty {
     public static int MINIMUM_LENGTH = 4;
+    public static int CORE_LENGTH = 4;
 
     OFTableFeaturePropertyType  type;
 	short  length;
@@ -77,7 +78,6 @@ public class OFTableFeatureProperty   implements org.openflow.protocol.interface
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	
     	return len;
     }
     

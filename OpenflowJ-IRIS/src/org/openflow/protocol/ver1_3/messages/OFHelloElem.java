@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFHelloElem   implements org.openflow.protocol.interfaces.OFHelloElem {
     public static int MINIMUM_LENGTH = 4;
+    public static int CORE_LENGTH = 4;
 
     OFHelloElemType  type;
 	short  length;
@@ -77,7 +78,6 @@ public class OFHelloElem   implements org.openflow.protocol.interfaces.OFHelloEl
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	
     	return len;
     }
     

@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFInstructionWriteMetadata extends OFInstruction implements org.openflow.protocol.interfaces.OFInstructionWriteMetadata {
     public static int MINIMUM_LENGTH = 24;
+    public static int CORE_LENGTH = 20;
 
     int pad_1th;
 	long  metadata;
@@ -78,8 +79,7 @@ public class OFInstructionWriteMetadata extends OFInstruction implements org.ope
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

@@ -9,6 +9,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFTableFeaturePropertyWriteActions extends OFTableFeatureProperty implements org.openflow.protocol.interfaces.OFTableFeaturePropertyWriteActions {
     public static int MINIMUM_LENGTH = 4;
+    public static int CORE_LENGTH = 0;
 
     List<org.openflow.protocol.interfaces.OFActionId>  action_ids;
 
@@ -63,8 +64,8 @@ public class OFTableFeaturePropertyWriteActions extends OFTableFeatureProperty i
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	if ( this.action_ids != null ) for ( org.openflow.protocol.interfaces.OFActionId i : this.action_ids ) { len += i.computeLength(); }
+    	short len = (short)(CORE_LENGTH + super.computeLength());
+		if ( this.action_ids != null ) for ( org.openflow.protocol.interfaces.OFActionId i : this.action_ids ) { len += i.computeLength(); }
     	return len;
     }
     

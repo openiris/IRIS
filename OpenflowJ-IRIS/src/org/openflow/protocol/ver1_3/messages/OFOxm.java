@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFOxm   implements org.openflow.protocol.interfaces.OFOxm {
     public static int MINIMUM_LENGTH = 4;
+    public static int CORE_LENGTH = 4;
 
     OFOxmClass  oxm_class;
 	byte  field_bitmask;
@@ -131,7 +132,7 @@ public class OFOxm   implements org.openflow.protocol.interfaces.OFOxm {
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	if ( this.data != null ) { len += this.data.length; } 
+		if ( this.data != null ) { len += this.data.length; } 
     	return len;
     }
     

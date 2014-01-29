@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFGetAsyncRequest extends OFMessage implements org.openflow.protocol.interfaces.OFGetAsyncRequest {
     public static int MINIMUM_LENGTH = 32;
+    public static int CORE_LENGTH = 24;
 
     int  packet_in_mask_equal_master;
 	int  packet_in_mask_slave;
@@ -147,8 +148,7 @@ public class OFGetAsyncRequest extends OFMessage implements org.openflow.protoco
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

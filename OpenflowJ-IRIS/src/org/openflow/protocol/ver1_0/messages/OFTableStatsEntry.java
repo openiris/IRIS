@@ -9,6 +9,7 @@ import java.util.Set;
 
 public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFTableStatsEntry {
     public static int MINIMUM_LENGTH = 64;
+    public static int CORE_LENGTH = 64;
 
     byte  table_id;
 	short pad_1th;
@@ -196,7 +197,6 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	
     	return len;
     }
     

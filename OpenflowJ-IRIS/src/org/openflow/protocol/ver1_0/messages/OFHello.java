@@ -8,6 +8,7 @@ import java.util.List;
 
 public class OFHello extends OFMessage implements org.openflow.protocol.interfaces.OFHello {
     public static int MINIMUM_LENGTH = 8;
+    public static int CORE_LENGTH = 0;
 
     
 
@@ -57,8 +58,7 @@ public class OFHello extends OFMessage implements org.openflow.protocol.interfac
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

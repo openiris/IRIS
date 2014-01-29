@@ -7,6 +7,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFStatistics extends OFMessage implements org.openflow.protocol.interfaces.OFStatistics {
     public static int MINIMUM_LENGTH = 8;
+    public static int CORE_LENGTH = 0;
 
     
 
@@ -42,8 +43,7 @@ public class OFStatistics extends OFMessage implements org.openflow.protocol.int
 
 	// compute length (without final alignment)    
     public short computeLength() {
-    	short len = (short)MINIMUM_LENGTH;
-    	
+    	short len = (short)(CORE_LENGTH + super.computeLength());
     	return len;
     }
     

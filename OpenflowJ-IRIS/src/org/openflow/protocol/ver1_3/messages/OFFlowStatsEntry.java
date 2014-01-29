@@ -9,6 +9,7 @@ import org.openflow.protocol.ver1_3.types.*;
 
 public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFlowStatsEntry {
     public static int MINIMUM_LENGTH = 52;
+    public static int CORE_LENGTH = 52;
 
     short  length;
 	byte  table_id;
@@ -304,7 +305,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 	// compute length (without final alignment)    
     public short computeLength() {
     	short len = (short)MINIMUM_LENGTH;
-    	len += match.lengthDiff();
+		len += match.lengthDiff();
 		if ( this.instructions != null ) for ( org.openflow.protocol.interfaces.OFInstruction i : this.instructions ) { len += i.computeLength(); }
     	return len;
     }
