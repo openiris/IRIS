@@ -529,7 +529,7 @@ enum ofp_statistics_type(wire_type=uint16_t, request=ofp_message_type.OFPT_STATI
     OFPMP_FLOW = 1,
     OFPMP_AGGREGATE = 2,
     OFPMP_TABLE = 3,
-    OFPMP_PORT_STATS = 4,
+    OFPMP_PORT = 4,
     OFPMP_QUEUE = 5,
     OFPMP_GROUP = 6,
     OFPMP_GROUP_DESC = 7,
@@ -1590,7 +1590,7 @@ struct of_meter_features {
 };
 
 // of_port_no_t --> uint32_t (bjlee)
-struct of_statistics_port_stats_request : of_statistics_request {
+struct of_statistics_port_request : of_statistics_request {
     uint8_t version;
     uint8_t type == 18;
     uint16_t length;
@@ -1602,7 +1602,7 @@ struct of_statistics_port_stats_request : of_statistics_request {
     pad(4);
 };
 
-struct of_statistics_port_stats_reply : of_statistics_reply {
+struct of_statistics_port_reply : of_statistics_reply {
     uint8_t version;
     uint8_t type == 19;
     uint16_t length;

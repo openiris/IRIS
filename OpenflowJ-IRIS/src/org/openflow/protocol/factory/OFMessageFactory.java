@@ -588,20 +588,6 @@ public class OFMessageFactory {
 		}
 	}
 	
-	public static OFStatisticsPortStatsRequest createStatisticsPortStatsRequest(byte version) {
-		switch(version) {
-		case 0x04: return new org.openflow.protocol.ver1_3.messages.OFStatisticsPortStatsRequest();
-		default: return null;
-		}
-	}
-	
-	public static OFStatisticsPortStatsRequest asStatisticsPortStatsRequest(byte version, org.openflow.protocol.OFMessage m) {
-		switch(version) {
-		case 0x04: return (OFStatisticsPortStatsRequest) m;
-		default: return null;
-		}
-	}
-	
 	public static OFStatistics createStatistics(byte version) {
 		switch(version) {
 		case 0x01: return new org.openflow.protocol.ver1_0.messages.OFStatistics();
@@ -665,6 +651,7 @@ public class OFMessageFactory {
 	public static OFStatisticsPortRequest createStatisticsPortRequest(byte version) {
 		switch(version) {
 		case 0x01: return new org.openflow.protocol.ver1_0.messages.OFStatisticsPortRequest();
+		case 0x04: return new org.openflow.protocol.ver1_3.messages.OFStatisticsPortRequest();
 		default: return null;
 		}
 	}
@@ -672,6 +659,7 @@ public class OFMessageFactory {
 	public static OFStatisticsPortRequest asStatisticsPortRequest(byte version, org.openflow.protocol.OFMessage m) {
 		switch(version) {
 		case 0x01: return (OFStatisticsPortRequest) m;
+		case 0x04: return (OFStatisticsPortRequest) m;
 		default: return null;
 		}
 	}
@@ -1632,20 +1620,6 @@ public class OFMessageFactory {
 		}
 	}
 	
-	public static OFStatisticsPortStatsReply createStatisticsPortStatsReply(byte version) {
-		switch(version) {
-		case 0x04: return new org.openflow.protocol.ver1_3.messages.OFStatisticsPortStatsReply();
-		default: return null;
-		}
-	}
-	
-	public static OFStatisticsPortStatsReply asStatisticsPortStatsReply(byte version, org.openflow.protocol.OFMessage m) {
-		switch(version) {
-		case 0x04: return (OFStatisticsPortStatsReply) m;
-		default: return null;
-		}
-	}
-	
 	public static OFRoleReply createRoleReply(byte version) {
 		switch(version) {
 		case 0x04: return new org.openflow.protocol.ver1_3.messages.OFRoleReply();
@@ -2245,6 +2219,7 @@ public class OFMessageFactory {
 	public static OFStatisticsPortReply createStatisticsPortReply(byte version) {
 		switch(version) {
 		case 0x01: return new org.openflow.protocol.ver1_0.messages.OFStatisticsPortReply();
+		case 0x04: return new org.openflow.protocol.ver1_3.messages.OFStatisticsPortReply();
 		default: return null;
 		}
 	}
@@ -2252,6 +2227,7 @@ public class OFMessageFactory {
 	public static OFStatisticsPortReply asStatisticsPortReply(byte version, org.openflow.protocol.OFMessage m) {
 		switch(version) {
 		case 0x01: return (OFStatisticsPortReply) m;
+		case 0x04: return (OFStatisticsPortReply) m;
 		default: return null;
 		}
 	}

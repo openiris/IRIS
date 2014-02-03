@@ -4,7 +4,6 @@ public enum OFStatisticsType {
 	METER_CONFIG,
 	GROUP,
 	VENDOR,
-	PORT_STATS,
 	TABLE_FEATURES,
 	FLOW,
 	GROUP_DESC,

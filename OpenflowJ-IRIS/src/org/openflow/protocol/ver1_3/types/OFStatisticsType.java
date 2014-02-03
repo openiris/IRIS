@@ -58,16 +58,16 @@ public enum OFStatisticsType {
 	        return new OFStatisticsTableReply();
 	      }
     	}),
-  	PORT_STATS	(4, org.openflow.protocol.interfaces.OFStatisticsType.PORT_STATS,
-  		OFStatisticsPortStatsRequest.class, OFStatisticsPortStatsReply.class,
+  	PORT	(4, org.openflow.protocol.interfaces.OFStatisticsType.PORT,
+  		OFStatisticsPortRequest.class, OFStatisticsPortReply.class,
 	    new Instantiable<OFStatistics>() {
 	      public OFStatistics instantiate() {
-	        return new OFStatisticsPortStatsRequest();
+	        return new OFStatisticsPortRequest();
 	      }
 	    },
 	    new Instantiable<OFStatistics>() {
 	      public OFStatistics instantiate() {
-	        return new OFStatisticsPortStatsReply();
+	        return new OFStatisticsPortReply();
 	      }
     	}),
   	QUEUE	(5, org.openflow.protocol.interfaces.OFStatisticsType.QUEUE,
