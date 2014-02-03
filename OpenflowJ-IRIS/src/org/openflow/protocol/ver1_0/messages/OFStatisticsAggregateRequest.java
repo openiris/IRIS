@@ -38,6 +38,7 @@ public class OFStatisticsAggregateRequest extends OFStatisticsRequest implements
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMatchSupported() {
 		return true;
 	}
@@ -51,6 +52,7 @@ public class OFStatisticsAggregateRequest extends OFStatisticsRequest implements
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTableIdSupported() {
 		return true;
 	}
@@ -64,6 +66,7 @@ public class OFStatisticsAggregateRequest extends OFStatisticsRequest implements
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isOutPortSupported() {
 		return true;
 	}

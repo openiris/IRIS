@@ -44,7 +44,8 @@ public class OFMeterMod extends OFMessage implements org.openflow.protocol.inter
 		this.command = command;
 		return this;
 	}
-	
+
+	@org.codehaus.jackson.annotate.JsonIgnore	
 	public boolean isCommandSupported() {
 		return true;
 	}
@@ -58,6 +59,7 @@ public class OFMeterMod extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isFlagsSupported() {
 		return true;
 	}
@@ -71,6 +73,7 @@ public class OFMeterMod extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMeterIdSupported() {
 		return true;
 	}
@@ -84,6 +87,7 @@ public class OFMeterMod extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMetersSupported() {
 		return true;
 	}

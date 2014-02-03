@@ -41,6 +41,7 @@ public class OFGetAsyncRequest extends OFMessage implements org.openflow.protoco
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPacketInMaskEqualMasterSupported() {
 		return true;
 	}
@@ -54,6 +55,7 @@ public class OFGetAsyncRequest extends OFMessage implements org.openflow.protoco
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPacketInMaskSlaveSupported() {
 		return true;
 	}
@@ -67,6 +69,7 @@ public class OFGetAsyncRequest extends OFMessage implements org.openflow.protoco
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPortStatusMaskEqualMasterSupported() {
 		return true;
 	}
@@ -80,6 +83,7 @@ public class OFGetAsyncRequest extends OFMessage implements org.openflow.protoco
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPortStatusMaskSlaveSupported() {
 		return true;
 	}
@@ -93,6 +97,7 @@ public class OFGetAsyncRequest extends OFMessage implements org.openflow.protoco
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isFlowRemovedMaskEqualMasterSupported() {
 		return true;
 	}
@@ -106,6 +111,7 @@ public class OFGetAsyncRequest extends OFMessage implements org.openflow.protoco
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isFlowRemovedMaskSlaveSupported() {
 		return true;
 	}

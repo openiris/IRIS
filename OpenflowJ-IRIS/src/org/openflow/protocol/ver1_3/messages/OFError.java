@@ -39,7 +39,8 @@ public class OFError extends OFMessage implements org.openflow.protocol.interfac
 		this.error_code = error_code;
 		return this;
 	}
-	
+
+	@org.codehaus.jackson.annotate.JsonIgnore	
 	public boolean isErrorCodeSupported() {
 		return true;
 	}
@@ -53,6 +54,7 @@ public class OFError extends OFMessage implements org.openflow.protocol.interfac
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isSubcodeSupported() {
 		return true;
 	}
@@ -66,6 +68,7 @@ public class OFError extends OFMessage implements org.openflow.protocol.interfac
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataSupported() {
 		return true;
 	}

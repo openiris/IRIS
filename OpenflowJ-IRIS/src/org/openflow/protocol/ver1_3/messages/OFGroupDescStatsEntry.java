@@ -38,6 +38,7 @@ public class OFGroupDescStatsEntry   implements org.openflow.protocol.interfaces
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isLengthSupported() {
 		return true;
 	}
@@ -51,6 +52,7 @@ public class OFGroupDescStatsEntry   implements org.openflow.protocol.interfaces
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTypeSupported() {
 		return true;
 	}
@@ -64,6 +66,7 @@ public class OFGroupDescStatsEntry   implements org.openflow.protocol.interfaces
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isGroupIdSupported() {
 		return true;
 	}
@@ -77,6 +80,7 @@ public class OFGroupDescStatsEntry   implements org.openflow.protocol.interfaces
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isBucketsSupported() {
 		return true;
 	}

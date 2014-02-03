@@ -31,6 +31,7 @@ public class OFActionGroup extends OFAction implements org.openflow.protocol.int
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isGroupIdSupported() {
 		return true;
 	}

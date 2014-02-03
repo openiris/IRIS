@@ -34,6 +34,7 @@ public class OFRoleRequest extends OFMessage implements org.openflow.protocol.in
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isRoleSupported() {
 		return true;
 	}
@@ -47,6 +48,7 @@ public class OFRoleRequest extends OFMessage implements org.openflow.protocol.in
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isGenerationIdSupported() {
 		return true;
 	}

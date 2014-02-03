@@ -30,6 +30,7 @@ public class OFBucketCounter   implements org.openflow.protocol.interfaces.OFBuc
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPacketCountSupported() {
 		return true;
 	}
@@ -43,6 +44,7 @@ public class OFBucketCounter   implements org.openflow.protocol.interfaces.OFBuc
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isByteCountSupported() {
 		return true;
 	}

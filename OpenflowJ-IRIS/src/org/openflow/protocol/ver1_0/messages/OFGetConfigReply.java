@@ -33,6 +33,7 @@ public class OFGetConfigReply extends OFMessage implements org.openflow.protocol
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isFlagsSupported() {
 		return true;
 	}
@@ -46,6 +47,7 @@ public class OFGetConfigReply extends OFMessage implements org.openflow.protocol
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMissSendLengthSupported() {
 		return true;
 	}

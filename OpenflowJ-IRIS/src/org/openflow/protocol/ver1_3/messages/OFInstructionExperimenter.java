@@ -33,6 +33,7 @@ public class OFInstructionExperimenter extends OFInstruction implements org.open
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isExperimenterIdSupported() {
 		return true;
 	}
@@ -46,6 +47,7 @@ public class OFInstructionExperimenter extends OFInstruction implements org.open
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataSupported() {
 		return true;
 	}

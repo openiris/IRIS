@@ -37,7 +37,8 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		this.type = type;
 		return this;
 	}
-	
+
+	@org.codehaus.jackson.annotate.JsonIgnore	
 	public boolean isTypeSupported() {
 		return true;
 	}
@@ -51,6 +52,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isLengthSupported() {
 		return true;
 	}

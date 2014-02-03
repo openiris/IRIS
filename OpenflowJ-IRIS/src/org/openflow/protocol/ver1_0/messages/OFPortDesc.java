@@ -48,6 +48,7 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPortSupported() {
 		return true;
 	}
@@ -61,6 +62,7 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isHwAddrSupported() {
 		return true;
 	}
@@ -74,6 +76,7 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNameSupported() {
 		return true;
 	}
@@ -112,6 +115,7 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isConfigSupported() {
 		return true;
 	}
@@ -150,6 +154,7 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isStateSupported() {
 		return true;
 	}
@@ -163,6 +168,7 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isCurrentFeaturesSupported() {
 		return true;
 	}
@@ -176,6 +182,7 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isAdvertisedFeaturesSupported() {
 		return true;
 	}
@@ -189,6 +196,7 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isSupportedFeaturesSupported() {
 		return true;
 	}
@@ -202,6 +210,7 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPeerFeaturesSupported() {
 		return true;
 	}

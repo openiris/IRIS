@@ -38,7 +38,8 @@ public class OFMeterBand   implements org.openflow.protocol.interfaces.OFMeterBa
 		this.type = type;
 		return this;
 	}
-	
+
+	@org.codehaus.jackson.annotate.JsonIgnore	
 	public boolean isTypeSupported() {
 		return true;
 	}
@@ -52,6 +53,7 @@ public class OFMeterBand   implements org.openflow.protocol.interfaces.OFMeterBa
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isLengthSupported() {
 		return true;
 	}
@@ -65,6 +67,7 @@ public class OFMeterBand   implements org.openflow.protocol.interfaces.OFMeterBa
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isRateSupported() {
 		return true;
 	}
@@ -78,6 +81,7 @@ public class OFMeterBand   implements org.openflow.protocol.interfaces.OFMeterBa
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isBurstSizeSupported() {
 		return true;
 	}

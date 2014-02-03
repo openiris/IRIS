@@ -35,7 +35,8 @@ public class OFQueueProperty   implements org.openflow.protocol.interfaces.OFQue
 		this.type = type;
 		return this;
 	}
-	
+
+	@org.codehaus.jackson.annotate.JsonIgnore	
 	public boolean isTypeSupported() {
 		return true;
 	}
@@ -49,6 +50,7 @@ public class OFQueueProperty   implements org.openflow.protocol.interfaces.OFQue
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isLengthSupported() {
 		return true;
 	}

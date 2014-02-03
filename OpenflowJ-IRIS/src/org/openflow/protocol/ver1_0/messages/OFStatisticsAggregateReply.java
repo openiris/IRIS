@@ -37,6 +37,7 @@ public class OFStatisticsAggregateReply extends OFStatisticsReply implements org
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPacketCountSupported() {
 		return true;
 	}
@@ -50,6 +51,7 @@ public class OFStatisticsAggregateReply extends OFStatisticsReply implements org
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isByteCountSupported() {
 		return true;
 	}
@@ -63,6 +65,7 @@ public class OFStatisticsAggregateReply extends OFStatisticsReply implements org
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isFlowCountSupported() {
 		return true;
 	}

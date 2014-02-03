@@ -33,6 +33,7 @@ public class OFStatisticsGroupRequest extends OFStatisticsRequest implements org
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isGroupIdSupported() {
 		return true;
 	}

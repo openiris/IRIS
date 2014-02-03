@@ -47,6 +47,7 @@ public class OFGroupStatsEntry   implements org.openflow.protocol.interfaces.OFG
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isLengthSupported() {
 		return true;
 	}
@@ -60,6 +61,7 @@ public class OFGroupStatsEntry   implements org.openflow.protocol.interfaces.OFG
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isGroupIdSupported() {
 		return true;
 	}
@@ -73,6 +75,7 @@ public class OFGroupStatsEntry   implements org.openflow.protocol.interfaces.OFG
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isRefCountSupported() {
 		return true;
 	}
@@ -86,6 +89,7 @@ public class OFGroupStatsEntry   implements org.openflow.protocol.interfaces.OFG
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPacketCountSupported() {
 		return true;
 	}
@@ -99,6 +103,7 @@ public class OFGroupStatsEntry   implements org.openflow.protocol.interfaces.OFG
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isByteCountSupported() {
 		return true;
 	}
@@ -112,6 +117,7 @@ public class OFGroupStatsEntry   implements org.openflow.protocol.interfaces.OFG
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDurationSecSupported() {
 		return true;
 	}
@@ -125,6 +131,7 @@ public class OFGroupStatsEntry   implements org.openflow.protocol.interfaces.OFG
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDurationNsecSupported() {
 		return true;
 	}
@@ -138,6 +145,7 @@ public class OFGroupStatsEntry   implements org.openflow.protocol.interfaces.OFG
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isBucketStatsSupported() {
 		return true;
 	}

@@ -7,6 +7,7 @@
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean is${method_name}USupported() {
 		return true;
 	}

@@ -31,6 +31,7 @@ public class OFActionSetNwSrc extends OFAction implements org.openflow.protocol.
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNwAddrSupported() {
 		return true;
 	}

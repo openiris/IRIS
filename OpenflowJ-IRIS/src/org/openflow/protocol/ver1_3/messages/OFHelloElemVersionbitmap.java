@@ -34,6 +34,7 @@ public class OFHelloElemVersionbitmap extends OFHelloElem implements org.openflo
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isBitmapsSupported() {
 		return true;
 	}

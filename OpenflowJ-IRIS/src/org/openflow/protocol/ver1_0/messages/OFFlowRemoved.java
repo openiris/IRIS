@@ -49,6 +49,7 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMatchSupported() {
 		return true;
 	}
@@ -62,6 +63,7 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isCookieSupported() {
 		return true;
 	}
@@ -75,6 +77,7 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPrioritySupported() {
 		return true;
 	}
@@ -93,7 +96,8 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		this.reason = reason;
 		return this;
 	}
-	
+
+	@org.codehaus.jackson.annotate.JsonIgnore	
 	public boolean isReasonSupported() {
 		return true;
 	}
@@ -107,6 +111,7 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDurationSecSupported() {
 		return true;
 	}
@@ -120,6 +125,7 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDurationNsecSupported() {
 		return true;
 	}
@@ -133,6 +139,7 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isIdleTimeoutSupported() {
 		return true;
 	}
@@ -146,6 +153,7 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPacketCountSupported() {
 		return true;
 	}
@@ -159,6 +167,7 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isByteCountSupported() {
 		return true;
 	}

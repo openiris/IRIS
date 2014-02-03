@@ -55,6 +55,7 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPortNumberSupported() {
 		return true;
 	}
@@ -68,6 +69,7 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isReceivePacketsSupported() {
 		return true;
 	}
@@ -81,6 +83,7 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTransmitPacketsSupported() {
 		return true;
 	}
@@ -94,6 +97,7 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isReceiveBytesSupported() {
 		return true;
 	}
@@ -107,6 +111,7 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTransmitBytesSupported() {
 		return true;
 	}
@@ -120,6 +125,7 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isReceiveDroppedSupported() {
 		return true;
 	}
@@ -133,6 +139,7 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTransmitDroppedSupported() {
 		return true;
 	}
@@ -146,6 +153,7 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isReceiveErrorsSupported() {
 		return true;
 	}
@@ -159,6 +167,7 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTransmitErrorsSupported() {
 		return true;
 	}
@@ -172,6 +181,7 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isReceiveFrameErrorsSupported() {
 		return true;
 	}
@@ -185,6 +195,7 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isReceiveOverrunErrorsSupported() {
 		return true;
 	}
@@ -198,6 +209,7 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isReceiveCrcErrSupported() {
 		return true;
 	}
@@ -211,6 +223,7 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isCollisionsSupported() {
 		return true;
 	}

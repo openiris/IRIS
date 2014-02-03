@@ -40,7 +40,8 @@ public class OFPortStatus extends OFMessage implements org.openflow.protocol.int
 		this.reason = reason;
 		return this;
 	}
-	
+
+	@org.codehaus.jackson.annotate.JsonIgnore	
 	public boolean isReasonSupported() {
 		return true;
 	}
@@ -54,6 +55,7 @@ public class OFPortStatus extends OFMessage implements org.openflow.protocol.int
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDescSupported() {
 		return true;
 	}

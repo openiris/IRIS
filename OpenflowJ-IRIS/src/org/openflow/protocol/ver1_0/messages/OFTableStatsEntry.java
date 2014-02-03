@@ -44,6 +44,7 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTableIdSupported() {
 		return true;
 	}
@@ -57,6 +58,7 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNameSupported() {
 		return true;
 	}
@@ -95,6 +97,7 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isWildcardsSupported() {
 		return true;
 	}
@@ -108,6 +111,7 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMaxEntriesSupported() {
 		return true;
 	}
@@ -121,6 +125,7 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isActiveCountSupported() {
 		return true;
 	}
@@ -134,6 +139,7 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isLookupCountSupported() {
 		return true;
 	}
@@ -147,6 +153,7 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMatchedCountSupported() {
 		return true;
 	}

@@ -33,6 +33,7 @@ public class OFActionVendor extends OFAction implements org.openflow.protocol.in
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isVendorIdSupported() {
 		return true;
 	}
@@ -46,6 +47,7 @@ public class OFActionVendor extends OFAction implements org.openflow.protocol.in
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataSupported() {
 		return true;
 	}

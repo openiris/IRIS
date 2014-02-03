@@ -33,6 +33,7 @@ public class OFActionSetNwTos extends OFAction implements org.openflow.protocol.
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNwTosSupported() {
 		return true;
 	}

@@ -34,6 +34,7 @@ public class OFHello extends OFMessage implements org.openflow.protocol.interfac
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isElementsSupported() {
 		return true;
 	}

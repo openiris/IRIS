@@ -34,7 +34,8 @@ public class OFInstruction   implements org.openflow.protocol.interfaces.OFInstr
 		this.type = type;
 		return this;
 	}
-	
+
+	@org.codehaus.jackson.annotate.JsonIgnore	
 	public boolean isTypeSupported() {
 		return true;
 	}
@@ -48,6 +49,7 @@ public class OFInstruction   implements org.openflow.protocol.interfaces.OFInstr
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isLengthSupported() {
 		return true;
 	}

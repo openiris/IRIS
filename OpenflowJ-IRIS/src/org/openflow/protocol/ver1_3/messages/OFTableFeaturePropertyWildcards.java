@@ -34,6 +34,7 @@ public class OFTableFeaturePropertyWildcards extends OFTableFeatureProperty impl
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isOxmIdsSupported() {
 		return true;
 	}

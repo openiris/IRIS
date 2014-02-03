@@ -33,6 +33,7 @@ public class OFActionSetMplsTtl extends OFAction implements org.openflow.protoco
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMplsTtlSupported() {
 		return true;
 	}

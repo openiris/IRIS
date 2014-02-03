@@ -34,6 +34,7 @@ public class OFStatisticsVendorReply extends OFStatisticsReply implements org.op
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isVendorSupported() {
 		return true;
 	}
@@ -47,6 +48,7 @@ public class OFStatisticsVendorReply extends OFStatisticsReply implements org.op
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataSupported() {
 		return true;
 	}

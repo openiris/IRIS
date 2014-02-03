@@ -35,6 +35,7 @@ public class OFStatisticsFlowReply extends OFStatisticsReply implements org.open
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isEntriesSupported() {
 		return true;
 	}

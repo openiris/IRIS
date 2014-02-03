@@ -34,7 +34,8 @@ public class OFAction   implements org.openflow.protocol.interfaces.OFAction {
 		this.type = type;
 		return this;
 	}
-	
+
+	@org.codehaus.jackson.annotate.JsonIgnore	
 	public boolean isTypeSupported() {
 		return true;
 	}
@@ -48,6 +49,7 @@ public class OFAction   implements org.openflow.protocol.interfaces.OFAction {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isLengthSupported() {
 		return true;
 	}

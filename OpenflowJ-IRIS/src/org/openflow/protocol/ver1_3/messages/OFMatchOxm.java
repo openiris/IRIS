@@ -51,6 +51,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isOxmFieldsSupported() {
 		return true;
 	}

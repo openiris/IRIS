@@ -34,7 +34,8 @@ public class OFHelloElem   implements org.openflow.protocol.interfaces.OFHelloEl
 		this.type = type;
 		return this;
 	}
-	
+
+	@org.codehaus.jackson.annotate.JsonIgnore	
 	public boolean isTypeSupported() {
 		return true;
 	}
@@ -48,6 +49,7 @@ public class OFHelloElem   implements org.openflow.protocol.interfaces.OFHelloEl
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isLengthSupported() {
 		return true;
 	}

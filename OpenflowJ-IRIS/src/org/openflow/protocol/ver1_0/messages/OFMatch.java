@@ -84,6 +84,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isWildcardsSupported() {
 		return true;
 	}
@@ -97,6 +98,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isInputPortSupported() {
 		return true;
 	}
@@ -110,6 +112,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataLayerSourceSupported() {
 		return true;
 	}
@@ -123,6 +126,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataLayerDestinationSupported() {
 		return true;
 	}
@@ -136,6 +140,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataLayerVirtualLanSupported() {
 		return true;
 	}
@@ -149,6 +154,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataLayerVirtualLanPriorityCodePointSupported() {
 		return true;
 	}
@@ -162,6 +168,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataLayerTypeSupported() {
 		return true;
 	}
@@ -175,6 +182,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNetworkTypeOfServiceSupported() {
 		return true;
 	}
@@ -188,6 +196,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNetworkProtocolSupported() {
 		return true;
 	}
@@ -201,6 +210,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNetworkSourceSupported() {
 		return true;
 	}
@@ -214,6 +224,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNetworkDestinationSupported() {
 		return true;
 	}
@@ -227,6 +238,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTransportSourceSupported() {
 		return true;
 	}
@@ -240,6 +252,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTransportDestinationSupported() {
 		return true;
 	}

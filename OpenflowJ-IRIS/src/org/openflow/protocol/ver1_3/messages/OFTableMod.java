@@ -35,6 +35,7 @@ public class OFTableMod extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTableIdSupported() {
 		return true;
 	}
@@ -48,6 +49,7 @@ public class OFTableMod extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isConfigSupported() {
 		return true;
 	}

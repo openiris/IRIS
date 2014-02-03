@@ -46,6 +46,7 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTableIdSupported() {
 		return true;
 	}
@@ -59,6 +60,7 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isOutPortSupported() {
 		return true;
 	}
@@ -72,6 +74,7 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isOutGroupSupported() {
 		return true;
 	}
@@ -85,6 +88,7 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isCookieSupported() {
 		return true;
 	}
@@ -98,6 +102,7 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isCookieMaskSupported() {
 		return true;
 	}
@@ -111,6 +116,7 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMatchSupported() {
 		return true;
 	}

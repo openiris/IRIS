@@ -34,6 +34,7 @@ public class OFTableFeaturePropertyApplyActionsMiss extends OFTableFeatureProper
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isActionIdsSupported() {
 		return true;
 	}

@@ -34,6 +34,7 @@ public class OFStatisticsPortRequest extends OFStatisticsRequest implements org.
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPortSupported() {
 		return true;
 	}

@@ -31,6 +31,7 @@ public class OFRoleReply extends OFMessage implements org.openflow.protocol.inte
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataSupported() {
 		return true;
 	}

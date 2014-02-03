@@ -37,6 +37,7 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isQueueIdSupported() {
 		return true;
 	}
@@ -50,6 +51,7 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isLengthSupported() {
 		return true;
 	}
@@ -63,6 +65,7 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPropertiesSupported() {
 		return true;
 	}

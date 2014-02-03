@@ -34,6 +34,7 @@ public class OFInstructionWriteMetadata extends OFInstruction implements org.ope
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMetadataSupported() {
 		return true;
 	}
@@ -47,6 +48,7 @@ public class OFInstructionWriteMetadata extends OFInstruction implements org.ope
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMetadataMaskSupported() {
 		return true;
 	}

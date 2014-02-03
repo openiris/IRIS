@@ -34,6 +34,7 @@ public class OFActionOutput extends OFAction implements org.openflow.protocol.in
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPortSupported() {
 		return true;
 	}
@@ -47,6 +48,7 @@ public class OFActionOutput extends OFAction implements org.openflow.protocol.in
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMaxLengthSupported() {
 		return true;
 	}

@@ -34,7 +34,8 @@ public class OFTableFeatureProperty   implements org.openflow.protocol.interface
 		this.type = type;
 		return this;
 	}
-	
+
+	@org.codehaus.jackson.annotate.JsonIgnore	
 	public boolean isTypeSupported() {
 		return true;
 	}
@@ -48,6 +49,7 @@ public class OFTableFeatureProperty   implements org.openflow.protocol.interface
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isLengthSupported() {
 		return true;
 	}

@@ -55,6 +55,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMatchSupported() {
 		return true;
 	}
@@ -68,6 +69,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isCookieSupported() {
 		return true;
 	}
@@ -86,7 +88,8 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		this.command = command;
 		return this;
 	}
-	
+
+	@org.codehaus.jackson.annotate.JsonIgnore	
 	public boolean isCommandSupported() {
 		return true;
 	}
@@ -100,6 +103,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isIdleTimeoutSupported() {
 		return true;
 	}
@@ -113,6 +117,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isHardTimeoutSupported() {
 		return true;
 	}
@@ -126,6 +131,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPrioritySupported() {
 		return true;
 	}
@@ -139,6 +145,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isBufferIdSupported() {
 		return true;
 	}
@@ -152,6 +159,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isOutPortSupported() {
 		return true;
 	}
@@ -190,6 +198,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isFlagsSupported() {
 		return true;
 	}
@@ -203,6 +212,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isActionsSupported() {
 		return true;
 	}

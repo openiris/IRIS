@@ -40,6 +40,7 @@ public class OFStatisticsRequest extends OFStatistics implements org.openflow.pr
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isStatisticsTypeSupported() {
 		return true;
 	}
@@ -78,6 +79,7 @@ public class OFStatisticsRequest extends OFStatistics implements org.openflow.pr
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isFlagsSupported() {
 		return true;
 	}

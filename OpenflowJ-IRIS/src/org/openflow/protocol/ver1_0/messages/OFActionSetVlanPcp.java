@@ -33,6 +33,7 @@ public class OFActionSetVlanPcp extends OFAction implements org.openflow.protoco
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isVlanPcpSupported() {
 		return true;
 	}

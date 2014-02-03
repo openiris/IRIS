@@ -39,6 +39,7 @@ public class OFMeterFeatures   implements org.openflow.protocol.interfaces.OFMet
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMaxMeterSupported() {
 		return true;
 	}
@@ -52,6 +53,7 @@ public class OFMeterFeatures   implements org.openflow.protocol.interfaces.OFMet
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isBandTypesSupported() {
 		return true;
 	}
@@ -90,6 +92,7 @@ public class OFMeterFeatures   implements org.openflow.protocol.interfaces.OFMet
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isCapabilitiesSupported() {
 		return true;
 	}
@@ -103,6 +106,7 @@ public class OFMeterFeatures   implements org.openflow.protocol.interfaces.OFMet
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMaxBandsSupported() {
 		return true;
 	}
@@ -116,6 +120,7 @@ public class OFMeterFeatures   implements org.openflow.protocol.interfaces.OFMet
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMaxColorSupported() {
 		return true;
 	}

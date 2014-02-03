@@ -38,7 +38,8 @@ public class OFOxm   implements org.openflow.protocol.interfaces.OFOxm {
 		this.oxm_class = oxm_class;
 		return this;
 	}
-	
+
+	@org.codehaus.jackson.annotate.JsonIgnore	
 	public boolean isOxmClassSupported() {
 		return true;
 	}
@@ -53,6 +54,7 @@ public class OFOxm   implements org.openflow.protocol.interfaces.OFOxm {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isFieldSupported() {
 		return true;
 	}
@@ -67,6 +69,7 @@ public class OFOxm   implements org.openflow.protocol.interfaces.OFOxm {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isBitmaskSupported() {
 		return true;
 	}
@@ -80,6 +83,7 @@ public class OFOxm   implements org.openflow.protocol.interfaces.OFOxm {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPayloadLengthSupported() {
 		return true;
 	}
@@ -93,6 +97,7 @@ public class OFOxm   implements org.openflow.protocol.interfaces.OFOxm {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataSupported() {
 		return true;
 	}

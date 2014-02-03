@@ -35,6 +35,7 @@ public class OFTableFeaturePropertyExperimenterMiss extends OFTableFeatureProper
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isExperimenterIdSupported() {
 		return true;
 	}
@@ -48,6 +49,7 @@ public class OFTableFeaturePropertyExperimenterMiss extends OFTableFeatureProper
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isSubtypeSupported() {
 		return true;
 	}
@@ -61,6 +63,7 @@ public class OFTableFeaturePropertyExperimenterMiss extends OFTableFeatureProper
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isExperimenterDataSupported() {
 		return true;
 	}

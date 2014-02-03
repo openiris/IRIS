@@ -33,6 +33,7 @@ public class OFInstructionGotoTable extends OFInstruction implements org.openflo
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTableIdSupported() {
 		return true;
 	}

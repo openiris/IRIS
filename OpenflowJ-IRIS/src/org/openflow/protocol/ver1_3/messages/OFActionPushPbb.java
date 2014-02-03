@@ -32,6 +32,7 @@ public class OFActionPushPbb extends OFAction implements org.openflow.protocol.i
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isEthertypeSupported() {
 		return true;
 	}

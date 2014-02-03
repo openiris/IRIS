@@ -32,6 +32,7 @@ public class OFActionPushVlan extends OFAction implements org.openflow.protocol.
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isEthertypeSupported() {
 		return true;
 	}

@@ -47,6 +47,7 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isLengthSupported() {
 		return true;
 	}
@@ -60,6 +61,7 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTableIdSupported() {
 		return true;
 	}
@@ -73,6 +75,7 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNameSupported() {
 		return true;
 	}
@@ -86,6 +89,7 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMetadataMatchSupported() {
 		return true;
 	}
@@ -99,6 +103,7 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMetadataWriteSupported() {
 		return true;
 	}
@@ -112,6 +117,7 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isConfigSupported() {
 		return true;
 	}
@@ -125,6 +131,7 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMaxEntriesSupported() {
 		return true;
 	}
@@ -138,6 +145,7 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPropertiesSupported() {
 		return true;
 	}

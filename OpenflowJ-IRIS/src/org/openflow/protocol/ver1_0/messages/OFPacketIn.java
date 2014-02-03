@@ -41,6 +41,7 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isBufferIdSupported() {
 		return true;
 	}
@@ -54,6 +55,7 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTotalLengthSupported() {
 		return true;
 	}
@@ -67,6 +69,7 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isInputPortSupported() {
 		return true;
 	}
@@ -85,7 +88,8 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 		this.reason = reason;
 		return this;
 	}
-	
+
+	@org.codehaus.jackson.annotate.JsonIgnore	
 	public boolean isReasonSupported() {
 		return true;
 	}
@@ -99,6 +103,7 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataSupported() {
 		return true;
 	}

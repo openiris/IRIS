@@ -48,6 +48,7 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDatapathIdSupported() {
 		return true;
 	}
@@ -61,6 +62,7 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNBuffersSupported() {
 		return true;
 	}
@@ -74,6 +76,7 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNTablesSupported() {
 		return true;
 	}
@@ -112,6 +115,7 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isCapabilitiesSupported() {
 		return true;
 	}
@@ -125,6 +129,7 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isActionsSupported() {
 		return true;
 	}
@@ -138,6 +143,7 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPortsSupported() {
 		return true;
 	}

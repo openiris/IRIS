@@ -47,7 +47,8 @@ public class OFPortMod extends OFMessage implements org.openflow.protocol.interf
 		this.port_no = port_no;
 		return this;
 	}
-	
+
+	@org.codehaus.jackson.annotate.JsonIgnore	
 	public boolean isPortNoSupported() {
 		return true;
 	}
@@ -61,6 +62,7 @@ public class OFPortMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isHwAddrSupported() {
 		return true;
 	}
@@ -74,6 +76,7 @@ public class OFPortMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isConfigSupported() {
 		return true;
 	}
@@ -87,6 +90,7 @@ public class OFPortMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMaskSupported() {
 		return true;
 	}
@@ -100,6 +104,7 @@ public class OFPortMod extends OFMessage implements org.openflow.protocol.interf
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isAdvertiseSupported() {
 		return true;
 	}

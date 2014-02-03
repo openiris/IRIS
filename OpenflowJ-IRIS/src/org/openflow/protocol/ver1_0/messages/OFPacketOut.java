@@ -43,6 +43,7 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isBufferIdSupported() {
 		return true;
 	}
@@ -56,6 +57,7 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isInputPortSupported() {
 		return true;
 	}
@@ -69,6 +71,7 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isActionsLengthSupported() {
 		return true;
 	}
@@ -82,6 +85,7 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isActionsSupported() {
 		return true;
 	}
@@ -95,6 +99,7 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataSupported() {
 		return true;
 	}

@@ -33,6 +33,7 @@ public class OFQueuePropertyMinRate extends OFQueueProperty implements org.openf
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isRateSupported() {
 		return true;
 	}

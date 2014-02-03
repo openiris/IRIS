@@ -47,6 +47,7 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMeterIdSupported() {
 		return true;
 	}
@@ -60,6 +61,7 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isLengthSupported() {
 		return true;
 	}
@@ -73,6 +75,7 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isFlowCountSupported() {
 		return true;
 	}
@@ -86,6 +89,7 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPacketInCountSupported() {
 		return true;
 	}
@@ -99,6 +103,7 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isByteInCountSupported() {
 		return true;
 	}
@@ -112,6 +117,7 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDurationSecSupported() {
 		return true;
 	}
@@ -125,6 +131,7 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDurationNsecSupported() {
 		return true;
 	}
@@ -138,6 +145,7 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isBandStatsSupported() {
 		return true;
 	}

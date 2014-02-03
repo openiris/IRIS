@@ -35,6 +35,7 @@ public class OFStatisticsMeterConfigReply extends OFStatisticsReply implements o
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isEntriesSupported() {
 		return true;
 	}

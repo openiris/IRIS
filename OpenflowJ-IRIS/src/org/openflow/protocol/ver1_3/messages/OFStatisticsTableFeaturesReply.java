@@ -35,6 +35,7 @@ public class OFStatisticsTableFeaturesReply extends OFStatisticsReply implements
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isEntriesSupported() {
 		return true;
 	}

@@ -35,6 +35,7 @@ public class OFInstructionApplyActions extends OFInstruction implements org.open
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isActionsSupported() {
 		return true;
 	}

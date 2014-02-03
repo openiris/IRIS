@@ -33,6 +33,7 @@ public class OFMeterBandDscpRemark extends OFMeterBand implements org.openflow.p
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPrecLevelSupported() {
 		return true;
 	}

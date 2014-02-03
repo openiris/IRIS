@@ -52,6 +52,7 @@ public class OFStatisticsGroupFeaturesReply extends OFStatisticsReply implements
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTypesSupported() {
 		return true;
 	}
@@ -90,6 +91,7 @@ public class OFStatisticsGroupFeaturesReply extends OFStatisticsReply implements
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isCapabilitiesSupported() {
 		return true;
 	}
@@ -103,6 +105,7 @@ public class OFStatisticsGroupFeaturesReply extends OFStatisticsReply implements
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMaxGroupsAllSupported() {
 		return true;
 	}
@@ -116,6 +119,7 @@ public class OFStatisticsGroupFeaturesReply extends OFStatisticsReply implements
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMaxGroupsSelectSupported() {
 		return true;
 	}
@@ -129,6 +133,7 @@ public class OFStatisticsGroupFeaturesReply extends OFStatisticsReply implements
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMaxGroupsIndirectSupported() {
 		return true;
 	}
@@ -142,6 +147,7 @@ public class OFStatisticsGroupFeaturesReply extends OFStatisticsReply implements
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMaxGroupsFfSupported() {
 		return true;
 	}
@@ -155,6 +161,7 @@ public class OFStatisticsGroupFeaturesReply extends OFStatisticsReply implements
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isActionsAllSupported() {
 		return true;
 	}
@@ -168,6 +175,7 @@ public class OFStatisticsGroupFeaturesReply extends OFStatisticsReply implements
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isActionsSelectSupported() {
 		return true;
 	}
@@ -181,6 +189,7 @@ public class OFStatisticsGroupFeaturesReply extends OFStatisticsReply implements
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isActionsIndirectSupported() {
 		return true;
 	}
@@ -194,6 +203,7 @@ public class OFStatisticsGroupFeaturesReply extends OFStatisticsReply implements
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isActionsFfSupported() {
 		return true;
 	}

@@ -31,6 +31,7 @@ public class OFInstructionMeter extends OFInstruction implements org.openflow.pr
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMeterIdSupported() {
 		return true;
 	}

@@ -41,6 +41,7 @@ public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isLengthSupported() {
 		return true;
 	}
@@ -54,6 +55,7 @@ public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isWeightSupported() {
 		return true;
 	}
@@ -67,6 +69,7 @@ public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isWatchPortSupported() {
 		return true;
 	}
@@ -80,6 +83,7 @@ public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isWatchGroupSupported() {
 		return true;
 	}
@@ -93,6 +97,7 @@ public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isActionsSupported() {
 		return true;
 	}

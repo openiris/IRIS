@@ -40,6 +40,7 @@ public class OFStatisticsDescReply extends OFStatisticsReply implements org.open
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isManufacturerDescriptionSupported() {
 		return true;
 	}
@@ -53,6 +54,7 @@ public class OFStatisticsDescReply extends OFStatisticsReply implements org.open
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isHardwareDescriptionSupported() {
 		return true;
 	}
@@ -66,6 +68,7 @@ public class OFStatisticsDescReply extends OFStatisticsReply implements org.open
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isSoftwareDescriptionSupported() {
 		return true;
 	}
@@ -79,6 +82,7 @@ public class OFStatisticsDescReply extends OFStatisticsReply implements org.open
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isSerialNumberSupported() {
 		return true;
 	}
@@ -92,6 +96,7 @@ public class OFStatisticsDescReply extends OFStatisticsReply implements org.open
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDatapathDescriptionSupported() {
 		return true;
 	}

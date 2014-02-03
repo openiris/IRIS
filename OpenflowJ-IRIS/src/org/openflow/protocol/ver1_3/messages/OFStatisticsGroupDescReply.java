@@ -35,6 +35,7 @@ public class OFStatisticsGroupDescReply extends OFStatisticsReply implements org
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isEntriesSupported() {
 		return true;
 	}

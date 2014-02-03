@@ -57,6 +57,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isLengthSupported() {
 		return true;
 	}
@@ -70,6 +71,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTableIdSupported() {
 		return true;
 	}
@@ -83,6 +85,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDurationSecSupported() {
 		return true;
 	}
@@ -96,6 +99,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDurationNsecSupported() {
 		return true;
 	}
@@ -109,6 +113,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPrioritySupported() {
 		return true;
 	}
@@ -122,6 +127,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isIdleTimeoutSupported() {
 		return true;
 	}
@@ -135,6 +141,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isHardTimeoutSupported() {
 		return true;
 	}
@@ -148,6 +155,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isFlagsSupported() {
 		return true;
 	}
@@ -161,6 +169,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isCookieSupported() {
 		return true;
 	}
@@ -174,6 +183,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPacketCountSupported() {
 		return true;
 	}
@@ -187,6 +197,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isByteCountSupported() {
 		return true;
 	}
@@ -200,6 +211,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMatchSupported() {
 		return true;
 	}
@@ -213,6 +225,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isInstructionsSupported() {
 		return true;
 	}

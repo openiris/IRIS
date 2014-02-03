@@ -38,6 +38,7 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPortNumberSupported() {
 		return true;
 	}
@@ -51,6 +52,7 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isQueueIdSupported() {
 		return true;
 	}
@@ -64,6 +66,7 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTransmitBytesSupported() {
 		return true;
 	}
@@ -77,6 +80,7 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTransmitPacketsSupported() {
 		return true;
 	}
@@ -90,6 +94,7 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTransmitErrorsSupported() {
 		return true;
 	}

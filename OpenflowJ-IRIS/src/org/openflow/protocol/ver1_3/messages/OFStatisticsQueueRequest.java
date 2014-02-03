@@ -38,7 +38,8 @@ public class OFStatisticsQueueRequest extends OFStatisticsRequest implements org
 		this.port_no = port_no;
 		return this;
 	}
-	
+
+	@org.codehaus.jackson.annotate.JsonIgnore	
 	public boolean isPortNoSupported() {
 		return true;
 	}
@@ -52,6 +53,7 @@ public class OFStatisticsQueueRequest extends OFStatisticsRequest implements org
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isQueueIdSupported() {
 		return true;
 	}

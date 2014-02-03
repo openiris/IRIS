@@ -34,6 +34,7 @@ public class OFTableFeaturePropertyApplySetfield extends OFTableFeatureProperty 
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isOxmIdsSupported() {
 		return true;
 	}

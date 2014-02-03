@@ -33,6 +33,7 @@ public class OFStatisticsMeterConfigRequest extends OFStatisticsRequest implemen
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMeterIdSupported() {
 		return true;
 	}

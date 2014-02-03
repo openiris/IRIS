@@ -31,6 +31,7 @@ public class OFMeterBandExperimenter extends OFMeterBand implements org.openflow
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isExperimenterIdSupported() {
 		return true;
 	}

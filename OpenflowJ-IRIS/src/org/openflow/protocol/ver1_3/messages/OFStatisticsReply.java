@@ -42,6 +42,7 @@ public class OFStatisticsReply extends OFStatistics implements org.openflow.prot
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isStatisticsTypeSupported() {
 		return true;
 	}
@@ -80,6 +81,7 @@ public class OFStatisticsReply extends OFStatistics implements org.openflow.prot
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isFlagsSupported() {
 		return true;
 	}

@@ -35,6 +35,7 @@ public class OFVendor extends OFMessage implements org.openflow.protocol.interfa
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isVendorIdSupported() {
 		return true;
 	}
@@ -48,6 +49,7 @@ public class OFVendor extends OFMessage implements org.openflow.protocol.interfa
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isSubtypeSupported() {
 		return true;
 	}
@@ -61,6 +63,7 @@ public class OFVendor extends OFMessage implements org.openflow.protocol.interfa
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataSupported() {
 		return true;
 	}

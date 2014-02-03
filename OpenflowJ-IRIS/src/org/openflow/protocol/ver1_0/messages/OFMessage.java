@@ -36,6 +36,7 @@ public class OFMessage   implements org.openflow.protocol.interfaces.OFMessage {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isVersionSupported() {
 		return true;
 	}
@@ -49,6 +50,7 @@ public class OFMessage   implements org.openflow.protocol.interfaces.OFMessage {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isVersionUSupported() {
 		return true;
 	}
@@ -67,7 +69,8 @@ public class OFMessage   implements org.openflow.protocol.interfaces.OFMessage {
 		this.type = type;
 		return this;
 	}
-	
+
+	@org.codehaus.jackson.annotate.JsonIgnore	
 	public boolean isTypeSupported() {
 		return true;
 	}
@@ -81,6 +84,7 @@ public class OFMessage   implements org.openflow.protocol.interfaces.OFMessage {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isLengthSupported() {
 		return true;
 	}
@@ -94,6 +98,7 @@ public class OFMessage   implements org.openflow.protocol.interfaces.OFMessage {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isLengthUSupported() {
 		return true;
 	}
@@ -107,6 +112,7 @@ public class OFMessage   implements org.openflow.protocol.interfaces.OFMessage {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isXidSupported() {
 		return true;
 	}
@@ -120,6 +126,7 @@ public class OFMessage   implements org.openflow.protocol.interfaces.OFMessage {
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isXidUSupported() {
 		return true;
 	}

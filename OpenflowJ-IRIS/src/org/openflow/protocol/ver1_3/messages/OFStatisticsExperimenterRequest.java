@@ -36,6 +36,7 @@ public class OFStatisticsExperimenterRequest extends OFStatisticsRequest impleme
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isExperimenterIdSupported() {
 		return true;
 	}
@@ -49,6 +50,7 @@ public class OFStatisticsExperimenterRequest extends OFStatisticsRequest impleme
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isExperimentTypeSupported() {
 		return true;
 	}
@@ -62,6 +64,7 @@ public class OFStatisticsExperimenterRequest extends OFStatisticsRequest impleme
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataSupported() {
 		return true;
 	}

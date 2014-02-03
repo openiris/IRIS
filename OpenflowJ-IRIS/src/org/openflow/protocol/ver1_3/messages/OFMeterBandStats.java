@@ -30,6 +30,7 @@ public class OFMeterBandStats   implements org.openflow.protocol.interfaces.OFMe
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPacketBandCountSupported() {
 		return true;
 	}
@@ -43,6 +44,7 @@ public class OFMeterBandStats   implements org.openflow.protocol.interfaces.OFMe
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isByteBandCountSupported() {
 		return true;
 	}

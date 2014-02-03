@@ -38,6 +38,7 @@ public class OFQueueGetConfigReply extends OFMessage implements org.openflow.pro
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPortSupported() {
 		return true;
 	}
@@ -51,6 +52,7 @@ public class OFQueueGetConfigReply extends OFMessage implements org.openflow.pro
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isQueuesSupported() {
 		return true;
 	}

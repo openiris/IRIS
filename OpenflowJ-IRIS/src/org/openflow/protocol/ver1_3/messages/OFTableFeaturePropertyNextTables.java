@@ -34,6 +34,7 @@ public class OFTableFeaturePropertyNextTables extends OFTableFeatureProperty imp
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNextTableIdsSupported() {
 		return true;
 	}

@@ -36,6 +36,7 @@ public class OFActionOpaqueEnqueue extends OFAction implements org.openflow.prot
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPortSupported() {
 		return true;
 	}
@@ -49,6 +50,7 @@ public class OFActionOpaqueEnqueue extends OFAction implements org.openflow.prot
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isQueueIdSupported() {
 		return true;
 	}

@@ -34,6 +34,7 @@ public class OFQueuePropertyExperimenter extends OFQueueProperty implements org.
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isExperimenterIdSupported() {
 		return true;
 	}
@@ -47,6 +48,7 @@ public class OFQueuePropertyExperimenter extends OFQueueProperty implements org.
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataSupported() {
 		return true;
 	}

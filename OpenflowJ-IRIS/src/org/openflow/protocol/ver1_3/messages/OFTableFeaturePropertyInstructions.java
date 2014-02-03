@@ -34,6 +34,7 @@ public class OFTableFeaturePropertyInstructions extends OFTableFeatureProperty i
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isInstructionIdsSupported() {
 		return true;
 	}

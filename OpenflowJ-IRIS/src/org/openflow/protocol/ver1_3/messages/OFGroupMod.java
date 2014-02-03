@@ -45,7 +45,8 @@ public class OFGroupMod extends OFMessage implements org.openflow.protocol.inter
 		this.command = command;
 		return this;
 	}
-	
+
+	@org.codehaus.jackson.annotate.JsonIgnore	
 	public boolean isCommandSupported() {
 		return true;
 	}
@@ -64,7 +65,8 @@ public class OFGroupMod extends OFMessage implements org.openflow.protocol.inter
 		this.group_category = group_category;
 		return this;
 	}
-	
+
+	@org.codehaus.jackson.annotate.JsonIgnore	
 	public boolean isGroupCategorySupported() {
 		return true;
 	}
@@ -78,6 +80,7 @@ public class OFGroupMod extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isGroupIdSupported() {
 		return true;
 	}
@@ -91,6 +94,7 @@ public class OFGroupMod extends OFMessage implements org.openflow.protocol.inter
 		return this;
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isBucketsSupported() {
 		return true;
 	}
