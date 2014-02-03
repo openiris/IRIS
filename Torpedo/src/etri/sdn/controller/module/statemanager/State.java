@@ -15,7 +15,6 @@ import org.openflow.protocol.OFPort;
 import org.openflow.protocol.factory.OFMessageFactory;
 import org.openflow.protocol.interfaces.OFFeaturesReply;
 import org.openflow.protocol.interfaces.OFMatch;
-import org.openflow.protocol.interfaces.OFPortNo;
 import org.openflow.protocol.interfaces.OFStatisticsAggregateReply;
 import org.openflow.protocol.interfaces.OFStatisticsAggregateRequest;
 import org.openflow.protocol.interfaces.OFStatisticsDescReply;
@@ -46,6 +45,11 @@ public class State extends OFModel {
 	private long timeInitiated;
 	private long totalMemory;
 	private OFProtocol protocol;
+	/**
+	 * Custom Serializer for FEATURES_REPLY message. 
+	 * This is used to handle the REST URI /wm/core/switch/{switchid}/features/json.
+	 */
+	private OFFeaturesReplySerializerModule features_reply_module;
 	
 	/**
 	 * Create the State instance.
@@ -58,13 +62,8 @@ public class State extends OFModel {
 		this.totalMemory = Runtime.getRuntime().totalMemory();
 		
 		this.protocol = (OFProtocol) manager.getController().getProtocol();
+		this.features_reply_module = new OFFeaturesReplySerializerModule(this.protocol);
 	}
-	
-	/**
-	 * Custom Serializer for FEATURES_REPLY message. 
-	 * This is used to handle the REST URI /wm/core/switch/{switchid}/features/json.
-	 */
-	private OFFeaturesReplySerializerModule features_reply_module = new OFFeaturesReplySerializerModule();
 	
 	/**
 	 * Custom Serializer for OFPort
@@ -143,7 +142,8 @@ public class State extends OFModel {
 							OFMessageFactory.createStatisticsAggregateRequest(sw.getVersion());
 					if ( req.isMatchSupported() ) {
 						OFMatch.Builder match = OFMessageFactory.createMatchBuilder(sw.getVersion());
-						match.setWildcardsWire(0xffffffff);
+						if ( match.isWildcardsSupported() ) 
+							match.setWildcardsWire(0xffffffff);
 						req.setMatch(match.build());
 					}
 					if ( req.isOutPortSupported() ) 
@@ -192,7 +192,8 @@ public class State extends OFModel {
 							OFMessageFactory.createStatisticsAggregateRequest(sw.getVersion());
 					if ( req.isMatchSupported() ) {
 						OFMatch.Builder match = OFMessageFactory.createMatchBuilder(sw.getVersion());
-						match.setWildcardsWire(0xffffffff);
+						if ( match.isWildcardsSupported() )
+							match.setWildcardsWire(0xffffffff);
 						req.setMatch(match.build());
 					}
 					if ( req.isOutPortSupported() )
@@ -283,16 +284,16 @@ public class State extends OFModel {
 					);
 
 					OFStatisticsPortRequest req = OFMessageFactory.createStatisticsPortRequest(sw.getVersion());
-					req.setPortNo(OFPortNo.NONE);
+					req.setPort(OFPort.NONE);
 
 					List<OFStatisticsReply> reply = protocol.getSwitchStatistics(sw, req);
-					
+
 					for ( OFStatisticsReply s : reply ) {
 						if ( s instanceof OFStatisticsPortReply ) {
 							resultValues.addAll( ((OFStatisticsPortReply)s).getEntries() );
 						}
 					}
-					
+
 					// create an object mapper.
 					ObjectMapper om = new ObjectMapper();
 					// this is critical in providing the port statistics correctly.

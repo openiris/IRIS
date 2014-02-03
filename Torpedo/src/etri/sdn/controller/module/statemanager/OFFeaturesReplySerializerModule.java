@@ -8,10 +8,11 @@ import org.codehaus.jackson.Version;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 import org.codehaus.jackson.map.module.SimpleModule;
-import org.openflow.protocol.ver1_0.messages.OFFeaturesReply;
-import org.openflow.protocol.ver1_0.messages.OFPortDesc;
-import org.openflow.protocol.ver1_0.types.OFCapabilities;
+import org.openflow.protocol.interfaces.OFFeaturesReply;
+import org.openflow.protocol.interfaces.OFPortDesc;
 import org.openflow.util.HexString;
+
+import etri.sdn.controller.protocol.OFProtocol;
 
 /**
  * A Custom Serializer for OFFeaturesReply (FEATURES_REPLY) message.
@@ -20,21 +21,34 @@ import org.openflow.util.HexString;
  *
  */
 final class OFFeaturesReplySerializer extends JsonSerializer<OFFeaturesReply> {
+	
+	OFProtocol protocol;
+	
+	public OFFeaturesReplySerializer(OFProtocol protocol) {
+		this.protocol = protocol;
+	}
 	@Override
 	public void serialize(OFFeaturesReply reply, JsonGenerator jgen, SerializerProvider provider) 
 	throws IOException, JsonProcessingException {
 		
 		jgen.writeStartObject();
 		jgen.writeStringField("datapathId", HexString.toHexString(reply.getDatapathId()));
-		jgen.writeNumberField("actions", reply.getActions());
+		if (reply.isActionsSupported())
+			jgen.writeNumberField("actions", reply.getActions());
+		else
+			jgen.writeNumberField("actions", 0);
 		jgen.writeNumberField("buffers", reply.getNBuffers());
-		jgen.writeNumberField("capabilities", OFCapabilities.of(reply.getCapabilities()).get());
+		jgen.writeNumberField("capabilities", reply.getCapabilitiesWire());
 		jgen.writeNumberField("length", reply.getLength());
 		jgen.writeNumberField("tables", reply.getNTables());
         jgen.writeStringField("type", reply.getType().toString());
         jgen.writeNumberField("version", reply.getVersion());
         jgen.writeNumberField("xid", reply.getXid());
-		provider.defaultSerializeField("ports", reply.getPorts(), jgen);
+        if ( reply.isPortsSupported() ) {
+        	provider.defaultSerializeField("ports", reply.getPorts(), jgen);
+        } else {
+        	provider.defaultSerializeField("ports", this.protocol.getPorts(reply.getDatapathId()), jgen);
+        }
         jgen.writeEndObject();
 	}
 }
@@ -75,10 +89,10 @@ final class OFPhysicalPortSerializer extends JsonSerializer<OFPortDesc> {
  */
 public final class OFFeaturesReplySerializerModule extends SimpleModule {
 
-	public OFFeaturesReplySerializerModule() {
+	public OFFeaturesReplySerializerModule(OFProtocol protocol) {
 		super("OFFeaturesReplyModule", new Version(1, 0, 0, "OFFeaturesReplyModule"));
 		
-		addSerializer(OFFeaturesReply.class, new OFFeaturesReplySerializer());
+		addSerializer(OFFeaturesReply.class, new OFFeaturesReplySerializer(protocol));
 //		addSerializer(OFPhysicalPort.class, new OFPhysicalPortSerializer());
 		addSerializer(OFPortDesc.class, new OFPhysicalPortSerializer());
 	}

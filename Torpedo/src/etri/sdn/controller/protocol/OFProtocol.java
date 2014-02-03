@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.openflow.protocol.OFMessage;
@@ -57,8 +58,8 @@ import etri.sdn.controller.util.Logger;
 
 public class OFProtocol {
 
-//	private static VersionedMessageFactory message_factory = new VersionedMessageFactory();
-	
+	//	private static VersionedMessageFactory message_factory = new VersionedMessageFactory();
+
 	public static final String STR_IN_PORT = "in_port";
 	public static final String STR_DL_DST = "dl_dst";
 	public static final String STR_DL_SRC = "dl_src";
@@ -80,24 +81,24 @@ public class OFProtocol {
 			new ConcurrentHashMap<IOFSwitch, Map<Integer, PortInformation>>();
 	private Map<IOFSwitch, Map<String, PortInformation>> portInformationsByName = 
 			new ConcurrentHashMap<IOFSwitch, Map<String, PortInformation>>();
-	
+
 	/**
 	 * This field is used to exchange information with switch.
 	 */
 	private Map<IOFSwitch, Map<Integer/*xid*/, Object>> responsesCache = 
 			new ConcurrentHashMap<IOFSwitch, Map<Integer, Object>>();
-	
+
 	private OFController controller;
 	private Object portLock = new Object();
-	
+
 	public OFProtocol(OFController controller) {
 		this.controller = controller;
 	}
-	
+
 	public OFController getController() {
 		return this.controller;
 	}
-	
+
 	public void setResponseCacheItem(IOFSwitch sw, int xid, Object item) {
 		Map<Integer, Object> rcache = this.responsesCache.get(sw);
 		if ( rcache == null ) {
@@ -106,7 +107,7 @@ public class OFProtocol {
 		}
 		rcache.put( xid, item );
 	}
-	
+
 	public Object getResponseCacheItem(IOFSwitch sw, int xid) {
 		Map<Integer, Object> rcache = this.responsesCache.get(sw);
 		if ( rcache == null ) {
@@ -114,7 +115,7 @@ public class OFProtocol {
 		}
 		return rcache.get(xid);
 	}
-	
+
 	public void removeResponseCacheItem(IOFSwitch sw, int xid) {
 		Map<Integer, Object> rcache = this.responsesCache.get(sw);
 		if ( rcache == null ) {
@@ -122,12 +123,12 @@ public class OFProtocol {
 		}
 		rcache.remove(xid);
 	}
-	
+
 	/*
 	public static final OFMessageFactory getMessageFactory() {
 		return new VersionedMessageFactory();
 	}
-	*/
+	 */
 	
 	public SwitchInformation getSwitchInformation(IOFSwitch sw) {
 		SwitchInformation si = this.switchInformations.get(sw);
@@ -137,7 +138,7 @@ public class OFProtocol {
 		}
 		return si;
 	}
-	
+
 	/**
 	 * Get port information by the port number. 
 	 * If none existent, a new PortInformation object is created and saved automatically.
@@ -159,7 +160,7 @@ public class OFProtocol {
 		}
 		return pi;
 	}
-	
+
 	public Collection<PortInformation> getPortInformations(IOFSwitch sw) {
 		Map<Integer, PortInformation> inner = portInformations.get(sw);
 		if ( inner != null ) {
@@ -168,6 +169,18 @@ public class OFProtocol {
 		return Collections.emptySet();
 	}
 	
+	public Collection<PortInformation> getPortInformations(long datapathId) {
+		for ( IOFSwitch sw : portInformations.keySet() ) {
+			if ( sw.getId() == datapathId ) {
+				Map<Integer, PortInformation> inner = portInformations.get(sw);
+				if ( inner != null ) {
+					return inner.values();
+				}
+			}
+		}
+		return Collections.emptySet();
+	}
+
 	public void removePortInformation(IOFSwitch sw, PortInformation pi) {
 		Map<Integer, PortInformation> inner = portInformations.get(sw);
 		if ( inner != null ) {
@@ -178,7 +191,7 @@ public class OFProtocol {
 			}
 		}
 	}
-	
+
 	/**
 	 * This method should be called after port number is correctly set up.
 	 * @param sw
@@ -193,7 +206,7 @@ public class OFProtocol {
 		}
 		return inner.get(name);
 	}
-	
+
 	public void setPortInformationByName(IOFSwitch sw, String name, PortInformation pi) {
 		Map<String, PortInformation> inner = portInformationsByName.get(sw);
 		if ( inner == null ) {
@@ -217,14 +230,14 @@ public class OFProtocol {
 		if ( si == null || si.getManufacturerDescription() == null ) {
 			return null;
 		}
-	
+
 		OFStatisticsDescReply ret = OFMessageFactory.createStatisticsDescReply(sw.getVersion());
 		ret.setManufacturerDescription(si.getManufacturerDescription());
 		ret.setDatapathDescription(si.getDatapathDescription());
 		ret.setHardwareDescription(si.getHardwareDescription());
 		ret.setSoftwareDescription(si.getSoftwareDescription());
 		ret.setSerialNumber(si.getSerialNumber());
-	
+
 		return ret;
 	}
 
@@ -254,6 +267,34 @@ public class OFProtocol {
 	public Collection<OFPortDesc> getPorts(IOFSwitch sw) {
 		List<OFPortDesc> ret = new LinkedList<OFPortDesc>();
 		for ( PortInformation pi : this.getPortInformations(sw) ) {
+			OFPortDesc pd = OFMessageFactory.createPortDesc(sw.getVersion());
+			pd
+			.setPort(OFPort.of(pi.getPort()))
+			.setHwAddr(pi.getHwAddr())
+			.setName(pi.getName())
+			.setConfigWire(pi.getConfig())
+			.setStateWire(pi.getState())
+			.setCurrentFeatures(pi.getCurrentFeatures())
+			.setAdvertisedFeatures(pi.getAdvertisedFeatures())
+			.setSupportedFeatures(pi.getSupportedFeatures())
+			.setPeerFeatures(pi.getPeerFeatures());
+			if ( pd.isCurrSpeedSupported() )
+				pd.setCurrSpeed(pi.getCurrSpeed());
+			if ( pd.isMaxSpeedSupported() ) 
+				pd.setMaxSpeed(pi.getMaxSpeed());
+			ret.add( pd );
+		}
+		return ret;
+	}
+	
+
+	public List<OFPortDesc> getPorts(long datapathId) {
+		List<OFPortDesc> ret = new LinkedList<OFPortDesc>();
+		for ( PortInformation pi : this.getPortInformations(datapathId) ) {
+			IOFSwitch sw = this.controller.getSwitch(datapathId);
+			if ( sw == null ) {
+				return Collections.emptyList();
+			}
 			OFPortDesc pd = OFMessageFactory.createPortDesc(sw.getVersion());
 			pd
 			.setPort(OFPort.of(pi.getPort()))
@@ -309,7 +350,7 @@ public class OFProtocol {
 	public boolean process(Connection conn, MessageContext context, OFMessage m) {
 		IOFSwitch sw = conn.getSwitch();
 		OFMessageType t = m.getType();
-	
+
 		switch (t) {
 		case HELLO:
 			// if HELLO received, we send features request.
@@ -318,44 +359,35 @@ public class OFProtocol {
 			} catch (IOException e1) {
 				return false;
 			}
-			
+
 			// set the version number in the switch.
 			if ( sw != null ) {
 				sw.setVersion(m.getVersion());
 			}
-			
+
 			// send feature request message.
 			OFFeaturesRequest freq = OFMessageFactory.createFeaturesRequest(m.getVersion());
 			conn.write(freq);
-	
-			if ( m.getVersion() > (byte)0x01 ) {
-				// set configuration parameters in the switch.
-				// The switch does not reply to a request to set the configuration.
-				// The flags indicate whether IP fragments should be treated normally, dropped, or reassembled. [jshin]
-				OFSetConfig sc = OFMessageFactory.createSetConfig(m.getVersion());
-				sc.setFlags((short) 0).setMissSendLength((short) 128);
-				conn.write(sc);
-			}
 			break;
-	
+
 		case ERROR:
 			Logger.stderr("GET ERROR : " + m.toString());
 			return false;
-	
+
 		case ECHO_REQUEST:
 			Logger.debug("ECHO_REQUEST is received");
 			OFEchoReply reply = OFMessageFactory.createEchoReply(m.getVersion());
 			reply.setXid(m.getXid());
 			conn.write(reply);
 			break;
-	
+
 		case FEATURES_REPLY:
 			if ( sw == null ) return false;
-	
+
 			synchronized ( portLock ) {
 				OFFeaturesReply fr = (OFFeaturesReply) m;
 				sw.setId(fr.getDatapathId());
-	
+
 				SwitchInformation si = this.getSwitchInformation(sw);
 				si
 				.setId(fr.getDatapathId())
@@ -364,7 +396,7 @@ public class OFProtocol {
 				.setTables(fr.getNTables());
 				if (fr.isActionsSupported() ) 
 					si.setActions(fr.getActions());
-	
+
 				// for version 1.3, there is no fr.getPorts() method.
 				if ( fr.isPortsSupported() ) {
 					List<OFPortDesc> ports = fr.getPorts();
@@ -373,16 +405,25 @@ public class OFProtocol {
 					}
 				}
 			}
-	
+
+			if ( m.getVersion() > (byte)0x01 ) {
+				// set configuration parameters in the switch.
+				// The switch does not reply to a request to set the configuration.
+				// The flags indicate whether IP fragments should be treated normally, dropped, or reassembled. [jshin]
+				OFSetConfig sc = OFMessageFactory.createSetConfig(m.getVersion());
+				sc.setFlags((short) 0).setMissSendLength((short) 0xffff);
+				conn.write(sc);
+			}
+
 			// send port desc request message to retrieve all port list.
 			// preq might be null if m.getVersion() == 0x01. But it's OK because
 			// conn.write ignore null preq.
 			OFStatisticsPortDescRequest preq = OFMessageFactory.createStatisticsPortDescRequest(m.getVersion());
 			conn.write(preq);
-	
+
 			OFStatisticsRequest req = OFMessageFactory.createStatisticsDescRequest(m.getVersion());
 			conn.write(req);
-	
+
 			// send flow_mod to process table miss packets [jshin]
 			OFInstructionApplyActions instruction = 
 					OFMessageFactory.createInstructionApplyActions(m.getVersion());
@@ -391,15 +432,15 @@ public class OFProtocol {
 				OFMatchOxm match = OFMessageFactory.createMatchOxm(m.getVersion());
 				OFActionOutput action = OFMessageFactory.createActionOutput(m.getVersion());
 				List<OFAction> actions = new LinkedList<OFAction>();
-	
+
 				OFFlowMod fm = OFMessageFactory.createFlowMod(m.getVersion());
-				
+
 				action.setPort(OFPort.CONTROLLER).setMaxLength((short)0).setLength(action.computeLength());
 				actions.add(action);
-				
+
 				instruction.setActions(actions).setLength(instruction.computeLength());
 				instructions.add(instruction);
-	
+
 				fm.setTableId((byte) 0x0)			//the table which the flow entry should be inserted
 				.setCommand(OFFlowModCommand.ADD)
 				.setIdleTimeout((short) 0)
@@ -411,29 +452,29 @@ public class OFProtocol {
 				.setMatch(match)
 				.setInstructions(instructions)
 				.setFlags( OFFlowModFlags.SEND_FLOW_REM );
-													//send flow removed message when flow expires or is deleted
-	
+				//send flow removed message when flow expires or is deleted
+
 				conn.write(fm);
 			}
-	
+
 			// now the handshaking is fully done.
 			// therefore, we can safely register the switch object
 			// into the switches map. This map is used heavily by
 			// link discovery module.
 			//			Logger.stdout("adding a switch with id = " + conn.getSwitch().getId());
 			getController().addSwitch( conn.getSwitch().getId(), conn.getSwitch() );
-	
+
 			deliverFeaturesReply( conn.getSwitch(), m.getXid(), (OFFeaturesReply) m );
-	
+
 			if ( !getController().handleGeneric(conn, context, m) ) {
 				return false;
 			}
-	
+
 			break;
-	
+
 		case PORT_STATUS:
 			if ( sw == null ) return false;
-	
+
 			OFPortStatus ps = (OFPortStatus) m;
 			OFPortDesc phyport = (OFPortDesc) ps.getDesc();
 			if ( ps.getReason() == OFPortReason.DELETE ) {
@@ -444,15 +485,15 @@ public class OFProtocol {
 			} else { /* ps.getReason() == OFPortReason.ADD */ 
 				setPort( sw, phyport );
 			}
-	
+
 			if ( !getController().handleGeneric(conn, context, m) ) {
 				return false;
 			}
 			break;
-	
+
 		case STATISTICS_REPLY:
 			if ( sw == null ) return false;
-	
+
 			OFStatisticsReply stat = (OFStatisticsReply) m;
 			if ( stat.getStatisticsType() == OFStatisticsType.PORT_DESC ) {
 				OFStatisticsPortDescReply portDesc = (OFStatisticsPortDescReply) m;
@@ -468,19 +509,19 @@ public class OFProtocol {
 				deliverSwitchStatistics( sw, stat );
 			}
 			break;
-	
+
 		case PACKET_IN:
 			if ( !getController().handlePacketIn(conn, context, m) ) {
 				return false;
 			}
 			break;
-	
+
 		default:
 			if ( !getController().handleGeneric(conn, context, m) ) {
 				return false;
 			}
 		}
-	
+
 		return true;
 	}
 
@@ -492,19 +533,22 @@ public class OFProtocol {
 	public List<OFStatisticsReply> getSwitchStatistics(IOFSwitch sw, OFStatisticsRequest req) {
 		List<OFStatisticsReply> response = new LinkedList<OFStatisticsReply>();
 		int xid = req.setXid(sw.getNextTransactionId()).getXid();
-	
+
 		this.setResponseCacheItem(sw, xid, response);
-		sw.getConnection().write(req);
-		synchronized ( response ) {
-			try {
-				response.wait(1000);
-			} catch ( InterruptedException e ) {
-				// does nothing.
-			} finally {
-				this.removeResponseCacheItem(sw, xid);
+		if ( sw.getConnection() != null ) {
+			sw.getConnection().write(req);
+			synchronized ( response ) {
+				try {
+					response.wait(1000);
+				} catch ( InterruptedException e ) {
+					// does nothing.
+				} finally {
+					this.removeResponseCacheItem(sw, xid);
+				}
 			}
+			return response;
 		}
-		return response;
+		return null;
 	}
 
 	public void deliverSwitchStatistics(IOFSwitch sw, OFStatisticsReply m) {
@@ -564,7 +608,7 @@ public class OFProtocol {
 		List<OFPortDesc> result = new ArrayList<OFPortDesc>();
 		Collection<OFPortDesc> allPorts = this.getPorts(sw);
 		if ( allPorts == null ) return null;
-	
+
 		for (OFPortDesc port: allPorts) {
 			if (portEnabled(port)) {
 				result.add(port);
@@ -577,7 +621,7 @@ public class OFProtocol {
 		List<Integer> result = new ArrayList<Integer>();
 		Collection<OFPortDesc> allPorts = this.getPorts(sw);
 		if ( allPorts == null ) return null;
-	
+
 		for (OFPortDesc port: allPorts) {
 			if (portEnabled(port)) {
 				result.add(port.getPort().get());
@@ -591,7 +635,8 @@ public class OFProtocol {
 			return false;
 		if (port.getConfig().contains(OFPortConfig.PORT_DOWN))
 			return false;
-		if (port.getState().contains(OFPortState.LINK_DOWN))
+		Set<OFPortState> states = port.getState();
+		if (states.contains(OFPortState.LINK_DOWN) || states.contains(OFPortState.BLOCKED) )
 			return false;
 		// Port STP state doesn't work with multiple VLANs, so ignore it for now
 		//if ((port.getState() & OFPortState.STP_MASK.getValue()) == OFPortState.STP_BLOCK.getValue())
@@ -608,21 +653,21 @@ public class OFProtocol {
 	}
 
 	public OFMatch loadOFMatchFromPacket(IOFSwitch sw, byte[] packetData, short inputPort) {
-	
+
 		OFMatch.Builder ret = OFMessageFactory.createMatchBuilder(sw.getVersion());
-		
+
 		short scratch = 0;
 		int transportOffset = 34;
 		ByteBuffer packetDataBB = ByteBuffer.wrap(packetData);
 		int limit = packetDataBB.limit();
-	
+
 		ret.setInputPort(OFPort.of(inputPort));
-	
+
 		if ( ret.isWildcardsSupported() && inputPort == OFPort.ALL.get() ) {
 			// ret.wildcards |= OFBFlowWildcards.IN_PORT
 			ret.setWildcards( OFFlowWildcards.IN_PORT );
 		}
-		
+
 		System.out.println(limit);
 		assert (limit >= 14);
 		// dl dst
@@ -630,30 +675,37 @@ public class OFProtocol {
 		System.out.println(packetDataBB + " " + eth_dst + " " + limit);
 		packetDataBB.get(eth_dst);
 		ret.setDataLayerDestination(eth_dst);
-	
+
 		// dl src
 		byte[] eth_src = new byte[6];
 		packetDataBB.get(eth_src);
 		ret.setDataLayerSource(eth_src);
-	
+
 		// dl type
 		short data_layer_type = packetDataBB.getShort();
 		ret.setDataLayerType(data_layer_type);
-	
-		if (data_layer_type != (short) 0x8100) { // need cast to avoid signed
-			// bug
-			ret.setDataLayerVirtualLan((short) 0xffff);
-			ret.setDataLayerVirtualLanPriorityCodePoint((byte) 0);
-		} else {
-			// has vlan tag
+
+		//		if (data_layer_type != (short) 0x8100) { // need cast to avoid signed
+		//			// bug
+		//			ret.setDataLayerVirtualLan((short) 0xffff);
+		//			ret.setDataLayerVirtualLanPriorityCodePoint((byte) 0);
+		//		} else {
+		//			// has vlan tag
+		//			scratch = packetDataBB.getShort();
+		//			ret.setDataLayerVirtualLan((short)(0xfff & scratch));
+		//			ret.setDataLayerVirtualLanPriorityCodePoint((byte)((0xe000 & scratch) >> 13));
+		//			ret.setDataLayerType(packetDataBB.getShort());
+		//		}
+
+		if ( data_layer_type == (short) 0x8100 ) {
 			scratch = packetDataBB.getShort();
 			ret.setDataLayerVirtualLan((short)(0xfff & scratch));
 			ret.setDataLayerVirtualLanPriorityCodePoint((byte)((0xe000 & scratch) >> 13));
-			ret.setDataLayerType(packetDataBB.getShort());
+			//			ret.setDataLayerType(packetDataBB.getShort());
 		}
-	
+
 		byte network_protocol = 0;
-	
+
 		switch (data_layer_type) {
 		case 0x0800:
 			// ipv4
@@ -679,21 +731,32 @@ public class OFProtocol {
 			int arpPos = packetDataBB.position();
 			// opcode
 			scratch = packetDataBB.getShort(arpPos + 6);
-			ret.setNetworkProtocol(network_protocol = (byte) (0xff & scratch));
-	
+			if ( sw.getVersion() == (byte) 0x01 ) {
+				ret.setNetworkProtocol(network_protocol = (byte) (0xff & scratch));
+			} else {
+				ret.setValue(OFOxmMatchFields.OFB_ARP_OP, (byte) 0, ByteBuffer.allocate(2).putShort(scratch).array());
+			}
+
 			scratch = packetDataBB.getShort(arpPos + 2);
 			// if ipv4 and addr len is 4
 			if (scratch == 0x800 && packetDataBB.get(arpPos + 5) == 4) {
-				// nw src
-				ret.setNetworkSource(packetDataBB.getInt(arpPos + 14));
-				// nw dst
-				ret.setNetworkDestination(packetDataBB.getInt(arpPos + 24));
+				if ( sw.getVersion() == (byte) 0x01 ) {
+					// nw src
+					ret.setNetworkSource(packetDataBB.getInt(arpPos + 14));
+					// nw dst
+					ret.setNetworkDestination(packetDataBB.getInt(arpPos + 24));
+				} else {
+					ret.setValue(OFOxmMatchFields.OFB_ARP_SPA, (byte) 0, 
+							ByteBuffer.allocate(4).putInt(packetDataBB.getInt(arpPos + 14)).array());
+					ret.setValue(OFOxmMatchFields.OFB_ARP_TPA, (byte) 0, 
+							ByteBuffer.allocate(4).putInt(packetDataBB.getInt(arpPos + 24)).array());
+				}
 			}
 			break;
 		default:
 			break;
 		}
-	
+
 		switch (network_protocol) {
 		case 0x01:
 			// icmp
@@ -719,7 +782,7 @@ public class OFProtocol {
 		default:
 			break;
 		}
-	
+
 		return ret.build();
 	}
 
@@ -735,39 +798,39 @@ public class OFProtocol {
 	 */
 	private void setFromCIDR(OFMatch.Builder match, String cidr, String which)
 			throws IllegalArgumentException {
-				String values[] = cidr.split("/");
-				String[] ip_str = values[0].split("\\.");
-				int ip = 0;
-				ip += Integer.valueOf(ip_str[0]) << 24;
-				ip += Integer.valueOf(ip_str[1]) << 16;
-				ip += Integer.valueOf(ip_str[2]) << 8;
-				ip += Integer.valueOf(ip_str[3]);
-				int prefix = 32; // all bits are fixed, by default
-			
-				if (values.length >= 2)
-					prefix = Integer.valueOf(values[1]);
-				
-				if ( match.isWildcardsSupported() ) {
-					int mask = 32 - prefix;
-					if (which.equals(STR_NW_DST)) {
-						match.setNetworkDestination(ip);
-						match.setWildcardsWire((match.getWildcardsWire() & ~OFBFlowWildcard.NW_DST_MASK) | 
-								(mask << OFBFlowWildcard.NW_DST_SHIFT));
-					} else if (which.equals(STR_NW_SRC)) {
-						match.setNetworkSource(ip);
-						match.setWildcardsWire((match.getWildcardsWire() & ~OFBFlowWildcard.NW_SRC_MASK) | 
-								(mask << OFBFlowWildcard.NW_SRC_SHIFT));
-					}
-				} else {
-					int mask = 0x80000000 >> (prefix-1);
-								
-					if (which.equals(STR_NW_DST)) {
-						match.setValue(OFOxmMatchFields.OFB_IPV4_DST, (byte) 1, ByteBuffer.allocate(8).putInt(ip).putInt(mask).array());
-					} else if (which.equals(STR_NW_SRC)) {
-						match.setValue(OFOxmMatchFields.OFB_IPV4_SRC, (byte) 1, ByteBuffer.allocate(8).putInt(ip).putInt(mask).array());
-					}
-				}
+		String values[] = cidr.split("/");
+		String[] ip_str = values[0].split("\\.");
+		int ip = 0;
+		ip += Integer.valueOf(ip_str[0]) << 24;
+		ip += Integer.valueOf(ip_str[1]) << 16;
+		ip += Integer.valueOf(ip_str[2]) << 8;
+		ip += Integer.valueOf(ip_str[3]);
+		int prefix = 32; // all bits are fixed, by default
+
+		if (values.length >= 2)
+			prefix = Integer.valueOf(values[1]);
+
+		if ( match.isWildcardsSupported() ) {
+			int mask = 32 - prefix;
+			if (which.equals(STR_NW_DST)) {
+				match.setNetworkDestination(ip);
+				match.setWildcardsWire((match.getWildcardsWire() & ~OFBFlowWildcard.NW_DST_MASK) | 
+						(mask << OFBFlowWildcard.NW_DST_SHIFT));
+			} else if (which.equals(STR_NW_SRC)) {
+				match.setNetworkSource(ip);
+				match.setWildcardsWire((match.getWildcardsWire() & ~OFBFlowWildcard.NW_SRC_MASK) | 
+						(mask << OFBFlowWildcard.NW_SRC_SHIFT));
 			}
+		} else {
+			int mask = 0x80000000 >> (prefix-1);
+
+						if (which.equals(STR_NW_DST)) {
+							match.setValue(OFOxmMatchFields.OFB_IPV4_DST, (byte) 1, ByteBuffer.allocate(8).putInt(ip).putInt(mask).array());
+						} else if (which.equals(STR_NW_SRC)) {
+							match.setValue(OFOxmMatchFields.OFB_IPV4_SRC, (byte) 1, ByteBuffer.allocate(8).putInt(ip).putInt(mask).array());
+						}
+		}
+	}
 
 	/**
 	 * Set this OFMatch's parameters based on a comma-separated key=value pair
@@ -814,86 +877,86 @@ public class OFProtocol {
 	 */
 	public OFMatch loadOFMatchFromString(IOFSwitch sw, String match)
 			throws IllegalArgumentException {
-				OFMatch.Builder ret = OFMessageFactory.createMatchBuilder(sw.getVersion());
-				
-				if (match.equals("") || match.equalsIgnoreCase("any")
-						|| match.equalsIgnoreCase("all") || match.equals("[]"))
-					match = "OFMatch[]";
-				String[] tokens = match.split("[\\[,\\]]");
-				String[] values;
-				int initArg = 0;
-				if (tokens[0].equals("OFMatch"))
-					initArg = 1;
-				if ( ret.isWildcardsSupported() ) {
-					ret.setWildcards(OFFlowWildcards.ALL);
+		OFMatch.Builder ret = OFMessageFactory.createMatchBuilder(sw.getVersion());
+
+		if (match.equals("") || match.equalsIgnoreCase("any")
+				|| match.equalsIgnoreCase("all") || match.equals("[]"))
+			match = "OFMatch[]";
+		String[] tokens = match.split("[\\[,\\]]");
+		String[] values;
+		int initArg = 0;
+		if (tokens[0].equals("OFMatch"))
+			initArg = 1;
+		if ( ret.isWildcardsSupported() ) {
+			ret.setWildcards(OFFlowWildcards.ALL);
+		}
+
+		int i;
+		for (i = initArg; i < tokens.length; i++) {
+			values = tokens[i].split("=");
+			if (values.length != 2)
+				throw new IllegalArgumentException("Token " + tokens[i]
+						+ " does not have form 'key=value' parsing " + match);
+			values[0] = values[0].toLowerCase(); // try to make this case insens
+			if (values[0].equals(STR_IN_PORT) || values[0].equals("input_port")) {
+				ret.setInputPort(OFPort.of(Integer.valueOf(values[1])));
+				if ( ret.isWildcardsSupported() )
+					ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.IN_PORT);
+			} else if (values[0].equals(STR_DL_DST)
+					|| values[0].equals("eth_dst")) {
+				ret.setDataLayerDestination(HexString.fromHexString(values[1]));
+				if ( ret.isWildcardsSupported() )
+					ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.DL_DST);
+			} else if (values[0].equals(STR_DL_SRC)
+					|| values[0].equals("eth_src")) {
+				ret.setDataLayerSource(HexString.fromHexString(values[1]));
+				if ( ret.isWildcardsSupported() )
+					ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.DL_SRC);
+			} else if (values[0].equals(STR_DL_TYPE)
+					|| values[0].equals("eth_type")) {
+				if (values[1].startsWith("0x"))
+					ret.setDataLayerType(U16.t(Integer.valueOf(values[1].replaceFirst("0x", ""), 16)));
+				else
+					ret.setDataLayerType(U16.t(Integer.valueOf(values[1])));
+				if ( ret.isWildcardsSupported() )
+					ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.DL_TYPE);
+			} else if (values[0].equals(STR_DL_VLAN)) {
+				if (values[1].contains("0x")) {
+					ret.setDataLayerVirtualLan(U16.t(Integer.valueOf(values[1].replaceFirst("0x", ""), 16)));
+				} else {
+					ret.setDataLayerVirtualLan(U16.t(Integer.valueOf(values[1])));
 				}
-				
-				int i;
-				for (i = initArg; i < tokens.length; i++) {
-					values = tokens[i].split("=");
-					if (values.length != 2)
-						throw new IllegalArgumentException("Token " + tokens[i]
-								+ " does not have form 'key=value' parsing " + match);
-					values[0] = values[0].toLowerCase(); // try to make this case insens
-					if (values[0].equals(STR_IN_PORT) || values[0].equals("input_port")) {
-						ret.setInputPort(OFPort.of(Integer.valueOf(values[1])));
-						if ( ret.isWildcardsSupported() )
-							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.IN_PORT);
-					} else if (values[0].equals(STR_DL_DST)
-							|| values[0].equals("eth_dst")) {
-						ret.setDataLayerDestination(HexString.fromHexString(values[1]));
-						if ( ret.isWildcardsSupported() )
-							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.DL_DST);
-					} else if (values[0].equals(STR_DL_SRC)
-							|| values[0].equals("eth_src")) {
-						ret.setDataLayerSource(HexString.fromHexString(values[1]));
-						if ( ret.isWildcardsSupported() )
-							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.DL_SRC);
-					} else if (values[0].equals(STR_DL_TYPE)
-							|| values[0].equals("eth_type")) {
-						if (values[1].startsWith("0x"))
-							ret.setDataLayerType(U16.t(Integer.valueOf(values[1].replaceFirst("0x", ""), 16)));
-						else
-							ret.setDataLayerType(U16.t(Integer.valueOf(values[1])));
-						if ( ret.isWildcardsSupported() )
-							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.DL_TYPE);
-					} else if (values[0].equals(STR_DL_VLAN)) {
-						if (values[1].contains("0x")) {
-							ret.setDataLayerVirtualLan(U16.t(Integer.valueOf(values[1].replaceFirst("0x", ""), 16)));
-						} else {
-							ret.setDataLayerVirtualLan(U16.t(Integer.valueOf(values[1])));
-						}
-						if ( ret.isWildcardsSupported() )
-							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.DL_VLAN);
-					} else if (values[0].equals(STR_DL_VLAN_PCP)) {
-						ret.setDataLayerVirtualLanPriorityCodePoint(U8.t(Short.valueOf(values[1])));
-						if ( ret.isWildcardsSupported() )
-							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.DL_VLAN_PCP);
-					} else if (values[0].equals(STR_NW_DST)
-							|| values[0].equals("ip_dst"))
-						setFromCIDR(ret, values[1], STR_NW_DST);
-					else if (values[0].equals(STR_NW_SRC) || values[0].equals("ip_src"))
-						setFromCIDR(ret, values[1], STR_NW_SRC);
-					else if (values[0].equals(STR_NW_PROTO)) {
-						ret.setNetworkProtocol(U8.t(Short.valueOf(values[1])));
-						if ( ret.isWildcardsSupported() )
-							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.NW_PROTO);
-					} else if (values[0].equals(STR_NW_TOS)) {
-						ret.setNetworkTypeOfService(U8.t(Short.valueOf(values[1])));
-						if ( ret.isWildcardsSupported() )
-							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.NW_TOS);
-					} else if (values[0].equals(STR_TP_DST)) {
-						ret.setTransportDestination(U16.t(Integer.valueOf(values[1])));
-						if ( ret.isWildcardsSupported() )
-							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.TP_DST);
-					} else if (values[0].equals(STR_TP_SRC)) {
-						ret.setTransportSource(U16.t(Integer.valueOf(values[1])));
-						if ( ret.isWildcardsSupported() )
-							ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.TP_SRC);
-					} else
-						throw new IllegalArgumentException("unknown token " + tokens[i]
-								+ " parsing " + match);
-				}
-				return ret.build();
-			}
+				if ( ret.isWildcardsSupported() )
+					ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.DL_VLAN);
+			} else if (values[0].equals(STR_DL_VLAN_PCP)) {
+				ret.setDataLayerVirtualLanPriorityCodePoint(U8.t(Short.valueOf(values[1])));
+				if ( ret.isWildcardsSupported() )
+					ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.DL_VLAN_PCP);
+			} else if (values[0].equals(STR_NW_DST)
+					|| values[0].equals("ip_dst"))
+				setFromCIDR(ret, values[1], STR_NW_DST);
+			else if (values[0].equals(STR_NW_SRC) || values[0].equals("ip_src"))
+				setFromCIDR(ret, values[1], STR_NW_SRC);
+			else if (values[0].equals(STR_NW_PROTO)) {
+				ret.setNetworkProtocol(U8.t(Short.valueOf(values[1])));
+				if ( ret.isWildcardsSupported() )
+					ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.NW_PROTO);
+			} else if (values[0].equals(STR_NW_TOS)) {
+				ret.setNetworkTypeOfService(U8.t(Short.valueOf(values[1])));
+				if ( ret.isWildcardsSupported() )
+					ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.NW_TOS);
+			} else if (values[0].equals(STR_TP_DST)) {
+				ret.setTransportDestination(U16.t(Integer.valueOf(values[1])));
+				if ( ret.isWildcardsSupported() )
+					ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.TP_DST);
+			} else if (values[0].equals(STR_TP_SRC)) {
+				ret.setTransportSource(U16.t(Integer.valueOf(values[1])));
+				if ( ret.isWildcardsSupported() )
+					ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.TP_SRC);
+			} else
+				throw new IllegalArgumentException("unknown token " + tokens[i]
+						+ " parsing " + match);
+		}
+		return ret.build();
+	}
 }

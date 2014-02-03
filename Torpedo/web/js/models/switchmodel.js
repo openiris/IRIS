@@ -79,7 +79,7 @@ window.Switch = Backbone.Model.extend({
 			dataType:"json",
 			success:function (data) {
 				//console.log("fetched  switch " + self.id + " ports");
-				//console.log(data[self.id]);
+				// console.log(data[self.id]);
 				// create port models
 				_.each(data[self.id], function(p) {
 					p.id = self.id+'-'+p.portNumber;
