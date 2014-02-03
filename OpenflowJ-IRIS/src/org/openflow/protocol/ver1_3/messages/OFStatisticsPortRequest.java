@@ -4,12 +4,13 @@ import java.nio.ByteBuffer;
 import org.openflow.util.*;
 
 import org.openflow.protocol.ver1_3.types.*;
+import org.openflow.protocol.OFPort;
 
 public class OFStatisticsPortRequest extends OFStatisticsRequest implements org.openflow.protocol.interfaces.OFStatisticsPortRequest {
     public static int MINIMUM_LENGTH = 24;
     public static int CORE_LENGTH = 8;
 
-    OFPortNo  port_no;
+    int  port;
 	int pad_1th;
 
     public OFStatisticsPortRequest() {
@@ -21,24 +22,19 @@ public class OFStatisticsPortRequest extends OFStatisticsRequest implements org.
     
     public OFStatisticsPortRequest(OFStatisticsPortRequest other) {
     	super(other);
-		this.port_no = other.port_no;
+		this.port = other.port;
     }
 
-	public org.openflow.protocol.interfaces.OFPortNo getPortNo() {
-		return OFPortNo.to(this.port_no);
+	public OFPort getPort() {
+		return new OFPort(this.port);
 	}
 	
-	public OFStatisticsPortRequest setPortNo(org.openflow.protocol.interfaces.OFPortNo port_no) {
-		this.port_no = OFPortNo.from(port_no);
+	public OFStatisticsPortRequest setPort(OFPort port) {
+		this.port = (int) port.get();
 		return this;
 	}
 	
-	public OFStatisticsPortRequest setPortNo(OFPortNo port_no) {
-		this.port_no = port_no;
-		return this;
-	}
-	
-	public boolean isPortNoSupported() {
+	public boolean isPortSupported() {
 		return true;
 	}
 	
@@ -51,18 +47,18 @@ public class OFStatisticsPortRequest extends OFStatisticsRequest implements org.
 	
     public void readFrom(ByteBuffer data) {
         super.readFrom(data);
-		this.port_no = OFPortNo.valueOf(OFPortNo.readFrom(data));
+		this.port = data.getInt();
 		this.pad_1th = data.getInt();
     }
 
     public void writeTo(ByteBuffer data) {
     	super.writeTo(data);
-        data.putInt(this.port_no.getValue());
+        data.putInt(this.port);
 		data.putInt(this.pad_1th);
     }
 
     public String toString() {
-        return super.toString() +  ":OFStatisticsPortRequest-"+":port_no=" + port_no.toString();
+        return super.toString() +  ":OFStatisticsPortRequest-"+":port=" + U32.f(port);
     }
 
 	// compute length (without final alignment)    
@@ -87,7 +83,7 @@ public class OFStatisticsPortRequest extends OFStatisticsRequest implements org.
         		
 		final int prime = 1657;
 		int result = super.hashCode() * prime;
-		result = prime * result + ((port_no == null)?0:port_no.hashCode());
+		result = prime * result + (int) port;
 		return result;
     }
 
@@ -104,8 +100,7 @@ public class OFStatisticsPortRequest extends OFStatisticsRequest implements org.
             return false;
         }
         OFStatisticsPortRequest other = (OFStatisticsPortRequest) obj;
-		if ( port_no == null && other.port_no != null ) { return false; }
-		else if ( !port_no.equals(other.port_no) ) { return false; }
+		if ( port != other.port ) return false;
         return true;
     }
 }

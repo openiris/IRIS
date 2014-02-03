@@ -1598,7 +1598,7 @@ struct of_statistics_port_request : of_statistics_request {
     uint16_t statistics_type == 4;
     uint16_t flags;
     pad(4);
-    uint32_t port_no;
+    uint32_t port;
     pad(4);
 };
 

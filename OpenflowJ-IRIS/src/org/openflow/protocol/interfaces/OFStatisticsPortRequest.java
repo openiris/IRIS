@@ -2,13 +2,13 @@ package org.openflow.protocol.interfaces;
 
 import java.nio.ByteBuffer;
 
-
+import org.openflow.protocol.OFPort;
 
 public interface OFStatisticsPortRequest extends OFStatisticsRequest {
 
-	public OFStatisticsPortRequest setPortNo(OFPortNo value);
-	public OFPortNo getPortNo();
-	public boolean isPortNoSupported();
+	public OFStatisticsPortRequest setPort(OFPort value);
+	public OFPort getPort();
+	public boolean isPortSupported();
 	
 	public OFStatisticsPortRequest dup();
 

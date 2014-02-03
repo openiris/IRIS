@@ -892,7 +892,7 @@ struct of_statistics_port_request : of_statistics_request {
     uint32_t xid;
     uint16_t statistics_type == 4;
     uint16_t flags;
-    uint16_t port_no;
+    uint16_t port;
     pad(6);
 };
 
