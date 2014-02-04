@@ -1,5 +1,6 @@
 package etri.sdn.controller.module.topologymanager;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -17,6 +18,8 @@ import org.openflow.protocol.factory.OFMessageFactory;
 import org.openflow.protocol.interfaces.OFAction;
 import org.openflow.protocol.interfaces.OFActionOutput;
 import org.openflow.protocol.interfaces.OFMessageType;
+import org.openflow.protocol.interfaces.OFOxm;
+import org.openflow.protocol.interfaces.OFOxmMatchFields;
 import org.openflow.protocol.interfaces.OFPacketIn;
 import org.openflow.protocol.interfaces.OFPacketOut;
 
@@ -123,10 +126,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 				new OFMFilter() {
 					@Override
 					public boolean filter(OFMessage m) {
-						// currently, we only handle version 1.0
-						if (m.getVersion() == 0x01)
-							return true;
-						return false;
+						return true;
 					}
 				}
 		);
@@ -220,6 +220,23 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		TopologyInstance ti = getCurrentInstance(tunnelEnabled);
 		return ti.isAllowed(sw, portId);
 	}
+	
+	protected int getInputPort(OFPacketIn pi) {
+		if ( pi == null ) {
+			throw new AssertionError("pi cannot refer null");
+		}
+		if ( pi.isInputPortSupported() ) {
+			return pi.getInputPort().get();
+		}
+		else {
+			OFOxm oxm = pi.getMatch().getOxmFromIndex(OFOxmMatchFields.OFB_IN_PORT);
+			if ( oxm == null ) {
+				Logger.debug("Packet-in does not have oxm object for OFB_IN_PORT");
+				throw new AssertionError("pi cannot refer null");
+			}
+			return ByteBuffer.wrap(oxm.getData()).getInt();
+		}
+	}
 
 
 	// ****************
@@ -237,7 +254,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	 */
 	protected boolean dropFilter(long sw, OFPacketIn pi) {
 		boolean result = true;
-		short port = (short) pi.getInputPort().get();
+		short port = (short) getInputPort(pi);
 
 		// If the input port is not allowed for data traffic, drop everything.
 		// BDDP packets will not reach this stage.
@@ -339,7 +356,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 
 			// remove the incoming switch port
 			if (pinSwitch == sid) {
-				ports.remove(pi.getInputPort());
+				ports.remove(getInputPort(pi));
 			}
 
 			// we have all the switch ports to which we need to broadcast.
@@ -372,7 +389,6 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		if ( eth == null ) {
 			// parse Ethernet header and put into the context
 			eth = new Ethernet();
-//			eth.deserialize(pi.getPacketData(), 0, pi.getPacketData().length);
 			eth.deserialize(pi.getData(), 0, pi.getData().length);
 			context.put(MessageContext.ETHER_PAYLOAD, eth);
 		}
@@ -628,6 +644,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		for(int i=0; i<topologyAware.size(); ++i) {
 			ITopologyListener listener = topologyAware.get(i);
 			listener.topologyChanged();
+//			currentInstance.printTopology();
 		}
 	}
 
@@ -693,7 +710,6 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		IOFSwitch sw =  controller.getSwitch(switchid);
 		if (sw == null) return false;
 		
-//		return (sw.portEnabled(port));
 		return protocol.portEnabled(sw, port);
 	}
 

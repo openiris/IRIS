@@ -3,4 +3,5 @@
 **/*.bak
 **/*.cld
 **/*.pyc
+**/*.gitignore
 **/*~

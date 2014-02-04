@@ -403,7 +403,7 @@ public class OFProtocol {
 					for ( OFPortDesc port: ports ) {
 						setPort(sw, port);
 					}
-				}
+				} 
 			}
 
 			if ( m.getVersion() > (byte)0x01 ) {
@@ -478,11 +478,14 @@ public class OFProtocol {
 			OFPortStatus ps = (OFPortStatus) m;
 			OFPortDesc phyport = (OFPortDesc) ps.getDesc();
 			if ( ps.getReason() == OFPortReason.DELETE ) {
+				System.out.println("DELETE: " + phyport);
 				deletePort( sw, phyport.getPort().get() );
 			} else if ( ps.getReason() == OFPortReason.MODIFY ) {
+				System.out.println("MODIFY: " + phyport);
 				deletePort( sw, phyport.getPort().get() );
 				setPort( sw, phyport );
 			} else { /* ps.getReason() == OFPortReason.ADD */ 
+				System.out.println("ADD: " + phyport);
 				setPort( sw, phyport );
 			}
 
@@ -668,11 +671,10 @@ public class OFProtocol {
 			ret.setWildcards( OFFlowWildcards.IN_PORT );
 		}
 
-		System.out.println(limit);
 		assert (limit >= 14);
+		
 		// dl dst
 		byte[] eth_dst = new byte[6];
-		System.out.println(packetDataBB + " " + eth_dst + " " + limit);
 		packetDataBB.get(eth_dst);
 		ret.setDataLayerDestination(eth_dst);
 
