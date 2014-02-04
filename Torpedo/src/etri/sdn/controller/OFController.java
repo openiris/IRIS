@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -23,6 +22,7 @@ import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFHandler;
 import etri.sdn.controller.protocol.io.IOFProtocolServer;
 import etri.sdn.controller.protocol.io.IOFSwitch;
+import etri.sdn.controller.protocol.io.TcpServer;
 import etri.sdn.controller.util.Logger;
 
 /**
@@ -321,7 +321,7 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 						}
 					}
 				},
-				after,
+				0,
 				after
 		);
 	}
@@ -405,6 +405,9 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 	@Override
 	public final boolean handleDisconnectEvent(Connection conn) {
 		System.out.println("disconnected");
+		
+		assert( conn.getSwitch() != null );
+		
 		if ( conn.getSwitch() != null ) {
 			
 			for (OFModule m: modules) {

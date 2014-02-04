@@ -38,9 +38,11 @@ import org.openflow.protocol.interfaces.OFFlowModCommand;
 import org.openflow.protocol.interfaces.OFFlowModFlags;
 import org.openflow.protocol.interfaces.OFInstruction;
 import org.openflow.protocol.interfaces.OFInstructionApplyActions;
+import org.openflow.protocol.interfaces.OFInstructionType;
 import org.openflow.protocol.interfaces.OFMatch;
 import org.openflow.protocol.interfaces.OFMessageType;
 import org.openflow.protocol.interfaces.OFOxm;
+import org.openflow.protocol.interfaces.OFOxmClass;
 import org.openflow.protocol.interfaces.OFOxmMatchFields;
 import org.openflow.protocol.interfaces.OFPacketIn;
 import org.openflow.protocol.interfaces.OFPacketOut;
@@ -222,7 +224,8 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 	 */
 	public boolean pushRoute(
 			Connection conn,
-			Route route, OFMatch match, 
+			Route route, 
+			OFMatch match, 
 			Integer wildcard_hints,
 			OFPacketIn pi,
 			long pinSwitch,
@@ -233,56 +236,40 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			OFFlowModCommand   flowModCommand) {
 
 		boolean srcSwitchIncluded = false;
+		
 		OFFlowMod fm = OFMessageFactory.createFlowMod(pi.getVersion());
 
-		if ( fm.isInstructionsSupported() ) {
-			OFInstructionApplyActions instruction = OFMessageFactory.createInstructionApplyActions(pi.getVersion());
-			List<OFInstruction> instructions = new ArrayList<OFInstruction>();
-			OFActionOutput action_output = OFMessageFactory.createActionOutput(pi.getVersion());
-			List<OFAction> actions = new ArrayList<OFAction>();
+		List<OFAction> actions = new ArrayList<OFAction>();
+		OFActionOutput action_output = OFMessageFactory.createActionOutput(pi.getVersion());
+		action_output.setMaxLength((short)0xffff);
+		action_output.setLength(action_output.computeLength());
+		actions.add(action_output);
 
-//			action_output.setType(OFActionType.OUTPUT);			//TODO: modified
-			action_output.setMaxLength((short)0xffff);
-			action_output.setLength(action_output.computeLength());
-			actions.add(action_output);
+		fm.setIdleTimeout(FLOWMOD_DEFAULT_IDLE_TIMEOUT)
+		.setHardTimeout(FLOWMOD_DEFAULT_HARD_TIMEOUT)
+		.setBufferId(0xffffffff /* OFP_NO_BUFFER */)
+		.setCookie(cookie)
+		.setCommand(flowModCommand)
+		.setMatch(match)
+		.setFlags(OFFlowModFlags.SEND_FLOW_REM);
+
+		if ( fm.isTableIdSupported() ) {
+			fm.setTableId( (byte) 0x0 );
+		}
+
+		if ( fm.isInstructionsSupported() ) {
+			List<OFInstruction> instructions = new ArrayList<OFInstruction>();
+			OFInstructionApplyActions instruction = OFMessageFactory.createInstructionApplyActions(pi.getVersion());
 			instruction.setActions(actions);
-//			instruction.setType(OFInstructionType.APPLY_ACTIONS);
 			instruction.setLength(instruction.computeLength());
-			instructions.clear();
 			instructions.add(instruction);
 
-//			setCookieMask		//TODO: check fm field
-//			setOutGroup
-//			setOutPort
-			
-			fm.setTableId((byte) 0x0)
-			.setIdleTimeout(FLOWMOD_DEFAULT_IDLE_TIMEOUT)
-			.setHardTimeout(FLOWMOD_DEFAULT_HARD_TIMEOUT)
-			.setCookie(cookie)
-			.setPriority((short) 100)
-			.setBufferId(0xffffffff /* OFP_NO_BUFFER */)		//refers to a packet buffered at the switch and sent to the controller
-//			.setCommand(OFFlowModCommand.valueOf(flowModCommand))
-			.setCommand(flowModCommand)
-			.setMatch(match)
-			.setInstructions(instructions)
-			.setFlagsWire((short) 0x0001);					//send flow removed message when flow expires or is deleted
-			fm.setLength(fm.computeLength());
+			fm.setInstructions( instructions );
 		} else {
-			List<OFAction> actions = new ArrayList<OFAction>();
-			OFActionOutput action_output = OFMessageFactory.createActionOutput(pi.getVersion());
-			action_output.setMaxLength((short)0xffff);
-			action_output.setLength(action_output.computeLength());
-			actions.add(action_output);
-
-			fm.setIdleTimeout(FLOWMOD_DEFAULT_IDLE_TIMEOUT)
-			.setHardTimeout(FLOWMOD_DEFAULT_HARD_TIMEOUT)
-			.setBufferId(0xffffffff /* OFP_NO_BUFFER */)
-			.setCookie(cookie)
-			.setCommand(flowModCommand)
-			.setMatch(match)
-			.setActions(actions);
-			fm.setLength( fm.computeLength() );
+			fm.setActions( actions );
 		}
+
+		fm.setLength( fm.computeLength() );
 		
 		List<NodePortTuple> switchPortList = route.getPath();
 
@@ -322,10 +309,43 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			short outPort = switchPortList.get(indx).getPortId();
 			short inPort = switchPortList.get(indx-1).getPortId();
 			// set input and output ports on the switch
-			fm.getMatch().setInputPort(OFPort.of(inPort));
-			List<OFAction> actions = fm.getActions();
-			OFAction action = actions.get(0);
-			((OFActionOutput)action).setPort(OFPort.of(outPort));
+			OFMatch fm_match = fm.getMatch();
+			if ( fm_match.isInputPortSupported() ) {
+				fm_match.setInputPort(OFPort.of(inPort));
+			} else {
+				OFOxm oxm = fm_match.getOxmFromIndex(OFOxmMatchFields.OFB_IN_PORT);
+				if ( oxm == null ) {
+					List<OFOxm> oxms = fm_match.getOxmFields();
+					oxm = OFMessageFactory.createOxm(pi.getVersion());
+					oxm.setOxmClass(OFOxmClass.OPENFLOW_BASIC);
+					oxm.setBitmask((byte)0);
+					oxm.setField((byte)0);		// OFB_IN_PORT;
+					oxm.setData(ByteBuffer.allocate(4).putInt(inPort).array());
+					oxms.add(oxm);
+					fm_match.setOxmFields( oxms );
+					fm.setLength( fm.computeLength() );
+				}
+				else {
+					oxm.setData(ByteBuffer.allocate(4).putInt(inPort).array());
+				}
+			}
+			
+			if ( fm.isActionsSupported() ) {
+				List<OFAction> fm_actions = fm.getActions();
+				OFAction action = fm_actions.get(0);
+				((OFActionOutput)action).setPort(OFPort.of(outPort));
+			} else {
+				List<OFInstruction> fm_instructions = fm.getInstructions();
+				OFInstruction one = fm_instructions.get(0);
+				if ( one.getType() == OFInstructionType.APPLY_ACTIONS ) {
+					OFInstructionApplyActions apply = (OFInstructionApplyActions) one;
+					List<OFAction> inst_actions = apply.getActions();
+					if ( inst_actions != null && !inst_actions.isEmpty() ) {
+						OFAction action = inst_actions.get(0);
+						((OFActionOutput)action).setPort(OFPort.of(outPort));
+					}
+				}
+			}
 
 			try {
 //				counterStore.updatePktOutFMCounterStore(sw, fm);
@@ -701,57 +721,91 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 
 		// Create flow-mod based on packet-in and src-switch
 		OFFlowMod fm = OFMessageFactory.createFlowMod(sw.getVersion());
+		OFMatch.Builder match = OFMessageFactory.createMatchBuilder(sw.getVersion());
 		
 		if (fm.isInstructionsSupported()) {
-			OFMatch.Builder blockMatchOxm = OFMessageFactory.createMatchBuilder(sw.getVersion());
+			match.setValue(OFOxmMatchFields.OFB_ETH_SRC, (byte) 0, Ethernet.toByteArray(host_mac));
+			match.setValue(OFOxmMatchFields.OFB_IN_PORT, (byte) 0, IPv4.toIPv4AddressBytes(inputPort));
 			
-			blockMatchOxm.setValue(OFOxmMatchFields.OFB_ETH_SRC, (byte) 0, Ethernet.toByteArray(host_mac));
-			blockMatchOxm.setValue(OFOxmMatchFields.OFB_IN_PORT, (byte) 0, IPv4.toIPv4AddressBytes(inputPort));
+//			OFInstructionApplyActions instruction = OFMessageFactory.createInstructionApplyActions(sw.getVersion());
+//			instruction.setActions(Collections.<OFAction>emptyList());	// drop
+//			List<OFInstruction> instructions = new ArrayList<OFInstruction>();
+//			instruction.setLength(instruction.computeLength());
+//			instructions.add(instruction);
 			
-			List<OFInstruction> instructions = new ArrayList<OFInstruction>();
-			OFInstructionApplyActions instruction = OFMessageFactory.createInstructionApplyActions(sw.getVersion());
-			instruction.setActions(Collections.<OFAction>emptyList());	// drop
-			instruction.setLength(instruction.computeLength());
-			instructions.add(instruction);
-			
-//			setCookie		//TODO: field check
-//			setCookieMask
-//			setFlags
-//			setOutGroup
-//			setOutPort
-//			setPriority
-
-			fm.setCookie(cookie)
-			.setTableId((byte) 0x0)
-			.setIdleTimeout(FLOWMOD_DEFAULT_IDLE_TIMEOUT)
-//			.setHardTimeout(FLOWMOD_DEFAULT_HARD_TIMEOUT)
-			.setHardTimeout((short) hardTimeout)
-			.setCommand(OFFlowModCommand.ADD)
-			.setBufferId( 0xffffffff /* OFP_NO_BUFFER */)
-//			.setFlagsWire((short) 0x0001)			//send flow removed message when flow expires or is deleted.
-			.setMatch(blockMatchOxm.build())
-			.setInstructions(instructions);
-			fm.setLength(fm.computeLength());
+			fm.setCommand(OFFlowModCommand.ADD)
+			.setInstructions(Collections.<OFInstruction>emptyList());	// Drop
 		} else {
-			OFMatch.Builder match = OFMessageFactory.createMatchBuilder(sw.getVersion());
-			List<OFAction> actions = new ArrayList<OFAction>(); // Set no action to
-
-			// drop
-			match
+//			List<OFAction> actions = new ArrayList<OFAction>();
+			
+			match                                                             
 			.setDataLayerSource(Ethernet.toByteArray(host_mac))
 			.setInputPort(OFPort.of(inputPort));
 			if (match.isWildcardsSupported())
 				match.setWildcardsWire(OFBFlowWildcard.ALL & ~OFBFlowWildcard.DL_SRC & ~OFBFlowWildcard.IN_PORT);
-
-			fm.setCookie(cookie)
-			.setHardTimeout((short) hardTimeout)
-			.setIdleTimeout(FLOWMOD_DEFAULT_IDLE_TIMEOUT)
-//			.setHardTimeout(FLOWMOD_DEFAULT_HARD_TIMEOUT)
-			.setBufferId( 0xffffffff /* OFP_NO_BUFFER */)
-			.setMatch(match.build())
-			.setActions(actions)
-			.setLength(fm.computeLength());
+			
+			fm.setActions(Collections.<OFAction>emptyList());			// Drop
 		}
+		
+		fm.setCookie(cookie)
+		.setHardTimeout((short) hardTimeout)
+		.setIdleTimeout(FLOWMOD_DEFAULT_IDLE_TIMEOUT)
+		.setBufferId( 0xffffffff /* OFP_NO_BUFFER */)
+		.setMatch(match.build());
+		if ( fm.isTableIdSupported() ) {
+			fm.setTableId((byte) 0x0);
+		}
+		fm.setLength(fm.computeLength());
+		
+//		if (fm.isInstructionsSupported()) {
+//			OFMatch.Builder blockMatchOxm = OFMessageFactory.createMatchBuilder(sw.getVersion());
+//			
+//			blockMatchOxm.setValue(OFOxmMatchFields.OFB_ETH_SRC, (byte) 0, Ethernet.toByteArray(host_mac));
+//			blockMatchOxm.setValue(OFOxmMatchFields.OFB_IN_PORT, (byte) 0, IPv4.toIPv4AddressBytes(inputPort));
+//			
+//			List<OFInstruction> instructions = new ArrayList<OFInstruction>();
+//			OFInstructionApplyActions instruction = OFMessageFactory.createInstructionApplyActions(sw.getVersion());
+//			instruction.setActions(Collections.<OFAction>emptyList());	// drop
+//			instruction.setLength(instruction.computeLength());
+//			instructions.add(instruction);
+//			
+//			fm.setCookie(cookie)
+//			.setTableId((byte) 0x0)
+//			.setIdleTimeout(FLOWMOD_DEFAULT_IDLE_TIMEOUT)
+////			.setHardTimeout(FLOWMOD_DEFAULT_HARD_TIMEOUT)
+//			.setHardTimeout((short) hardTimeout)
+//			.setCommand(OFFlowModCommand.ADD)
+//			.setBufferId( 0xffffffff /* OFP_NO_BUFFER */)
+////			.setFlagsWire((short) 0x0001)			//send flow removed message when flow expires or is deleted.
+//			.setMatch(blockMatchOxm.build())
+//			.setInstructions(instructions);
+////			setCookie
+////			setCookieMask
+////			setFlags
+////			setOutGroup
+////			setOutPort
+////			setPriority
+//			fm.setLength(fm.computeLength());
+//		} else {
+//			OFMatch.Builder match = OFMessageFactory.createMatchBuilder(sw.getVersion());
+//			List<OFAction> actions = new ArrayList<OFAction>(); // Set no action to
+//
+//			// drop
+//			match                                                             
+//			.setDataLayerSource(Ethernet.toByteArray(host_mac))
+//			.setInputPort(OFPort.of(inputPort));
+//			if (match.isWildcardsSupported())
+//				match.setWildcardsWire(OFBFlowWildcard.ALL & ~OFBFlowWildcard.DL_SRC & ~OFBFlowWildcard.IN_PORT);
+//
+//			fm.setCookie(cookie)
+//			.setHardTimeout((short) hardTimeout)
+//			.setIdleTimeout(FLOWMOD_DEFAULT_IDLE_TIMEOUT)
+////			.setHardTimeout(FLOWMOD_DEFAULT_HARD_TIMEOUT)
+//			.setBufferId( 0xffffffff /* OFP_NO_BUFFER */)
+//			.setMatch(match.build())
+//			.setActions(actions)
+//			.setLength(fm.computeLength());
+//		}
 
 //		log.debug("write drop flow-mod sw={} match={} flow-mod={}",
 //				new Object[] { sw, match, fm });

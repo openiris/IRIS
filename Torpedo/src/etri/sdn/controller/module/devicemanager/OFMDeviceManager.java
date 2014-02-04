@@ -107,6 +107,23 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 			return ofmDeviceManagerCache;
 		}
 	}
+	
+	protected int getInputPort(OFPacketIn pi) {
+		if ( pi == null ) {
+			throw new AssertionError("pi cannot refer null");
+		}
+		if ( pi.isInputPortSupported() ) {
+			return pi.getInputPort().get();
+		}
+		else {
+			OFOxm oxm = pi.getMatch().getOxmFromIndex(OFOxmMatchFields.OFB_IN_PORT);
+			if ( oxm == null ) {
+				Logger.debug("Packet-in does not have oxm object for OFB_IN_PORT");
+				throw new AssertionError("pi cannot refer null");
+			}
+			return ByteBuffer.wrap(oxm.getData()).getInt();
+		}
+	}
 
 	/**
 	 * Initializes this module.
@@ -132,9 +149,22 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 					@Override
 					public boolean filter(OFMessage m) {
 						OFPacketIn pi = (OFPacketIn) m;
-						if ( pi.getData() == null || pi.getData().length <= 0 ) {
+						byte[] data = pi.getData();
+						
+						if ( data == null || data.length <= 0 ) {
 							return false;
 						}
+						
+						if ( data[12] == (byte)0x86 && data[13] == (byte)0xdd ) {
+							// ethertype == IPv6
+							return false;
+						}
+						
+						if ( data[12] == (byte)0x00 && data[13] == (byte)0x01 ) {
+							// ethertype == 0001 (mininet internal?)
+							return false;
+						}
+									
 						return true;		// accept all messages regardless versions.
 					}
 				}
@@ -208,25 +238,25 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 		}
 
 		// Extract source entity information
-		Entity srcEntity = null;
-		if ( pi.isInputPortSupported() ) {
-			srcEntity = getSourceEntityFromPacket(eth, sw.getId(), pi.getInputPort().get());
-		} else {
-			OFOxm oxm = pi.getMatch().getOxmFromIndex(OFOxmMatchFields.OFB_IN_PORT);
-			if ( oxm == null ) {
-				Logger.debug("Packet-in does not have oxm object for OFB_IN_PORT");
-			}
-			int inputPort = ByteBuffer.wrap(oxm.getData()).getInt();
-			srcEntity = getSourceEntityFromPacket(eth, sw.getId(), inputPort);
-		}
+		Entity srcEntity = getSourceEntityFromPacket(eth, sw, getInputPort(pi));
 		if (srcEntity == null)
-			return false;
+			return true;
 
 		// Learn/lookup device information
 		Device srcDevice = devices.learnDeviceByEntity(srcEntity);
 		if (srcDevice == null)
-			return false;
-
+			return true;
+		
+//		if ( Main.debug ) {
+//			byte[] srcMac = eth.getSourceMACAddress();
+//			byte[] dstMac = eth.getDestinationMACAddress();
+//			short etype = eth.getEtherType();
+//			System.out.printf("%d - src: %02x:%02x:%02x:%02x:%02x:%02x dst: %02x:%02x:%02x:%02x:%02x:%02x %04x\n", 
+//					sw.getId(),
+//					srcMac[0],srcMac[1],srcMac[2],srcMac[3],srcMac[4],srcMac[5], 
+//					dstMac[0],dstMac[1],dstMac[2],dstMac[3],dstMac[4],dstMac[5], etype);
+//		}
+		
 		// Store the source device in the context
 		cntx.put(MessageContext.SRC_DEVICE, srcDevice);
 
@@ -258,7 +288,9 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 	 * 
 	 * @return the entity from the packet
 	 */
-	private Entity getSourceEntityFromPacket(Ethernet eth, long swdpid, int ofPort) {
+	private Entity getSourceEntityFromPacket(Ethernet eth, IOFSwitch sw, int ofPort) {
+		long swdpid = sw.getId();
+		
 		byte[] dlAddrArr = eth.getSourceMACAddress();
 		long dlAddr = Ethernet.toLong(dlAddrArr);
 

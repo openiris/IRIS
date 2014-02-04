@@ -27,7 +27,7 @@ public class Main {
 	/**
 	 * if this value is set to true, debug mode is enabled. 
 	 */
-	public static boolean debug = false;
+	public static boolean debug = true;
 	
 	/**
 	 * This is a function to parse command line options. 

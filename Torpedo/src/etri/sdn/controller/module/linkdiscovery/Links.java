@@ -359,7 +359,8 @@ public class Links extends OFModel {
 	 * return the name of this Model.
 	 */
 	public String toString() {
-		return "Links";
+//		return "Links";
+		return this.getStringRepresentation();
 	}
 	
 	/**

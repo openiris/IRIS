@@ -22,9 +22,10 @@ import org.openflow.protocol.factory.OFMessageFactory;
 import org.openflow.protocol.interfaces.OFAction;
 import org.openflow.protocol.interfaces.OFActionOutput;
 import org.openflow.protocol.interfaces.OFMessageType;
+import org.openflow.protocol.interfaces.OFOxm;
+import org.openflow.protocol.interfaces.OFOxmMatchFields;
 import org.openflow.protocol.interfaces.OFPacketIn;
 import org.openflow.protocol.interfaces.OFPacketOut;
-import org.openflow.protocol.interfaces.OFPortConfig;
 import org.openflow.protocol.interfaces.OFPortDesc;
 import org.openflow.protocol.interfaces.OFPortReason;
 import org.openflow.protocol.interfaces.OFPortState;
@@ -186,6 +187,23 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		// does nothing.
 	}
 	
+	protected int getInputPort(OFPacketIn pi) {
+		if ( pi == null ) {
+			throw new AssertionError("pi cannot refer null");
+		}
+		if ( pi.isInputPortSupported() ) {
+			return pi.getInputPort().get();
+		}
+		else {
+			OFOxm oxm = pi.getMatch().getOxmFromIndex(OFOxmMatchFields.OFB_IN_PORT);
+			if ( oxm == null ) {
+				Logger.debug("Packet-in does not have oxm object for OFB_IN_PORT");
+				throw new AssertionError("pi cannot refer null");
+			}
+			return ByteBuffer.wrap(oxm.getData()).getInt();
+		}
+	}
+	
 	/**
 	 * Initialize this module to receive 
 	 * 
@@ -328,28 +346,6 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	public void sendDiscoveryMessage(long switchId, short destinationPort, boolean isStandard, boolean isReverse) {
 		// this internally calls private member function (relay).
 		sendDiscoveryMessage(this.controller.getSwitch(switchId), destinationPort, isStandard, isReverse);
-	}
-
-	/**
-	 * Find out if the port is enabled. 
-	 * if the port or link is down, false is returned. 
-	 * Otherwise, true is returned. 
-	 * 
-	 * @param port	OFPhysicalPort object
-	 * @return		true(enabled), false(disabled)
-	 */
-//	private static boolean portEnabled(OFPhysicalPort port) {
-	private static boolean portEnabled(OFPortDesc port) {
-		if (port == null)
-			return false;
-		if (port.getConfig().contains(OFPortConfig.PORT_DOWN))
-			return false;
-		if (port.getState().contains(OFPortState.LINK_DOWN))
-			return false;
-		// Port STP state doesn't work with multiple VLANs, so ignore it for now
-		// if ((port.getState() & OFPortState.STP_MASK.getValue()) == OFPortState.STP_BLOCK.getValue())
-		//    return false;
-		return true;
 	}
 
 	/**
@@ -660,7 +656,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 			return true;
 		}
 
-		if (port == OFPort.LOCAL.get())
+		if (port == OFPort.CONTROLLER.get() || port == OFPort.LOCAL.get())
 			return true;
 
 		OFPortDesc ofpPort = protocol.getPort(sw, port);
@@ -715,7 +711,6 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		Ethernet ethernet;
 		if (isStandard) {
 			ethernet = new Ethernet()
-//			.setSourceMACAddress(ofpPort.getHardwareAddress())
 			.setSourceMACAddress(ofpPort.getHwAddr())
 			.setDestinationMACAddress(LLDP_STANDARD_DST_MAC_STRING)
 			.setEtherType(Ethernet.TYPE_LLDP);
@@ -725,7 +720,6 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 			bsn.setPayload(lldp);
 
 			ethernet = new Ethernet()
-//			.setSourceMACAddress(ofpPort.getHardwareAddress())
 			.setSourceMACAddress(ofpPort.getHwAddr())
 			.setDestinationMACAddress(LLDP_BSN_DST_MAC_STRING)
 			.setEtherType(Ethernet.TYPE_BSN);
@@ -762,11 +756,6 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 			return false;
 		}
 
-//		if ( sw.getEnabledPorts() != null) {
-//			for (Short p : sw.getEnabledPortNumbers()) {
-//				processNewPort(sw, p);
-//			}
-//		}
 		if ( protocol.getEnabledPorts(sw) != null ) {
 			for ( Integer p : protocol.getEnabledPortNumbers(sw) ) {
 				processNewPort(sw, p);
@@ -971,32 +960,32 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 			}
 		}
 
-		if (remoteSwitch == null) {
+		if (remoteSwitch == null || remoteSwitch == sw ) {
 			// process no further
 			return false;
 		}
 
-//		if (!remoteSwitch.portEnabled(remotePort)) {
 		if ( !protocol.portEnabled(remoteSwitch, remotePort) ) {
 			// process no further
 			return false;
 		}
+		
+		short inputPort = (short) getInputPort(pi);
 
-//		if (!sw.portEnabled(pi.getInPort())) {
-		if ( !protocol.portEnabled(sw, (short) pi.getInputPort().get())) {
+		if ( !protocol.portEnabled(sw, inputPort) ) {
 			// process no further
 			return false;
 		}
-
+		
 		Link lt = this.links.addOrUpdateLink(
 				remoteSwitch.getId(), 				// remote switch id
 				remotePort,							// remote port number
 //				remoteSwitch.getPort(remotePort), 	// remote physical port
 				protocol.getPort(remoteSwitch, remotePort),
 				sw.getId(), 						// local switch id
-				(short) pi.getInputPort().get(),	// remote port number
+				inputPort,							// remote port number
 //				sw.getPort(pi.getInPort()),			// local physical port
-				protocol.getPort(sw, (short) pi.getInputPort().get()),
+				protocol.getPort(sw, inputPort),
 				isStandard,
 				isReverse
 		);
@@ -1047,14 +1036,23 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 
 //		short portnum = ps.getDesc().getPortNumber();
 		int portnum = ps.getDesc().getPort().get();
-		NodePortTuple npt = new NodePortTuple(sw.getId(), portnum);
+		
+		NodePortTuple npt = null;
+		try {
+			npt = new NodePortTuple(sw.getId(), portnum);
+		} catch ( RuntimeException e ) {
+			// Features reply has not yet been set. 
+			return false;
+		}
+		
 		boolean linkDeleted  = false;
 		boolean linkInfoChanged = false;
 
 		// if ps is a delete, or a modify where the port is down or
 		// configured down
 		if (ps.getReason() == OFPortReason.DELETE ||
-				(ps.getReason() == OFPortReason.MODIFY && !portEnabled((OFPortDesc) ps.getDesc()))) {
+				(ps.getReason() == OFPortReason.MODIFY && 
+				!protocol.portEnabled((OFPortDesc) ps.getDesc()))) {
 			// Reason: Port Status Changed
 			this.links.deleteLinksOnPort( npt );
 

@@ -32,7 +32,6 @@ import org.openflow.protocol.interfaces.OFActionOutput;
 import org.openflow.protocol.interfaces.OFFlowMod;
 import org.openflow.protocol.interfaces.OFFlowModCommand;
 import org.openflow.protocol.interfaces.OFInstruction;
-import org.openflow.protocol.interfaces.OFInstructionApplyActions;
 import org.openflow.protocol.interfaces.OFMatch;
 import org.openflow.protocol.interfaces.OFMessageType;
 import org.openflow.protocol.interfaces.OFPacketIn;
@@ -85,6 +84,10 @@ public class Forwarding extends ForwardingBase {
 			new OFMFilter() {
 				@Override
 				public boolean filter(OFMessage m) {
+					OFPacketIn pi = (OFPacketIn) m;
+					if ( pi.getData() == null || pi.getData().length <= 0 ) {
+						return false;
+					}
 					return true;
 				}
 			}
@@ -133,7 +136,7 @@ public class Forwarding extends ForwardingBase {
 				return true;
 			}
 		} else {
-			Logger.stdout("No decision was made for PacketIn=" + pi + " forwarding");
+//			Logger.stdout("No decision was made for PacketIn=" + pi + " forwarding");
 
 			if (eth.isBroadcast() || eth.isMulticast()) {
 				// For now we treat multicast as broadcast
@@ -167,54 +170,25 @@ public class Forwarding extends ForwardingBase {
 		// Create flow-mod based on packet-in and src-switch
 		OFFlowMod fm = OFMessageFactory.createFlowMod(pi.getVersion());
 		
+		// Drop
 		if ( fm.isInstructionsSupported() ) {
-			//TODO :page23(action drop), 26(empty action list drops packet.)
-//			OFInstructionClearActions instruction = OFMessageFactory.createInstructionClearActions(pi.getVersion());
-			OFInstructionApplyActions instruction = OFMessageFactory.createInstructionApplyActions(pi.getVersion());
-			List<OFInstruction> instructions = new ArrayList<OFInstruction>();
-			instruction.setActions(Collections.<OFAction>emptyList());		// drop
-			instruction.setLength(instruction.computeLength());
-			instructions.clear();
-			instructions.add(instruction);
-
-			long cookie = AppCookie.makeCookie(FORWARDING_APP_ID, 0);
-			
-//			fm.setCookie(cookie)
-//			.setHardTimeout((short) 0)
-//			.setIdleTimeout((short) 5)
-//			.setBufferId(0xffffffff /* OFP_NO_BUFFER */)
-//			.setMatch(match)
-//			.setInstructions(instructions);
-//			fm.setLength(fm.computeLength());
-			
-//				setActions			//TODO: field check
-//				setCookieMask
-//				setOutPort
-//				setFlags
-			
-			fm.setTableId((byte) 0x00)
-			.setCookie(cookie)
-			.setCommand(OFFlowModCommand.ADD)
-			.setHardTimeout((short) 0)
-			.setIdleTimeout((short) 5)
-			.setPriority((short) 100)		//TODO: priority value
-			.setBufferId(0xffffffff /* OFP_NO_BUFFER */)
-			.setOutGroup(0xffffffff /* OFP_NO_BUFFER */)
-			.setMatch(match)
-			.setInstructions(instructions);
-			fm.setLength(fm.computeLength());
+			fm.setCommand(OFFlowModCommand.ADD)
+			.setInstructions(Collections.<OFInstruction>emptyList());
 		} else {
-			
-			long cookie = AppCookie.makeCookie(FORWARDING_APP_ID, 0);
-			
-			fm.setCookie(cookie)
-			.setHardTimeout((short) 0)
-			.setIdleTimeout((short) 5)
-			.setBufferId(0xffffffff /* OFP_NO_BUFFER */)
-			.setMatch(match)
-			.setActions(Collections.<OFAction>emptyList())		// drop
-			.setLength(fm.computeLength());
+			fm.setActions(Collections.<OFAction>emptyList());
 		}
+
+		long cookie = AppCookie.makeCookie(FORWARDING_APP_ID, 0);
+		
+		fm.setCookie(cookie)
+		.setHardTimeout((short) 0)
+		.setIdleTimeout((short) 5)
+		.setBufferId(0xffffffff /* OFP_NO_BUFFER */)
+		.setMatch(match);
+		if ( fm.isTableIdSupported() ) {
+			fm.setTableId((byte) 0x0);
+		}
+		fm.setLength(fm.computeLength());		
 		
 		try {
 			Logger.debug("write drop flow-mod sw={} match={} flow-mod={}", 
@@ -400,7 +374,7 @@ public class Forwarding extends ForwardingBase {
 		
 //		action_output.setPort(OFPort.FLOOD).setMaxLength((short)0).setLength(action_output.computeLength());
 		if (sw.hasAttribute(IOFSwitch.PROP_SUPPORTS_OFPP_FLOOD)) {
-			action_output.setPort(OFPort.FLOOD);	//TODO: modified
+			action_output.setPort(OFPort.FLOOD);
 		} else {
 			action_output.setPort(OFPort.ALL);
 		}
