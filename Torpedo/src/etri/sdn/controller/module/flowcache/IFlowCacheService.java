@@ -1,6 +1,6 @@
 package etri.sdn.controller.module.flowcache;
 
-import org.openflow.protocol.OFMatchWithSwDpid;
+//import org.openflow.protocol.OFMatchWithSwDpid;
 
 import etri.sdn.controller.IService;
 import etri.sdn.controller.MessageContext;

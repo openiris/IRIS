@@ -1,5 +1,6 @@
 package etri.sdn.controller.module.devicemanager;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -12,8 +13,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.OFPacketIn;
-import org.openflow.protocol.OFType;
+import org.openflow.protocol.interfaces.OFMessageType;
+import org.openflow.protocol.interfaces.OFOxm;
+import org.openflow.protocol.interfaces.OFOxmMatchFields;
+import org.openflow.protocol.interfaces.OFPacketIn;
 
 import etri.sdn.controller.IInfoProvider;
 import etri.sdn.controller.IOFTask;
@@ -29,10 +32,8 @@ import etri.sdn.controller.module.topologymanager.ITopologyService;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.ARP;
-import etri.sdn.controller.protocol.packet.DHCP;
 import etri.sdn.controller.protocol.packet.Ethernet;
 import etri.sdn.controller.protocol.packet.IPv4;
-import etri.sdn.controller.protocol.packet.UDP;
 import etri.sdn.controller.util.Logger;
 
 /**
@@ -59,6 +60,9 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 
 	private ITopologyService topology;
 	private IEntityClassifierService entityClassifier;
+	
+//	@SuppressWarnings("unused")
+//	private VersionAdaptor10 version_adaptor_10;
 	
 	/** 
 	 * All the devices that you want.
@@ -103,6 +107,23 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 			return ofmDeviceManagerCache;
 		}
 	}
+	
+	protected int getInputPort(OFPacketIn pi) {
+		if ( pi == null ) {
+			throw new AssertionError("pi cannot refer null");
+		}
+		if ( pi.isInputPortSupported() ) {
+			return pi.getInputPort().get();
+		}
+		else {
+			OFOxm oxm = pi.getMatch().getOxmFromIndex(OFOxmMatchFields.OFB_IN_PORT);
+			if ( oxm == null ) {
+				Logger.debug("Packet-in does not have oxm object for OFB_IN_PORT");
+				throw new AssertionError("pi cannot refer null");
+			}
+			return ByteBuffer.wrap(oxm.getData()).getInt();
+		}
+	}
 
 	/**
 	 * Initializes this module.
@@ -116,16 +137,35 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 		this.entityClassifier = getEntityClassifierServiceRef();
 		this.devices = Devices.getInstance(topology, entityClassifier);
 		
+//		this.version_adaptor_10 = (VersionAdaptor10) getController().getVersionAdaptor((byte)0x01);
+		
 		// 'classes' now has an entry for the class IPv4,
 		// and this will create an entry within 'secondaryIndexMap' of ClassIndices object.
 //		addIndex(true, EnumSet.of(DeviceField.IPV4));
 
 		registerFilter(
-				OFType.PACKET_IN,
+				OFMessageType.PACKET_IN,
 				new OFMFilter() {
 					@Override
 					public boolean filter(OFMessage m) {
-						return true;
+						OFPacketIn pi = (OFPacketIn) m;
+						byte[] data = pi.getData();
+						
+						if ( data == null || data.length <= 0 ) {
+							return false;
+						}
+						
+						if ( data[12] == (byte)0x86 && data[13] == (byte)0xdd ) {
+							// ethertype == IPv6
+							return false;
+						}
+						
+						if ( data[12] == (byte)0x00 && data[13] == (byte)0x01 ) {
+							// ethertype == 0001 (mininet internal?)
+							return false;
+						}
+									
+						return true;		// accept all messages regardless versions.
 					}
 				}
 		);
@@ -150,7 +190,6 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 		if ( Main.debug ) {
 			this.controller.scheduleTask(
 					new IOFTask() {
-	
 						@Override
 						public boolean execute() {
 							Logger.debug(devices.getHostDebugInfo());
@@ -194,20 +233,30 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 		if ( eth == null ) {
 			// parse Ethernet header and put into the context
 			eth = new Ethernet();
-			eth.deserialize(pi.getPacketData(), 0, pi.getPacketData().length);
+			eth.deserialize(pi.getData(), 0, pi.getData().length);
 			cntx.put(MessageContext.ETHER_PAYLOAD, eth);
 		}
 
 		// Extract source entity information
-		Entity srcEntity = getSourceEntityFromPacket(eth, sw.getId(), pi.getInPort());
+		Entity srcEntity = getSourceEntityFromPacket(eth, sw, getInputPort(pi));
 		if (srcEntity == null)
-			return false;
+			return true;
 
 		// Learn/lookup device information
 		Device srcDevice = devices.learnDeviceByEntity(srcEntity);
 		if (srcDevice == null)
-			return false;
-
+			return true;
+		
+//		if ( Main.debug ) {
+//			byte[] srcMac = eth.getSourceMACAddress();
+//			byte[] dstMac = eth.getDestinationMACAddress();
+//			short etype = eth.getEtherType();
+//			System.out.printf("%d - src: %02x:%02x:%02x:%02x:%02x:%02x dst: %02x:%02x:%02x:%02x:%02x:%02x %04x\n", 
+//					sw.getId(),
+//					srcMac[0],srcMac[1],srcMac[2],srcMac[3],srcMac[4],srcMac[5], 
+//					dstMac[0],dstMac[1],dstMac[2],dstMac[3],dstMac[4],dstMac[5], etype);
+//		}
+		
 		// Store the source device in the context
 		cntx.put(MessageContext.SRC_DEVICE, srcDevice);
 
@@ -235,13 +284,13 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 	 * 
 	 * @param eth the packet to parse
 	 * @param swdpid the switch on which the packet arrived
-	 * @param port the original packetin
+	 * @param ofPort the original packetin
 	 * 
 	 * @return the entity from the packet
 	 */
-	private Entity getSourceEntityFromPacket(Ethernet eth,
-			long swdpid,
-			int port) {
+	private Entity getSourceEntityFromPacket(Ethernet eth, IOFSwitch sw, int ofPort) {
+		long swdpid = sw.getId();
+		
 		byte[] dlAddrArr = eth.getSourceMACAddress();
 		long dlAddr = Ethernet.toLong(dlAddrArr);
 
@@ -255,7 +304,7 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 				((vlan >= 0) ? vlan : null),
 				((nwSrc != 0) ? nwSrc : null),
 				swdpid,
-				port,
+				ofPort,
 				new Date());
 	}
 
@@ -276,6 +325,7 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 			}
 		} else if (eth.getPayload() instanceof IPv4) {
 			IPv4 ipv4 = (IPv4) eth.getPayload();
+			/*
 			if (ipv4.getPayload() instanceof UDP) {
 				UDP udp = (UDP)ipv4.getPayload();
 				if (udp.getPayload() instanceof DHCP) {
@@ -285,6 +335,10 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 					}
 				}
 			}
+ 			*/
+			
+			// bjlee - 2013.10.11
+			return ipv4.getSourceAddress();
 		}
 		return 0;
 	}
@@ -452,17 +506,17 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 		return "OFMDeviceManager";
 	}
 
-	@Override
-	public boolean isCallbackOrderingPrereq(OFType type, String name) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isCallbackOrderingPostreq(OFType type, String name) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+//	@Override
+//	public boolean isCallbackOrderingPrereq(OFType type, String name) {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
+//
+//	@Override
+//	public boolean isCallbackOrderingPostreq(OFType type, String name) {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
 
 	@Override
 	public etri.sdn.controller.IListener.Command reconcileFlows(

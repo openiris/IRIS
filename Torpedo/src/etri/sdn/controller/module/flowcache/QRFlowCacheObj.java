@@ -1,8 +1,6 @@
 package etri.sdn.controller.module.flowcache;
 
 
-import org.openflow.protocol.OFMatchWithSwDpid;
-
 /**
  * Used in BigFlowCacheQueryResp as query result.
  * Used to return one flow when queried by one of the big flow cache APIs.

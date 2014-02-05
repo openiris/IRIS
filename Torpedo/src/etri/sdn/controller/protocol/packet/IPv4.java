@@ -492,6 +492,13 @@ public class IPv4 extends BasePacket {
                 (byte)ipAddress};
     }
 
+    public static byte[] toPortBytes(int port) {
+    	return new byte[] {
+                (byte)(port >>> 24),
+                (byte)(port >>> 16),
+                (byte)(port >>> 8),
+                (byte)port};
+    }
     /* (non-Javadoc)
      * @see java.lang.Object#hashCode()
      */

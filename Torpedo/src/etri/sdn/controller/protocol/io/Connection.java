@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 import org.openflow.io.OFMessageAsyncStream;
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.factory.BasicFactory;
+//import org.openflow.protocol.factory.BasicFactory;
 
 public final class Connection {
 	public enum STATUS { CONNECTED, RUNNING, CLOSED };
@@ -18,7 +18,7 @@ public final class Connection {
 	private SocketChannel client;
 	private IOFSwitch sw;
 	private Set<IOFHandler> handlers = new ConcurrentSkipListSet<IOFHandler>();
-	private BasicFactory factory;
+//	private BasicFactory factory;
 	private STATUS client_status;
 	private OFMessageAsyncStream stream;
 	private int seq;
@@ -26,10 +26,10 @@ public final class Connection {
 	public Connection(SocketChannel client) {
 		this.client = client;
 		this.sw = null;
-		this.factory = new BasicFactory();
+//		this.factory = new BasicFactory();
 		this.client_status = STATUS.CONNECTED;
 		try {
-			this.stream = new OFMessageAsyncStream( client, factory );
+			this.stream = new OFMessageAsyncStream( client /*, VersionAdaptor.getMessageFactory() */ );
 		} catch (IOException e) {
 			this.stream = null;
 		}
@@ -65,9 +65,9 @@ public final class Connection {
 		this.handlers.addAll( handlers );
 	}
 
-	public BasicFactory getFactory() {
-		return factory;
-	}
+//	public BasicFactory getFactory() {
+//		return factory;
+//	}
 
 	public STATUS getStatus() {
 		return client_status;
@@ -102,8 +102,17 @@ public final class Connection {
 	}
 
 	public synchronized boolean write(OFMessage fm) {
+		if ( fm == null ) return true;
+		
+		if ( fm.getXid() == 0 ) {
+			fm.setXid(sw.getNextTransactionId());
+		}
+		
 		try {
-			getStream().write(fm);
+			getStream().write( 
+					fm.setLength( fm.computeLength() ) 
+			);
+//			System.err.println("writing >>>>>" + fm.toString());
 		} catch (IOException e) {
 			return false;
 		}

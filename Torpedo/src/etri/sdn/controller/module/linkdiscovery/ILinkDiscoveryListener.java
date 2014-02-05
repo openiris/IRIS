@@ -68,9 +68,9 @@ public interface ILinkDiscoveryListener {
 	 */
 	public class LDUpdate {
 		protected long src;
-		protected short srcPort;
+		protected int srcPort;
 		protected long dst;
-		protected short dstPort;
+		protected int dstPort;
 		protected SwitchType srcType;
 		protected LinkType type;
 		protected UpdateOperation operation;
@@ -85,10 +85,10 @@ public interface ILinkDiscoveryListener {
 		 * @param type		the type of link ({@link ILinkDiscovery.LinkType})
 		 * @param operation	the type of link update operation ({@link UpdateOperation})
 		 */
-		public LDUpdate(long src, short srcPort,
-				long dst, short dstPort,
-				LinkType type,
-				UpdateOperation operation) {
+		public LDUpdate(long src, int srcPort,
+						long dst, int dstPort,
+						LinkType type,
+						UpdateOperation operation) {
 			this.src = src;
 			this.srcPort = srcPort;
 			this.dst = dst;
@@ -134,7 +134,7 @@ public interface ILinkDiscoveryListener {
 		 * @param port		port number
 		 * @param operation	{@link UpdateOperation}
 		 */
-		public LDUpdate(long sw, short port, UpdateOperation operation) {
+		public LDUpdate(long sw, int port, UpdateOperation operation) {
 			this.src = sw;
 			this.srcPort = port;
 			this.operation = operation;
@@ -144,7 +144,7 @@ public interface ILinkDiscoveryListener {
 			return src;
 		}
 
-		public short getSrcPort() {
+		public int getSrcPort() {
 			return srcPort;
 		}
 
@@ -152,7 +152,7 @@ public interface ILinkDiscoveryListener {
 			return dst;
 		}
 
-		public short getDstPort() {
+		public int getDstPort() {
 			return dstPort;
 		}
 

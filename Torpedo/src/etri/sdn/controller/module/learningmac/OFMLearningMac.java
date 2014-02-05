@@ -1,27 +1,39 @@
 package etri.sdn.controller.module.learningmac;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.openflow.protocol.OFFlowMod;
-import org.openflow.protocol.OFMatch;
+import org.openflow.protocol.OFBFlowWildcard;
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.OFPacketIn;
-import org.openflow.protocol.OFPacketOut;
 import org.openflow.protocol.OFPort;
-import org.openflow.protocol.OFType;
-import org.openflow.protocol.action.OFAction;
-import org.openflow.protocol.action.OFActionOutput;
+import org.openflow.protocol.OFMatchUtil;
+import org.openflow.protocol.factory.OFMessageFactory;
+import org.openflow.protocol.interfaces.OFAction;
+import org.openflow.protocol.interfaces.OFFlowModFlags;
+import org.openflow.protocol.interfaces.OFInstruction;
+import org.openflow.protocol.interfaces.OFMessageType;
+import org.openflow.protocol.interfaces.OFActionOutput;
+import org.openflow.protocol.interfaces.OFFlowMod;
+import org.openflow.protocol.interfaces.OFMatch;
+import org.openflow.protocol.interfaces.OFOxm;
+import org.openflow.protocol.interfaces.OFOxmMatchFields;
+import org.openflow.protocol.interfaces.OFPacketIn;
+import org.openflow.protocol.interfaces.OFPacketOut;
+import org.openflow.protocol.interfaces.OFFlowModCommand;
+import org.openflow.protocol.interfaces.OFInstructionApplyActions;
 import org.openflow.util.LRULinkedHashMap;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
+import etri.sdn.controller.protocol.OFProtocol;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.Ethernet;
@@ -31,7 +43,7 @@ import etri.sdn.controller.util.Logger;
  * MAC Learning Module. 
  * Modified the original LearningMac class of Floodlight.
  * 
- * @author bjlee
+ * @author labry
  *
  */
 public final class OFMLearningMac extends OFModule {
@@ -40,7 +52,9 @@ public final class OFMLearningMac extends OFModule {
 	 * Table to save learning result.
 	 */
 	private Map<IOFSwitch, Map<MacVlanPair, Short>> macVlanToSwitchPortMap =
-		new ConcurrentHashMap<IOFSwitch, Map<MacVlanPair, Short>>();
+			new ConcurrentHashMap<IOFSwitch, Map<MacVlanPair, Short>>();
+
+	private OFProtocol protocol;
 
 	// flow-mod - for use in the cookie
 	private static final int LEARNING_SWITCH_APP_ID = 1;
@@ -78,10 +92,10 @@ public final class OFMLearningMac extends OFModule {
 			// for our purposes that is equivalent to the default VLAN ID 0
 			vlan = 0;
 		}
-		
+
 		if (swMap == null) {
 			// May be accessed by REST API so we need to make it thread safe
-//			swMap = new ConcurrentHashMap<MacVlanPair,Short>();
+			//			swMap = new ConcurrentHashMap<MacVlanPair,Short>();
 			swMap = Collections.synchronizedMap(new LRULinkedHashMap<MacVlanPair,Short>(MAX_MACS_PER_SWITCH));
 			macVlanToSwitchPortMap.put(sw, swMap);
 		}
@@ -98,7 +112,7 @@ public final class OFMLearningMac extends OFModule {
 		if (vlan == (short) 0xffff) {
 			vlan = 0;
 		}
-		
+
 		Map<MacVlanPair,Short> swMap = macVlanToSwitchPortMap.get(sw);
 		if (swMap != null)
 			swMap.remove(new MacVlanPair(mac, vlan, sw));
@@ -115,7 +129,7 @@ public final class OFMLearningMac extends OFModule {
 		if (vlan == (short) 0xffff) {
 			vlan = 0;
 		}
-		
+
 		Map<MacVlanPair,Short> swMap = macVlanToSwitchPortMap.get(sw);
 		if (swMap != null)
 			return swMap.get(new MacVlanPair(mac, vlan, sw));
@@ -158,57 +172,60 @@ public final class OFMLearningMac extends OFModule {
 	 * @param match The OFMatch structure to write.
 	 * @param outPort The switch port to output it to.
 	 */
-	private void writeFlowMod(IOFSwitch sw, short command, int bufferId,
+	private void writeFlowMod(IOFSwitch sw, OFFlowModCommand command, int bufferId,
 			OFMatch match, short outPort, List<OFMessage> out) {
-		// from openflow 1.0 spec - need to set these on a struct ofp_flow_mod:
-		// struct ofp_flow_mod {
-		//    struct ofp_header header;
-		//    struct ofp_match match; /* Fields to match */
-		//    uint64_t cookie; /* Opaque controller-issued identifier. */
-		//
-		//    /* Flow actions. */
-		//    uint16_t command; /* One of OFPFC_*. */
-		//    uint16_t idle_timeout; /* Idle time before discarding (seconds). */
-		//    uint16_t hard_timeout; /* Max time before discarding (seconds). */
-		//    uint16_t priority; /* Priority level of flow entry. */
-		//    uint32_t buffer_id; /* Buffered packet to apply to (or -1).
-		//                           Not meaningful for OFPFC_DELETE*. */
-		//    uint16_t out_port; /* For OFPFC_DELETE* commands, require
-		//                          matching entries to include this as an
-		//                          output port. A value of OFPP_NONE
-		//                          indicates no restriction. */
-		//    uint16_t flags; /* One of OFPFF_*. */
-		//    struct ofp_action_header actions[0]; /* The action length is inferred
-		//                                            from the length field in the
-		//                                            header. */
-		//    };
 
-		OFFlowMod flowMod = (OFFlowMod) sw.getConnection().getFactory().getMessage(OFType.FLOW_MOD);
-		flowMod.setMatch(match);
-		flowMod.setCookie(LEARNING_SWITCH_COOKIE);
-		flowMod.setCommand(command);
-		flowMod.setIdleTimeout(IDLE_TIMEOUT_DEFAULT);
-		flowMod.setHardTimeout(HARD_TIMEOUT_DEFAULT);
-		flowMod.setPriority(PRIORITY_DEFAULT);
-		flowMod.setBufferId(bufferId);
-		flowMod.setOutPort((command == OFFlowMod.OFPFC_DELETE) ? outPort : OFPort.OFPP_NONE.getValue());
-		flowMod.setFlags((command == OFFlowMod.OFPFC_DELETE) ? 0 : (short) (1 << 0)); // OFPFF_SEND_FLOW_REM
+		OFFlowMod flowMod = OFMessageFactory.createFlowMod(sw.getVersion());
 
-		// set the ofp_action_header/out actions:
-		// from the openflow 1.0 spec: need to set these on a struct ofp_action_output:
-		// uint16_t type; /* OFPAT_OUTPUT. */
-		// uint16_t len; /* Length is 8. */
-		// uint16_t port; /* Output port. */
-		// uint16_t max_len; /* Max length to send to controller. */
-		// type/len are set because it is OFActionOutput,
-		// and port, max_len are arguments to this constructor
-		flowMod.setActions(Arrays.asList((OFAction) new OFActionOutput(outPort, (short) 0xffff)));
-		flowMod.setLength((short) (OFFlowMod.MINIMUM_LENGTH + OFActionOutput.MINIMUM_LENGTH));
+		if(flowMod.isTableIdSupported()) {
+			OFInstructionApplyActions instruction = OFMessageFactory.createInstructionApplyActions(sw.getVersion());
+			List<OFInstruction> instructions = new LinkedList<OFInstruction>();
+			OFActionOutput action = OFMessageFactory.createActionOutput(sw.getVersion());
+			List<OFAction> actions = new LinkedList<OFAction>();
 
-		// TODO: support for counter store.
-		//		counterStore.updatePktOutFMCounterStore(sw, flowMod);
+			action.setPort(OFPort.of(outPort));
+			action.setMaxLength((short) 0xffff);
+			action.setLength(action.computeLength());
+			actions.add(action);
 
-		// and write it out
+			instruction.setActions(actions);
+			instruction.setLength(instruction.computeLength());			//labry added
+			
+			instructions.add(instruction);
+
+			flowMod.setTableId((byte) 0x0)								//the table which the flow entry should be inserted
+			.setCommand(command)
+			.setIdleTimeout(IDLE_TIMEOUT_DEFAULT)
+			.setHardTimeout(HARD_TIMEOUT_DEFAULT)						//permanent if idle and hard timeout are zero
+			.setPriority(PRIORITY_DEFAULT)
+			.setBufferId(bufferId)										//refers to a packet buffered at the switch and sent to the controller
+//			.setOutGroup(0x18)										//OFPP_ANY
+			.setOutPort((command == OFFlowModCommand.DELETE) ? OFPort.of(outPort) : OFPort.NONE)
+			.setMatch(match)
+			.setInstructions(instructions);
+			if ( command != OFFlowModCommand.DELETE )
+				flowMod.setFlags(OFFlowModFlags.SEND_FLOW_REM);					//send flow removed message when flow expires or is deleted
+			flowMod.setLength(flowMod.computeLength());
+
+		} else {
+			flowMod.setMatch(match);
+			flowMod.setCookie(LEARNING_SWITCH_COOKIE);
+			flowMod.setCommand(command);
+			flowMod.setIdleTimeout(IDLE_TIMEOUT_DEFAULT);
+			flowMod.setHardTimeout(HARD_TIMEOUT_DEFAULT);
+			flowMod.setPriority(PRIORITY_DEFAULT);
+			flowMod.setBufferId(bufferId);
+			//		flowMod.setOutPort(OFPort.o.of(command == OFFlowModCommand.DELETE ? outPort : OFPortNo.NONE);
+			flowMod.setOutPort(command == OFFlowModCommand.DELETE ? OFPort.of(outPort) : OFPort.NONE);
+			flowMod.setFlagsWire((command == OFFlowModCommand.DELETE ? 0 : (short) (1 << 0))); // OFPFF_SEND_FLOW_REM	
+
+			OFActionOutput action_output = OFMessageFactory.createActionOutput(sw.getVersion());
+			action_output.setPort(OFPort.of(outPort)).setMaxLength((short)0xffff).setLength(action_output.getLength());
+			
+			flowMod.setActions(Arrays.asList( (OFAction)action_output) );
+			flowMod.setLength( flowMod.computeLength() );
+		}
+
 		out.add(flowMod);
 	}
 
@@ -221,40 +238,34 @@ public final class OFMLearningMac extends OFModule {
 	 */
 	private void writePacketOutForPacketIn(IOFSwitch sw, 
 			OFPacketIn packetInMessage, 
-			short egressPort,
+			OFPort egressPort,
+			short getInputPort,
 			List<OFMessage> out) {
-		// from openflow 1.0 spec - need to set these on a struct ofp_packet_out:
-		// uint32_t buffer_id; /* ID assigned by datapath (-1 if none). */
-		// uint16_t in_port; /* Packet's input port (OFPP_NONE if none). */
-		// uint16_t actions_len; /* Size of action array in bytes. */
-		// struct ofp_action_header actions[0]; /* Actions. */
-		/* uint8_t data[0]; */ /* Packet data. The length is inferred
-                                  from the length field in the header.
-                                  (Only meaningful if buffer_id == -1.) */
 
-		OFPacketOut packetOutMessage = (OFPacketOut) sw.getConnection().getFactory().getMessage(OFType.PACKET_OUT);
-		short packetOutLength = (short)OFPacketOut.MINIMUM_LENGTH; // starting length
+		OFPacketOut packetOutMessage = OFMessageFactory.createPacketOut(sw.getVersion());
 
 		// Set buffer_id, in_port, actions_len
 		packetOutMessage.setBufferId(packetInMessage.getBufferId());
-		packetOutMessage.setInPort(packetInMessage.getInPort());
-		packetOutMessage.setActionsLength((short)OFActionOutput.MINIMUM_LENGTH);
-		packetOutLength += OFActionOutput.MINIMUM_LENGTH;
+		packetOutMessage.setInputPort(OFPort.of(getInputPort));
 
 		// set actions
 		List<OFAction> actions = new ArrayList<OFAction>(1);      
-		actions.add(new OFActionOutput(egressPort, (short) 0));
+		OFActionOutput action_output = OFMessageFactory.createActionOutput(sw.getVersion());
+		action_output.setPort(egressPort).setMaxLength((short)0).setLength(action_output.computeLength());
+		actions.add(action_output);
+		packetOutMessage.setActionsLength( action_output.getLength() );
 		packetOutMessage.setActions(actions);
 
 		// set data - only if buffer_id == -1
-		if (packetInMessage.getBufferId() == OFPacketOut.BUFFER_ID_NONE) {
-			byte[] packetData = packetInMessage.getPacketData();
-			packetOutMessage.setPacketData(packetData); 
-			packetOutLength += (short)packetData.length;
-		}
+		if (packetInMessage.getBufferId() == 0xffffffff /*OFPacketOut.BUFFER_ID_NONE*/) {
+			byte[] packetData = packetInMessage.getData();
+			packetOutMessage.setData(packetData);
+		} 
 
 		// finally, set the total length
-		packetOutMessage.setLength(packetOutLength);              
+		packetOutMessage.setLength(packetOutMessage.computeLength());     
+
+		//		System.err.println("FB PacketOut 3 =======" + packetOutMessage.toString());
 
 		// TODO: counter store support
 		//		counterStore.updatePktOutFMCounterStore(sw, packetOutMessage);
@@ -274,7 +285,7 @@ public final class OFMLearningMac extends OFModule {
 	public boolean handleMessage(Connection conn, MessageContext context, OFMessage msg, List<OFMessage> outgoing) {
 		return processPacketInMessage(conn, context, msg, outgoing);
 	}
-	
+
 	/**
 	 * Handle disconnection to a switch. 
 	 * As this module does not handle the event, this method just return true.
@@ -298,12 +309,12 @@ public final class OFMLearningMac extends OFModule {
 	 * @return
 	 */
 	private boolean processPacketInMessage(Connection conn, MessageContext context, OFMessage msg, List<OFMessage> out) {
-		
+
 		if ( conn.getSwitch() == null ) {
 			Logger.stderr("Connection is not fully handshaked");
 			return true;
 		}
-		
+
 		if ( msg == null ) {
 			// this is critical. 
 			// no further processing of this msg is possible.
@@ -313,29 +324,55 @@ public final class OFMLearningMac extends OFModule {
 		OFPacketIn pi = (OFPacketIn) msg;
 
 		// Read in packet data headers by using OFMatch
-		OFMatch match = new OFMatch();
-		match.loadFromPacket(pi.getPacketData(), pi.getInPort());
-		Long sourceMac = Ethernet.toLong(match.getDataLayerSource());
-		Long destMac = Ethernet.toLong(match.getDataLayerDestination());
-		Short vlan = match.getDataLayerVirtualLan();
+		//		OFMatch match = new OFMatch();
+		//		match.loadFromPacket(pi.getPacketData(), pi.getInPort());
+
+		OFMatch match = null;
+		Long sourceMac = null;
+		Long destMac = null;
+		Integer vlan = null;
+		Integer inputPort = null;
+
+		if ( pi.isInputPortSupported() ) { // is it OF 0x01 ?? 
+			match = (OFMatch) protocol.loadOFMatchFromPacket(conn.getSwitch(), pi.getData(), (short) pi.getInputPort().get());
+			inputPort = pi.getInputPort().get();
+			sourceMac = Ethernet.toLong(match.getDataLayerSource());
+			destMac = Ethernet.toLong(match.getDataLayerDestination());
+			vlan = (int) match.getDataLayerVirtualLan();
+
+		} else {
+			match = pi.getMatch();
+			inputPort = OFMatchUtil.getInt(pi.getMatch(), OFOxmMatchFields.OFB_IN_PORT);
+			sourceMac = OFMatchUtil.getEthAsLong(pi.getMatch(), OFOxmMatchFields.OFB_ETH_SRC);
+			destMac = OFMatchUtil.getEthAsLong(pi.getMatch(), OFOxmMatchFields.OFB_ETH_DST);
+			vlan = OFMatchUtil.getInt(pi.getMatch(), OFOxmMatchFields.OFB_VLAN_VID);
+			if(vlan == null) {
+				vlan = -1;
+			}
+			//System.out.println("match: " + match + "inputPort " + sourceMac +" sourceMac " + destMac + "destMac");
+
+		}
+
+
 		if ((destMac & 0xfffffffffff0L) == 0x0180c2000000L) {
 			return true;
 		}
 		if ((sourceMac & 0x010000000000L) == 0) {
 			// If source MAC is a unicast address, learn the port for this MAC/VLAN
-			this.addToPortMap(conn.getSwitch(), sourceMac, vlan, pi.getInPort());
+			this.addToPortMap(conn.getSwitch(), sourceMac, vlan.shortValue(), inputPort.shortValue());
 		}
 
 		// Now output flow-mod and/or packet
-		Short outPort = getFromPortMap(conn.getSwitch(), destMac, vlan);
+		Short outPort = getFromPortMap(conn.getSwitch(), destMac, vlan.shortValue());
+
 		if (outPort == null) {
 			// If we haven't learned the port for the dest MAC/VLAN, flood it
 			// Don't flood broadcast packets if the broadcast is disabled.
 			// XXX For LearningSwitch this doesn't do much. The sourceMac is removed
 			//     from port map whenever a flow expires, so you would still see
 			//     a lot of floods.
-			this.writePacketOutForPacketIn(conn.getSwitch(), pi, OFPort.OFPP_FLOOD.getValue(), out);
-		} else if (outPort == match.getInputPort()) {
+			this.writePacketOutForPacketIn(conn.getSwitch(), pi, OFPort.FLOOD, inputPort.shortValue(), out);
+		} else if (outPort == inputPort.shortValue()) {
 			// ignore this packet.
 			//            log.trace("ignoring packet that arrived on same port as learned destination:"
 			//                    + " switch {} vlan {} dest MAC {} port {}",
@@ -350,45 +387,165 @@ public final class OFMLearningMac extends OFModule {
 			// its former location does not keep the stale entry alive forever.
 			// FIXME: current HP switches ignore DL_SRC and DL_DST fields, so we have to match on
 			// NW_SRC and NW_DST as well
-			match.setWildcards(
-					((Integer)conn.getSwitch().getAttribute(IOFSwitch.PROP_FASTWILDCARDS)).intValue()
-					& ~OFMatch.OFPFW_IN_PORT
-					& ~OFMatch.OFPFW_DL_VLAN & ~OFMatch.OFPFW_DL_SRC & ~OFMatch.OFPFW_DL_DST
-					& ~OFMatch.OFPFW_NW_SRC_MASK & ~OFMatch.OFPFW_NW_DST_MASK
-			);
-			this.writeFlowMod(conn.getSwitch(), OFFlowMod.OFPFC_ADD, pi.getBufferId(), match, outPort, out);
+
+			if(match.isWildcardsSupported()) {
+				match.setWildcardsWire(
+						((Integer)conn.getSwitch().getAttribute(IOFSwitch.PROP_FASTWILDCARDS)).intValue()
+						& ~OFBFlowWildcard.IN_PORT
+						& ~OFBFlowWildcard.DL_VLAN & ~OFBFlowWildcard.DL_SRC & ~OFBFlowWildcard.DL_DST
+						& ~OFBFlowWildcard.NW_SRC_MASK & ~OFBFlowWildcard.NW_DST_MASK
+						);
+			} else {
+				// How to set wildcards in OF1.3?
+				// does nothing
+			}
+
+			this.writeFlowMod(conn.getSwitch(), OFFlowModCommand.ADD, 
+					pi.getBufferId(), match, outPort, out);
+
 			if (LEARNING_SWITCH_REVERSE_FLOW) {
-				this.writeFlowMod(conn.getSwitch(), OFFlowMod.OFPFC_ADD, -1, match.clone()
-						.setDataLayerSource(match.getDataLayerDestination())
-						.setDataLayerDestination(match.getDataLayerSource())
-						.setNetworkSource(match.getNetworkDestination())
-						.setNetworkDestination(match.getNetworkSource())
-						.setTransportSource(match.getTransportDestination())
-						.setTransportDestination(match.getTransportSource())
-						.setInputPort(outPort),
-						match.getInputPort(),
-						out
-				);
+				OFMatch.Builder builder = OFMessageFactory.createMatchBuilder(conn.getSwitch().getVersion());
+
+				if( match.isDataLayerSourceSupported()) {
+					
+					builder
+					.setDataLayerSource(match.getDataLayerDestination())
+					.setDataLayerDestination(match.getDataLayerSource())
+					.setNetworkSource(match.getNetworkDestination())
+					.setNetworkDestination(match.getNetworkSource())
+					.setTransportSource(match.getTransportDestination())
+					.setTransportDestination(match.getTransportSource())
+					.setInputPort(OFPort.of(outPort));
+					
+					this.writeFlowMod(conn.getSwitch(), OFFlowModCommand.ADD, -1,
+							builder.build(),
+							inputPort.shortValue(),
+							out
+							);
+				} else {
+					// how set to reverse flow in OF1.3
+					OFMatch m = match.dup();
+					
+					List<OFOxm> oxms = m.getOxmFields();
+					OFOxm phyPortOxm = null;
+					OFOxm ethSrcOxm = null;
+					OFOxm ethDstOxm = null;
+					OFOxm ethTypeOxm = null;
+					OFOxm ipSrcOxm = null;
+					OFOxm ipDstOxm = null;
+					OFOxm ipProtoOxm = null;
+					OFOxm tcpSrcOxm = null;
+					OFOxm tcpDstOxm = null;
+					OFOxm udpSrcOxm = null;
+					OFOxm udpDstOxm = null;
+					OFOxm sctpSrcOxm = null;
+					OFOxm sctpDstOxm = null;
+					
+					for ( OFOxm oxm : oxms ) {
+						byte field = oxm.getField();
+						switch ( field ) {
+						case 0: // OFB_IN_PORT
+							oxm.setData(ByteBuffer.allocate(4).putInt(outPort).array());
+							break;
+						case 1:
+							phyPortOxm = oxm;
+							break;
+						case 3: // OFB_ETH_DST
+							ethDstOxm = oxm;
+							break;
+						case 4:	// OFB_ETH_SRC
+							ethSrcOxm = oxm;
+							break;
+						case 5: // OFB_ETH_TYPE
+							ethTypeOxm = oxm;
+							break;
+						case 10: // just ignore
+							ipProtoOxm = oxm;
+							break;
+						case 11: // OFB_IPV4_SRC
+							ipSrcOxm = oxm;
+							break;
+						case 12: // OFB_IPV4_DST
+							ipDstOxm = oxm;
+							break;
+						case 13: // OFB_TCP_SRC
+							tcpSrcOxm = oxm;
+							break;
+						case 14: // OFB_TCP_DST
+							tcpDstOxm = oxm;
+							break;
+						case 15: // OFB_UDP_SRC
+							udpSrcOxm = oxm;
+							break;
+						case 16: // OFB_UDP_DST
+							udpDstOxm = oxm;
+							break;
+						case 17: // OFB_SCTP_SRC
+							sctpSrcOxm = oxm;
+							break;
+						case 18: // OFB_SCTP_DST
+							sctpDstOxm = oxm;
+							break;
+						}
+					}
+					
+					swap(ethSrcOxm, ethDstOxm);
+					swap(ipSrcOxm, ipDstOxm);
+					swap(tcpSrcOxm, tcpDstOxm);
+					swap(udpSrcOxm, udpDstOxm);
+					swap(sctpSrcOxm, sctpDstOxm);
+					
+					
+					this.writeFlowMod(conn.getSwitch(), OFFlowModCommand.ADD, -1,
+							m,
+							inputPort.shortValue(),
+							out
+							);
+				}
 			}
 		}
 		return true;
 	}
 
+	private void swap(OFOxm ethSrcOxm, OFOxm ethDstOxm) {
+		if ( ethSrcOxm != null && ethDstOxm != null ) {
+			byte[] tmp = ethSrcOxm.getData();
+			ethSrcOxm.setData(ethDstOxm.getData());
+			ethDstOxm.setData(tmp);
+		}
+	}
+
+	public final byte[] longToBytes(long eth) {
+	    byte[] ethAddress = new byte[ 6 ];
+
+	    ethAddress[0] = (byte)(eth >>> 40);
+	    ethAddress[1] = (byte)(eth >>> 32);
+	    ethAddress[2] = (byte)(eth >>> 24);
+	    ethAddress[3] = (byte)(eth >>> 16);
+	    ethAddress[4] = (byte)(eth >>>  8);
+	    ethAddress[5] = (byte)(eth >>>  0);
+
+	    return ethAddress;
+	}
+	
 	/**
 	 * Initialize this module. As this module processes all PACKET_IN messages,
 	 * it registers filter to receive those messages.
 	 */
 	@Override
 	protected void initialize() {
+
+		protocol = getController().getProtocol();
+
 		registerFilter(
-				OFType.PACKET_IN,
+				OFMessageType.PACKET_IN,
 				new OFMFilter() {
 					@Override
 					public boolean filter(OFMessage m) {
 						return true;
 					}
 				}
-		);
+				);
 	}
 
 	/**

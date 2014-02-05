@@ -20,44 +20,50 @@ package etri.sdn.controller.module.forwarding;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-import org.openflow.protocol.OFFlowMod;
-import org.openflow.protocol.OFMatch;
+import org.openflow.protocol.OFBFlowWildcard;
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.OFPacketIn;
-import org.openflow.protocol.OFPacketOut;
 import org.openflow.protocol.OFPort;
-import org.openflow.protocol.OFType;
-import org.openflow.protocol.action.OFAction;
-import org.openflow.protocol.action.OFActionOutput;
+import org.openflow.protocol.factory.OFMessageFactory;
+import org.openflow.protocol.interfaces.OFAction;
+import org.openflow.protocol.interfaces.OFActionOutput;
+import org.openflow.protocol.interfaces.OFFlowMod;
+import org.openflow.protocol.interfaces.OFFlowModCommand;
+import org.openflow.protocol.interfaces.OFInstruction;
+import org.openflow.protocol.interfaces.OFMatch;
+import org.openflow.protocol.interfaces.OFMessageType;
+import org.openflow.protocol.interfaces.OFPacketIn;
+import org.openflow.protocol.interfaces.OFPacketOut;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.module.devicemanager.IDevice;
+import etri.sdn.controller.module.devicemanager.IDeviceService;
 import etri.sdn.controller.module.devicemanager.SwitchPort;
 import etri.sdn.controller.module.routing.IRoutingDecision;
+import etri.sdn.controller.module.routing.IRoutingService;
 import etri.sdn.controller.module.routing.Route;
+import etri.sdn.controller.module.topologymanager.ITopologyService;
+import etri.sdn.controller.protocol.OFProtocol;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.Ethernet;
 import etri.sdn.controller.util.AppCookie;
 import etri.sdn.controller.util.Logger;
-import etri.sdn.controller.module.topologymanager.ITopologyService;
-import etri.sdn.controller.module.routing.IRoutingService;
-import etri.sdn.controller.module.devicemanager.IDeviceService;
 
 /**
  * This class implements the forwarding module.
  * This module determines how to handle all PACKET_IN messages
  * according to the routing decision.
  * 
- * <p>Modified the original LearningMac class of Floodlight.
- * 
  * @author jshin
  */
 public class Forwarding extends ForwardingBase {
+	
+	OFProtocol protocol;
 	
 	/**
 	 * Initializes this module. As this module processes all PACKET_IN messages,
@@ -71,12 +77,21 @@ public class Forwarding extends ForwardingBase {
 		this.routingEngine = (IRoutingService) getModule(IRoutingService.class);
 		this.topology = (ITopologyService) getModule(ITopologyService.class);
 		
-		registerFilter(OFType.PACKET_IN, new OFMFilter() {
-			@Override
-			public boolean filter(OFMessage m) {
-				return true;
+		this.protocol = getController().getProtocol();
+		
+		registerFilter(
+			OFMessageType.PACKET_IN, 
+			new OFMFilter() {
+				@Override
+				public boolean filter(OFMessage m) {
+					OFPacketIn pi = (OFPacketIn) m;
+					if ( pi.getData() == null || pi.getData().length <= 0 ) {
+						return false;
+					}
+					return true;
+				}
 			}
-		});
+		);
 	}
 
 	/**
@@ -91,7 +106,7 @@ public class Forwarding extends ForwardingBase {
 		if ( eth == null ) {
 			// parse Ethernet header and put into the context
 			eth = new Ethernet();
-			eth.deserialize(pi.getPacketData(), 0, pi.getPacketData().length);
+			eth.deserialize(pi.getData(), 0, pi.getData().length);
 			cntx.put(MessageContext.ETHER_PAYLOAD, eth);
 		}
 
@@ -121,7 +136,7 @@ public class Forwarding extends ForwardingBase {
 				return true;
 			}
 		} else {
-			Logger.stdout("No decision was made for PacketIn=" + pi + " forwarding");
+//			Logger.stdout("No decision was made for PacketIn=" + pi + " forwarding");
 
 			if (eth.isBroadcast() || eth.isMulticast()) {
 				// For now we treat multicast as broadcast
@@ -133,7 +148,7 @@ public class Forwarding extends ForwardingBase {
 
 		return true;
 	}
-
+	
 	/**
 	 * Creates a {@link OFPacketOut} with packetin that is dropped.
 	 * 
@@ -143,27 +158,38 @@ public class Forwarding extends ForwardingBase {
 	 * @param cntx the {@link MessageContext}
 	 */
 	protected void doDropFlow(IOFSwitch sw, OFPacketIn pi, IRoutingDecision decision, MessageContext cntx) {
+		int input_port = getInputPort(pi);
+		
 		// initialize match structure and populate it using the packet
-		OFMatch match = new OFMatch();
-		match.loadFromPacket(pi.getPacketData(), pi.getInPort());
-		if (decision.getWildcards() != null) {
-			match.setWildcards(decision.getWildcards());
+		OFMatch match = protocol.loadOFMatchFromPacket(sw, pi.getData(), (short) input_port);
+
+		if ( (decision.getWildcards() != null) && (match.isWildcardsSupported()) ) {
+			match.setWildcardsWire(decision.getWildcards());
 		}
 
 		// Create flow-mod based on packet-in and src-switch
-		OFFlowMod fm = (OFFlowMod) sw.getConnection().getFactory().getMessage(OFType.FLOW_MOD);
-		List<OFAction> actions = new ArrayList<OFAction>(); // Set no action to
-		// drop
-		long cookie = AppCookie.makeCookie(FORWARDING_APP_ID, 0);
+		OFFlowMod fm = OFMessageFactory.createFlowMod(pi.getVersion());
+		
+		// Drop
+		if ( fm.isInstructionsSupported() ) {
+			fm.setCommand(OFFlowModCommand.ADD)
+			.setInstructions(Collections.<OFInstruction>emptyList());
+		} else {
+			fm.setActions(Collections.<OFAction>emptyList());
+		}
 
+		long cookie = AppCookie.makeCookie(FORWARDING_APP_ID, 0);
+		
 		fm.setCookie(cookie)
 		.setHardTimeout((short) 0)
 		.setIdleTimeout((short) 5)
-		.setBufferId(OFPacketOut.BUFFER_ID_NONE)
-		.setMatch(match)
-		.setActions(actions)
-		.setLengthU(OFFlowMod.MINIMUM_LENGTH); // +OFActionOutput.MINIMUM_LENGTH);
-
+		.setBufferId(0xffffffff /* OFP_NO_BUFFER */)
+		.setMatch(match);
+		if ( fm.isTableIdSupported() ) {
+			fm.setTableId((byte) 0x0);
+		}
+		fm.setLength(fm.computeLength());		
+		
 		try {
 			Logger.debug("write drop flow-mod sw={} match={} flow-mod={}", 
 					new Object[] { sw, match, fm });
@@ -187,8 +213,10 @@ public class Forwarding extends ForwardingBase {
 	protected void doForwardFlow(IOFSwitch sw, OFPacketIn pi, 
 			MessageContext cntx,
 			boolean requestFlowRemovedNotifn) {    
-		OFMatch match = new OFMatch();
-		match.loadFromPacket(pi.getPacketData(), pi.getInPort());
+		
+		int input_port = getInputPort(pi);
+		
+		OFMatch match = protocol.loadOFMatchFromPacket(sw, pi.getData(), (short) input_port);
 
 		// Check if we have the location of the destination
 		IDevice dstDevice = (IDevice) cntx.get(MessageContext.DST_DEVICE);
@@ -202,10 +230,10 @@ public class Forwarding extends ForwardingBase {
 				return;
 			}
 			if (srcIsland == null) {
-				Logger.stderr("No openflow island found for source {" + sw.getStringId() + "}/{" + pi.getInPort() + "}");
+				Logger.stderr("No openflow island found for source {" + sw.getStringId() + "}/{" + input_port + "}");
 				return;
 			}
-
+			
 			// Validate that we have a destination known on the same island
 			// Validate that the source and destination are not on the same switchport
 			boolean on_same_island = false;
@@ -215,8 +243,7 @@ public class Forwarding extends ForwardingBase {
 				Long dstIsland = topology.getL2DomainId(dstSwDpid);
 				if ((dstIsland != null) && dstIsland.equals(srcIsland)) {
 					on_same_island = true;
-					if ((sw.getId() == dstSwDpid) &&
-							(pi.getInPort() == dstDap.getPort())) {
+					if ((sw.getId() == dstSwDpid) && (input_port == dstDap.getPort())) {
 						on_same_if = true;
 					}
 					break;
@@ -232,10 +259,10 @@ public class Forwarding extends ForwardingBase {
 
 			if (on_same_if) {
 				Logger.stdout("Both source and destination are on the same switch/port " + 
-						sw.toString() + "/" + pi.getInPort() + ", Action = NOP");
+						sw.toString() + "/" + input_port + ", Action = NOP");
 				return;
 			}
-
+			
 			// Install all the routes where both src and dst have attachment points.
 			// Since the lists are stored in sorted order we can traverse the attachment
 			// points in O(m+n) time.
@@ -245,7 +272,7 @@ public class Forwarding extends ForwardingBase {
 			Arrays.sort(dstDaps, clusterIdComparator);
 
 			int iSrcDaps = 0, iDstDaps = 0;
-
+			
 			while ((iSrcDaps < srcDaps.length) && (iDstDaps < dstDaps.length)) {
 				SwitchPort srcDap = srcDaps[iSrcDaps];
 				SwitchPort dstDap = dstDaps[iDstDaps];
@@ -276,28 +303,30 @@ public class Forwarding extends ForwardingBase {
 							long cookie = 
 									AppCookie.makeCookie(FORWARDING_APP_ID, 0);
 
-							// if there is prior routing decision use wildcard                                                     
+							// if there is prior routing decision use wildcard
 							Integer wildcard_hints = null;
 							IRoutingDecision decision = (IRoutingDecision) cntx.get(MessageContext.ROUTING_DECISION);
 							
-							if (decision != null) {
-								wildcard_hints = decision.getWildcards();
-							} else {
-								// L2 only wildcard if there is no prior route decision
-								wildcard_hints = ((Integer) sw
-										.getAttribute(IOFSwitch.PROP_FASTWILDCARDS))
-										.intValue()
-										& ~OFMatch.OFPFW_IN_PORT
-										& ~OFMatch.OFPFW_DL_VLAN
-										& ~OFMatch.OFPFW_DL_SRC
-										& ~OFMatch.OFPFW_DL_DST
-										& ~OFMatch.OFPFW_NW_SRC_MASK
-										& ~OFMatch.OFPFW_NW_DST_MASK;
+							if (match.isWildcardsSupported()){
+								if (decision != null) {
+									wildcard_hints = decision.getWildcards();
+								} else {
+									// L2 only wildcard if there is no prior route decision
+									wildcard_hints = ((Integer) sw
+											.getAttribute(IOFSwitch.PROP_FASTWILDCARDS))
+											.intValue()
+											& ~OFBFlowWildcard.IN_PORT
+											& ~OFBFlowWildcard.DL_VLAN
+											& ~OFBFlowWildcard.DL_SRC
+											& ~OFBFlowWildcard.DL_DST
+											& ~OFBFlowWildcard.NW_SRC_MASK
+											& ~OFBFlowWildcard.NW_DST_MASK;
+								}
 							}
 
 							pushRoute(sw.getConnection(), route, match, wildcard_hints, pi, sw.getId(), cookie, 
 									cntx, requestFlowRemovedNotifn, false,
-									OFFlowMod.OFPFC_ADD);
+									OFFlowModCommand.ADD);
 						}
 					}
 					iSrcDaps++;
@@ -323,8 +352,9 @@ public class Forwarding extends ForwardingBase {
 	 * @param cntx the {@link MessageContext}
 	 */
 	protected void doFlood(IOFSwitch sw, OFPacketIn pi, MessageContext cntx) {
-		if (topology.isIncomingBroadcastAllowed(sw.getId(),
-				pi.getInPort()) == false) {
+		int input_port = getInputPort(pi);
+		
+		if (! topology.isIncomingBroadcastAllowed(sw.getId(), (short) input_port) ) {
 //			if (log.isTraceEnabled()) {
 //				log.trace("doFlood, drop broadcast packet, pi={}, " + 
 //						"from a blocked port, srcSwitch=[{},{}], linkInfo={}",
@@ -334,29 +364,33 @@ public class Forwarding extends ForwardingBase {
 		}
 
 		// Set Action to flood
-		OFPacketOut po = (OFPacketOut) sw.getConnection().getFactory().getMessage(OFType.PACKET_OUT);
+		OFPacketOut po = OFMessageFactory.createPacketOut(pi.getVersion());
+		
+		po.setBufferId(pi.getBufferId());
+		po.setInputPort(OFPort.of(input_port));
+		
 		List<OFAction> actions = new ArrayList<OFAction>();
+		OFActionOutput action_output = OFMessageFactory.createActionOutput(pi.getVersion());
+		
+//		action_output.setPort(OFPort.FLOOD).setMaxLength((short)0).setLength(action_output.computeLength());
 		if (sw.hasAttribute(IOFSwitch.PROP_SUPPORTS_OFPP_FLOOD)) {
-			actions.add(new OFActionOutput(OFPort.OFPP_FLOOD.getValue(), 
-					(short)0xFFFF));
+			action_output.setPort(OFPort.FLOOD);
 		} else {
-			actions.add(new OFActionOutput(OFPort.OFPP_ALL.getValue(), 
-					(short)0xFFFF));
+			action_output.setPort(OFPort.ALL);
 		}
+		action_output.setMaxLength((short)0xffff);
+		action_output.setLength(action_output.computeLength());
+		
+		actions.add(action_output);
 		po.setActions(actions);
-		po.setActionsLength((short) OFActionOutput.MINIMUM_LENGTH);
+		po.setActionsLength(action_output.computeLength());
 
 		// set buffer-id, in-port and packet-data based on packet-in
-		short poLength = (short)(po.getActionsLength() + OFPacketOut.MINIMUM_LENGTH);
-		po.setBufferId(pi.getBufferId());
-		po.setInPort(pi.getInPort());
-		if (pi.getBufferId() == OFPacketOut.BUFFER_ID_NONE) {
-			byte[] packetData = pi.getPacketData();
-			poLength += packetData.length;
-			po.setPacketData(packetData);
+		if (pi.getBufferId() == 0xffffffff /* OFP_NO_BUFFER */ ) {
+			po.setData( pi.getData() );
 		}
-		po.setLength(poLength);
-
+		po.setLength( po.computeLength() );
+		
 		try {
 //			if (log.isTraceEnabled()) {
 //				log.trace("Writing flood PacketOut switch={} packet-in={} packet-out={}",
