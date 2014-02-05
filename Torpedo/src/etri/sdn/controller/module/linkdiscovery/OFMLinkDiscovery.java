@@ -736,7 +736,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		// set actions
 		List<OFAction> actions = new ArrayList<OFAction>();
 		OFActionOutput action_output = OFMessageFactory.createActionOutput(sw.getVersion());
-		action_output.setPort(OFPort.of(port)).setMaxLength((short)0);
+		action_output.setPort(OFPort.of(port)).setMaxLength((short)0).setLength(action_output.computeLength());
 		actions.add(action_output);
 		po.setActions(actions);
 		po.setActionsLength( action_output.computeLength() );

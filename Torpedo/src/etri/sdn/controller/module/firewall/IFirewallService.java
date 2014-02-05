@@ -67,4 +67,9 @@ public interface IFirewallService extends IService {
      * @param ruleid the ruleid of firewall rule to delete
      */
     public void deleteRule(int ruleid);
+    
+    /**
+     * Delete all the rules from the memory storage and the persistent database.
+     */
+    public void clearRules();
 }
