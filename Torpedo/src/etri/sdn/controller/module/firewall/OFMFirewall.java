@@ -1,16 +1,21 @@
 package etri.sdn.controller.module.firewall;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.OFPacketIn;
-import org.openflow.protocol.OFType;
+import org.openflow.protocol.interfaces.OFMessageType;
+import org.openflow.protocol.interfaces.OFOxm;
+import org.openflow.protocol.interfaces.OFOxmMatchFields;
+import org.openflow.protocol.interfaces.OFPacketIn;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
@@ -22,6 +27,7 @@ import etri.sdn.controller.module.routing.IRoutingDecision;
 import etri.sdn.controller.module.routing.RoutingDecision;
 import etri.sdn.controller.module.storagemanager.IStorageService;
 import etri.sdn.controller.module.storagemanager.OFMStorageManager;
+import etri.sdn.controller.protocol.OFProtocol;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.Ethernet;
@@ -36,9 +42,7 @@ import etri.sdn.controller.util.Logger;
  * @author jshin
  * 
  */
-public class OFMFirewall
-extends OFModule
-implements IFirewallService
+public class OFMFirewall extends OFModule implements IFirewallService
 {
 	
 	private FirewallStorage firewallStorage;
@@ -49,6 +53,9 @@ implements IFirewallService
 	protected List<FirewallRule> rules;		// protected by synchronized
     protected boolean enabled;
     protected int subnet_mask = IPv4.toIPv4Address("255.255.255.0");
+    
+    @SuppressWarnings("unused")
+	private OFProtocol protocol;
 
     // constant strings for storage/parsing
     public static final String TABLE_NAME = "controller_firewallrules";
@@ -99,7 +106,24 @@ implements IFirewallService
 	public String getCollectionName(){
 		return collectionName;
 	}
-    
+
+	protected int getInputPort(OFPacketIn pi) {
+		if ( pi == null ) {
+			throw new AssertionError("pi cannot refer null");
+		}
+		if ( pi.isInputPortSupported() ) {
+			return pi.getInputPort().get();
+		}
+		else {
+			OFOxm oxm = pi.getMatch().getOxmFromIndex(OFOxmMatchFields.OFB_IN_PORT);
+			if ( oxm == null ) {
+				Logger.debug("Packet-in does not have oxm object for OFB_IN_PORT");
+				throw new AssertionError("pi cannot refer null");
+			}
+			return ByteBuffer.wrap(oxm.getData()).getInt();
+		}
+	}
+
     /*
      * Internal methods
      */
@@ -118,6 +142,7 @@ implements IFirewallService
     private boolean processPacketInMessage(IOFSwitch sw, OFPacketIn pi, IRoutingDecision decision, MessageContext cntx){
     	
     	Ethernet eth = (Ethernet) cntx.get(MessageContext.ETHER_PAYLOAD);
+    	int input_port = getInputPort(pi);
     	
     	// Allowing L2 broadcast + ARP broadcast request (also deny malformed
         // broadcasts -> L2 broadcast + L3 unicast)
@@ -135,7 +160,7 @@ implements IFirewallService
 
                 decision = new RoutingDecision(
                 		sw.getId(),
-                		pi.getInPort(), 
+                		(short) input_port, 
                 		(IDevice) cntx.get(MessageContext.SRC_DEVICE),
                         IRoutingDecision.RoutingAction.MULTICAST);
                 decision.addToContext(cntx);
@@ -144,7 +169,7 @@ implements IFirewallService
 
                 decision = new RoutingDecision(
                 		sw.getId(),
-                		pi.getInPort(), 
+                		(short) input_port, 
                 		(IDevice) cntx.get(MessageContext.SRC_DEVICE),
                 		IRoutingDecision.RoutingAction.DROP);
                 decision.addToContext(cntx);
@@ -172,7 +197,7 @@ implements IFirewallService
             if (rule == null || rule.action == FirewallRule.FirewallAction.DENY) {
                 decision = new RoutingDecision(
                 		sw.getId(),
-                		pi.getInPort(), 
+                		(short) input_port, 
                 		(IDevice) cntx.get(MessageContext.SRC_DEVICE),
                         IRoutingDecision.RoutingAction.DROP);
                 decision.setWildcards(match_ret.wildcards);
@@ -188,7 +213,7 @@ implements IFirewallService
             } else {
                 decision = new RoutingDecision(
                 		sw.getId(),
-                		pi.getInPort(), 
+                		(short) input_port, 
                 		(IDevice) cntx.get(MessageContext.SRC_DEVICE),
                         IRoutingDecision.RoutingAction.FORWARD_OR_FLOOD);
                 decision.setWildcards(match_ret.wildcards);
@@ -232,6 +257,7 @@ implements IFirewallService
      */
     protected RuleWildcardsPair matchWithRule(IOFSwitch sw, OFPacketIn pi, MessageContext cntx) {
         FirewallRule matched_rule = null;
+        int input_port = getInputPort(pi);
         
         Ethernet eth = (Ethernet) cntx.get(MessageContext.ETHER_PAYLOAD);
         
@@ -246,7 +272,7 @@ implements IFirewallService
                 rule = iter.next();
 
                 // check if rule matches
-                if (rule.matchesFlow(sw.getId(), pi.getInPort(), eth, wildcards) == true) {
+                if (rule.matchesFlow(sw.getId(), (short)input_port, eth, wildcards) == true) {
                     matched_rule = rule;
                     break;
                 }
@@ -479,16 +505,20 @@ implements IFirewallService
 		this.dbName = conf.getString("storage-default-db");
 		this.collectionName = firewallStorage.getName();
 		
+		this.protocol = getController().getProtocol();
+		
 		rules = new ArrayList<FirewallRule>();
         
         // start disabled
         enabled = false;
 
-		registerFilter(OFType.PACKET_IN, new OFMFilter() {
-			@Override
-			public boolean filter(OFMessage m) {
-				return true;
-			}
+        registerFilter(
+        		OFMessageType.PACKET_IN, 
+        		new OFMFilter() {
+        			@Override
+        			public boolean filter(OFMessage m) {
+        				return true;
+        			}
 		});
         
         // Read rules
@@ -512,7 +542,7 @@ implements IFirewallService
 		if (!this.enabled)
             return true;
 
-        switch (msg.getType()) {
+		switch(msg.getType()) {
         case PACKET_IN:
             IRoutingDecision decision = null;
             if (context != null) {
@@ -665,6 +695,15 @@ implements IFirewallService
         
         firewallStorage.getFirewallEntryTable().deleteFirewallEntry(Integer.toString(ruleid));
         firewallStorage.deleteDBEntry(storageInstance, dbName, collectionName, ruleid);
+	}
+	
+	@Override
+	public void clearRules() {
+		for ( FirewallRule rule : this.rules ) {
+			firewallStorage.getFirewallEntryTable().deleteFirewallEntry(Integer.toString(rule.ruleid));
+			firewallStorage.deleteDBEntry(storageInstance, dbName, collectionName, rule.ruleid);
+		}
+		this.rules.clear();
 	}
 
 }

@@ -135,7 +135,7 @@ iris.adjustXandY = function(nodes, links) {
 //			console.log('pdeg : ' + parent.degree);
 //			console.log('pwei : ' + parent.weight);
 //			console.log(ns[n].id);
-//			console.log('mdeg : ' + ns[n].degree);
+//			console.log('('+parent.id+','+parent.degree+','+parent.weight+') -- (' + ns[n].id + "," + ns[n].degree + ')');
 			
 			var r = nDistance(parent);
 			var rad = degree[parent.id]*Math.PI/180;
@@ -263,6 +263,8 @@ iris.topology = function() {
 			d.group = 1;		/* switch */
 		});
 		
+//		console.log(iris.topologyCollection.nodes);
+		
 		iris.hostCollection.models.forEach(function (d) {
 			// random enables the fast loading of the topology graph because
 			// node positions are probably not colliding. 
@@ -307,7 +309,9 @@ iris.topology = function() {
                 var link = {source:nodes_map[host.id],
                             target:nodes_map[host.attributes['attachmentPoint'][j]['switchDPID']],
                             value:10};
-                
+//                console.log(j);
+//                console.log(host.attributes['attachmentPoint']);
+//                console.log(nodes_map);
                 link.source.weight++;
                 link.target.weight++;
                 

@@ -1,7 +1,5 @@
 package etri.sdn.controller.module.flowcache;
 
-import org.openflow.protocol.OFMatchWithSwDpid;
-
 import etri.sdn.controller.MessageContext;
 
 /**
@@ -65,8 +63,7 @@ public class OFMatchReconcile  {
     
     public OFMatchReconcile(OFMatchReconcile copy) {
         ofmWithSwDpid =
-            new OFMatchWithSwDpid(copy.ofmWithSwDpid.getOfMatch(),
-                    copy.ofmWithSwDpid.getSwitchDataPathId());
+            new OFMatchWithSwDpid(copy.ofmWithSwDpid.getOfMatch(), copy.ofmWithSwDpid.getSwitchDataPathId());
         priority = copy.priority;
         action = copy.action;
         cookie = copy.cookie;

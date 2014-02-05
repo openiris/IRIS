@@ -1,0 +1,1 @@
+	mappings.put(org.openflow.protocol.interfaces.${typename}.$name, $name);

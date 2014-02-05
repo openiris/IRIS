@@ -202,7 +202,6 @@ public class FirewallStorage extends OFModel{
 		return resultList;
 	}
 	
-	
 	/**
 	 * Array of RESTApi objects. 
 	 * Each objects represent a REST call handler routine bound to a specific URI.
@@ -335,33 +334,42 @@ public class FirewallStorage extends OFModel{
 								Iterator<FirewallRule> iter = firewall.getRules().iterator();
 
 								String entityText = request.getEntityAsText();
-								entityText = entityText.replaceAll("[\']", "");
-								//System.out.println(entityText);
-
-								try {
-									inRule = FirewallRule.jsonToFirewallRule(entityText);
-								} catch (IOException e) {
-									Logger.error("Error parsing firewall rule: " + entityText, e);
-									e.printStackTrace();
-									return;
+								
+								// Clear all rules.
+								if (entityText == null) {
+									firewall.clearRules();
+									status = "All rules are deleted.";
 								}
+								// Delete one rule based on input rule id.
+								else {
+									entityText = entityText.replaceAll("[\']", "");
+									//System.out.println(entityText);
 
-								while (iter.hasNext()) {
-									FirewallRule r = iter.next();
-									if ( r.ruleid == inRule.ruleid){
-										exists = true;
-										break;
+									try {
+										inRule = FirewallRule.jsonToFirewallRule(entityText);
+									} catch (IOException e) {
+										Logger.error("Error parsing firewall rule: " + entityText, e);
+										e.printStackTrace();
+										return;
 									}
-								}
 
-								if ( !exists ){
-									status = "Error! Can't delete, a rule with this ID doesn't exist.";
-									Logger.error(status);
-									return;
-								} else {
-									// delete rule from firewall
-									firewall.deleteRule( inRule.ruleid );
-									status = "Rule deleted";
+									while (iter.hasNext()) {
+										FirewallRule r = iter.next();
+										if ( r.ruleid == inRule.ruleid){
+											exists = true;
+											break;
+										}
+									}
+
+									if ( !exists ){
+										status = "Error! Can't delete, a rule with this ID doesn't exist.";
+										Logger.error(status);
+										return;
+									} else {
+										// delete rule from firewall
+										firewall.deleteRule( inRule.ruleid );
+										status = "Rule deleted";
+									}
 								}
 
 								result = "{\"status\" : \"" + status + "\"}";

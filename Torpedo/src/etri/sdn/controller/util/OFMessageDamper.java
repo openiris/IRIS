@@ -5,11 +5,12 @@
 package etri.sdn.controller.util;
 
 import java.io.IOException;
-import java.util.EnumSet;
+//import java.util.EnumSet;
 import java.util.Set;
 
 import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.OFType;
+import org.openflow.protocol.interfaces.OFMessageType;
+//import org.openflow.protocol.OFType;
 
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
@@ -73,12 +74,11 @@ public final class OFMessageDamper {
             } else if (!sw.equals(other.sw)) return false;
             return true;
         }
-        
-      
     }
     
     private TimedCache<DamperEntry> cache;
-    private EnumSet<OFType> msgTypesToCache;
+//    private EnumSet<OFType> msgTypesToCache;
+    private Set<OFMessageType> msgTypesToCache;
     /**
      * 
      * @param capacity the maximum number of messages that should be 
@@ -90,10 +90,11 @@ public final class OFMessageDamper {
      * timeout ms ago. 
      */
     public OFMessageDamper(int capacity, 
-                           Set<OFType> typesToDampen,  
+                           Set<OFMessageType> typesToDampen,  
                            int timeout) {
         cache = new TimedCache<DamperEntry>(capacity, timeout);
-        msgTypesToCache = EnumSet.copyOf(typesToDampen);
+//        msgTypesToCache = EnumSet.copyOf(typesToDampen);
+        msgTypesToCache = typesToDampen;
     }        
     
     /**
