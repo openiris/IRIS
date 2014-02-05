@@ -31,9 +31,9 @@ Some of its improvements in the IRIS UI enable zoom-in, zoom-out, and panning of
 Specification
 -------------
 
-1. Supports Openflow 1.0 (1.3 is comming at the end of year 2013)
+1. Supports Openflow 1.0.1 and 1.3.2
 2. Pure Java-based Implementation
-3. Handles 5 million Mac Learning Requestes per second with commodity HW
+3. Handles more than 5 million Mac Learning Requests per second with commodity HW
 4. Supports about 500 concurrent connections to switches with commodity HW
 5. The same license policy with Floodlight (Apache license)
 
