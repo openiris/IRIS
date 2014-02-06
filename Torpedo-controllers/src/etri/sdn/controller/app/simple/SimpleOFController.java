@@ -39,7 +39,6 @@ public class SimpleOFController extends OFController {
 
 	private OFMUserInterface m_user_interface = new OFMUserInterface();
 	private OFMLearningMac m_learning_mac = new OFMLearningMac();
-	private OFMLearningMac13 m_learning_mac13 = new OFMLearningMac13();
 	private OFMLinkDiscovery m_link_discovery = new OFMLinkDiscovery();
 	private OFMTopologyManager m_topology_manager = new OFMTopologyManager();
 	private OFMDefaultEntityClassifier m_entity_classifier = new OFMDefaultEntityClassifier();
@@ -49,7 +48,6 @@ public class SimpleOFController extends OFController {
 	
 	private OFModule[] packet_in_pipeline = { 
 			m_learning_mac,
-			m_learning_mac13,
 			m_link_discovery, 
 			m_topology_manager,
 			m_entity_classifier, 
@@ -67,7 +65,6 @@ public class SimpleOFController extends OFController {
 	@Override
 	public void init() {
 		m_learning_mac.init(this);
-		m_learning_mac13.init(this);
 		m_link_discovery.init(this);
 		m_topology_manager.init(this);
 		m_entity_classifier.init(this);
