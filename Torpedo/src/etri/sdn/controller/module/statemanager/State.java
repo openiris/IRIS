@@ -147,8 +147,10 @@ public class State extends OFModel {
 					}
 					if ( req.isOutPortSupported() ) 
 						req.setOutPort(OFPort.NONE);
+					if ( req.isOutGroupSupported() ) 
+						req.setOutGroup(0xffffffff /* OFPG_ANY (all group) */);
 					if ( req.isTableIdSupported() ) 
-						req.setTableId((byte)0xff);
+						req.setTableId((byte)0xff /* OFPTT_ALL (all tables) */);
 					req.setLength( req.computeLength() );
 	                
 					List<OFStatisticsReply> reply = protocol.getSwitchStatistics(sw, req);
