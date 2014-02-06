@@ -427,13 +427,10 @@ public final class OFMLearningMac extends OFModule {
 					OFMatch m = match.dup();
 					
 					List<OFOxm> oxms = m.getOxmFields();
-					OFOxm phyPortOxm = null;
 					OFOxm ethSrcOxm = null;
 					OFOxm ethDstOxm = null;
-					OFOxm ethTypeOxm = null;
 					OFOxm ipSrcOxm = null;
 					OFOxm ipDstOxm = null;
-					OFOxm ipProtoOxm = null;
 					OFOxm tcpSrcOxm = null;
 					OFOxm tcpDstOxm = null;
 					OFOxm udpSrcOxm = null;
@@ -447,20 +444,11 @@ public final class OFMLearningMac extends OFModule {
 						case 0: // OFB_IN_PORT
 							oxm.setData(ByteBuffer.allocate(4).putInt(outPort).array());
 							break;
-						case 1:
-							phyPortOxm = oxm;
-							break;
 						case 3: // OFB_ETH_DST
 							ethDstOxm = oxm;
 							break;
 						case 4:	// OFB_ETH_SRC
 							ethSrcOxm = oxm;
-							break;
-						case 5: // OFB_ETH_TYPE
-							ethTypeOxm = oxm;
-							break;
-						case 10: // just ignore
-							ipProtoOxm = oxm;
 							break;
 						case 11: // OFB_IPV4_SRC
 							ipSrcOxm = oxm;
@@ -494,7 +482,6 @@ public final class OFMLearningMac extends OFModule {
 					swap(tcpSrcOxm, tcpDstOxm);
 					swap(udpSrcOxm, udpDstOxm);
 					swap(sctpSrcOxm, sctpDstOxm);
-					
 					
 					this.writeFlowMod(conn.getSwitch(), OFFlowModCommand.ADD, -1,
 							m,
