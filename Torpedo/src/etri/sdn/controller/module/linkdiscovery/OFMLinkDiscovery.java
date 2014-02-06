@@ -86,7 +86,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	private static final byte TLV_DIRECTION_VALUE_REVERSE[] = {0x02};
 
 	protected final int DISCOVERY_TASK_INTERVAL = 1; 	// 1 second.
-	protected final int LLDP_TO_ALL_INTERVAL = 15 ; 	//15 seconds.
+	protected final int LLDP_TO_ALL_INTERVAL = 7; 		//15 seconds.
 	protected long lldpClock = 0;
 	
 	/**

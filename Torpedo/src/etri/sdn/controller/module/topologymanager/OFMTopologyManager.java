@@ -132,7 +132,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		);
 
 		init();
-		initiatePeriodicTopologyUpdate();
+//		initiatePeriodicTopologyUpdate();
 	}
 	
 	protected void initiatePeriodicTopologyUpdate() {
