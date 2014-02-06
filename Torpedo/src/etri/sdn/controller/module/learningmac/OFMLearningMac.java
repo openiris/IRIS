@@ -251,9 +251,9 @@ public final class OFMLearningMac extends OFModule {
 		// set actions
 		List<OFAction> actions = new ArrayList<OFAction>(1);      
 		OFActionOutput action_output = OFMessageFactory.createActionOutput(sw.getVersion());
-		action_output.setPort(egressPort).setMaxLength((short)0).setLength(action_output.computeLength());
+		action_output.setPort(egressPort).setMaxLength((short)0);
 		actions.add(action_output);
-		packetOutMessage.setActionsLength( action_output.getLength() );
+		packetOutMessage.setActionsLength( action_output.computeLength() );
 		packetOutMessage.setActions(actions);
 
 		// set data - only if buffer_id == -1
