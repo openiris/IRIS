@@ -29,7 +29,6 @@ public class BasicOFController extends OFController {
 	private OFMDefaultEntityClassifier m_entity_classifier = new OFMDefaultEntityClassifier();
 	private OFMDeviceManager m_device_manager = new OFMDeviceManager();
 	private OFMStateManager m_state_manager = new OFMStateManager();
-//	private OFMStaticFlowEntryPusher m_static_entry_pusher = new OFMStaticFlowEntryPusher();
 	private OFMStorageManager m_storage_manager = new OFMStorageManager();	
 	private Forwarding m_forwarding = new Forwarding();
 	private OFMFirewall m_firewall = new OFMFirewall();
@@ -58,7 +57,6 @@ public class BasicOFController extends OFController {
 		m_entity_classifier.init(this);
 		m_device_manager.init(this);
 		m_state_manager.init(this);			// this is not a part of the pipeline.
-//		m_static_entry_pusher.init(this);	// this is not a part of the pipeline.
 		m_user_interface.init(this);		// this is not a part of the pipeline.
 		m_storage_manager.init(this);		// this is not a part of the pipeline.s
 		m_firewall.init(this);
@@ -66,10 +64,7 @@ public class BasicOFController extends OFController {
 	}
 
 	@Override
-//	public boolean handlePacketIn(Connection conn, MessageContext context, OFPacketIn pi) {
 	public boolean handlePacketIn(Connection conn, MessageContext context, OFMessage m) {
-//		OFPacketIn pi = (OFPacketIn) m;	
-
 		List<OFMessage> out = new LinkedList<OFMessage>();
 		for ( int i = 0; i < packet_in_pipeline.length; ++i ) {
 			boolean cont = packet_in_pipeline[i].processMessage( conn, context, m, out );
@@ -112,9 +107,9 @@ public class BasicOFController extends OFController {
 		else if ( t == OFMessageType.FEATURES_REPLY ) {
 			return m_link_discovery.processHandshakeFinished( conn, context );
 		}
-//		else {
+		else {
 //			System.err.println("Unhandled OF message: "	+ m.toString());
-//		}
+		}
 		return true;
 	}
 }

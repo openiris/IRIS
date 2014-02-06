@@ -379,7 +379,6 @@ public class Forwarding extends ForwardingBase {
 			action_output.setPort(OFPort.ALL);
 		}
 		action_output.setMaxLength((short)0xffff);
-		action_output.setLength(action_output.computeLength());
 		
 		actions.add(action_output);
 		po.setActions(actions);

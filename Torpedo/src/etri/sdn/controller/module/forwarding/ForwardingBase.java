@@ -430,7 +430,6 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 
 		action_output.setMaxLength((short)0xffff);
 		action_output.setPort(OFPort.of(outport));
-		action_output.setLength(action_output.computeLength());
 		actions.add(action_output);
 		
 		OFPacketOut po = OFMessageFactory.createPacketOut(pi.getVersion());
@@ -499,7 +498,6 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 
 		action_output.setMaxLength((short)0xffff);
 		action_output.setPort(OFPort.of(outPort));
-		action_output.setLength(action_output.computeLength());
 		actions.add(action_output);
 		
 		po.setActions(actions)
@@ -561,7 +559,6 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 					OFMessageFactory.createActionOutput(conn.getSwitch().getVersion());
 			action_output.setPort(OFPort.of(j.next().shortValue()));
 			action_output.setMaxLength((short)0);
-			action_output.setLength(action_output.computeLength());
 			actions.add(action_output);
 			actions_length += action_output.computeLength();
 		}
@@ -569,7 +566,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 		OFPacketOut po = OFMessageFactory.createPacketOut(conn.getSwitch().getVersion());
 		
 		po.setActions(actions);
-		po.setActionsLength(actions_length);
+		po.setActionsLength( actions_length );
 
 		// set buffer-id to OFP_NO_BUFFER, and set in-port to OFPP_NONE
 		po.setBufferId( 0xffffffff /* OFP_NO_BUFFER */);
