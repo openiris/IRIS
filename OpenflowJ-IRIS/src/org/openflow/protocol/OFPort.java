@@ -56,6 +56,9 @@ public class OFPort {
 		if ( o == null || !(o instanceof OFPort) ) {
 			return false;
 		}
+		if ( this == o ) {
+			return true;
+		}
 		return this.port == ((OFPort)o).port;
 	}
 	
