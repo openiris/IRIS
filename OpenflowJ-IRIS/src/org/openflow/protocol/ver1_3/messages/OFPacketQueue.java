@@ -46,7 +46,7 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
 	}
 			
 	public OFPort getPort() {
-		return new OFPort(this.port);
+		return OFPort.of(this.port);
 	}
 	
 	public OFPacketQueue setPort(OFPort port) {

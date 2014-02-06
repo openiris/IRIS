@@ -46,7 +46,7 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
     }
 
 	public OFPort getPort() {
-		return new OFPort(this.port);
+		return OFPort.of(this.port);
 	}
 	
 	public OFPortDesc setPort(OFPort port) {

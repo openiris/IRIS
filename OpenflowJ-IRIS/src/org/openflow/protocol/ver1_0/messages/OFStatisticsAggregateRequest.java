@@ -58,7 +58,7 @@ public class OFStatisticsAggregateRequest extends OFStatisticsRequest implements
 	}
 			
 	public OFPort getOutPort() {
-		return new OFPort(this.out_port);
+		return OFPort.of(this.out_port);
 	}
 	
 	public OFStatisticsAggregateRequest setOutPort(OFPort port) {

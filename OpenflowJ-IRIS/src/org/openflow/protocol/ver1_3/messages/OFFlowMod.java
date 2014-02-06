@@ -172,7 +172,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 	}
 			
 	public OFPort getOutPort() {
-		return new OFPort(this.out_port);
+		return OFPort.of(this.out_port);
 	}
 	
 	public OFFlowMod setOutPort(OFPort port) {

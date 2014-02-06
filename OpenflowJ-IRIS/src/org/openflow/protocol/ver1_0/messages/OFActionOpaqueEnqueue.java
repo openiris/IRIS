@@ -28,7 +28,7 @@ public class OFActionOpaqueEnqueue extends OFAction implements org.openflow.prot
     }
 
 	public OFPort getPort() {
-		return new OFPort(this.port);
+		return OFPort.of(this.port);
 	}
 	
 	public OFActionOpaqueEnqueue setPort(OFPort port) {

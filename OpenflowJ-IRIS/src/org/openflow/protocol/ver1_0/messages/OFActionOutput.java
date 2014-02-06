@@ -26,7 +26,7 @@ public class OFActionOutput extends OFAction implements org.openflow.protocol.in
     }
 
 	public OFPort getPort() {
-		return new OFPort(this.port);
+		return OFPort.of(this.port);
 	}
 	
 	public OFActionOutput setPort(OFPort port) {

@@ -52,7 +52,7 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 	}
 			
 	public OFPort getOutPort() {
-		return new OFPort(this.out_port);
+		return OFPort.of(this.out_port);
 	}
 	
 	public OFStatisticsFlowRequest setOutPort(OFPort port) {

@@ -33,7 +33,7 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
     }
 
 	public OFPort getPortNumber() {
-		return new OFPort(this.port_number);
+		return OFPort.of(this.port_number);
 	}
 	
 	public OFQueueStatsEntry setPortNumber(OFPort port) {

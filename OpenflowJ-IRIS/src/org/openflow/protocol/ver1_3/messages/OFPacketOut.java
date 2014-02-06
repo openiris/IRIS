@@ -51,7 +51,7 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
 	}
 			
 	public OFPort getInputPort() {
-		return new OFPort(this.input_port);
+		return OFPort.of(this.input_port);
 	}
 	
 	public OFPacketOut setInputPort(OFPort port) {

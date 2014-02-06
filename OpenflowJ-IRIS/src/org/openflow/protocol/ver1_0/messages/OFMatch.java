@@ -90,7 +90,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 	}
 		
 	public OFPort getInputPort() {
-		return new OFPort(this.input_port);
+		return OFPort.of(this.input_port);
 	}
 	
 	public OFMatch setInputPort(OFPort port) {

@@ -27,7 +27,7 @@ public class OFStatisticsPortRequest extends OFStatisticsRequest implements org.
     }
 
 	public OFPort getPort() {
-		return new OFPort(this.port);
+		return OFPort.of(this.port);
 	}
 	
 	public OFStatisticsPortRequest setPort(OFPort port) {

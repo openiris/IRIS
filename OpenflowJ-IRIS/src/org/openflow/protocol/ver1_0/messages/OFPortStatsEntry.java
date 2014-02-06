@@ -47,7 +47,7 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
     }
 
 	public OFPort getPortNumber() {
-		return new OFPort(this.port_number);
+		return OFPort.of(this.port_number);
 	}
 	
 	public OFPortStatsEntry setPortNumber(OFPort port) {

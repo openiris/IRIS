@@ -61,7 +61,7 @@ public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
 	}
 			
 	public OFPort getWatchPort() {
-		return new OFPort(this.watch_port);
+		return OFPort.of(this.watch_port);
 	}
 	
 	public OFBucket setWatchPort(OFPort port) {

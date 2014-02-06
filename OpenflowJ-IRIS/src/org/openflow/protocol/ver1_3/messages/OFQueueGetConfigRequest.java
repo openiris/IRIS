@@ -25,7 +25,7 @@ public class OFQueueGetConfigRequest extends OFMessage implements org.openflow.p
     }
 
 	public OFPort getPort() {
-		return new OFPort(this.port);
+		return OFPort.of(this.port);
 	}
 	
 	public OFQueueGetConfigRequest setPort(OFPort port) {
