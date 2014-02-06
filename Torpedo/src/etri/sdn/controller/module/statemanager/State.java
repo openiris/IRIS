@@ -15,7 +15,6 @@ import org.openflow.protocol.OFPort;
 import org.openflow.protocol.factory.OFMessageFactory;
 import org.openflow.protocol.interfaces.OFFeaturesReply;
 import org.openflow.protocol.interfaces.OFMatch;
-import org.openflow.protocol.interfaces.OFStatisticsAggregateReply;
 import org.openflow.protocol.interfaces.OFStatisticsAggregateRequest;
 import org.openflow.protocol.interfaces.OFStatisticsDescReply;
 import org.openflow.protocol.interfaces.OFStatisticsFlowReply;
@@ -149,7 +148,7 @@ public class State extends OFModel {
 					if ( req.isOutPortSupported() ) 
 						req.setOutPort(OFPort.NONE);
 					if ( req.isTableIdSupported() ) 
-						req.setTableId((byte)0xff);					
+						req.setTableId((byte)0x00);					
 	                
 					List<OFStatisticsReply> reply = protocol.getSwitchStatistics(sw, req);
 					
@@ -162,7 +161,7 @@ public class State extends OFModel {
 					ObjectMapper om = new ObjectMapper();
 					
 					try {
-						String r = om.writerWithDefaultPrettyPrinter().writeValueAsString(output);
+						String r = om/*.writerWithDefaultPrettyPrinter()*/.writeValueAsString(output);
 						response.setEntity(r, MediaType.APPLICATION_JSON);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -188,35 +187,7 @@ public class State extends OFModel {
 						return;		// switch is not completely set up.
 					}
 					
-					OFStatisticsAggregateRequest req = 
-							OFMessageFactory.createStatisticsAggregateRequest(sw.getVersion());
-					if ( req.isMatchSupported() ) {
-						OFMatch.Builder match = OFMessageFactory.createMatchBuilder(sw.getVersion());
-						if ( match.isWildcardsSupported() )
-							match.setWildcardsWire(0xffffffff);
-						req.setMatch(match.build());
-					}
-					if ( req.isOutPortSupported() )
-						req.setOutPort(OFPort.NONE);
-					if ( req.isTableIdSupported() )
-						req.setTableId((byte)0xff);
-	                
-					List<OFStatisticsReply> reply = protocol.getSwitchStatistics(sw, req);
-	                int flowCount = 0;
-					long packetCount = 0;
-					long byteCount = 0;
-	                if ( reply != null && !reply.isEmpty() ) {
-	                	OFStatisticsReply stat = reply.remove(0);
-	                	if ( stat instanceof OFStatisticsAggregateReply ) {
-	                		OFStatisticsAggregateReply aggs = (OFStatisticsAggregateReply) stat;
-	                		flowCount = aggs.getFlowCount();
-	                		byteCount = aggs.getByteCount();
-	                		packetCount = aggs.getPacketCount();
-//	                		System.out.printf("%x %x %x", flowCount, byteCount, packetCount);
-	                	}
-	                }
-					
-	                StringWriter sWriter = new StringWriter();
+					StringWriter sWriter = new StringWriter();
 	                JsonFactory f = new JsonFactory();
 	                JsonGenerator g = null;
 	                OFStatisticsDescReply desc = protocol.getDescription(sw);
@@ -237,12 +208,6 @@ public class State extends OFModel {
 	                	g.writeString( desc!=null ? desc.getSerialNumber() : "-" );
 	                	g.writeFieldName("softwareDescription");
 	                	g.writeString( desc!=null ? desc.getSoftwareDescription() : "-" );
-	                	g.writeFieldName("flowCount");
-	                	g.writeNumber(flowCount);
-	                	g.writeFieldName("packetCount");
-	                	g.writeNumber(packetCount);
-	                	g.writeFieldName("byteCount");
-	                	g.writeNumber(byteCount);
 	                	g.writeEndObject();
 	                	g.writeEndArray();
 	                	g.writeEndObject();
@@ -327,7 +292,6 @@ public class State extends OFModel {
 						return;		// switch is not completely set up.
 					}
 					
-//					OFFeaturesReply reply = sw.getFeaturesReply();
 					OFFeaturesReply reply = protocol.getFeaturesReply(sw);
 					
 					HashMap<String, OFFeaturesReply> result = new HashMap<String, OFFeaturesReply>();
@@ -365,10 +329,6 @@ public class State extends OFModel {
 						return;		// switch is not completely set up.
 					}
 					
-//					HashMap<String, List<OFFlowStatisticsReply>> result 
-//						= new HashMap<String, List<OFFlowStatisticsReply>>();
-//					List<OFFlowStatisticsReply> resultValues = new java.util.LinkedList<OFFlowStatisticsReply>();
-//					result.put( switchIdStr, resultValues );
 					HashMap<String, List<org.openflow.protocol.interfaces.OFFlowStatsEntry>> result = 
 						new HashMap<String, List<org.openflow.protocol.interfaces.OFFlowStatsEntry>>();
 					List<org.openflow.protocol.interfaces.OFFlowStatsEntry> resultValues = 
@@ -384,9 +344,8 @@ public class State extends OFModel {
 					if ( req.isOutPortSupported() ) 
 						req.setOutPort(OFPort.NONE);
 					if ( req.isTableIdSupported() )
-						req.setTableId((byte)0xff);
+						req.setTableId((byte)0x00);
 
-//					List<OFStatistics> reply = sw.getSwitchStatistics( req );
 					List<OFStatisticsReply> reply = protocol.getSwitchStatistics(sw, req);
 					for ( OFStatisticsReply s : reply ) {
 						if ( s instanceof OFStatisticsFlowReply ) {
