@@ -148,7 +148,8 @@ public class State extends OFModel {
 					if ( req.isOutPortSupported() ) 
 						req.setOutPort(OFPort.NONE);
 					if ( req.isTableIdSupported() ) 
-						req.setTableId((byte)0x00);					
+						req.setTableId((byte)0xff);
+					req.setLength( req.computeLength() );
 	                
 					List<OFStatisticsReply> reply = protocol.getSwitchStatistics(sw, req);
 					
@@ -159,6 +160,7 @@ public class State extends OFModel {
 	                
 	                // create an object mapper.
 					ObjectMapper om = new ObjectMapper();
+					om.registerModule(port_module);
 					
 					try {
 						String r = om/*.writerWithDefaultPrettyPrinter()*/.writeValueAsString(output);
@@ -356,6 +358,7 @@ public class State extends OFModel {
 					// create an object mapper.
 					ObjectMapper om = new ObjectMapper();
 					om.registerModule(flow_statistics_reply_module);
+					om.registerModule(port_module);
 					
 					try {
 						String r = om/*.writerWithDefaultPrettyPrinter()*/.writeValueAsString(result);
