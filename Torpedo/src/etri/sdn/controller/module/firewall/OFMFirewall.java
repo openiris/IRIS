@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.openflow.protocol.OFMessage;
 import org.openflow.protocol.interfaces.OFMessageType;
@@ -693,6 +695,15 @@ public class OFMFirewall extends OFModule implements IFirewallService
         
         firewallStorage.getFirewallEntryTable().deleteFirewallEntry(Integer.toString(ruleid));
         firewallStorage.deleteDBEntry(storageInstance, dbName, collectionName, ruleid);
+	}
+	
+	@Override
+	public void clearRules() {
+		for ( FirewallRule rule : this.rules ) {
+			firewallStorage.getFirewallEntryTable().deleteFirewallEntry(Integer.toString(rule.ruleid));
+			firewallStorage.deleteDBEntry(storageInstance, dbName, collectionName, rule.ruleid);
+		}
+		this.rules.clear();
 	}
 
 }
