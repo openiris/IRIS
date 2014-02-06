@@ -47,7 +47,7 @@ window.HostCollection = Backbone.Collection.extend({
                     if (h['attachmentPoint'].length > 0) {
                         h.id = h.mac[0];
                         h.swport = _.reduce(h['attachmentPoint'], function(memo, ap) {
-                            return memo + ap.switchDPID + "-" + ap.port + " "}, "");
+                            return memo + ap.switchDPID + "-" + ap.port + "<br/>"}, "");
                         h.lastSeen = new Date(h.lastSeen).toLocaleString();
                         self.add(h, {merge: true, silent: true});
                     }
