@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html ng-app="iris">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="cache-control" content="max-age=0" />
@@ -19,6 +20,18 @@
     <link href="css/periscope.css" rel="stylesheet">
     <link href="css/topology.css" rel="stylesheet">
 
+	<script src="lib/jquery.min.js"></script>
+	<script src="lib/underscore-min.js"></script>
+	<script src="lib/backbone-min.js"></script>
+	<script src="lib/d3.v3.min.js"></script>
+	<script src="lib/angular.min.js"></script>
+	
+	<script src="js/periscope.js"></script>
+	<script src="js/controllers/status.js"></script>
+	<script src="js/controllers/switches.js"></script>
+	<script src="js/controllers/devices.js"></script>
+	<script src="js/controllers/topology.js"></script>
+  	
     <!-- Le fav and touch icons -->
     <!-- TODO create some icons 
     <link rel="shortcut icon" href="/img/favicon.ico">
@@ -53,56 +66,62 @@
 		each class is bound to each class callback that handles the drawing 
 		of that div's content.
 	-->
-	<div class="home controller_statistics">
-		<h1>Controller Statistics</h1><a><!-- reload button --></a>
-		<table class="vertical_table" template="controller_statistics">
+	<div class="home controller_statistics" ng-controller="CntlControllerStatus">
+		<h1>Controller Statistics</h1><a ng-click="getData()"></a>
+		<table class="vertical_table">
+			<tr><td>Hostname:</td><td>{{stat.host}}:{{stat.ofport}}</td></tr>
+			<tr><td>Healthy:</td><td>{{stat.healthy}}</td>
+			<tr><td>Uptime:</td><td>{{stat.uptime}}</td>
+			<tr><td>JVM memory bloat:</td><td>{{stat.free}} free out of {{stat.total}}</td>
+			<tr><td>Modules loaded:</td><td>{{stat.moduleText}}</td>
 		</table>
 	</div>
 	
-	<div class="home switches switches">
-		<h1>Switches(<span id="snum">0</span>)</h1><a><!-- reload button --></a>
+	<div class="home switches switches" ng-controller="CntlSwitches">
+		<h1>Switches(<span>{{switches.length}}</span>)</h1><a ng-click="getData()"></a>
 		<div>
-		<table class="horizontal_table mark_4th_row">
-		<colgroup>
-			<col span="3" class="desc">
-			<col span="3" class="stat">
-			<col class="time">
-		</colgroup>
+		<table class="horizontal_table mark_2th_row">
 		<thead>
 		<tr>
 			<th>DPID</th><th>IP Address</th><th>Vendor</th><th>Packets</th><th>Bytes</th><th>Flows</th><th>Connected Since</th>
 		</tr>
 		</thead>
 		<tbody template="switches">
-			<!-- switch items go here -->
+			<tr ng-if="switches.length==0">
+				<td colspan="7">No switches</td>
+			</tr>
+			<tr ng-if="switches.length>0" ng-repeat="switch in switches">
+				<td>{{switch.id}}</td><td>{{switch.inetAddress}}</td><td>{{switch.vendor}}</td><td>{{switch.packets}}</td>
+				<td>{{switch.bytes}}</td><td>{{switch.flows}}</td><td>{{switch.connectedSince}}</td>
+			</tr>
 		</tbody>
 		</table>
 		</div>
 	</div>
 	
-	<div class="home devices devices">
-		<h1>Devices(<span id="dnum">0</span>)</h1><a><!-- reload button --></a>
+	<div class="home devices devices" ng-controller="CntlDevices">
+		<h1>Devices(<span>{{devices.length}}</span>)</h1><a ng-click="getData()"></a>
 		<div>
-		<table class="horizontal_table mark_4th_row">
-		<colgroup>
-			<col span="3" class="desc">
-			<col span="3" class="stat">
-			<col class="time">
-		</colgroup>
+		<table class="horizontal_table mark_2th_row">
 		<thead>
 		<tr>
 			<th>MAC Address</th><th>IP Address</th><th>Switch Port</th><th>Last Seen</th>
 		</tr>
 		</thead>
 		<tbody template="devices">
-			<!-- switch items go here -->
+			<tr ng-if="devices.length==0">
+				<td colspan="4">No devices</td>
+			</tr>
+			<tr ng-if="devices.length>0" ng-repeat="device in devices">
+				<td>{{device.id}}</td><td>{{device.inetAddress}}</td><td>{{device.port}}</td><td>{{device.lastSeen}}</td>
+			</tr>
 		</tbody>
 		</table>
 		</div>
 	</div>
 	
-	<div class="topology topology">
-		<h1>Topology</h1><a>Layout topology automatically</a>
+	<div class="topology topology" ng-controller="CntlTopology">
+		<h1>Topology</h1><a ng-click="render()">Layout topology automatically</a>
 		<div template="topology">
 		</div>
 	</div>
@@ -148,29 +167,6 @@ Powered by <a href="http://documentcloud.github.com/backbone/">Backbone.js</a>,
 <a href="http://jquery.com/">jQuery</a>, 
 <a href="http://mbostock.github.com/d3/">D3.js</a>, etc.</p>
 </footer>
-<script src="lib/jquery.min.js"></script>
-<script src="lib/underscore-min.js"></script>
-<script src="lib/backbone-min.js"></script>
-<script src="lib/d3.v3.min.js"></script>
-
-<script src="lib/bootstrap-dropdown.js"></script>
-<script src="lib/bootstrap-alert.js"></script>
-
-<script src="js/models/portmodel.js"></script>
-<script src="js/models/flowmodel.js"></script>
-<script src="js/models/switchmodel.js"></script>
-<script src="js/models/hostmodel.js"></script>
-<script src="js/models/statusmodel.js"></script>
-<script src="js/models/topologymodel.js"></script>
-
-<script src="js/periscope.js"></script>
-<script src="js/periscope_controller_statistics.js"></script>
-<script src="js/periscope_switches.js"></script>
-<script src="js/periscope_devices.js"></script>
-<script src="js/periscope_topology.js"></script>
-<script src="js/periscope_flows.js"></script>
-<script src="js/periscope_ports.js"></script>
-<script src="js/periscope_switch_desc.js"></script>
 </div> <!-- page -->
 </body>
 </html>
