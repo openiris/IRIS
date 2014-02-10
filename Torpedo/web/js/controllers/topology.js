@@ -523,6 +523,7 @@ irisApp.controller('CntlTopology',
 					$scope.nodes = [];
 					$scope.links = [];
 					$scope.hosts = [];
+					iris.topology([], [], []);
 				});
 			};
 

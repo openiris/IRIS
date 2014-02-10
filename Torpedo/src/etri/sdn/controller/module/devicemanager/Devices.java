@@ -902,6 +902,21 @@ public class Devices extends OFModel implements IDeviceService {
 			Logger.stderr("device map does not have this device -" + device.toString());
 		}
 	}
+	
+	public void deleteDevice(long datapathid) {
+		List<Device> to_remove = new LinkedList<Device>();
+		for ( Device d : deviceIdToDeviceMap.values() ) {
+			for (SwitchPort sp : d.getAttachmentPoints() ) {
+				if ( sp.getSwitchDPID() == datapathid ) {
+					to_remove.add( d );
+					break;
+				}
+			}
+		}
+		for ( Device d : to_remove ) {
+			deleteDevice( d );
+		}
+	}	
 
 	/**
 	 * Removes the device of the deviceKey argument from the single and multi indices.

@@ -275,7 +275,7 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 	
 	@Override
 	protected boolean handleDisconnect(Connection conn) {
-		// does nothing currently
+		this.devices.deleteDevice(conn.getSwitch().getId());
 		return true;
 	}
 

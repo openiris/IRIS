@@ -13,7 +13,7 @@ irisApp.controller('CntlDevices',
 				.success(function(data) {
 					
 					// get all the ids in the returned array.
-					retrieved_ids = _.map(data, function(obj) { return obj['mac'][0]; })
+					retrieved_ids = _.map(data, function(d) { return d['mac'][0]; })
 					// calculate diff from device_ids to find out identifiers which 
 					// should be removed from devices. 
 					to_remove_ids = _.difference($scope.device_ids, retrieved_ids);
@@ -25,7 +25,7 @@ irisApp.controller('CntlDevices',
 					$scope.device_ids = _.difference($scope.device_ids, to_remove_ids);
 					$scope.device_ids = _.union($scope.device_ids, to_add_ids);
 					
-					$scope.devices = _.filter($scope.devices, function(d) { return ! _.contains(to_add_ids, d.id); })
+					$scope.devices = _.filter($scope.devices, function(d) { return ! _.contains(to_remove_ids, d.id); })
 					
 					_.each(data, function(host) {
 						if ( host['attachmentPoint'].length > 0 ) {

@@ -410,8 +410,14 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 		
 		if ( conn.getSwitch() != null ) {
 			
-			for (OFModule m: modules) {
-				m.processDisconnect(conn);
+			try { 
+				conn.getSwitch().getId();
+				
+				for (OFModule m: modules) {
+					m.processDisconnect(conn);
+				}
+			} catch ( RuntimeException e ) {
+				// FEATURES_REPLY is not exchanged.
 			}
 			
 			try { 

@@ -514,6 +514,13 @@ public class OFProtocol {
 			break;
 
 		case PACKET_IN:
+			try { 
+				sw.getId();
+			} catch ( RuntimeException e ) {
+				// FEATURES_REPLY is not set.
+				return false;
+			}
+			
 			if ( !getController().handlePacketIn(conn, context, m) ) {
 				return false;
 			}
