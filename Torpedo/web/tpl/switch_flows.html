@@ -1,1 +1,24 @@
-<tr><td><%= cookie %></td><td><%= priority %></td><td><%= matchHTML %></td><td><%= actionText %></td><td><%= packetCount %></td><td><%= byteCount %></td><td><%= durationSeconds %>s</td><td><%= idleTimeout %>s</td></tr>
+	<div ng-controller="CntlFlows">
+		<table class="horizontal_table center mark_2th_row" width="100%">
+			<caption><span>Flow Records:</span><span type="links"></span></caption>
+			<thead>
+			<tr>
+				<th>Cookie</th><th>Priority</th><th>Match</th><th>Action</th><th>Packets</th><th>Bytes</th><th>Age</th><th>Timeout</th>
+			</tr>
+			</thead>
+		    <tbody template="switch_flows">
+		    	<tr ng-if="flows.length==0"><td colspan="8">No flows</td></tr>
+		    	<tr ng-if="flows.length>0" ng-repeat="flow in flows">
+					<td>{{flow.cookie}}</td>
+					<td>{{flow.priority}}</td>
+					<td>{{flow.matchHTML}}</td>
+					<td>{{flow.actionText}}</td>
+					<td>{{flow.packetCount}}</td>
+					<td>{{flow.byteCount}}</td>
+					<td>{{flow.durationSeconds}}s</td>
+					<td>{{flow.idleTimeout}}s</td>
+				</tr>
+		    </tbody>
+	    </table>
+	</div>
+

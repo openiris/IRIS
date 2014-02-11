@@ -23,6 +23,36 @@ irisApp.controller('CntlSwitches',
 				});
 			};
 			
+			$scope.showSwitchDescPopup = function(id) {
+				var e = angular.element('#hiddens>div.switch_desc').clone();
+				e.append('<ng-include src="\'tpl/switch_desc.html\'"></ng-include>');
+				var newScope = $scope.$new();
+				$compile(e)( newScope );
+				newScope.id = id;
+				
+				e.dialog({
+					title: 'Switch Description for ' + id,
+					width: 600
+				});
+			}
+			
+			$scope.showFlowsPopup = function(id) {
+				var e = angular.element('#hiddens>div.flows').clone();
+				e.append('<ng-include src="\'tpl/switch_flows.html\'"></ng-include>');
+				var newScope = $scope.$new();
+				$compile(e)( newScope );
+				newScope.id = id;
+				
+				e.dialog({
+					title: 'Flow Records of switch ' + id,
+					width: 1000,
+					maxHeight: 600,
+					close: function(event, ui) {
+						newScope.goon = false;
+					}
+				});
+			}
+			
 			// define getData method.
 			$scope.getData = function() {
 				$http.get('/wm/core/controller/switches/json')

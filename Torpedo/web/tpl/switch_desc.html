@@ -1,5 +1,12 @@
-<tr><td>dataPathDescription: </td><td><%= datapathDescription %></td></tr>
-<tr><td>hardwareDescription: </td><td><%= hardwareDescription %></td></tr>
-<tr><td>manufacturerDescription: </td><td><%= manufacturerDescription %></td></tr>
-<tr><td>softwareDescription: </td><td><%= softwareDescription %></td></tr>
-<tr><td>serialNumber: </td><td><%= serialNumber %></td></tr>
+	<div ng-controller="CntlSwitchDesc">
+		<table class="vertical_table box center mark_2th_row">
+			<caption><span>Switch Desc:</span></caption>
+			<tbody template="switch_desc">
+				<tr><td>dataPathDescription: </td><td>{{desc.datapathDescription}}</td></tr>
+				<tr><td>hardwareDescription: </td><td>{{desc.hardwareDescription}}</td></tr>
+				<tr><td>manufacturerDescription: </td><td>{{desc.manufacturerDescription}}</td></tr>
+				<tr><td>softwareDescription: </td><td>{{desc.softwareDescription}}</td></tr>
+				<tr><td>serialNumber: </td><td>{{desc.serialNumber}}</td></tr>
+			</tbody>
+		</table>
+	</div>

@@ -161,6 +161,7 @@ table caption {
 }
 
 table.vertical_table { 
+	width:100%;
 }
 table.vertical_table td {
 	padding: 3px 0;

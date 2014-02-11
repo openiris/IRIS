@@ -31,6 +31,8 @@
 	<script src="js/periscope.js"></script>
 	<script src="js/controllers/status.js"></script>
 	<script src="js/controllers/ports.js"></script>
+	<script src="js/controllers/flows.js"></script>
+	<script src="js/controllers/switch_desc.js"></script>
 	<script src="js/controllers/switches.js"></script>
 	<script src="js/controllers/devices.js"></script>
 	<script src="js/controllers/topology.js"></script>
@@ -95,8 +97,13 @@
 				<td colspan="7">No switches</td>
 			</tr>
 			<tr ng-if="switches.length>0" ng-repeat="switch in switches">
-				<td><a ng-click="showPortsPopup(switch.id)">{{switch.id}}</a></td><td>{{switch.inetAddress}}</td><td>{{switch.vendor}}</td><td>{{switch.packets}}</td>
-				<td>{{switch.bytes}}</td><td>{{switch.flows}}</td><td>{{switch.connectedSince}}</td>
+				<td><a ng-click="showPortsPopup(switch.id)">{{switch.id}}</a></td>
+				<td>{{switch.inetAddress}}</td>
+				<td><a ng-click="showSwitchDescPopup(switch.id)">{{switch.vendor}}</a></td>
+				<td>{{switch.packets}}</td>
+				<td>{{switch.bytes}}</td>
+				<td <a ng-click="showFlowsPopup(switch.id)">{{switch.flows}}</td>
+				<td>{{switch.connectedSince}}</td>
 			</tr>
 		</tbody>
 		</table>
@@ -133,25 +140,10 @@
 </div> <!-- /content -->
 <div id="hiddens" style="display: none;">
 	<div class="home switches flows" style="display: none;">
-		<table class="horizontal_table mark_2th_row">
-		<caption><span>Flow Records:</span><span type="links"></span></caption>
-		<thead>
-		<tr>
-			<th>Cookie</th><th>Priority</th><th>Match</th><th>Action</th><th>Packets</th><th>Bytes</th><th>Age</th><th>Timeout</th>
-		</tr>
-		</thead>
-	    <tbody template="switch_flows">
-	    </tbody>
-	    </table>
 	</div>
 	<div id="ports" class="home switches ports" style="display: none;" title="Ports">
 	</div>
-	<div class="home switches switch_desc" style="display: none;">
-		<table class="vertical_table width50 box center mark_2th_row">
-		<caption><span>Switch Desc:</span><span type="links"></span></caption>
-		<tbody template="switch_desc">
-		</tbody>
-		</table>
+	<div class="home switches switch_desc" style="display: none;" title="Switch Description">
 	</div>
 </div> <!-- /hiddens -->
 <footer class="footer">
