@@ -903,6 +903,11 @@ public class Devices extends OFModel implements IDeviceService {
 		}
 	}
 	
+	/**
+	 * delete all device attached to a given switch.
+	 * 
+	 * @param datapathid datapath id of the switch.
+	 */
 	public void deleteDevice(long datapathid) {
 		List<Device> to_remove = new LinkedList<Device>();
 		for ( Device d : deviceIdToDeviceMap.values() ) {

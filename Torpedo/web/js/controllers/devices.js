@@ -25,7 +25,9 @@ irisApp.controller('CntlDevices',
 					$scope.device_ids = _.difference($scope.device_ids, to_remove_ids);
 					$scope.device_ids = _.union($scope.device_ids, to_add_ids);
 					
-					$scope.devices = _.filter($scope.devices, function(d) { return ! _.contains(to_remove_ids, d.id); })
+					$scope.devices = _.filter($scope.devices, function(d) { 
+						return ! _.contains(to_remove_ids, d.id); 
+					})
 					
 					_.each(data, function(host) {
 						if ( host['attachmentPoint'].length > 0 ) {
