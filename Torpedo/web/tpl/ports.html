@@ -1,1 +1,20 @@
-<tr><td><a ref="<%= portNumber %>"><%= name %></a></td><td><%= status %></td><td><%= transmitBytes %></td><td><%= receiveBytes %></td><td><%= transmitPackets %></td><td><%= receivePackets %></td><td><%= dropped %></td><td><%= errors %></td></tr>
+	<div ng-controller="CntlPorts">
+		<table class="horizontal_table mark_2th_row" width="100%">
+		<caption><span>Ports:</span><span type="links"></span></caption>
+		<thead>
+		<tr>
+			<th>#</th><th>Link Status</th><th>TX Bytes</th><th>RX Bytes</th><th>TX Pkts</th><th>RX Pkts</th><th>Dropped</th><th>Errors</th>
+		</tr>
+		</thead>
+		<tbody>
+			<tr ng-if="ports.length==0"><td colspan="8">No ports</td></tr>
+			<tr ng-if="ports.length>0" ng-repeat="port in ports">
+				<td>{{port.portNumber}}</td><td>{{port.status}}</td>
+				<td>{{port.transmitBytes}}</td><td>{{port.receiveBytes}}</td>
+				<td>{{port.transmitPackets}}</td><td>{{port.receivePackets}}</td>
+				<td>{{port.receiveDropped + port.transmitDropped}}</td>
+				<td>{{port.receiveErrors + port.transmitErrors}}</td>
+			</tr>
+		</tbody>
+		</table>
+	</div>

@@ -17,10 +17,12 @@
 
     <!-- Le styles -->
     <link href="css/reset.css" rel="stylesheet">
+    <link href="css/jquery-ui-themes-1.10.4/themes/smoothness/jquery-ui.css" rel="stylesheet">
     <link href="css/periscope.css" rel="stylesheet">
     <link href="css/topology.css" rel="stylesheet">
 
-	<script src="lib/jquery.min.js"></script>
+	<script src="lib/jquery-1.11.0.min.js"></script>
+	<script src="lib/jquery-ui-1.10.4.custom.min.js"></script>
 	<script src="lib/underscore-min.js"></script>
 	<script src="lib/backbone-min.js"></script>
 	<script src="lib/d3.v3.min.js"></script>
@@ -28,9 +30,11 @@
 	
 	<script src="js/periscope.js"></script>
 	<script src="js/controllers/status.js"></script>
+	<script src="js/controllers/ports.js"></script>
 	<script src="js/controllers/switches.js"></script>
 	<script src="js/controllers/devices.js"></script>
 	<script src="js/controllers/topology.js"></script>
+
   	
     <!-- Le fav and touch icons -->
     <!-- TODO create some icons 
@@ -91,7 +95,7 @@
 				<td colspan="7">No switches</td>
 			</tr>
 			<tr ng-if="switches.length>0" ng-repeat="switch in switches">
-				<td>{{switch.id}}</td><td>{{switch.inetAddress}}</td><td>{{switch.vendor}}</td><td>{{switch.packets}}</td>
+				<td><a ng-click="showPortsPopup(switch.id)">{{switch.id}}</a></td><td>{{switch.inetAddress}}</td><td>{{switch.vendor}}</td><td>{{switch.packets}}</td>
 				<td>{{switch.bytes}}</td><td>{{switch.flows}}</td><td>{{switch.connectedSince}}</td>
 			</tr>
 		</tbody>
@@ -128,37 +132,27 @@
 	
 </div> <!-- /content -->
 <div id="hiddens" style="display: none;">
-<div class="home switches flows" style="display: none;">
-	<table class="horizontal_table mark_2th_row">
-	<caption><span>Flow Records:</span><span type="links"></span></caption>
-	<thead>
-	<tr>
-		<th>Cookie</th><th>Priority</th><th>Match</th><th>Action</th><th>Packets</th><th>Bytes</th><th>Age</th><th>Timeout</th>
-	</tr>
-	</thead>
-    <tbody template="switch_flows">
-    </tbody>
-    </table>
-</div>
-<div class="home switches ports" style="display: none;">
-	<table class="horizontal_table mark_2th_row">
-	<caption><span>Ports:</span><span type="links"></span></caption>
-	<thead>
-	<tr>
-		<th>#</th><th>Link Status</th><th>TX Bytes</th><th>RX Bytes</th><th>TX Pkts</th><th>RX Pkts</th><th>Dropped</th><th>Errors</th>
-	</tr>
-	</thead>
-	<tbody template="ports">
-	</tbody>
-	</table>
-</div>
-<div class="home switches switch_desc" style="display: none;">
-	<table class="vertical_table width50 box center mark_2th_row">
-	<caption><span>Switch Desc:</span><span type="links"></span></caption>
-	<tbody template="switch_desc">
-	</tbody>
-	</table>
-</div>
+	<div class="home switches flows" style="display: none;">
+		<table class="horizontal_table mark_2th_row">
+		<caption><span>Flow Records:</span><span type="links"></span></caption>
+		<thead>
+		<tr>
+			<th>Cookie</th><th>Priority</th><th>Match</th><th>Action</th><th>Packets</th><th>Bytes</th><th>Age</th><th>Timeout</th>
+		</tr>
+		</thead>
+	    <tbody template="switch_flows">
+	    </tbody>
+	    </table>
+	</div>
+	<div id="ports" class="home switches ports" style="display: none;" title="Ports">
+	</div>
+	<div class="home switches switch_desc" style="display: none;">
+		<table class="vertical_table width50 box center mark_2th_row">
+		<caption><span>Switch Desc:</span><span type="links"></span></caption>
+		<tbody template="switch_desc">
+		</tbody>
+		</table>
+	</div>
 </div> <!-- /hiddens -->
 <footer class="footer">
 Copyright (C) ETRI. 

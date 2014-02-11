@@ -236,3 +236,22 @@ td.chosen {
 div.controller_statistics {
 	margin-bottom: 20px;
 }
+
+
+/*
+ * UI specific definitions
+ */
+ .ui-dialog-title {
+ 	font-size: 12px;
+ }
+ 
+ .ui-dialog-titlebar {
+ 	padding: 5px;
+ }
+ 
+ .ui-dialog-content {
+ 	font-family: 'Courier New';
+ 	font-size: 12px;
+	line-height: 16px;
+	align: center;
+ }

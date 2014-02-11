@@ -1,11 +1,27 @@
 
 
 irisApp.controller('CntlSwitches', 
-		['$scope', '$http', '$timeout', '$iris',
-		 function($scope, $http, $timeout, $iris) {
+		['$scope', '$http', '$timeout', '$iris', '$compile',
+		 function($scope, $http, $timeout, $iris, $compile) {
 			// initialize some data internal to this controller.
 			$scope.switch_dpids = [];
 			$scope.switches = [];
+			
+			$scope.showPortsPopup = function(id) {
+				var e = angular.element('#hiddens>div.ports').clone();
+				e.append('<ng-include src="\'tpl/ports.html\'"></ng-include>');
+				var newScope = $scope.$new();
+				$compile(e)( newScope );
+				newScope.id = id;
+				
+				e.dialog({
+					title: 'Ports of the switch ' + id,
+					width: 800,
+					close: function(event, ui) {
+						newScope.goon = false;
+					}
+				});
+			};
 			
 			// define getData method.
 			$scope.getData = function() {
