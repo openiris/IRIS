@@ -30,6 +30,8 @@ irisApp.controller('CntlSwitches',
 				$compile(e)( newScope );
 				newScope.id = id;
 				
+				angular.element('div.content').append(e);
+				
 				e.dialog({
 					title: 'Switch Description for ' + id,
 					width: 600

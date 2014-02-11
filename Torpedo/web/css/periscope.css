@@ -24,8 +24,6 @@ a:hover {
 }
 
 .header {
-	position: fixed;
-	z-index: 10000; /* always at the top */
 	top: 0px;
 	width: 1200px;
 	padding: 40px 0 0 0;
@@ -110,7 +108,7 @@ footer a {
 
 .content {
 	padding: 30px 20px;
-	margin-top: 125px;
+	margin-top: 10px;
 	min-height: 740px;
 	border: 1px solid rgb(0, 0, 0, 0);
 	position: relative;
