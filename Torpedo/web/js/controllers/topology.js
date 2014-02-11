@@ -492,6 +492,7 @@ iris.topology = function(nodes, hosts, links) {
 };
 
 
+// topology controller definition.
 irisApp.controller('CntlTopology', 
 		['$scope', '$http', '$timeout', '$iris',
 		 function($scope, $http, $timeout, $iris) {
@@ -526,10 +527,9 @@ irisApp.controller('CntlTopology',
 					iris.topology([], [], []);
 				});
 			};
-
-			// call to fill the initial data into the view.
-			$timeout(function(){
+			
+			angular.element('div.content > div.topology').bind('displayed', function() {
 				$scope.render();
-			}, 2000);
+			});
 		}]
 );

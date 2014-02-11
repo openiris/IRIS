@@ -13,7 +13,9 @@ $(document).ready( function() {
 		$('body').addClass(cl);
 
 		// show div's belongs to the current block
-		$('div.content > div.' + cl).show();
+		$('div.content > div.' + cl).show( 0, function() {
+			$(this).trigger('displayed');
+		});
 		// and hide others
 		$('div.content > div:not(.'+cl+')').hide();
 	});
