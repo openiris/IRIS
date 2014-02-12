@@ -103,6 +103,7 @@ header h2 {
 #main_content ol li {
 	list-style: decimal outside;
 	margin-left: 30px;
+	margin-bottom: 5px;
 }
 
 #main_content img {
