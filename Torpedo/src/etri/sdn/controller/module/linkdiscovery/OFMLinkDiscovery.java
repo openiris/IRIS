@@ -618,6 +618,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	private void discoverOnAllPorts() {
 
 		for ( IOFSwitch sw : controller.getSwitches() ) {
+			
 			if ( sw == null || !sw.isConnected() ) continue;
 
 			Collection<OFPortDesc> pports = protocol.getEnabledPorts(sw);
@@ -664,6 +665,10 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		if (ofpPort == null) {
 			Logger.error("sw: %d,  port: %d is null", sw.getId(), port);
 			return true;
+		}
+		
+		if (ofpPort.getHwAddr() == null) {
+			Logger.error("switch %d might be already removed", sw.getId());
 		}
 
 		// using "nearest customer bridge" MAC address for broadest possible propagation
