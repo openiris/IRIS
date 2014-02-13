@@ -19,6 +19,8 @@ import org.openflow.protocol.interfaces.OFStatisticsAggregateRequest;
 import org.openflow.protocol.interfaces.OFStatisticsDescReply;
 import org.openflow.protocol.interfaces.OFStatisticsFlowReply;
 import org.openflow.protocol.interfaces.OFStatisticsFlowRequest;
+import org.openflow.protocol.interfaces.OFStatisticsPortDescRequest;
+import org.openflow.protocol.interfaces.OFStatisticsPortDescReply;
 import org.openflow.protocol.interfaces.OFStatisticsPortReply;
 import org.openflow.protocol.interfaces.OFStatisticsPortRequest;
 import org.openflow.protocol.interfaces.OFStatisticsReply;
@@ -296,21 +298,45 @@ public class State extends OFModel {
 						return;		// switch is not completely set up.
 					}
 					
-					OFFeaturesReply reply = protocol.getFeaturesReply(sw);
-					
-					HashMap<String, OFFeaturesReply> result = new HashMap<String, OFFeaturesReply>();
-					result.put( switchIdStr, reply );
-					
-					// create an object mapper.
-					ObjectMapper om = new ObjectMapper();
-					om.registerModule(features_reply_module);
-					
-					try {
-						String r = om./*writerWithDefaultPrettyPrinter().*/writeValueAsString(result);
-						response.setEntity(r, MediaType.APPLICATION_JSON);
-					} catch (Exception e) {
-						e.printStackTrace();
-						return;
+					OFStatisticsPortDescRequest pdreq = OFMessageFactory.createStatisticsPortDescRequest(sw.getVersion());
+					if ( pdreq == null ) {
+						// this switch version is lower than 1.3. It does not support OFStatisticsPortDescRequest
+						OFFeaturesReply reply = protocol.getFeaturesReply(sw);
+						
+						HashMap<String, OFFeaturesReply> result = new HashMap<String, OFFeaturesReply>();
+						result.put( switchIdStr, reply );
+						
+						// create an object mapper.
+						ObjectMapper om = new ObjectMapper();
+						om.registerModule(features_reply_module);
+						
+						try {
+							String r = om./*writerWithDefaultPrettyPrinter().*/writeValueAsString(result);
+							response.setEntity(r, MediaType.APPLICATION_JSON);
+						} catch (Exception e) {
+							e.printStackTrace();
+							return;
+						}
+					} else {
+						// the switch supports version 1.3
+						List<OFStatisticsReply> reply = protocol.getSwitchStatistics( sw, pdreq );
+						
+						if ( reply != null && ! reply.isEmpty() ) {
+							HashMap<String, OFStatisticsPortDescReply> result = new HashMap<String, OFStatisticsPortDescReply>();
+							result.put( switchIdStr, (OFStatisticsPortDescReply) reply.remove(0) );
+							
+							// create an object mapper.
+							ObjectMapper om = new ObjectMapper();
+							om.registerModule(features_reply_module);
+							
+							try {
+								String r = om./*writerWithDefaultPrettyPrinter().*/writeValueAsString(result);
+								response.setEntity(r, MediaType.APPLICATION_JSON);
+							} catch (Exception e) {
+								e.printStackTrace();
+								return;
+							}
+						}
 					}
 				}
 			}

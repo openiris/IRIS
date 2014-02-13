@@ -9,7 +9,7 @@
 		<tbody>
 			<tr ng-if="ports.length==0"><td colspan="8">No ports</td></tr>
 			<tr ng-if="ports.length>0" ng-repeat="port in ports">
-				<td>{{port.portNumber}}</td><td>{{port.status}}</td>
+				<td>{{port.portNumber}}({{port.name}})</td><td>{{port.status}}</td>
 				<td>{{port.transmitBytes}}</td><td>{{port.receiveBytes}}</td>
 				<td>{{port.transmitPackets}}</td><td>{{port.receivePackets}}</td>
 				<td>{{port.receiveDropped + port.transmitDropped}}</td>

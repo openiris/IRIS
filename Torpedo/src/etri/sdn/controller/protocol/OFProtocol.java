@@ -37,6 +37,7 @@ import org.openflow.protocol.interfaces.OFPortState;
 import org.openflow.protocol.interfaces.OFPortStatus;
 import org.openflow.protocol.interfaces.OFSetConfig;
 import org.openflow.protocol.interfaces.OFStatisticsDescReply;
+import org.openflow.protocol.interfaces.OFStatisticsDescRequest;
 import org.openflow.protocol.interfaces.OFStatisticsPortDescReply;
 import org.openflow.protocol.interfaces.OFStatisticsPortDescRequest;
 import org.openflow.protocol.interfaces.OFStatisticsReply;
@@ -421,7 +422,7 @@ public class OFProtocol {
 			OFStatisticsPortDescRequest preq = OFMessageFactory.createStatisticsPortDescRequest(m.getVersion());
 			conn.write(preq);
 
-			OFStatisticsRequest req = OFMessageFactory.createStatisticsDescRequest(m.getVersion());
+			OFStatisticsDescRequest req = OFMessageFactory.createStatisticsDescRequest(m.getVersion());
 			conn.write(req);
 
 			// send flow_mod to process table miss packets [jshin]
@@ -506,6 +507,8 @@ public class OFProtocol {
 						setPort(sw, port);
 					}
 				}
+				
+				deliverSwitchStatistics( sw, portDesc );
 			} else if ( stat.getStatisticsType() == OFStatisticsType.DESC ) {
 				setDescription(sw, (OFStatisticsDescReply) stat);
 			} else {
