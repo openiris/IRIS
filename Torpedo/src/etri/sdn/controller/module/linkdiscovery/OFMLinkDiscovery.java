@@ -618,7 +618,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	private void discoverOnAllPorts() {
 
 		for ( IOFSwitch sw : controller.getSwitches() ) {
-			if ( sw == null ) continue;
+			if ( sw == null || !sw.isConnected() ) continue;
 
 			Collection<OFPortDesc> pports = protocol.getEnabledPorts(sw);
 
