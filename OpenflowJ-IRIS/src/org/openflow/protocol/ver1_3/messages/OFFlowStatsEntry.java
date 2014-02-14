@@ -240,6 +240,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		throw new UnsupportedOperationException("getActions is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isActionsSupported() {
 		return false;
 	}

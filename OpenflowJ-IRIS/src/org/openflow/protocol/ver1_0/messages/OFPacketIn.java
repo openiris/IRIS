@@ -118,6 +118,7 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 		throw new UnsupportedOperationException("getTableId is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTableIdSupported() {
 		return false;
 	}
@@ -132,6 +133,7 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 		throw new UnsupportedOperationException("getCookie is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isCookieSupported() {
 		return false;
 	}
@@ -146,6 +148,7 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 		throw new UnsupportedOperationException("getMatch is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMatchSupported() {
 		return false;
 	}

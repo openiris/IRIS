@@ -67,6 +67,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		throw new UnsupportedOperationException("getWildcards is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isWildcardsSupported() {
 		return false;
 	}
@@ -86,6 +87,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		throw new UnsupportedOperationException("getWildcardsWire is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isWildcardsWireSupported() {
 		return false;
 	}
@@ -100,6 +102,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		throw new UnsupportedOperationException("getInputPort is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isInputPortSupported() {
 		return false;
 	}
@@ -114,6 +117,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		throw new UnsupportedOperationException("getDataLayerSource is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataLayerSourceSupported() {
 		return false;
 	}
@@ -128,6 +132,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		throw new UnsupportedOperationException("getDataLayerDestination is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataLayerDestinationSupported() {
 		return false;
 	}
@@ -142,6 +147,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		throw new UnsupportedOperationException("getDataLayerVirtualLan is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataLayerVirtualLanSupported() {
 		return false;
 	}
@@ -156,6 +162,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		throw new UnsupportedOperationException("getDataLayerVirtualLanPriorityCodePoint is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataLayerVirtualLanPriorityCodePointSupported() {
 		return false;
 	}
@@ -170,6 +177,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		throw new UnsupportedOperationException("getDataLayerType is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataLayerTypeSupported() {
 		return false;
 	}
@@ -184,6 +192,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		throw new UnsupportedOperationException("getNetworkTypeOfService is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNetworkTypeOfServiceSupported() {
 		return false;
 	}
@@ -198,6 +207,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		throw new UnsupportedOperationException("getNetworkProtocol is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNetworkProtocolSupported() {
 		return false;
 	}
@@ -212,6 +222,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		throw new UnsupportedOperationException("getNetworkSource is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNetworkSourceSupported() {
 		return false;
 	}
@@ -226,6 +237,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		throw new UnsupportedOperationException("getNetworkDestination is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNetworkDestinationSupported() {
 		return false;
 	}
@@ -240,6 +252,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		throw new UnsupportedOperationException("getTransportSource is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTransportSourceSupported() {
 		return false;
 	}
@@ -254,6 +267,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		throw new UnsupportedOperationException("getTransportDestination is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTransportDestinationSupported() {
 		return false;
 	}
@@ -278,6 +292,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		throw new UnsupportedOperationException("getOxmFields is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isOxmFieldsSupported() {
 		return false;
 	}

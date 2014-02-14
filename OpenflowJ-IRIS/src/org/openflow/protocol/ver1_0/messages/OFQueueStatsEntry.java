@@ -109,6 +109,7 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 		throw new UnsupportedOperationException("getDurationSec is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDurationSecSupported() {
 		return false;
 	}
@@ -123,6 +124,7 @@ public class OFQueueStatsEntry   implements org.openflow.protocol.interfaces.OFQ
 		throw new UnsupportedOperationException("getDurationNsec is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDurationNsecSupported() {
 		return false;
 	}

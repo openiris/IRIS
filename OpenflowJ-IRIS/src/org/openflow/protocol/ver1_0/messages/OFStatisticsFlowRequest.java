@@ -81,6 +81,7 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 		throw new UnsupportedOperationException("getOutGroup is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isOutGroupSupported() {
 		return false;
 	}
@@ -95,6 +96,7 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 		throw new UnsupportedOperationException("getCookie is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isCookieSupported() {
 		return false;
 	}
@@ -109,6 +111,7 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
 		throw new UnsupportedOperationException("getCookieMask is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isCookieMaskSupported() {
 		return false;
 	}

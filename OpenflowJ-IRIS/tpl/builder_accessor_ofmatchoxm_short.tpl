@@ -11,6 +11,7 @@
 			return ByteBuffer.wrap(oxm.getData()).getShort();
 		}
 		
+		@org.codehaus.jackson.annotate.JsonIgnore
 		public boolean is${method_name}Supported() {
 			return true;
 		}

@@ -368,13 +368,16 @@ public class State extends OFModel {
 					OFStatisticsFlowRequest req = OFMessageFactory.createStatisticsFlowRequest(sw.getVersion());
 					if ( req.isMatchSupported() ) {
 						OFMatch.Builder match = OFMessageFactory.createMatchBuilder(sw.getVersion());
-						match.setWildcardsWire(0xffffffff);
+						if ( match.isWildcardsSupported() )
+							match.setWildcardsWire(0xffffffff);
 						req.setMatch(match.build());
 					}
 					if ( req.isOutPortSupported() ) 
 						req.setOutPort(OFPort.NONE);
+					if ( req.isOutGroupSupported() ) 
+						req.setOutGroup(0xffffffff /* OFPG_ANY (all group) */);
 					if ( req.isTableIdSupported() )
-						req.setTableId((byte)0x00);
+						req.setTableId((byte)0xff /* OFPTT_ALL (all tables) */);
 
 					List<OFStatisticsReply> reply = protocol.getSwitchStatistics(sw, req);
 					for ( OFStatisticsReply s : reply ) {

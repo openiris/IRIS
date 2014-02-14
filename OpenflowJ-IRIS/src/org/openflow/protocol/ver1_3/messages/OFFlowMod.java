@@ -276,6 +276,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		throw new UnsupportedOperationException("getActions is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isActionsSupported() {
 		return false;
 	}

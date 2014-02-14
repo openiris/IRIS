@@ -225,6 +225,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		throw new UnsupportedOperationException("getFlags is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isFlagsSupported() {
 		return false;
 	}
@@ -239,6 +240,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		throw new UnsupportedOperationException("getInstructions is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isInstructionsSupported() {
 		return false;
 	}

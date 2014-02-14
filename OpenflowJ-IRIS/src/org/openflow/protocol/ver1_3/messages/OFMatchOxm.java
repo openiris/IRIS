@@ -34,7 +34,8 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 	public void addOxmToIndex(org.openflow.protocol.interfaces.OFOxm oxm) {
 		index.put(OFOxmMatchFields.to(OFOxmMatchFields.valueOf(oxm.getField())), oxm);
 	}
-	
+
+	@org.codehaus.jackson.annotate.JsonIgnore	
 	public org.openflow.protocol.interfaces.OFOxm getOxmFromIndex(org.openflow.protocol.interfaces.OFOxmMatchFields clazz) {
 		return index.get(clazz);
 	}
@@ -66,6 +67,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("getWildcards is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isWildcardsSupported() {
 		return false;
 	}
@@ -85,6 +87,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("getWildcardsWire is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isWildcardsWireSupported() {
 		return false;
 	}
@@ -99,6 +102,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("getInputPort is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isInputPortSupported() {
 		return false;
 	}
@@ -113,6 +117,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("getDataLayerSource is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataLayerSourceSupported() {
 		return false;
 	}
@@ -127,6 +132,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("getDataLayerDestination is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataLayerDestinationSupported() {
 		return false;
 	}
@@ -141,6 +147,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("getDataLayerVirtualLan is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataLayerVirtualLanSupported() {
 		return false;
 	}
@@ -155,6 +162,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("getDataLayerVirtualLanPriorityCodePoint is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataLayerVirtualLanPriorityCodePointSupported() {
 		return false;
 	}
@@ -169,6 +177,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("getDataLayerType is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDataLayerTypeSupported() {
 		return false;
 	}
@@ -183,6 +192,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("getNetworkTypeOfService is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNetworkTypeOfServiceSupported() {
 		return false;
 	}
@@ -197,6 +207,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("getNetworkProtocol is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNetworkProtocolSupported() {
 		return false;
 	}
@@ -211,6 +222,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("getNetworkSource is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNetworkSourceSupported() {
 		return false;
 	}
@@ -225,6 +237,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("getNetworkDestination is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNetworkDestinationSupported() {
 		return false;
 	}
@@ -239,6 +252,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("getTransportSource is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTransportSourceSupported() {
 		return false;
 	}
@@ -253,6 +267,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		throw new UnsupportedOperationException("getTransportDestination is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTransportDestinationSupported() {
 		return false;
 	}
@@ -309,6 +324,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			return this.object.getOxmFields();
 		}
 		
+		@org.codehaus.jackson.annotate.JsonIgnore
 		public boolean isOxmFieldsSupported() {
 			return true;
 		}
@@ -354,6 +370,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			return OFPort.of(ByteBuffer.wrap(oxm.getData()).getInt());
 		}
 		
+		@org.codehaus.jackson.annotate.JsonIgnore
 		public boolean isInputPortSupported() {
 			return true;
 		}
@@ -375,6 +392,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			return ret;
 		}
 		
+		@org.codehaus.jackson.annotate.JsonIgnore
 		public boolean isDataLayerSourceSupported() {
 			return true;
 		}
@@ -396,6 +414,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			return ret;
 		}
 		
+		@org.codehaus.jackson.annotate.JsonIgnore
 		public boolean isDataLayerDestinationSupported() {
 			return true;
 		}
@@ -413,6 +432,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			return ByteBuffer.wrap(oxm.getData()).getShort();
 		}
 		
+		@org.codehaus.jackson.annotate.JsonIgnore
 		public boolean isDataLayerVirtualLanSupported() {
 			return true;
 		}
@@ -430,6 +450,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			return oxm.getData()[0];
 		}
 		
+		@org.codehaus.jackson.annotate.JsonIgnore
 		public boolean isDataLayerVirtualLanPriorityCodePointSupported() {
 			return true;
 		}
@@ -447,6 +468,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			return ByteBuffer.wrap(oxm.getData()).getShort();
 		}
 		
+		@org.codehaus.jackson.annotate.JsonIgnore
 		public boolean isDataLayerTypeSupported() {
 			return true;
 		}
@@ -464,6 +486,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			return oxm.getData()[0];
 		}
 		
+		@org.codehaus.jackson.annotate.JsonIgnore
 		public boolean isNetworkTypeOfServiceSupported() {
 			return true;
 		}
@@ -481,6 +504,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			return oxm.getData()[0];
 		}
 		
+		@org.codehaus.jackson.annotate.JsonIgnore
 		public boolean isNetworkProtocolSupported() {
 			return true;
 		}
@@ -498,6 +522,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			return ByteBuffer.wrap(oxm.getData()).getInt();
 		}
 		
+		@org.codehaus.jackson.annotate.JsonIgnore
 		public boolean isNetworkSourceSupported() {
 			return true;
 		}
@@ -515,6 +540,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			return ByteBuffer.wrap(oxm.getData()).getInt();
 		}
 		
+		@org.codehaus.jackson.annotate.JsonIgnore
 		public boolean isNetworkDestinationSupported() {
 			return true;
 		}
@@ -561,6 +587,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			return ByteBuffer.wrap(oxm.getData()).getShort();
 		}
 		
+		@org.codehaus.jackson.annotate.JsonIgnore
 		public boolean isTransportSourceSupported() {
 			return true;
 		}
@@ -607,6 +634,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 			return ByteBuffer.wrap(oxm.getData()).getShort();
 		}
 		
+		@org.codehaus.jackson.annotate.JsonIgnore
 		public boolean isTransportDestinationSupported() {
 			return true;
 		}

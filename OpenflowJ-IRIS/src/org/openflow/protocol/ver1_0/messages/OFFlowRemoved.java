@@ -182,6 +182,7 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		throw new UnsupportedOperationException("getTableId is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTableIdSupported() {
 		return false;
 	}
@@ -196,6 +197,7 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		throw new UnsupportedOperationException("getHardTimeout is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isHardTimeoutSupported() {
 		return false;
 	}

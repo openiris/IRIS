@@ -225,6 +225,7 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		throw new UnsupportedOperationException("getCurrSpeed is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isCurrSpeedSupported() {
 		return false;
 	}
@@ -239,6 +240,7 @@ public class OFPortDesc   implements org.openflow.protocol.interfaces.OFPortDesc
 		throw new UnsupportedOperationException("getMaxSpeed is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMaxSpeedSupported() {
 		return false;
 	}

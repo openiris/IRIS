@@ -7,6 +7,7 @@
 			return this.object.getOxmFields();
 		}
 		
+		@org.codehaus.jackson.annotate.JsonIgnore
 		public boolean is${method_name}Supported() {
 			return true;
 		}

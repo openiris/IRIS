@@ -62,6 +62,7 @@ public class OFGetConfigReply extends OFMessage implements org.openflow.protocol
 		throw new UnsupportedOperationException("getMissSendLen is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMissSendLenSupported() {
 		return false;
 	}

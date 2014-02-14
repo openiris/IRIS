@@ -227,6 +227,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		throw new UnsupportedOperationException("getCookieMask is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isCookieMaskSupported() {
 		return false;
 	}
@@ -241,6 +242,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		throw new UnsupportedOperationException("getTableId is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isTableIdSupported() {
 		return false;
 	}
@@ -255,6 +257,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		throw new UnsupportedOperationException("getOutGroup is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isOutGroupSupported() {
 		return false;
 	}
@@ -269,6 +272,7 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
 		throw new UnsupportedOperationException("getInstructions is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isInstructionsSupported() {
 		return false;
 	}

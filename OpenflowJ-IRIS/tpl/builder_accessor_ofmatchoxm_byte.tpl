@@ -11,6 +11,7 @@
 			return oxm.getData()[0];
 		}
 		
+		@org.codehaus.jackson.annotate.JsonIgnore
 		public boolean is${method_name}Supported() {
 			return true;
 		}

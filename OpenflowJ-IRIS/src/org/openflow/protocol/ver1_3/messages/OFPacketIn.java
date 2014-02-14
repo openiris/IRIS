@@ -150,6 +150,7 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
 		throw new UnsupportedOperationException("getInputPort is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isInputPortSupported() {
 		return false;
 	}

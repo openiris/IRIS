@@ -32,6 +32,7 @@ public class OFHello extends OFMessage implements org.openflow.protocol.interfac
 		throw new UnsupportedOperationException("getElements is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isElementsSupported() {
 		return false;
 	}

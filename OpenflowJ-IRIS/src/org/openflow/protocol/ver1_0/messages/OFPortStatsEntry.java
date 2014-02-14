@@ -238,6 +238,7 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		throw new UnsupportedOperationException("getReceiveCrcErrors is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isReceiveCrcErrorsSupported() {
 		return false;
 	}
@@ -252,6 +253,7 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		throw new UnsupportedOperationException("getDurationSec is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDurationSecSupported() {
 		return false;
 	}
@@ -266,6 +268,7 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		throw new UnsupportedOperationException("getDurationNsec is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isDurationNsecSupported() {
 		return false;
 	}

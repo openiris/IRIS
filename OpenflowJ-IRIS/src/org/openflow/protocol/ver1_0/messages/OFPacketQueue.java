@@ -80,6 +80,7 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
 		throw new UnsupportedOperationException("getPort is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPortSupported() {
 		return false;
 	}

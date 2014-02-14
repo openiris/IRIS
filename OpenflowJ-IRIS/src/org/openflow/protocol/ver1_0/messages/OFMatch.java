@@ -277,6 +277,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
 		throw new UnsupportedOperationException("getOxmFields is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isOxmFieldsSupported() {
 		return false;
 	}

@@ -269,6 +269,7 @@ public class OFPortStatsEntry   implements org.openflow.protocol.interfaces.OFPo
 		throw new UnsupportedOperationException("getReceiveCrcErr is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isReceiveCrcErrSupported() {
 		return false;
 	}

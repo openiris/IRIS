@@ -40,6 +40,7 @@
 			return ByteBuffer.wrap(oxm.getData()).getShort();
 		}
 		
+		@org.codehaus.jackson.annotate.JsonIgnore
 		public boolean isTransportDestinationSupported() {
 			return true;
 		}

@@ -155,6 +155,7 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		throw new UnsupportedOperationException("getActions is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isActionsSupported() {
 		return false;
 	}
@@ -169,6 +170,7 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		throw new UnsupportedOperationException("getPorts is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isPortsSupported() {
 		return false;
 	}

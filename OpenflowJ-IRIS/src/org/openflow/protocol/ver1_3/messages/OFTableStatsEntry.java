@@ -94,6 +94,7 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		throw new UnsupportedOperationException("getName is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isNameSupported() {
 		return false;
 	}
@@ -108,6 +109,7 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		throw new UnsupportedOperationException("getWildcards is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isWildcardsSupported() {
 		return false;
 	}
@@ -127,6 +129,7 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		throw new UnsupportedOperationException("getWildcardsWire is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isWildcardsWireSupported() {
 		return false;
 	}
@@ -141,6 +144,7 @@ public class OFTableStatsEntry   implements org.openflow.protocol.interfaces.OFT
 		throw new UnsupportedOperationException("getMaxEntries is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isMaxEntriesSupported() {
 		return false;
 	}

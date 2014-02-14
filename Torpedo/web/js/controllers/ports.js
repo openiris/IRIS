@@ -33,7 +33,12 @@ irisApp.controller('CntlPorts',
 					
 					$http.get('/wm/core/switch/' + $scope.id + '/features/json')
 					.success(function(data) {
-						_.each(data[$scope.id].ports, function(p)  {
+						feature_ports = data[$scope.id].ports;
+						if ( !feature_ports ) {
+							// for 1.3 response
+							feature_ports = data[$scope.id].entries;
+						}
+						_.each(feature_ports, function(p)  {
 							var px = $scope.portsMap[p.portNumber];
 							if ( px ) {
 								px.status = (p.currentFeatures == 0 || p.state & 1) ? 'DOWN' : 'UP';

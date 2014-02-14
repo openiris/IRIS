@@ -158,6 +158,7 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		throw new UnsupportedOperationException("getAuxiliaryId is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isAuxiliaryIdSupported() {
 		return false;
 	}
@@ -172,6 +173,7 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		throw new UnsupportedOperationException("getReserved is not supported operation");
 	}
 	
+	@org.codehaus.jackson.annotate.JsonIgnore
 	public boolean isReservedSupported() {
 		return false;
 	}
