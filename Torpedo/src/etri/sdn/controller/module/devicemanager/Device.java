@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
@@ -71,9 +72,10 @@ public class Device implements IDevice {
 	 * @param entity the initial entity for the device
 	 * @param entityClass the entity classes associated with the entity
 	 */
-	public Device(Long deviceKey,
+	private Device(Long deviceKey,
 			Entity entity,
-			IEntityClass entityClass) {
+			IEntityClass entityClass,
+			Collection<AttachmentPoint> attachmentPoints) {
 		this.deviceKey = deviceKey;
 		this.entities = new Entity[] {entity};
 		this.macAddressString = HexString.toHexString(entity.getMacAddress(), 6);
@@ -82,7 +84,12 @@ public class Device implements IDevice {
 
 		this.oldAPs = new CopyOnWriteArrayList<AttachmentPoint>();
 		this.attachmentPoints = new CopyOnWriteArrayList<AttachmentPoint>();
-
+		
+		this.attachmentPoints.addAll( attachmentPoints );
+	}
+	
+	public static Device allocateDevice(Long deviceKey, Entity entity, IEntityClass entityClass) {
+		List<AttachmentPoint> aps = new LinkedList<AttachmentPoint>();
 		if (entity.getSwitchDPID() != null && entity.getSwitchPort() != null){
 			long sw = entity.getSwitchDPID();
 			short port = entity.getSwitchPort().shortValue();
@@ -90,9 +97,15 @@ public class Device implements IDevice {
 			if (Devices.getInstance().isValidAttachmentPoint(sw, port)) {
 				AttachmentPoint ap = 
 					new AttachmentPoint(sw, port, entity.getLastSeenTimestamp().getTime());
-				this.attachmentPoints.add(ap);
+				aps.add(ap);
 			}
 		}
+		if ( aps.isEmpty() ) {
+			return null;
+		}
+		
+		Device ret = new Device(deviceKey, entity, entityClass, aps);
+		return ret;
 	}
 
 	/**

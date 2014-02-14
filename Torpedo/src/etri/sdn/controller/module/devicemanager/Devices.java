@@ -303,7 +303,8 @@ public class Devices extends OFModel implements IDeviceService {
 	 * @return a new device
 	 */
 	public static Device allocateDevice(Long deviceKey, Entity entity, IEntityClass entityClass) {
-		return new Device(deviceKey, entity, entityClass);
+//		return new Device(deviceKey, entity, entityClass);
+		return Device.allocateDevice(deviceKey, entity, entityClass);
 	}
 
 	/**
@@ -436,15 +437,24 @@ public class Devices extends OFModel implements IDeviceService {
 					Logger.stdout("PacketIn is not allowed {} {} : " + entityClass.getName() + ", " + entity);
 					return null;
 				}
+				
+				// assign new device id
 				synchronized (deviceKeyCounterLock) {
 					deviceId = Long.valueOf(deviceKeyCounter++);
 				}
+				
+				
 				device = Devices.allocateDevice(deviceId, entity, entityClass);
+				
+				if ( device == null ) {
+					// this device is not a target to learn.
+					return null;
+				}
 
 				// updateIndeces() updates the primaryIndex first.
 				// and if succeeds, continues to update per-class index.
 				// this does not include secondary index.
-				if ( updateIndices(device, deviceId) ) {
+				if ( updateIndices(device, deviceId) ) {  
 					// Add the new device to the primary map with a simple put
 					Device d = deviceIdToDeviceMap.putIfAbsent(deviceId, device);
 					if ( d != null ){
@@ -604,6 +614,9 @@ public class Devices extends OFModel implements IDeviceService {
 			if (d.updateAttachmentPoint()) {
 //				Logger.debug("++++ Device changed:" + d.toString());
 				sendDeviceMovedNotification(d);
+			}
+			if (d.getAttachmentPoints().length == 0) {
+				diter.remove();
 			}
 		}
 	}
