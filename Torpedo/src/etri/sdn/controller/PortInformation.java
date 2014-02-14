@@ -17,6 +17,10 @@ public class PortInformation {
 		// does nothing.
 	}
 	
+	public PortInformation(int port) {
+		this.port = port;
+	}
+	
 	public int getPort() {
 		return port;
 	}

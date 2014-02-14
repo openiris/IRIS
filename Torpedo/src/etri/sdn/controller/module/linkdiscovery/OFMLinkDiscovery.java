@@ -627,7 +627,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 
 				for ( OFPortDesc ofp: pports ) {
 
-					sendDiscoveryMessage(sw, (short) ofp.getPort().get(), true, false);
+					sendDiscoveryMessage(sw, ofp.getPort().get(), true, false);
 
 					// If the switch port is not already in the maintenance
 					// queue, add it.

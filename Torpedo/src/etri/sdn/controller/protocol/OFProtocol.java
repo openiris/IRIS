@@ -142,7 +142,7 @@ public class OFProtocol {
 
 	/**
 	 * Get port information by the port number. 
-	 * If none existent, a new PortInformation object is created and saved automatically.
+	 * If none existent, null is returned.
 	 * @param sw
 	 * @param port
 	 * @return
@@ -153,13 +153,7 @@ public class OFProtocol {
 			inner = new ConcurrentHashMap<Integer, PortInformation>();
 			portInformations.put(sw, inner);
 		}
-		PortInformation pi = inner.get(port);
-		if ( pi == null ) {
-			pi = new PortInformation();
-			pi.setPort(port);
-			inner.put(port, pi);
-		}
-		return pi;
+		return inner.get(port);
 	}
 
 	public Collection<PortInformation> getPortInformations(IOFSwitch sw) {
@@ -242,6 +236,12 @@ public class OFProtocol {
 		return ret;
 	}
 
+	/**
+	 *
+	 * @param sw
+	 * @param portNum
+	 * @return
+	 */
 	public OFPortDesc getPort(IOFSwitch sw, int portNum) {
 		PortInformation pi = this.getPortInformation(sw, portNum);
 		if ( pi != null ) {
@@ -318,6 +318,11 @@ public class OFProtocol {
 
 	public void setPort(IOFSwitch sw, OFPortDesc portDesc) {
 		PortInformation pi = this.getPortInformation(sw, portDesc.getPort().get());
+		
+		if ( pi == null ) {
+			pi = this.createPortInformation(sw, portDesc.getPort().get());
+		}
+		
 		pi.setHwAddr(portDesc.getHwAddr())
 		.setName(portDesc.getName())
 		.setConfig(portDesc.getConfigWire())
@@ -330,7 +335,19 @@ public class OFProtocol {
 			pi.setCurrSpeed(portDesc.getCurrSpeed());
 		if ( portDesc.isMaxSpeedSupported() ) 
 			pi.setMaxSpeed(portDesc.getMaxSpeed());
+		
 		this.setPortInformationByName(sw, new String(portDesc.getName()), pi);
+	}
+
+	private PortInformation createPortInformation(IOFSwitch sw, int port) {
+		PortInformation pi = new PortInformation(port);
+		Map<Integer, PortInformation> inner = this.portInformations.get(sw);
+		if ( inner == null ) {
+			inner = new ConcurrentHashMap<Integer, PortInformation>();
+			this.portInformations.put(sw, inner);
+		}
+		inner.put(port, pi);
+		return pi;
 	}
 
 	public void deletePort(IOFSwitch sw, int portNumber) {
