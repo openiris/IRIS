@@ -9,14 +9,14 @@
 		    <tbody template="switch_flows">
 		    	<tr ng-if="flows.length==0"><td colspan="8">No flows</td></tr>
 		    	<tr ng-if="flows.length>0" ng-repeat="flow in flows">
-					<td>{{flow.cookie}}</td>
-					<td>{{flow.priority}}</td>
-					<td>{{flow.matchHTML}}</td>
-					<td>{{flow.actionText}}</td>
-					<td>{{flow.packetCount}}</td>
-					<td>{{flow.byteCount}}</td>
-					<td>{{flow.durationSeconds}}s</td>
-					<td>{{flow.idleTimeout}}s</td>
+					<td width="10%">{{flow.cookie}}</td>
+					<td width="5%">{{flow.priority}}</td>
+					<td width="55%">{{flow.matchHTML}}</td>
+					<td width="10%">{{flow.actionText}}</td>
+					<td width="5%">{{flow.packetCount}}</td>
+					<td width="5%">{{flow.byteCount}}</td>
+					<td width="5%">{{flow.durationSeconds}}s</td>
+					<td width="5%">{{flow.idleTimeout}}s</td>
 				</tr>
 		    </tbody>
 	    </table>

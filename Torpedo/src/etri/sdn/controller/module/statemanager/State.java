@@ -78,7 +78,7 @@ public class State extends OFModel {
 	private OFFlowStatisticsReplySerializerModule flow_statistics_reply_module 
 		= new OFFlowStatisticsReplySerializerModule();
 	
-	/**
+	/**  
 	 * Array of RESTApi objects. 
 	 * Each objects represent a REST call handler routine bound to a specific URI.
 	 */

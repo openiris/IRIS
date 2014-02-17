@@ -15,48 +15,88 @@ irisApp.controller('CntlFlows',
 					_.each(data[$scope.id], function(f) {
 						f.matchHTML = '';
 						
-						if(!(f.match.wildcards & (1<<0))) { // input port
+						if ( f.match.inputPort ) {
 							f.matchHTML += "port=" + f.match.inputPort + ", ";
 						}
-						if(!(f.match.wildcards & (1<<1))) { // VLAN ID
+						// ---
+						if ( f.match.dataLayerVirtualLan ) {
 							f.matchHTML += "VLAN=" + f.match.dataLayerVirtualLan + ", ";
-						}
-						if(!(f.match.wildcards & (1<<20))) { // VLAN prio
+						} 
+						if ( f.match.dataLayerVirtualLanPriorityCodePoint ) {
 							f.matchHTML += "prio=" + f.match.dataLayerVirtualLanPriorityCodePoint  + ", ";
-						}
-						if(!(f.match.wildcards & (1<<2))) { // src MAC
+						} 
+						if ( f.match.dataLayerSource ) {
 							f.matchHTML += "src=" + f.match.dataLayerSource + ", ";
 						}
-						if(!(f.match.wildcards & (1<<3))) { // dest MAC
+						if ( f.match.dataLayerDestination ) {
 							f.matchHTML += "dest=" + f.match.dataLayerDestination + ", ";
 						}
-						if(!(f.match.wildcards & (1<<4))) { // Ethertype
-							// TODO print a human-readable name instead of hex
+						if ( f.match.dataLayerType ) {
 							f.matchHTML += "ethertype=" + f.match.dataLayerType + ", ";
 						}
-						if(!(f.match.wildcards & (1<<5))) { // IP protocol
-							// TODO print a human-readable name
+						// ---
+						if ( f.match.networkProtocol ) { // IP protocol
 							f.matchHTML += "proto=" + f.match.networkProtocol + ", ";
 						}
-						if(!(f.match.wildcards & (1<<6))) { // TCP/UDP source port
-							f.matchHTML += "IP src port=" + f.match.transportSource + ", ";
-						}
-						if(!(f.match.wildcards & (1<<7))) { // TCP/UDP dest port
-							f.matchHTML += "IP dest port=" + f.match.transportDestination  + ", ";
-						}
-						if(!(f.match.wildcards & (32<<8))) { // src IP
-							f.matchHTML += "src=" + f.match.networkSource  + ", ";
-						}
-						if(!(f.match.wildcards & (32<<14))) { // dest IP
-							f.matchHTML += "dest=" + f.match.networkDestination  + ", ";
-						}
-						if(!(f.match.wildcards & (1<<21))) { // IP TOS
+						if ( f.match.networkTypeOfService ) { // IP TOS
 							f.matchHTML += "TOS=" + f.match.networkTypeOfService  + ", ";
 						}
+						if ( f.match.networkDscp ) {
+							f.matchHTML += "DSCP=" + f.match.networkDscp  + ", ";
+						}
+						if ( f.match.networkEcn ) {
+							f.matchHTML += "DSCP=" + f.match.networkEcn  + ", ";
+						}
+						if ( f.match.networkSource ) { // src IP
+							f.matchHTML += "src=" + f.match.networkSource  + ", ";
+						}
+						if ( f.match.networkDestination ) { // dest IP
+							f.matchHTML += "dest=" + f.match.networkDestination  + ", ";
+						}
+						// ---
+						if ( f.match.transportSource ) { // TCP/UDP source port
+							f.matchHTML += "IP src port=" + f.match.transportSource + ", ";
+						}
+						if ( f.match.transportDestination ) { // TCP/UDP dest port
+							f.matchHTML += "IP dest port=" + f.match.transportDestination  + ", ";
+						}
+						if ( f.match.tcpSource ) {
+							f.matchHTML += "TCP src port=" + f.match.tcpSource + ", ";
+						}
+						if ( f.match.tcpDestination ) {
+							f.matchHTML += "TCP dst port=" + f.match.tcpDestination + ", ";
+						}
+						if ( f.match.udpSource ) {
+							f.matchHTML += "UDP src port=" + f.match.udpSource + ", ";
+						}
+						if ( f.match.udpDestination ) {
+							f.matchHTML += "UDP dst port=" + f.match.udpDestination + ", ";
+						}
+						if ( f.match.icmpType ) {
+							f.matchHTML += "ICMP type=" + f.match.icmpType + ", ";
+						}
+						if ( f.match.icmpCode ) {
+							f.matchHTML += "ICMP code=" + f.match.icmpCode + ", ";
+						}
+						
 						// remove trailing ", "
 						f.matchHTML = f.matchHTML.substr(0, f.matchHTML.length - 2);
 						
-						f.actionText = _.reduce(f.actions, function (memo, a) {
+						if ( f.priority == 0 && f.matchHTML == '' ) {
+							f.matchHTML = 'table miss record';
+						}
+						
+						var actions;
+						if ( f.actions ) {
+							actions = f.actions;
+						} else {
+							// this is for version 1.3 >= 
+							actions = _.reduce(f.instructions, function(arr, a) {
+								return arr.concat(a.actions);
+							}, []);
+						}
+						
+						f.actionText = _.reduce(actions, function (memo, a) {
 							switch (a.type) {
 							case "OUTPUT":
 								return memo + "output " + a.port + ', ';
@@ -85,7 +125,7 @@ irisApp.controller('CntlFlows',
 							}
 						}, "");
 						// remove trailing ", "
-						f.actionText = f.actionText.substr(0, f.actionText.length - 2);
+						f.actionText = f.actionText.substr(0, f.actionText.length - 2);	
 						
 						$scope.flows.push(f);
 					});					
