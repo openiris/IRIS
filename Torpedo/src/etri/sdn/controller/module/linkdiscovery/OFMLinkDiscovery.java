@@ -838,7 +838,6 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		if ( eth == null ) {
 			// parse Ethernet header and put into the context
 			eth = new Ethernet();
-//			eth.deserialize(pi.getPacketData(), 0, pi.getPacketData().length);
 			eth.deserialize(pi.getData(), 0, pi.getData().length);
 			context.put(MessageContext.ETHER_PAYLOAD, eth);
 		}
@@ -985,12 +984,10 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		Link lt = this.links.addOrUpdateLink(
 				remoteSwitch.getId(), 				// remote switch id
 				remotePort,							// remote port number
-//				remoteSwitch.getPort(remotePort), 	// remote physical port
-				protocol.getPort(remoteSwitch, remotePort),
+				protocol.getPort(remoteSwitch, remotePort),	// remote physical port
 				sw.getId(), 						// local switch id
 				inputPort,							// remote port number
-//				sw.getPort(pi.getInPort()),			// local physical port
-				protocol.getPort(sw, inputPort),
+				protocol.getPort(sw, inputPort),	// local physical port
 				isStandard,
 				isReverse
 		);
@@ -1039,7 +1036,6 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		 * following is the original implementation by Floodlight.
 		 */
 
-//		short portnum = ps.getDesc().getPortNumber();
 		int portnum = ps.getDesc().getPort().get();
 		
 		NodePortTuple npt = null;

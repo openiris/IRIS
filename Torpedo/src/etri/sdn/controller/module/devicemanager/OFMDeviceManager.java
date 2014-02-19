@@ -60,9 +60,7 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 
 	private ITopologyService topology;
 	private IEntityClassifierService entityClassifier;
-	
-//	@SuppressWarnings("unused")
-//	private VersionAdaptor10 version_adaptor_10;
+
 	
 	/** 
 	 * All the devices that you want.
@@ -136,8 +134,6 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 		this.topology = getTopologyServiceRef();		
 		this.entityClassifier = getEntityClassifierServiceRef();
 		this.devices = Devices.getInstance(topology, entityClassifier);
-		
-//		this.version_adaptor_10 = (VersionAdaptor10) getController().getVersionAdaptor((byte)0x01);
 		
 		// 'classes' now has an entry for the class IPv4,
 		// and this will create an entry within 'secondaryIndexMap' of ClassIndices object.
