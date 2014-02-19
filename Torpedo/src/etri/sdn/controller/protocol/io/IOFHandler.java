@@ -47,23 +47,6 @@ public interface IOFHandler {
 	public abstract boolean handleDisconnectEvent(Connection conn);
 	public abstract boolean handleConnectedEvent(final Connection conn);
 	
-	/**
-	 * If the connection is need to be handled by this handler, 
-	 * it returns true. Otherwise, returns false. 
-	 * @param conn
-	 * @return
-	 */
-	public abstract boolean isMySwitch(Connection conn);
-	
-	/**
-	 * If the messages are need to be handled by this controller,
-	 * it returns true. Otherwise, returns false.
-	 * @param conn
-	 * @param msgs
-	 * @return
-	 */
-	public abstract boolean isMyFlow(Connection conn, List<OFMessage> msgs);
-
 	public abstract void addModule(OFModule module);
 	
 	public abstract Collection<OFModule> getModules();

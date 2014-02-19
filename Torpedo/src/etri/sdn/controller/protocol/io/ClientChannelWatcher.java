@@ -44,9 +44,7 @@ public final class ClientChannelWatcher extends Thread {
 	public static Set<IOFHandler> getHandlersFor(Connection conn) {
 		Set<IOFHandler> ret = new ConcurrentSkipListSet<IOFHandler>();
 		for ( IOFHandler h : controllers ) {
-			if ( h.isMySwitch(conn) ) {
-				ret.add(h);
-			}
+			ret.add(h);
 		}
 		return ret;
 	}
@@ -200,8 +198,6 @@ public final class ClientChannelWatcher extends Thread {
 		boolean ret = true;
 		Set<IOFHandler> handlers = conn.getHandlers();
 		for ( IOFHandler h : handlers ) {
-			// if not my flow, we do not pass the msg to the controller.
-			if ( !h.isMyFlow(conn, msgs) ) { continue; }
 			ret = h.handleReadEvent(conn, msgs) == false ? false : ret ;
 		}
 		return ret;

@@ -434,24 +434,6 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 	}
 
 	/**
-	 * This function returns true if a given switch is assigned to this controller.
-	 * But this function is not used currently, so should be removed from the source.
-	 */
-	@Override
-	public boolean isMySwitch(Connection conn) {
-		return true;
-	}
-
-	/**
-	 * This function returns true if a given messages is assigned to this controller.
-	 * But this function is not used currently, so should be removed from the source.
-	 */
-	@Override
-	public boolean isMyFlow(Connection conn, List<OFMessage> msgs) {
-		return true;
-	}
-	
-	/**
 	 * This method is automatically called by {@link OFModule#init(IOFHandler)}.
 	 * This method is for adding a module as a part of this controller object.
 	 */

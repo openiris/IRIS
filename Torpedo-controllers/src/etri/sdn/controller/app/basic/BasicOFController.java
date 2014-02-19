@@ -81,16 +81,6 @@ public class BasicOFController extends OFController {
 	}
 
 	@Override
-	public boolean isMySwitch(Connection conn) {
-		return true;
-	}
-
-	@Override
-	public boolean isMyFlow(Connection conn, List<OFMessage> msgs) {
-		return true;
-	}
-
-	@Override
 	public boolean handleGeneric(Connection conn, MessageContext context, OFMessage m) {
 		
 		OFMessageType t = m.getType();
