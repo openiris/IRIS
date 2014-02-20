@@ -163,10 +163,6 @@ public class Forwarding extends ForwardingBase {
 		// initialize match structure and populate it using the packet
 		OFMatch match = protocol.loadOFMatchFromPacket(sw, pi.getData(), (short) input_port);
 
-		if ( (decision.getWildcards() != null) && (match.isWildcardsSupported()) ) {
-			match.setWildcardsWire(decision.getWildcards());
-		}
-
 		// Create flow-mod based on packet-in and src-switch
 		OFFlowMod fm = OFMessageFactory.createFlowMod(pi.getVersion());
 		fm.setCommand(OFFlowModCommand.ADD);
