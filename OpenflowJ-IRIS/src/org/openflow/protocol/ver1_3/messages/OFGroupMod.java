@@ -128,10 +128,10 @@ public class OFGroupMod extends OFMessage implements org.openflow.protocol.inter
     }
 
     public String toString() {
-        return super.toString() +  ":OFGroupMod-"+":command=" + command.toString() + 
-		":group_category=" + group_category.toString() + 
+        return super.toString() +  ":OFGroupMod-"+":command=" + command + 
+		":group_category=" + group_category + 
 		":group_id=" + U32.f(group_id) + 
-		":buckets=" + buckets.toString();
+		":buckets=" + buckets;
     }
 
 	// compute length (without final alignment)    

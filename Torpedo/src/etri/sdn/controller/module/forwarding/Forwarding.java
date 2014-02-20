@@ -169,11 +169,10 @@ public class Forwarding extends ForwardingBase {
 
 		// Create flow-mod based on packet-in and src-switch
 		OFFlowMod fm = OFMessageFactory.createFlowMod(pi.getVersion());
-		
+		fm.setCommand(OFFlowModCommand.ADD);
 		// Drop
 		if ( fm.isInstructionsSupported() ) {
-			fm.setCommand(OFFlowModCommand.ADD)
-			.setInstructions(Collections.<OFInstruction>emptyList());
+			fm.setInstructions(Collections.<OFInstruction>emptyList());
 		} else {
 			fm.setActions(Collections.<OFAction>emptyList());
 		}

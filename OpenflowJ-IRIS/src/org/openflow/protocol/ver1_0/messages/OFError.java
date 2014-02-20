@@ -97,7 +97,7 @@ public class OFError extends OFMessage implements org.openflow.protocol.interfac
     }
 
     public String toString() {
-        return super.toString() +  ":OFError-"+":error_code=" + error_code.toString() + 
+        return super.toString() +  ":OFError-"+":error_code=" + error_code + 
 		":subcode=" + U16.f(subcode) + 
 		":data=" + java.util.Arrays.toString(data);
     }

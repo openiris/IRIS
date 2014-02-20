@@ -73,7 +73,7 @@ public class OFTableFeatureProperty   implements org.openflow.protocol.interface
     }
 
     public String toString() {
-        return  ":OFTableFeatureProperty-"+":type=" + type.toString() + 
+        return  ":OFTableFeatureProperty-"+":type=" + type + 
 		":length=" + U16.f(length);
     }
 

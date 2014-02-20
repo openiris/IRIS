@@ -155,7 +155,7 @@ public class OFMessage   implements org.openflow.protocol.interfaces.OFMessage {
 
     public String toString() {
         return  ":OFMessage-"+":version=" + U8.f(version) + 
-		":type=" + type.toString() + 
+		":type=" + type + 
 		":length=" + U16.f(length) + 
 		":xid=" + U32.f(xid);
     }

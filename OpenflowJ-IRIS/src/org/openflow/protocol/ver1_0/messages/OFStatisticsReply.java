@@ -104,7 +104,7 @@ public class OFStatisticsReply extends OFStatistics implements org.openflow.prot
     }
 
     public String toString() {
-        return super.toString() +  ":OFStatisticsReply-"+":statistics_type=" + statistics_type.toString() + 
+        return super.toString() +  ":OFStatisticsReply-"+":statistics_type=" + statistics_type + 
 		":flags=" + U16.f(flags);
     }
 

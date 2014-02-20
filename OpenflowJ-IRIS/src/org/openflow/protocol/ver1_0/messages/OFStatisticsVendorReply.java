@@ -76,7 +76,7 @@ public class OFStatisticsVendorReply extends OFStatisticsReply implements org.op
     }
 
     public String toString() {
-        return super.toString() +  ":OFStatisticsVendorReply-"+":vendor=" + vendor.toString() + 
+        return super.toString() +  ":OFStatisticsVendorReply-"+":vendor=" + vendor + 
 		":data=" + java.util.Arrays.toString(data);
     }
 

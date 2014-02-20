@@ -87,8 +87,8 @@ public class OFPortStatus extends OFMessage implements org.openflow.protocol.int
     }
 
     public String toString() {
-        return super.toString() +  ":OFPortStatus-"+":reason=" + reason.toString() + 
-		":desc=" + desc.toString();
+        return super.toString() +  ":OFPortStatus-"+":reason=" + reason + 
+		":desc=" + desc;
     }
 
 	// compute length (without final alignment)    

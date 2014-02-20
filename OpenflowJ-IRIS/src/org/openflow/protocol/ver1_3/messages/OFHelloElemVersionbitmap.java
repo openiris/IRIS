@@ -60,7 +60,7 @@ public class OFHelloElemVersionbitmap extends OFHelloElem implements org.openflo
     }
 
     public String toString() {
-        return super.toString() +  ":OFHelloElemVersionbitmap-"+":bitmaps=" + bitmaps.toString();
+        return super.toString() +  ":OFHelloElemVersionbitmap-"+":bitmaps=" + bitmaps;
     }
 
 	// compute length (without final alignment)    

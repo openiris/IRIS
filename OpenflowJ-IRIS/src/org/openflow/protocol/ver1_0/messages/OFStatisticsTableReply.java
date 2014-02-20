@@ -61,7 +61,7 @@ public class OFStatisticsTableReply extends OFStatisticsReply implements org.ope
     }
 
     public String toString() {
-        return super.toString() +  ":OFStatisticsTableReply-"+":entries=" + entries.toString();
+        return super.toString() +  ":OFStatisticsTableReply-"+":entries=" + entries;
     }
 
 	// compute length (without final alignment)    

@@ -60,7 +60,7 @@ public class OFTableFeaturePropertyWildcards extends OFTableFeatureProperty impl
     }
 
     public String toString() {
-        return super.toString() +  ":OFTableFeaturePropertyWildcards-"+":oxm_ids=" + oxm_ids.toString();
+        return super.toString() +  ":OFTableFeaturePropertyWildcards-"+":oxm_ids=" + oxm_ids;
     }
 
 	// compute length (without final alignment)    

@@ -192,10 +192,10 @@ public class OFPacketIn extends OFMessage implements org.openflow.protocol.inter
     public String toString() {
         return super.toString() +  ":OFPacketIn-"+":buffer_id=" + U32.f(buffer_id) + 
 		":total_length=" + U16.f(total_length) + 
-		":reason=" + reason.toString() + 
+		":reason=" + reason + 
 		":table_id=" + U8.f(table_id) + 
 		":cookie=" + U64.f(cookie) + 
-		":match=" + match.toString() + 
+		":match=" + match + 
 		":data=" + java.util.Arrays.toString(data);
     }
 

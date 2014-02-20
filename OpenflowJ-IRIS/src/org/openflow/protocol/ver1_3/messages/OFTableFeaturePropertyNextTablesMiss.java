@@ -60,7 +60,7 @@ public class OFTableFeaturePropertyNextTablesMiss extends OFTableFeatureProperty
     }
 
     public String toString() {
-        return super.toString() +  ":OFTableFeaturePropertyNextTablesMiss-"+":next_table_ids=" + next_table_ids.toString();
+        return super.toString() +  ":OFTableFeaturePropertyNextTablesMiss-"+":next_table_ids=" + next_table_ids;
     }
 
 	// compute length (without final alignment)    

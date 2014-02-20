@@ -303,7 +303,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
     public String toString() {
         return  ":OFFlowStatsEntry-"+":length=" + U16.f(length) + 
 		":table_id=" + U8.f(table_id) + 
-		":match=" + match.toString() + 
+		":match=" + match + 
 		":duration_sec=" + U32.f(duration_sec) + 
 		":duration_nsec=" + U32.f(duration_nsec) + 
 		":priority=" + U16.f(priority) + 
@@ -312,7 +312,7 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		":cookie=" + U64.f(cookie) + 
 		":packet_count=" + U64.f(packet_count) + 
 		":byte_count=" + U64.f(byte_count) + 
-		":actions=" + actions.toString();
+		":actions=" + actions;
     }
 
 	// compute length (without final alignment)    

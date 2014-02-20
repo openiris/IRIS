@@ -67,7 +67,7 @@ public class OFHello extends OFMessage implements org.openflow.protocol.interfac
     }
 
     public String toString() {
-        return super.toString() +  ":OFHello-"+":elements=" + elements.toString();
+        return super.toString() +  ":OFHello-"+":elements=" + elements;
     }
 
 	// compute length (without final alignment)    

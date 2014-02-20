@@ -203,7 +203,7 @@ public class OFTableFeatures   implements org.openflow.protocol.interfaces.OFTab
 		":metadata_write=" + U64.f(metadata_write) + 
 		":config=" + U32.f(config) + 
 		":max_entries=" + U32.f(max_entries) + 
-		":properties=" + properties.toString();
+		":properties=" + properties;
     }
 
 	// compute length (without final alignment)    

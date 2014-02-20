@@ -142,7 +142,7 @@ public class OFPortMod extends OFMessage implements org.openflow.protocol.interf
     }
 
     public String toString() {
-        return super.toString() +  ":OFPortMod-"+":port_no=" + port_no.toString() + 
+        return super.toString() +  ":OFPortMod-"+":port_no=" + port_no + 
 		":hw_addr=" + java.util.Arrays.toString(hw_addr) + 
 		":config=" + U32.f(config) + 
 		":mask=" + U32.f(mask) + 

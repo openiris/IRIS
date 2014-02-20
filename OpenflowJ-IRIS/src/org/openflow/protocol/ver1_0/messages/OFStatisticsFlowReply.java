@@ -61,7 +61,7 @@ public class OFStatisticsFlowReply extends OFStatisticsReply implements org.open
     }
 
     public String toString() {
-        return super.toString() +  ":OFStatisticsFlowReply-"+":entries=" + entries.toString();
+        return super.toString() +  ":OFStatisticsFlowReply-"+":entries=" + entries;
     }
 
 	// compute length (without final alignment)    

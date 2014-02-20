@@ -143,7 +143,7 @@ public class OFBucket   implements org.openflow.protocol.interfaces.OFBucket {
 		":weight=" + U16.f(weight) + 
 		":watch_port=" + U32.f(watch_port) + 
 		":watch_group=" + U32.f(watch_group) + 
-		":actions=" + actions.toString();
+		":actions=" + actions;
     }
 
 	// compute length (without final alignment)    

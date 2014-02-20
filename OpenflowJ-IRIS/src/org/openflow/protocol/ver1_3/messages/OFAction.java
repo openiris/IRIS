@@ -73,7 +73,7 @@ public class OFAction   implements org.openflow.protocol.interfaces.OFAction {
     }
 
     public String toString() {
-        return  ":OFAction-"+":type=" + type.toString() + 
+        return  ":OFAction-"+":type=" + type + 
 		":length=" + U16.f(length);
     }
 

@@ -61,7 +61,7 @@ public class OFStatisticsQueueReply extends OFStatisticsReply implements org.ope
     }
 
     public String toString() {
-        return super.toString() +  ":OFStatisticsQueueReply-"+":entries=" + entries.toString();
+        return super.toString() +  ":OFStatisticsQueueReply-"+":entries=" + entries;
     }
 
 	// compute length (without final alignment)    

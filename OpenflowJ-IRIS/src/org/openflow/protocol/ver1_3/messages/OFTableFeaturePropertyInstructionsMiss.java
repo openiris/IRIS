@@ -67,7 +67,7 @@ public class OFTableFeaturePropertyInstructionsMiss extends OFTableFeatureProper
     }
 
     public String toString() {
-        return super.toString() +  ":OFTableFeaturePropertyInstructionsMiss-"+":instruction_ids=" + instruction_ids.toString();
+        return super.toString() +  ":OFTableFeaturePropertyInstructionsMiss-"+":instruction_ids=" + instruction_ids;
     }
 
 	// compute length (without final alignment)    

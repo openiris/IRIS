@@ -67,7 +67,7 @@ public class OFTableFeaturePropertyInstructions extends OFTableFeatureProperty i
     }
 
     public String toString() {
-        return super.toString() +  ":OFTableFeaturePropertyInstructions-"+":instruction_ids=" + instruction_ids.toString();
+        return super.toString() +  ":OFTableFeaturePropertyInstructions-"+":instruction_ids=" + instruction_ids;
     }
 
 	// compute length (without final alignment)    

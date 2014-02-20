@@ -195,7 +195,7 @@ public class OFGroupStatsEntry   implements org.openflow.protocol.interfaces.OFG
 		":byte_count=" + U64.f(byte_count) + 
 		":duration_sec=" + U32.f(duration_sec) + 
 		":duration_nsec=" + U32.f(duration_nsec) + 
-		":bucket_stats=" + bucket_stats.toString();
+		":bucket_stats=" + bucket_stats;
     }
 
 	// compute length (without final alignment)    

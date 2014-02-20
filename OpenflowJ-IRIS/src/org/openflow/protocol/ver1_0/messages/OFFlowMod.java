@@ -324,16 +324,16 @@ public class OFFlowMod extends OFMessage implements org.openflow.protocol.interf
     }
 
     public String toString() {
-        return super.toString() +  ":OFFlowMod-"+":match=" + match.toString() + 
+        return super.toString() +  ":OFFlowMod-"+":match=" + match + 
 		":cookie=" + U64.f(cookie) + 
-		":command=" + command.toString() + 
+		":command=" + command + 
 		":idle_timeout=" + U16.f(idle_timeout) + 
 		":hard_timeout=" + U16.f(hard_timeout) + 
 		":priority=" + U16.f(priority) + 
 		":buffer_id=" + U32.f(buffer_id) + 
 		":out_port=" + U16.f(out_port) + 
 		":flags=" + U16.f(flags) + 
-		":actions=" + actions.toString();
+		":actions=" + actions;
     }
 
 	// compute length (without final alignment)    

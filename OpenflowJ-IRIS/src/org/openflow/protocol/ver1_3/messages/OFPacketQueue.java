@@ -127,7 +127,7 @@ public class OFPacketQueue   implements org.openflow.protocol.interfaces.OFPacke
         return  ":OFPacketQueue-"+":queue_id=" + U32.f(queue_id) + 
 		":port=" + U32.f(port) + 
 		":length=" + U16.f(length) + 
-		":properties=" + properties.toString();
+		":properties=" + properties;
     }
 
 	// compute length (without final alignment)    

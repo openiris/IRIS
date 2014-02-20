@@ -241,10 +241,10 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
     }
 
     public String toString() {
-        return super.toString() +  ":OFFlowRemoved-"+":match=" + match.toString() + 
+        return super.toString() +  ":OFFlowRemoved-"+":match=" + match + 
 		":cookie=" + U64.f(cookie) + 
 		":priority=" + U16.f(priority) + 
-		":reason=" + reason.toString() + 
+		":reason=" + reason + 
 		":duration_sec=" + U32.f(duration_sec) + 
 		":duration_nsec=" + U32.f(duration_nsec) + 
 		":idle_timeout=" + U16.f(idle_timeout) + 

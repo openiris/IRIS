@@ -61,7 +61,7 @@ public class OFStatisticsPortDescReply extends OFStatisticsReply implements org.
     }
 
     public String toString() {
-        return super.toString() +  ":OFStatisticsPortDescReply-"+":entries=" + entries.toString();
+        return super.toString() +  ":OFStatisticsPortDescReply-"+":entries=" + entries;
     }
 
 	// compute length (without final alignment)    

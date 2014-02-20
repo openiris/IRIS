@@ -60,7 +60,7 @@ public class OFTableFeaturePropertyNextTables extends OFTableFeatureProperty imp
     }
 
     public String toString() {
-        return super.toString() +  ":OFTableFeaturePropertyNextTables-"+":next_table_ids=" + next_table_ids.toString();
+        return super.toString() +  ":OFTableFeaturePropertyNextTables-"+":next_table_ids=" + next_table_ids;
     }
 
 	// compute length (without final alignment)    

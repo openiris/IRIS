@@ -61,7 +61,7 @@ public class OFStatisticsTableFeaturesRequest extends OFStatisticsRequest implem
     }
 
     public String toString() {
-        return super.toString() +  ":OFStatisticsTableFeaturesRequest-"+":entries=" + entries.toString();
+        return super.toString() +  ":OFStatisticsTableFeaturesRequest-"+":entries=" + entries;
     }
 
 	// compute length (without final alignment)    

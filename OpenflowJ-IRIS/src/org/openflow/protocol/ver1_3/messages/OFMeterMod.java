@@ -126,10 +126,10 @@ public class OFMeterMod extends OFMessage implements org.openflow.protocol.inter
     }
 
     public String toString() {
-        return super.toString() +  ":OFMeterMod-"+":command=" + command.toString() + 
+        return super.toString() +  ":OFMeterMod-"+":command=" + command + 
 		":flags=" + U16.f(flags) + 
 		":meter_id=" + U32.f(meter_id) + 
-		":meters=" + meters.toString();
+		":meters=" + meters;
     }
 
 	// compute length (without final alignment)    

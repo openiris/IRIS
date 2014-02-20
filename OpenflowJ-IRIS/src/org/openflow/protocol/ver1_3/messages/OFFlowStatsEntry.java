@@ -312,8 +312,8 @@ public class OFFlowStatsEntry   implements org.openflow.protocol.interfaces.OFFl
 		":cookie=" + U64.f(cookie) + 
 		":packet_count=" + U64.f(packet_count) + 
 		":byte_count=" + U64.f(byte_count) + 
-		":match=" + match.toString() + 
-		":instructions=" + instructions.toString();
+		":match=" + match + 
+		":instructions=" + instructions;
     }
 
 	// compute length (without final alignment)    

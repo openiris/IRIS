@@ -316,7 +316,7 @@ public class OFMatch   implements org.openflow.protocol.interfaces.OFMatch {
     }
 
     public String toString() {
-        return  ":OFMatch-"+":type=" + type.toString() + 
+        return  ":OFMatch-"+":type=" + type + 
 		":length=" + U16.f(length);
     }
 

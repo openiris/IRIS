@@ -243,7 +243,7 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
     public String toString() {
         return super.toString() +  ":OFFlowRemoved-"+":cookie=" + U64.f(cookie) + 
 		":priority=" + U16.f(priority) + 
-		":reason=" + reason.toString() + 
+		":reason=" + reason + 
 		":table_id=" + U8.f(table_id) + 
 		":duration_sec=" + U32.f(duration_sec) + 
 		":duration_nsec=" + U32.f(duration_nsec) + 
@@ -251,7 +251,7 @@ public class OFFlowRemoved extends OFMessage implements org.openflow.protocol.in
 		":hard_timeout=" + U16.f(hard_timeout) + 
 		":packet_count=" + U64.f(packet_count) + 
 		":byte_count=" + U64.f(byte_count) + 
-		":match=" + match.toString();
+		":match=" + match;
     }
 
 	// compute length (without final alignment)    

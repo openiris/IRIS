@@ -667,7 +667,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
     }
 
     public String toString() {
-        return super.toString() +  ":OFMatchOxm-"+":oxm_fields=" + oxm_fields.toString();
+        return super.toString() +  ":OFMatchOxm-"+":oxm_fields=" + oxm_fields;
     }
 
 	// compute length (without final alignment)    

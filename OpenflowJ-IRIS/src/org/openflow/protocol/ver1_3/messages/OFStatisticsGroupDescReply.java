@@ -61,7 +61,7 @@ public class OFStatisticsGroupDescReply extends OFStatisticsReply implements org
     }
 
     public String toString() {
-        return super.toString() +  ":OFStatisticsGroupDescReply-"+":entries=" + entries.toString();
+        return super.toString() +  ":OFStatisticsGroupDescReply-"+":entries=" + entries;
     }
 
 	// compute length (without final alignment)    

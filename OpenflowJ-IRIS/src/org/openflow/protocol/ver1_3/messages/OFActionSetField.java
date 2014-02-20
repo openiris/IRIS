@@ -55,7 +55,7 @@ public class OFActionSetField extends OFAction implements org.openflow.protocol.
     }
 
     public String toString() {
-        return super.toString() +  ":OFActionSetField-"+":field=" + field.toString();
+        return super.toString() +  ":OFActionSetField-"+":field=" + field;
     }
 
 	// compute length (without final alignment)    

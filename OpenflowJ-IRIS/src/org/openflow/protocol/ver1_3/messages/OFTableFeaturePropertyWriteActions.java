@@ -60,7 +60,7 @@ public class OFTableFeaturePropertyWriteActions extends OFTableFeatureProperty i
     }
 
     public String toString() {
-        return super.toString() +  ":OFTableFeaturePropertyWriteActions-"+":action_ids=" + action_ids.toString();
+        return super.toString() +  ":OFTableFeaturePropertyWriteActions-"+":action_ids=" + action_ids;
     }
 
 	// compute length (without final alignment)    

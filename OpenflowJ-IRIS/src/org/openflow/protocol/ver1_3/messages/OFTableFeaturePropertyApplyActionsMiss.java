@@ -60,7 +60,7 @@ public class OFTableFeaturePropertyApplyActionsMiss extends OFTableFeatureProper
     }
 
     public String toString() {
-        return super.toString() +  ":OFTableFeaturePropertyApplyActionsMiss-"+":action_ids=" + action_ids.toString();
+        return super.toString() +  ":OFTableFeaturePropertyApplyActionsMiss-"+":action_ids=" + action_ids;
     }
 
 	// compute length (without final alignment)    

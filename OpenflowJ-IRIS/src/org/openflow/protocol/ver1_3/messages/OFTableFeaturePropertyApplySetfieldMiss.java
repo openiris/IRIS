@@ -60,7 +60,7 @@ public class OFTableFeaturePropertyApplySetfieldMiss extends OFTableFeaturePrope
     }
 
     public String toString() {
-        return super.toString() +  ":OFTableFeaturePropertyApplySetfieldMiss-"+":oxm_ids=" + oxm_ids.toString();
+        return super.toString() +  ":OFTableFeaturePropertyApplySetfieldMiss-"+":oxm_ids=" + oxm_ids;
     }
 
 	// compute length (without final alignment)    

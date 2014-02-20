@@ -73,7 +73,7 @@ public class OFHelloElem   implements org.openflow.protocol.interfaces.OFHelloEl
     }
 
     public String toString() {
-        return  ":OFHelloElem-"+":type=" + type.toString() + 
+        return  ":OFHelloElem-"+":type=" + type + 
 		":length=" + U16.f(length);
     }
 

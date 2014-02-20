@@ -127,11 +127,11 @@ public class OFStatisticsDescReply extends OFStatisticsReply implements org.open
     }
 
     public String toString() {
-        return super.toString() +  ":OFStatisticsDescReply-"+":manufacturer_description=" + manufacturer_description.toString() + 
-		":hardware_description=" + hardware_description.toString() + 
-		":software_description=" + software_description.toString() + 
-		":serial_number=" + serial_number.toString() + 
-		":datapath_description=" + datapath_description.toString();
+        return super.toString() +  ":OFStatisticsDescReply-"+":manufacturer_description=" + manufacturer_description + 
+		":hardware_description=" + hardware_description + 
+		":software_description=" + software_description + 
+		":serial_number=" + serial_number + 
+		":datapath_description=" + datapath_description;
     }
 
 	// compute length (without final alignment)    

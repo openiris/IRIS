@@ -83,7 +83,7 @@ public class OFQueueGetConfigReply extends OFMessage implements org.openflow.pro
 
     public String toString() {
         return super.toString() +  ":OFQueueGetConfigReply-"+":port=" + U32.f(port) + 
-		":queues=" + queues.toString();
+		":queues=" + queues;
     }
 
 	// compute length (without final alignment)    

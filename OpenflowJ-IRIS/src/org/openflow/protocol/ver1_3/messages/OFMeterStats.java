@@ -195,7 +195,7 @@ public class OFMeterStats   implements org.openflow.protocol.interfaces.OFMeterS
 		":byte_in_count=" + U64.f(byte_in_count) + 
 		":duration_sec=" + U32.f(duration_sec) + 
 		":duration_nsec=" + U32.f(duration_nsec) + 
-		":band_stats=" + band_stats.toString();
+		":band_stats=" + band_stats;
     }
 
 	// compute length (without final alignment)    

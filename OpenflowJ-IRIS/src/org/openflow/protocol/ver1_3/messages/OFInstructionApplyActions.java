@@ -70,7 +70,7 @@ public class OFInstructionApplyActions extends OFInstruction implements org.open
     }
 
     public String toString() {
-        return super.toString() +  ":OFInstructionApplyActions-"+":actions=" + actions.toString();
+        return super.toString() +  ":OFInstructionApplyActions-"+":actions=" + actions;
     }
 
 	// compute length (without final alignment)    

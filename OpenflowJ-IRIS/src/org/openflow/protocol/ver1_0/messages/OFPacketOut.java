@@ -144,7 +144,7 @@ public class OFPacketOut extends OFMessage implements org.openflow.protocol.inte
         return super.toString() +  ":OFPacketOut-"+":buffer_id=" + U32.f(buffer_id) + 
 		":input_port=" + U16.f(input_port) + 
 		":actions_length=" + U16.f(actions_length) + 
-		":actions=" + actions.toString() + 
+		":actions=" + actions + 
 		":data=" + java.util.Arrays.toString(data);
     }
 

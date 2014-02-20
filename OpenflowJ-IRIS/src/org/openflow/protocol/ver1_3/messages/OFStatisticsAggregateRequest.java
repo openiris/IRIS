@@ -161,7 +161,7 @@ public class OFStatisticsAggregateRequest extends OFStatisticsRequest implements
 		":out_group=" + U32.f(out_group) + 
 		":cookie=" + U64.f(cookie) + 
 		":cookie_mask=" + U64.f(cookie_mask) + 
-		":match=" + match.toString();
+		":match=" + match;
     }
 
 	// compute length (without final alignment)    

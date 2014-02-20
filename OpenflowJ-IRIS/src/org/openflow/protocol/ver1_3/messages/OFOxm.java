@@ -128,7 +128,7 @@ public class OFOxm   implements org.openflow.protocol.interfaces.OFOxm {
     }
 
     public String toString() {
-        return  ":OFOxm-"+":oxm_class=" + oxm_class.toString() + 
+        return  ":OFOxm-"+":oxm_class=" + oxm_class + 
 		":field_bitmask=" + U8.f(field_bitmask) + 
 		":payload_length=" + U8.f(payload_length) + 
 		":data=" + java.util.Arrays.toString(data);

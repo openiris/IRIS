@@ -73,7 +73,7 @@ public class OFInstruction   implements org.openflow.protocol.interfaces.OFInstr
     }
 
     public String toString() {
-        return  ":OFInstruction-"+":type=" + type.toString() + 
+        return  ":OFInstruction-"+":type=" + type + 
 		":length=" + U16.f(length);
     }
 

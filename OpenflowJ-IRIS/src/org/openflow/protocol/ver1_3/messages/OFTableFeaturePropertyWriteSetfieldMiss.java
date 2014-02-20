@@ -60,7 +60,7 @@ public class OFTableFeaturePropertyWriteSetfieldMiss extends OFTableFeaturePrope
     }
 
     public String toString() {
-        return super.toString() +  ":OFTableFeaturePropertyWriteSetfieldMiss-"+":oxm_ids=" + oxm_ids.toString();
+        return super.toString() +  ":OFTableFeaturePropertyWriteSetfieldMiss-"+":oxm_ids=" + oxm_ids;
     }
 
 	// compute length (without final alignment)    

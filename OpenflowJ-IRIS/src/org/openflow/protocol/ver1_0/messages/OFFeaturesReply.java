@@ -218,7 +218,7 @@ public class OFFeaturesReply extends OFMessage implements org.openflow.protocol.
 		":n_tables=" + U8.f(n_tables) + 
 		":capabilities=" + U32.f(capabilities) + 
 		":actions=" + U32.f(actions) + 
-		":ports=" + ports.toString();
+		":ports=" + ports;
     }
 
 	// compute length (without final alignment)    

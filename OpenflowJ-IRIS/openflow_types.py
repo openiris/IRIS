@@ -966,7 +966,7 @@ class Struct(Type):
         elif self.is_octet_type(variable_type):
           tsline = '":%s=" + java.util.Arrays.toString(%s) + ' % (variable_name, variable_name)
         else:
-          tsline = '":%s=" + %s.toString() + ' % (variable_name, variable_name)
+          tsline = '":%s=" + %s + ' % (variable_name, variable_name)
         tostrings.append(tsline)
         
         #

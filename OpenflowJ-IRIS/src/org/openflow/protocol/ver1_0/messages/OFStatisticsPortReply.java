@@ -61,7 +61,7 @@ public class OFStatisticsPortReply extends OFStatisticsReply implements org.open
     }
 
     public String toString() {
-        return super.toString() +  ":OFStatisticsPortReply-"+":entries=" + entries.toString();
+        return super.toString() +  ":OFStatisticsPortReply-"+":entries=" + entries;
     }
 
 	// compute length (without final alignment)    

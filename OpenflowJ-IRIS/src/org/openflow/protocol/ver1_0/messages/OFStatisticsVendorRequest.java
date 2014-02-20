@@ -76,7 +76,7 @@ public class OFStatisticsVendorRequest extends OFStatisticsRequest implements or
     }
 
     public String toString() {
-        return super.toString() +  ":OFStatisticsVendorRequest-"+":vendor=" + vendor.toString() + 
+        return super.toString() +  ":OFStatisticsVendorRequest-"+":vendor=" + vendor + 
 		":data=" + java.util.Arrays.toString(data);
     }
 

@@ -141,7 +141,7 @@ public class OFStatisticsAggregateRequest extends OFStatisticsRequest implements
     }
 
     public String toString() {
-        return super.toString() +  ":OFStatisticsAggregateRequest-"+":match=" + match.toString() + 
+        return super.toString() +  ":OFStatisticsAggregateRequest-"+":match=" + match + 
 		":table_id=" + U8.f(table_id) + 
 		":out_port=" + U16.f(out_port);
     }

@@ -141,7 +141,7 @@ public class OFStatisticsFlowRequest extends OFStatisticsRequest implements org.
     }
 
     public String toString() {
-        return super.toString() +  ":OFStatisticsFlowRequest-"+":match=" + match.toString() + 
+        return super.toString() +  ":OFStatisticsFlowRequest-"+":match=" + match + 
 		":table_id=" + U8.f(table_id) + 
 		":out_port=" + U16.f(out_port);
     }

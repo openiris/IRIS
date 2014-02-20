@@ -81,7 +81,7 @@ public class OFStatisticsQueueRequest extends OFStatisticsRequest implements org
     }
 
     public String toString() {
-        return super.toString() +  ":OFStatisticsQueueRequest-"+":port_no=" + port_no.toString() + 
+        return super.toString() +  ":OFStatisticsQueueRequest-"+":port_no=" + port_no + 
 		":queue_id=" + U32.f(queue_id);
     }
 

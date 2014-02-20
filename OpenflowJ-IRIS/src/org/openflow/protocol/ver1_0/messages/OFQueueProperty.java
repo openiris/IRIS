@@ -76,7 +76,7 @@ public class OFQueueProperty   implements org.openflow.protocol.interfaces.OFQue
     }
 
     public String toString() {
-        return  ":OFQueueProperty-"+":type=" + type.toString() + 
+        return  ":OFQueueProperty-"+":type=" + type + 
 		":length=" + U16.f(length);
     }
 

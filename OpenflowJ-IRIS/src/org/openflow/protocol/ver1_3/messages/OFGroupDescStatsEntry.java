@@ -116,7 +116,7 @@ public class OFGroupDescStatsEntry   implements org.openflow.protocol.interfaces
         return  ":OFGroupDescStatsEntry-"+":length=" + U16.f(length) + 
 		":type=" + U8.f(type) + 
 		":group_id=" + U32.f(group_id) + 
-		":buckets=" + buckets.toString();
+		":buckets=" + buckets;
     }
 
 	// compute length (without final alignment)    

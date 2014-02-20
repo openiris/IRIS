@@ -109,7 +109,7 @@ public class OFMeterBand   implements org.openflow.protocol.interfaces.OFMeterBa
     }
 
     public String toString() {
-        return  ":OFMeterBand-"+":type=" + type.toString() + 
+        return  ":OFMeterBand-"+":type=" + type + 
 		":length=" + U16.f(length) + 
 		":rate=" + U32.f(rate) + 
 		":burst_size=" + U32.f(burst_size);

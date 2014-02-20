@@ -61,7 +61,7 @@ public class OFStatisticsTableFeaturesReply extends OFStatisticsReply implements
     }
 
     public String toString() {
-        return super.toString() +  ":OFStatisticsTableFeaturesReply-"+":entries=" + entries.toString();
+        return super.toString() +  ":OFStatisticsTableFeaturesReply-"+":entries=" + entries;
     }
 
 	// compute length (without final alignment)    

@@ -68,7 +68,7 @@ public class OFStatisticsMeterConfigReply extends OFStatisticsReply implements o
     }
 
     public String toString() {
-        return super.toString() +  ":OFStatisticsMeterConfigReply-"+":entries=" + entries.toString();
+        return super.toString() +  ":OFStatisticsMeterConfigReply-"+":entries=" + entries;
     }
 
 	// compute length (without final alignment)    
