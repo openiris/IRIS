@@ -77,8 +77,8 @@ public final class MessageContext {
 
 	/**
 	 * retrieve an object saved with the given key
-	 * @param key value that uniquely identifies an item saved in the message context
-	 * @return
+	 * @param key 		value that uniquely identifies an item saved in the message context
+	 * @return			Object saved in the storage
 	 */
 	public Object get(String key) {
 		return storage.get(key);
@@ -87,7 +87,7 @@ public final class MessageContext {
 	/**
 	 * Put something in the message context with given key.
 	 * 
-	 * @param key value that uniquely identifies an item saved in the message context
+	 * @param key 	value that uniquely identifies an item saved in the message context
 	 * @param value value that is saved in the message context
 	 */
 	public void put(String key, Object value) {

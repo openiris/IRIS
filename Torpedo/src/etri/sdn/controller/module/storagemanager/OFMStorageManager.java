@@ -117,12 +117,9 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	 * inserts a JSON style String object into a persistent storage.
 	 * returns true when successful and false in other cases.
 	 *  
-	 * @param dbName 
-	 * name of the database.
-	 * @param collection 
-	 * name of collection for the database.
-	 * @param query 
-	 * JSON style String data to be inserted.
+	 * @param dbName 		name of the database.
+	 * @param collection 	name of collection for the database.
+	 * @param r 			JSON style String data to be inserted.
 	 * @return returns true when inserted, false when fails to insert.
 	 */
 	@Override
@@ -203,13 +200,10 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	 * deletes data that matches the JSON style query from the persistent storage.
 	 * returns true when successful and false in other cases.
 	 *  
-	 * @param dbName 
-	 * name of the persistent storage.
-	 * @param collection 
-	 * name of collection for the persistent storage.
-	 * @param query 
-	 * JSON style String query to delete the matching data from the persistent storage.
-	 * @return returns true when deleted, false when fails to delete.
+	 * @param dbName		name of the persistent storage.
+	 * @param collection 	name of collection for the persistent storage.
+	 * @param r 			JSON style String query to delete the matching data from the persistent storage.
+	 * @return 				returns true when deleted, false when fails to delete.
 	 */
 	@Override
 	public boolean delete(String dbName, String collection, String r) throws StorageException {

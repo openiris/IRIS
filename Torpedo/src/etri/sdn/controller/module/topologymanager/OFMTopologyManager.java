@@ -246,11 +246,9 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	 * If the packet-in switch port is disabled for all data traffic, then
 	 * the packet will be dropped.  Otherwise, the packet will follow the
 	 * normal processing chain.
-	 * @param sw
-	 * switch 
-	 * @param pi
-	 * Packet-IN message 
-	 * @return
+	 * @param sw	switch 
+	 * @param pi 	Packet-IN message 
+	 * @return		true if correctly enforced, false otherwise
 	 */
 	protected boolean dropFilter(long sw, OFPacketIn pi) {
 		boolean result = true;
@@ -313,9 +311,8 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	 * openflowdomain.  Get all the switches in the same openflow
 	 * domain as the sw (disabling tunnels).  Then get all the 
 	 * external switch ports and send these packets out.
-	 * @param sw
-	 * @param pi
-	 * @param cntx
+	 * @param pinSwitch		switch datapath id
+	 * @param pi			packet-in message
 	 */
 	protected void doFloodBDDP(long pinSwitch, OFPacketIn pi) {
 		
@@ -548,12 +545,11 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	/**
 	 * Add the given link to the data structure.  Returns true if a link was
 	 * added.
-	 * @param s
-	 * @param l
-	 * @return
+	 * @param s		Map<NodePortTuple, Set<Link>>
+	 * @param l		Link
+	 * @return	true if link is successfully added, false otherwise
 	 */
-	private boolean addLinkToStructure(Map<NodePortTuple, 
-			Set<Link>> s, Link l) {
+	private boolean addLinkToStructure(Map<NodePortTuple, Set<Link>> s, Link l) {
 		boolean result1 = false, result2 = false; 
 
 		NodePortTuple n1 = new NodePortTuple(l.getSrc(), l.getSrcPort());
@@ -575,12 +571,11 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	/**
 	 * Delete the given link from the data strucure.  Returns true if the
 	 * link was deleted.
-	 * @param s
-	 * @param l
-	 * @return
+	 * @param s		Map<NodePortTuple, Set<Link>>
+	 * @param l		Link
+	 * @return		true if successfully removed, false otherwise
 	 */
-	private boolean removeLinkFromStructure(Map<NodePortTuple, 
-			Set<Link>> s, Link l) {
+	private boolean removeLinkFromStructure(Map<NodePortTuple, Set<Link>> s, Link l) {
 
 		boolean result1 = false, result2 = false;
 		NodePortTuple n1 = new NodePortTuple(l.getSrc(), l.getSrcPort());

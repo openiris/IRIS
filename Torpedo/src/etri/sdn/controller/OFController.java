@@ -109,9 +109,9 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 
 		/**
 		 * This function delivers a read event to the QP thread.
-		 * @param conn
-		 * @param msgs
-		 * @return
+		 * @param conn		connection that the messages arrived
+		 * @param msgs		messages read
+		 * @return			true of correctly handled, false otherwise.
 		 */
 		public boolean handleReadEvent(Connection conn, List<OFMessage> msgs) {
 
@@ -300,7 +300,6 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 	 * using 'after' as a period value.
 	 * 
 	 * @param task
-	 * @param time millisecond since Epoch
 	 * @param after re-schedule this task after 'after' milliseconds. If zero is given,
 	 *              the task will start immediately, and never be repeated.
 	 */

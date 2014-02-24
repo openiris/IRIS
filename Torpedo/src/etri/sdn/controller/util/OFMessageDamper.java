@@ -77,7 +77,6 @@ public final class OFMessageDamper {
     }
     
     private TimedCache<DamperEntry> cache;
-//    private EnumSet<OFType> msgTypesToCache;
     private Set<OFMessageType> msgTypesToCache;
     /**
      * 
@@ -93,17 +92,15 @@ public final class OFMessageDamper {
                            Set<OFMessageType> typesToDampen,  
                            int timeout) {
         cache = new TimedCache<DamperEntry>(capacity, timeout);
-//        msgTypesToCache = EnumSet.copyOf(typesToDampen);
         msgTypesToCache = typesToDampen;
     }        
     
     /**
      * write the messag to the switch according to our dampening settings
-     * @param sw
-     * @param msg
-     * @return true if the message was written to the switch, false if
-     * the message was dampened. 
-     * @throws IOException
+     * @param conn		connection to write 
+     * @param msg		message to write
+     * @return 			true if the message was written to the switch, false if the message was dampened. 
+     * @throws 			IOException
      */
     public boolean write(Connection conn, OFMessage msg) throws IOException {
         if (! msgTypesToCache.contains(msg.getType())) {

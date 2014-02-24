@@ -1,5 +1,11 @@
 package etri.sdn.controller;
 
+/**
+ * This class is to manage port information in a protocol-independent manner.
+ * 
+ * @author bjlee
+ *
+ */
 public class PortInformation {
 	int  port					= -1;
 	byte[]  hw_addr				= null;

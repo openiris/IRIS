@@ -66,7 +66,8 @@ public class Route implements Comparable<Route> {
     }
 
     /**
-     * @param path the path to set
+     * Set path using the switch port list
+     * @param switchPorts	path to set
      */
     public void setPath(List<NodePortTuple> switchPorts) {
         this.switchPorts = switchPorts;

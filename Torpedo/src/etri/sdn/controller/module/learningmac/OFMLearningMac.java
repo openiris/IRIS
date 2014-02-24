@@ -303,10 +303,11 @@ public final class OFMLearningMac extends OFModule {
 	 * for the pair it will write a FlowMod for. If the mapping has not been learned the 
 	 * we will flood the packet.
 	 * 
-	 * @param context 
-	 * @param sw
-	 * @param pi
-	 * @return
+	 * @param conn		Connection object
+	 * @param context 	MessageContext object
+	 * @param msg		OFMessage object (packet-in)
+	 * @param out		List of outgoing messages to switch
+	 * @return			true of correctly processed, false otherwise
 	 */
 	private boolean processPacketInMessage(Connection conn, MessageContext context, OFMessage msg, List<OFMessage> out) {
 

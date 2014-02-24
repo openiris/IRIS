@@ -49,7 +49,7 @@ public abstract class OFModule {
 	 * return a module that implements a specific service from the 
 	 * static map {@link #modules}.
 	 * @param c class of the service that this module implements
-	 * @return
+	 * @return	OFModule object
 	 */
 	public static OFModule getModule(Class<? extends IService> c) {
 		return modules.get( c );
@@ -126,7 +126,7 @@ public abstract class OFModule {
 	 * This method first applies filters for the message type to find out 
 	 * the message needs to be processed by this module. 
 	 * if the answer is yes, the message is passed to 
-	 * {@link #handleMessage(Connection, MessageContext, OFMessage, List)). 
+	 * {@link #handleMessage(Connection, MessageContext, OFMessage, List)}. 
 	 * 
 	 * @param conn 		connection that the message has arrived
 	 * @param context 	message context for the message

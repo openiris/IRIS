@@ -196,16 +196,6 @@ public class Links extends OFModel {
 		this.manager.addLinkUpdate(npt.getNodeId(), npt.getPortId(), UpdateOperation.PORT_DOWN);
 	}
 	
-//	public void deleteLinksOnPortCompletely(NodePortTuple npt) {
-//		List<Link> eraseList = new ArrayList<Link>();
-//		if (this.portLinks.containsKey(npt)) {
-//			eraseList.addAll(this.portLinks.get(npt));
-//			deleteLinks(eraseList);
-//		}
-//		
-//		this.manager.addLinkUpdate(npt.getNodeId(), npt.getPortId(), UpdateOperation.LINK_REMOVED);
-//	}
-	
 	
 	/**
 	 * Add or update link information. used by OFMLinkDiscovery.handleLldp method. 
@@ -224,11 +214,9 @@ public class Links extends OFModel {
 	public Link addOrUpdateLink(
 			long remoteSwitchId, 
 			int remotePort,
-//			OFPhysicalPort remotePhyPort, 
 			OFPortDesc remotePhyPort,
 			long localSwitchId, 
 			int localInPort,
-//			OFPhysicalPort localInPhyPort,
 			OFPortDesc localInPhyPort,
 			boolean isStandard,
 			boolean isReverse) 
@@ -306,7 +294,7 @@ public class Links extends OFModel {
 	 * @param switchId	switch identifier
 	 * @param portnum	port number
 	 * @param ps		OFPortStatus message
-	 * @return
+	 * @return			true if link info changed, false otherwise
 	 */
 	public boolean updatePortStatus(Long switchId, int portnum, org.openflow.protocol.interfaces.OFPortStatus ps) {
 		
@@ -366,7 +354,7 @@ public class Links extends OFModel {
 	/**
 	 * Get the string representation of {@link #portLinks}.
 	 * 
-	 * @return
+	 * @return String 
 	 */
 	public String getStringRepresentation() {
 		StringBuffer ret = new StringBuffer();

@@ -24,7 +24,7 @@ import etri.sdn.controller.IService;
 
 /**
  * This interface is used to define a service that 
- * {@OFMLinkDiscovery} should implement. 
+ * {@link OFMLinkDiscovery} should implement. 
  * 
  * This file is no different with Floodlight version.
  * 
@@ -41,8 +41,9 @@ public interface ILinkDiscoveryService extends IService {
     /**
      * Returns link type of a given link.
      * Modified by bjlee
-     * @param info
-     * @return
+     * @param lt			Link object
+     * @param info			LinkInfo object
+     * @return				ILinkDiscovery.LinkType object
      */
     public ILinkDiscovery.LinkType getLinkType(Link lt, LinkInfo info);
 

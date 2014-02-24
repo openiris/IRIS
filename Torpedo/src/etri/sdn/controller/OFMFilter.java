@@ -8,7 +8,7 @@ import org.openflow.protocol.OFMessage;
  * you can find the example usage of this class 
  * in {@link etri.sdn.controller.module.linkdiscovery.OFMLinkDiscovery#initialize()} method. 
  * This class is normally used as a second parameter to 
- * {@link OFModule#registerFilter(org.openflow.protocol.OFType, OFMFilter)}.
+ * {@link OFModule#registerFilter(org.openflow.protocol.interfaces.OFMessageType, OFMFilter)}.
  * 
  * @author bjlee
  *

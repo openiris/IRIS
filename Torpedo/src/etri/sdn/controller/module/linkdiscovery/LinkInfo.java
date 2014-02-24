@@ -68,8 +68,7 @@ public class LinkInfo {
 
     /**
      * returns {@link #lastLldpReceivedTime}. 
-     * 
-     * @return
+     * @return Long
      */
     public Long getUnicastValidTime() {
         return lastLldpReceivedTime;
@@ -81,7 +80,7 @@ public class LinkInfo {
 
     /**
      * returns {@link #lastBddpReceivedTime}. 
-     * @return
+     * @return	Long 
      */
     public Long getMulticastValidTime() {
         return lastBddpReceivedTime;

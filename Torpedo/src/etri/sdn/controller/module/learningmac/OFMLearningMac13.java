@@ -171,10 +171,10 @@ public final class OFMLearningMac13 extends OFModule {
 	/**
 	 * Writes a OFFlowMod to a switch.
 	 * @param sw The switch tow rite the flowmod to.
-	 * @param command The FlowMod actions (add, delete, etc).
-	 * @param bufferId The buffer ID if the switch has buffered the packet.
-	 * @param match The OFMatch structure to write.
-	 * @param outPort The switch port to output it to.
+	 * @param command 	The FlowMod actions (add, delete, etc).
+	 * @param bufferId 	The buffer ID if the switch has buffered the packet.
+	 * @param matchOxm 	The OFMatch structure to write.
+	 * @param outPort 	The switch port to output it to.
 	 */
 	private void writeFlowMod(IOFSwitch sw, short command, int bufferId,
 			OFMatchOxm matchOxm, short outPort, List<OFMessage> out) {
@@ -221,8 +221,9 @@ public final class OFMLearningMac13 extends OFModule {
 	 * 
 	 * @param sw 				The switch to write the PacketOut to.
 	 * @param packetInMessage 	The corresponding PacketIn.
-	 * @param inPort 		
-	 * @param egressPort 		The switchport to output the PacketOut.
+	 * @param getInputPort		input port 		
+	 * @param egressPort 		The switchport to output the PacketOut
+	 * @param out				messages to send to switches
 	 */
 	private void writePacketOutForPacketIn(IOFSwitch sw, 
 			OFPacketIn packetInMessage, 
@@ -302,17 +303,6 @@ public final class OFMLearningMac13 extends OFModule {
 		return true;
 	}
 
-	/**
-	 * Processes a OFPacketIn message. If the switch has learned the MAC/VLAN to port mapping
-	 * for the pair it will write a FlowMod for. If the mapping has not been learned the 
-	 * we will flood the packet.
-	 * 
-	 * @param context 
-	 * @param sw
-	 * @param pi
-	 * @return
-	 */
-	
 	final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
 	public static String bytesToHex(byte[] bytes) {
 	    char[] hexChars = new char[bytes.length * 2];
@@ -329,6 +319,17 @@ public final class OFMLearningMac13 extends OFModule {
         return new byte[]{(byte)(s & 0x00FF),(byte)((s & 0xFF00)>>8),(byte)((d & 0xFF00)>>16),(byte)((d & 0xFF00)>>32)};
     }
 	
+	/**
+	 * Processes a OFPacketIn message. If the switch has learned the MAC/VLAN to port mapping
+	 * for the pair it will write a FlowMod for. If the mapping has not been learned the 
+	 * we will flood the packet.
+	 * 
+	 * @param conn		Connection object
+	 * @param context 	MessageContext object
+	 * @param msg		OFMessage object (packet-in)
+	 * @param out		List of outgoing messages to switch
+	 * @return			true of correctly processed, false otherwise
+	 */
 	public boolean processPacketInMessage(Connection conn, MessageContext context, OFMessage msg, List<OFMessage> out) {
 
 		if ( conn.getSwitch() == null ) {

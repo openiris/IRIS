@@ -10,7 +10,7 @@ import etri.sdn.controller.module.linkdiscovery.NodePortTuple;
 
 /**
  * This interface is used to define a service that 
- * {@OFMTopologyManager} should implement. 
+ * {@link OFMTopologyManager} should implement. 
  * 
  * @author SaeHyong Park (labry@etri.re.kr)
  *
@@ -86,7 +86,7 @@ public interface ITopologyService extends IService {
      * @param p1
      * @param s2
      * @param p2
-     * @return
+     * @return	true if two switch port is in the same broadcast domain, false otherwise
      */
     public boolean isInSameBroadcastDomain(long s1, short p1, 
                                            long s2, short p2);
@@ -159,10 +159,9 @@ public interface ITopologyService extends IService {
     /**
      * If the src broadcast domain port is not allowed for incoming
      * broadcast, this method provides the topologically equivalent
-     * incoming broadcast-allowed
-     * src port.  
+     * incoming broadcast-allowed src port.  
      * @param src
-     * @param dst
+     * @param srcPort
      * @return the allowed broadcast port
      */
     public NodePortTuple
@@ -187,7 +186,7 @@ public interface ITopologyService extends IService {
      * Returns a set of blocked ports.  The set of blocked
      * ports is the union of all the blocked ports across all
      * instances.
-     * @return
+     * @return	Set<NodePortTuple>
      */
     public Set<NodePortTuple> getBlockedPorts();
 
@@ -195,7 +194,7 @@ public interface ITopologyService extends IService {
      * ITopologyListener provides topologyChanged notification, 
      * but not *what* the changes were.  
      * This method returns the delta in the linkUpdates between the current and the previous topology instance.
-     * @return
+     * @return List<LDUpdate>
      */
     public List<LDUpdate> getLastLinkUpdates();
 

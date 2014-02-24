@@ -57,9 +57,12 @@ import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.util.Logger;
 
+/**
+ * This class is for handling Openflow protocol handshaking.
+ * @author bjlee
+ *
+ */
 public class OFProtocol {
-
-	//	private static VersionedMessageFactory message_factory = new VersionedMessageFactory();
 
 	public static final String STR_IN_PORT = "in_port";
 	public static final String STR_DL_DST = "dl_dst";
@@ -73,13 +76,22 @@ public class OFProtocol {
 	public static final String STR_NW_TOS = "nw_tos";
 	public static final String STR_TP_DST = "tp_dst";
 	public static final String STR_TP_SRC = "tp_src";
-	/*
-	 * Per-switch data structures
+	
+	/**
+	 * IOFSwitch to SwitchInformation map.
 	 */
 	private Map<IOFSwitch, SwitchInformation> switchInformations = 
 			new ConcurrentHashMap<IOFSwitch, SwitchInformation>();
+	
+	/**
+	 * Port Number to PortInformation map.
+	 */
 	private Map<IOFSwitch, Map<Integer, PortInformation>> portInformations = 
 			new ConcurrentHashMap<IOFSwitch, Map<Integer, PortInformation>>();
+	
+	/**
+	 * Switch to <PortName, PortInformation> map.
+	 */
 	private Map<IOFSwitch, Map<String, PortInformation>> portInformationsByName = 
 			new ConcurrentHashMap<IOFSwitch, Map<String, PortInformation>>();
 
@@ -89,17 +101,38 @@ public class OFProtocol {
 	private Map<IOFSwitch, Map<Integer/*xid*/, Object>> responsesCache = 
 			new ConcurrentHashMap<IOFSwitch, Map<Integer, Object>>();
 
+	/**
+	 * reference to OFController object.
+	 */
 	private OFController controller;
+	
+	/**
+	 * lock to synchronize.
+	 */
 	private Object portLock = new Object();
 
+	/**
+	 * Initialize OFProtocol object with OFController reference.
+	 * @param controller	OFController object.
+	 */
 	public OFProtocol(OFController controller) {
 		this.controller = controller;
 	}
 
+	/**
+	 * Get reference to OFController object.
+	 * @return	OFController object.
+	 */
 	public OFController getController() {
 		return this.controller;
 	}
 
+	/**
+	 * This method is used with two other companion methods: getResponseCacheItem and removeResponseCacheItem.
+	 * @param sw	IOFSwitch object
+	 * @param xid	transaction id
+	 * @param item	object to set as a response for the transaction id
+	 */
 	public void setResponseCacheItem(IOFSwitch sw, int xid, Object item) {
 		Map<Integer, Object> rcache = this.responsesCache.get(sw);
 		if ( rcache == null ) {
@@ -109,6 +142,12 @@ public class OFProtocol {
 		rcache.put( xid, item );
 	}
 
+	/**
+	 * This method is used with two other companion methods: setResponseCacheItem and removeResponseCacheItem.
+	 * @param sw	IOFSwitch object
+	 * @param xid	transaction id to get the response object
+	 * @return		Object set by setResponseCacheItem as a response for the transaction id
+	 */
 	public Object getResponseCacheItem(IOFSwitch sw, int xid) {
 		Map<Integer, Object> rcache = this.responsesCache.get(sw);
 		if ( rcache == null ) {
@@ -117,6 +156,11 @@ public class OFProtocol {
 		return rcache.get(xid);
 	}
 
+	/**
+	 * This method is used with two other companion methods: setResponseCacheItem and getResponseCacheItem.
+	 * @param sw	IOFSwitch object
+	 * @param xid	transaction id to remove the response object
+	 */
 	public void removeResponseCacheItem(IOFSwitch sw, int xid) {
 		Map<Integer, Object> rcache = this.responsesCache.get(sw);
 		if ( rcache == null ) {
@@ -125,12 +169,11 @@ public class OFProtocol {
 		rcache.remove(xid);
 	}
 
-	/*
-	public static final OFMessageFactory getMessageFactory() {
-		return new VersionedMessageFactory();
-	}
+	/**
+	 * Get switch information
+	 * @param sw	Switch to retrieve the SwitchInformation object
+	 * @return		SwitchInformation object
 	 */
-	
 	public SwitchInformation getSwitchInformation(IOFSwitch sw) {
 		SwitchInformation si = this.switchInformations.get(sw);
 		if ( si == null ) {
@@ -143,9 +186,9 @@ public class OFProtocol {
 	/**
 	 * Get port information by the port number. 
 	 * If none existent, null is returned.
-	 * @param sw
-	 * @param port
-	 * @return
+	 * @param sw	Switch to retrieve the port information
+	 * @param port	port number to retrieve the information
+	 * @return		PortInformation object
 	 */
 	public PortInformation getPortInformation(IOFSwitch sw, int port) {
 		Map<Integer, PortInformation> inner = portInformations.get(sw);
@@ -156,6 +199,11 @@ public class OFProtocol {
 		return inner.get(port);
 	}
 
+	/**
+	 * Get all PortInformation objects for the given switch
+	 * @param sw	IOFSwitch object
+	 * @return		Collection<PortInformation>
+	 */
 	public Collection<PortInformation> getPortInformations(IOFSwitch sw) {
 		Map<Integer, PortInformation> inner = portInformations.get(sw);
 		if ( inner != null ) {
@@ -164,6 +212,11 @@ public class OFProtocol {
 		return Collections.emptySet();
 	}
 	
+	/**
+	 * Get all the PortInformation objects for the given switch by datapath id
+	 * @param datapathId	datapath id of the switch
+	 * @return				Collection<PortInformation>
+	 */
 	public Collection<PortInformation> getPortInformations(long datapathId) {
 		for ( IOFSwitch sw : portInformations.keySet() ) {
 			if ( sw.getId() == datapathId ) {
@@ -176,6 +229,11 @@ public class OFProtocol {
 		return Collections.emptySet();
 	}
 
+	/**
+	 * Remove a specific port information from the switch
+	 * @param sw	IOFSwitch object
+	 * @param pi	PortInformation object
+	 */
 	public void removePortInformation(IOFSwitch sw, PortInformation pi) {
 		Map<Integer, PortInformation> inner = portInformations.get(sw);
 		if ( inner != null ) {
@@ -189,9 +247,9 @@ public class OFProtocol {
 
 	/**
 	 * This method should be called after port number is correctly set up.
-	 * @param sw
-	 * @param name
-	 * @return	Null can be returned if the item that you looking for is non-existent
+	 * @param sw	IOFSwitch object
+	 * @param name	name of the port
+	 * @return		Null can be returned if the item that you looking for is non-existent
 	 */
 	public PortInformation getPortInformationByName(IOFSwitch sw, String name) {
 		Map<String, PortInformation> inner = portInformationsByName.get(sw);
@@ -202,6 +260,12 @@ public class OFProtocol {
 		return inner.get(name);
 	}
 
+	/**
+	 * Set the port information
+	 * @param sw	IOFSwitch object
+	 * @param name	port name
+	 * @param pi	PortInformation object
+	 */
 	public void setPortInformationByName(IOFSwitch sw, String name, PortInformation pi) {
 		Map<String, PortInformation> inner = portInformationsByName.get(sw);
 		if ( inner == null ) {
@@ -211,6 +275,11 @@ public class OFProtocol {
 		inner.put(name, pi);
 	}
 
+	/**
+	 * Modify switch description using OFStatisticsDescReply object
+	 * @param sw	IOFswitch object
+	 * @param r		OFStatisticsDescReply object
+	 */
 	public void setDescription(IOFSwitch sw, OFStatisticsDescReply r) {
 		this.getSwitchInformation(sw)
 		.setManufacturerDescription(r.getManufacturerDescription())
@@ -220,6 +289,11 @@ public class OFProtocol {
 		.setSerialNumber(r.getSerialNumber());
 	}
 
+	/**
+	 * Get switch description as a OFStatisticsDescReply form
+	 * @param sw	IOFSwitch object
+	 * @return		OFStatisticsDescReply object
+	 */
 	public OFStatisticsDescReply getDescription(IOFSwitch sw) {
 		SwitchInformation si = this.getSwitchInformation(sw);
 		if ( si == null || si.getManufacturerDescription() == null ) {
@@ -237,10 +311,10 @@ public class OFProtocol {
 	}
 
 	/**
-	 *
-	 * @param sw
-	 * @param portNum
-	 * @return
+	 * Get port description as an OFPortDesc object
+	 * @param sw		IOFSwitch object
+	 * @param portNum	port number
+	 * @return			OFPortDesc object
 	 */
 	public OFPortDesc getPort(IOFSwitch sw, int portNum) {
 		PortInformation pi = this.getPortInformation(sw, portNum);
@@ -265,6 +339,11 @@ public class OFProtocol {
 		return null;
 	}
 
+	/**
+	 * Get all port information as a collection of OFPortDesc objects
+	 * @param sw	IOFSwitch object
+	 * @return		Collection<OFPortDesc>
+	 */
 	public Collection<OFPortDesc> getPorts(IOFSwitch sw) {
 		List<OFPortDesc> ret = new LinkedList<OFPortDesc>();
 		for ( PortInformation pi : this.getPortInformations(sw) ) {
@@ -288,7 +367,11 @@ public class OFProtocol {
 		return ret;
 	}
 	
-
+	/**
+	 * Get all port information as a list of OFPortDesc objects (TODO: why not collection?)
+	 * @param datapathId	datapath id (long)
+	 * @return				List<OFPortDesc>
+	 */
 	public List<OFPortDesc> getPorts(long datapathId) {
 		List<OFPortDesc> ret = new LinkedList<OFPortDesc>();
 		for ( PortInformation pi : this.getPortInformations(datapathId) ) {
@@ -316,6 +399,11 @@ public class OFProtocol {
 		return ret;
 	}
 
+	/**
+	 * Set port information using OFPortDesc object
+	 * @param sw		IOFSwitch object
+	 * @param portDesc	OFPortDesc object
+	 */
 	public void setPort(IOFSwitch sw, OFPortDesc portDesc) {
 		PortInformation pi = this.getPortInformation(sw, portDesc.getPort().get());
 		
@@ -339,6 +427,7 @@ public class OFProtocol {
 		this.setPortInformationByName(sw, new String(portDesc.getName()), pi);
 	}
 
+
 	private PortInformation createPortInformation(IOFSwitch sw, int port) {
 		PortInformation pi = new PortInformation(port);
 		Map<Integer, PortInformation> inner = this.portInformations.get(sw);
@@ -350,6 +439,11 @@ public class OFProtocol {
 		return pi;
 	}
 
+	/**
+	 * Delete port information by the number
+	 * @param sw			IOFSwitch object
+	 * @param portNumber	number of the port
+	 */
 	public void deletePort(IOFSwitch sw, int portNumber) {
 		PortInformation pi = this.getPortInformation(sw, portNumber);
 		if ( pi != null ) {
@@ -357,6 +451,11 @@ public class OFProtocol {
 		}
 	}
 
+	/**
+	 * Callback called by underlying platform when a connection to a switch is established
+	 * @param conn	Connection object
+	 * @return		true if correctly handled (always)
+	 */
 	public boolean handleConnectedEvent(Connection conn) {
 		// This is a greeting that says 'Hey. We know up to 1.3.2.' 
 		OFHello hello = OFMessageFactory.createHello((byte)0x04);
@@ -365,6 +464,13 @@ public class OFProtocol {
 		return true;
 	}
 
+	/**
+	 * Callback called by underlying platform when a new OFMessage is received for a connection
+	 * @param conn		Connection object
+	 * @param context	MessageContext object created for the message
+	 * @param m			OFMessage object to handle
+	 * @return			true of correctly handled, false otherwise
+	 */
 	public boolean process(Connection conn, MessageContext context, OFMessage m) {
 		IOFSwitch sw = conn.getSwitch();
 		OFMessageType t = m.getType();
@@ -556,8 +662,7 @@ public class OFProtocol {
 	}
 
 	/**
-	 * Modules that use IOFSwitch objects use this method to request statistics 
-	 * to the switch.
+	 * Modules that use IOFSwitch objects use this method to request statistics to the switch.
 	 * @param req OFStatisticsRequest object.
 	 */
 	public List<OFStatisticsReply> getSwitchStatistics(IOFSwitch sw, OFStatisticsRequest req) {
@@ -581,7 +686,7 @@ public class OFProtocol {
 		return null;
 	}
 
-	public void deliverSwitchStatistics(IOFSwitch sw, OFStatisticsReply m) {
+	private void deliverSwitchStatistics(IOFSwitch sw, OFStatisticsReply m) {
 		Object response = getResponseCacheItem(sw, m.getXid());
 		if ( response == null ) {
 			return;
@@ -596,6 +701,11 @@ public class OFProtocol {
 		}
 	}
 
+	/**
+	 * Get OFFeaturesReply for the given switch. 
+	 * @param sw	IOFSwitch object
+	 * @return		OFFeaturesReply object
+	 */
 	public OFFeaturesReply getFeaturesReply(IOFSwitch sw) {
 		OFFeaturesRequest req = OFMessageFactory.createFeaturesRequest(sw.getVersion());
 		req.setXid( sw.getNextTransactionId() );
@@ -619,7 +729,7 @@ public class OFProtocol {
 		}
 	}
 
-	public void deliverFeaturesReply(IOFSwitch sw, int xid, OFFeaturesReply reply) {
+	private void deliverFeaturesReply(IOFSwitch sw, int xid, OFFeaturesReply reply) {
 		Object response = this.getResponseCacheItem(sw, xid);
 		if ( response == null ) {
 			return;
@@ -634,6 +744,11 @@ public class OFProtocol {
 		}
 	}
 
+	/**
+	 * Get all the enabled ports
+	 * @param sw	IOFSwitch object
+	 * @return		Collection<OFPortDesc>
+	 */
 	public Collection<OFPortDesc> getEnabledPorts(IOFSwitch sw) {		
 		List<OFPortDesc> result = new ArrayList<OFPortDesc>();
 		Collection<OFPortDesc> allPorts = this.getPorts(sw);
@@ -647,6 +762,11 @@ public class OFProtocol {
 		return result;
 	}
 
+	/**
+	 * Get all the enabled port numbers
+	 * @param sw	IOFSwitch object
+	 * @return		Collection<Integer>
+	 */
 	public Collection<Integer> getEnabledPortNumbers(IOFSwitch sw) {
 		List<Integer> result = new ArrayList<Integer>();
 		Collection<OFPortDesc> allPorts = this.getPorts(sw);
@@ -660,6 +780,11 @@ public class OFProtocol {
 		return result;
 	}
 
+	/**
+	 * Check if the given port is enabled
+	 * @param port	OFPortDesc object
+	 * @return		true if enabled, false otherwise
+	 */
 	public boolean portEnabled(OFPortDesc port) {
 		if ( port == null ) 
 			return false;
@@ -674,6 +799,12 @@ public class OFProtocol {
 		return true;
 	}
 
+	/**
+	 * Check if a given port is enabled
+	 * @param sw		IOFSwitch object to which the port is bound
+	 * @param port		port number (short)
+	 * @return			true if enabled, false otherwise
+	 */
 	public boolean portEnabled(IOFSwitch sw, short port) {
 		OFPortDesc desc = this.getPort(sw, port);
 		if ( desc == null ) {
@@ -682,6 +813,14 @@ public class OFProtocol {
 		return portEnabled(desc);
 	}
 
+	/**
+	 * Create an OFMatch object from the packet-in data. 
+	 * This method is called by doDropFlow and doForwardFlow of Forwarding module, and processPacketInMesssage of LearningMac module.
+	 * @param sw			IOFSwitch object
+	 * @param packetData	packet-in data array
+	 * @param inputPort		input port (short)
+	 * @return				OFMatch object
+	 */
 	public OFMatch loadOFMatchFromPacket(IOFSwitch sw, byte[] packetData, short inputPort) {
 
 		OFMatch.Builder ret = OFMessageFactory.createMatchBuilder(sw.getVersion());
@@ -900,9 +1039,8 @@ public class OFProtocol {
 	 * @param match
 	 *            a key=value comma separated string, e.g.
 	 *            "in_port=5,ip_dst=192.168.0.0/16,tp_src=80"
-	 * @return 
-	 * @throws IllegalArgumentException
-	 *             on unexpected key or value
+	 * @return OFMatch object
+	 * @throws IllegalArgumentException on unexpected key or value
 	 */
 	public OFMatch loadOFMatchFromString(IOFSwitch sw, String match)
 			throws IllegalArgumentException {

@@ -20,7 +20,7 @@ import etri.sdn.controller.module.routing.RouteId;
 
 /**
  * A representation of a network topology.  Used internally by 
- * {@link TopologyManager}
+ * {@link OFMTopologyManager}
  */
 
 public class TopologyInstance {
@@ -247,14 +247,12 @@ public class TopologyInstance {
 	 * of computation.  This could happen when a switch is removed during the cluster
 	 * computation procedure.
 	 *
-	 * @param parentIndex: DFS index of the parent node
-	 * @param currIndex: DFS index to be assigned to a newly visited node
-	 * @param currSw: ID of the current switch
-	 * @param dfsList: HashMap of DFS data structure for each switch
-	 * @param currSet: Set of nodes in the current cluster in formation
-	 * @return long: DSF index to be used when a new node is visited
+	 * @param parentIndex	DFS index of the parent node
+	 * @param currIndex		DFS index to be assigned to a newly visited node
+	 * @param currSw		ID of the current switch
+	 * @param dfsList		HashMap of DFS data structure for each switch
+	 * @param currSet		Set of nodes in the current cluster in formation
 	 */
-
 	private long dfsTraverse (long parentIndex, long currIndex, long currSw,
 			Map<Long, ClusterDFS> dfsList, Set <Long> currSet) {
 
@@ -385,8 +383,8 @@ public class TopologyInstance {
 
 	/** Returns true if a link has either one of its switch ports 
 	 * blocked.
-	 * @param l
-	 * @return
+	 * @param l		Link object
+	 * @return		true if blocked, false otherwise
 	 */
 	protected boolean isBlockedLink(Link l) {
 		NodePortTuple n1 = new NodePortTuple(l.getSrc(), l.getSrcPort());

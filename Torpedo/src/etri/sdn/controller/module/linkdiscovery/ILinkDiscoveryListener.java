@@ -61,7 +61,7 @@ public interface ILinkDiscoveryListener {
 	/**
 	 * Actual update notification. 
 	 * the callback function {@link ILinkDiscoveryListener#linkDiscoveryUpdate(LDUpdate)}
-	 * that {@link IDiscoveryService} object calls receives this object as parameter.
+	 * that {@link ILinkDiscoveryService} object calls receives this object as parameter.
 	 * 
 	 * @author bjlee
 	 *
@@ -118,7 +118,7 @@ public interface ILinkDiscoveryListener {
 		 * Constructor for updatedSwitch(sw)
 		 *
 		 * @param switchId	id of the switch
-		 * @param stype		{@link IOFSwitch.SwitchType}
+		 * @param stype		{@link etri.sdn.controller.protocol.io.IOFSwitch.SwitchType}
 		 * @param oper		{@link UpdateOperation}
 		 */
 		public LDUpdate(long switchId, SwitchType stype, UpdateOperation oper ){

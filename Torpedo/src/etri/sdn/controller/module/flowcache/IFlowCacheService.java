@@ -101,19 +101,20 @@ public interface IFlowCacheService extends IService {
      * be written to the switches. If it returns true then the cookie returned
      * should be used for the flow mod sent to the switches.
      *
-     * @param appInstName Application instance name
-     * @param ofm openflow match object
-     * @param cookie openflow-mod cookie
-     * @param swPort SwitchPort object
-     * @param priority openflow match priority
-     * @param action action taken on the matched packets (PERMIT or DENY)
-     * @return true:  flow should be written to the switch(es)
-     *         false: flow should not be written to the switch(es). false is
-     *                returned, for example, when the flow was recently
-     *                written to the flow-cache and hence it is dampened to
-     *                avoid frequent writes of the same flow to the switches
-     *                This case can typically arise for the flows written at the
-     *                internal ports as they are heavily wild-carded.
+     * @param appInstName	Application instance name
+     * @param ofm 			openflow match object
+     * @param cookie 		openflow-mod cookie
+     * @param srcSwDpid 	source switch dpid
+     * @param inPort		input port
+     * @param priority 		openflow match priority
+     * @param action 		action taken on the matched packets (PERMIT or DENY)
+     * @return 				true:  flow should be written to the switch(es)
+     *         				false: flow should not be written to the switch(es). false is
+     *                			returned, for example, when the flow was recently
+     *                			written to the flow-cache and hence it is dampened to
+     *                			avoid frequent writes of the same flow to the switches
+     *                			This case can typically arise for the flows written at the
+     *                			internal ports as they are heavily wild-carded.
      */
     public boolean addFlow(String appInstName, OFMatchWithSwDpid ofm, 
                            Long cookie, long srcSwDpid, 
@@ -173,7 +174,6 @@ public interface IFlowCacheService extends IService {
      * It queries the switch for stats and updates the flowcache asynchronously
      * with the response.
      * @param swDpid
-     * @param delay_ms
      */
     public void querySwitchFlowTable(long swDpid);
 }

@@ -280,7 +280,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	 * 
 	 * (1) {@link Links#addOrUpdateLink(Link, LinkInfo)}
 	 * (2) {@link Links#timeoutLinks()}
-	 * (3) {@link Links#updatePortStatus(Long, short, OFPortStatus)}
+	 * (3) {@link Links#updatePortStatus(Long, int, OFPortStatus)}
 	 * 
 	 * @param lt Link object
 	 * @param info LinkInfo object
@@ -296,11 +296,6 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	
 	/**
 	 * This method is called by Links object to pass link update event to its listeners. 
-	 * Called by the following methods:
-	 * 
-	 * (1) {@link Links#addOrUpdateLink(Link, LinkInfo)}
-	 * (2) {@link Links#deleteLinks(List<Link>)}
-	 * 
 	 * @param lt Link object
 	 * @param info LinkInfo object
 	 * @param operation UpdateOperation value
@@ -336,7 +331,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	
 	/**
 	 * This method is called by Links object to make manager to send link discovery messages to peers.
-	 * internally call {@link #sendDiscoveryMessage(IOFSwitch, short, boolean, boolean)}.
+	 * internally call {@link #sendDiscoveryMessage(IOFSwitch, int, boolean, boolean)}.
 	 * 
 	 * @param switchId			ask this switch to send discovery message
 	 * @param destinationPort	to which port to send the discovery message
@@ -825,11 +820,11 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	 * As {@link #initialize()} has been coded only to accept the standard LLDP 
 	 * packets with Ethertype 0x88cc, there are other cases that never be executed. 
 	 * 
-	 * @param sw
-	 * @param context
-	 * @param pi
-	 * @param outgoing
-	 * @return
+	 * @param sw			IOFSwitch object
+	 * @param context		MessageContext object
+	 * @param pi			packet-in message
+	 * @param outgoing		messages to send to switch in result
+	 * @return				true if correctly handled	
 	 */
 	private boolean handlePacketIn(IOFSwitch sw, MessageContext context, OFPacketIn pi, List<OFMessage> outgoing) {
 
@@ -889,7 +884,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	 * <li> if the message is a non-standard LLDP which is not created by this controller, then return true
 	 *     to allow the further processing. (maybe forwarding?)
 	 * <li> if the remote switch or one of the sides of the link port is not enabled, then drop it. 
-	 * <li> or, call {@link Links#addOrUpdateLink(long, short, OFPhysicalPort, long, short, OFPhysicalPort, boolean, boolean)},
+	 * <li> or, call {@link Links#addOrUpdateLink(long, short, OFPhysicalPort, long, int, OFPhysicalPort, boolean, boolean)},
 	 *     remove the node & port pair (both side) from the Quarantine and Maintenance Queue and drop the message.
 	 * </ol>
 	 * 
@@ -1014,17 +1009,17 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	 *      {@link Links#deleteLinksOnPort(NodePortTuple)}.
 	 * <li> or if the PORT_STATUS indicates that the status of a link has been changed,
 	 *      we mark the link has been changed by calling
-	 *      {@link Links#updatePortStatus(Long, short, OFPortStatus)}.
+	 *      {@link Links#updatePortStatus(Long, int, OFPortStatus)}.
 	 * <li> and finally, if a link has NOT been deleted, 
 	 *      we process the PORT_STATUS as an indication that a new port 
-	 *      has been added, by calling {@link #processNewPort(IOFSwitch, short)}.
+	 *      has been added, by calling {@link #processNewPort(IOFSwitch, int)}.
 	 * </ol>
 	 * 
-	 * @param sw
-	 * @param context
-	 * @param ps
-	 * @param outgoing
-	 * @return
+	 * @param sw			IOFSwitch object
+	 * @param context		MesasgeContext object
+	 * @param ps			OFPortStatus object
+	 * @param outgoing		messages to send to switch in result
+	 * @return 				true if correctly handled, false otherwise
 	 */
 	private boolean handlePortStatus(IOFSwitch sw, MessageContext context, OFPortStatus ps, List<OFMessage> outgoing) {
 

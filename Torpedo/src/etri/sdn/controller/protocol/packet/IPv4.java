@@ -443,8 +443,8 @@ public class IPv4 extends BasePacket {
      * String useful in toString method's containing collections of IP
      * addresses.
      * 
-     * @param ipAddresses collection
-     * @return
+     * @param ipAddresses	collection of all IP addresses
+     * @return String		Converted string
      */
     public static String fromIPv4AddressCollection(Collection<Integer> ipAddresses) {
         if (ipAddresses == null)

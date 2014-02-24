@@ -29,8 +29,8 @@ public interface IInfoProvider {
 
     /**
      * Called when rest API requests information of a particular type
-     * @param type
-     * @return
+     * @param type	type of the information (string)
+     * @return		Map<String, Object> - information map
      */
     public Map<String, Object> getInfo(String type);
 }

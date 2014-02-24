@@ -278,9 +278,9 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 	/**
 	 * Parses an entity from an {@link Ethernet} packet.
 	 * 
-	 * @param eth the packet to parse
-	 * @param swdpid the switch on which the packet arrived
-	 * @param ofPort the original packetin
+	 * @param eth 		the packet to parse
+	 * @param sw	 	the switch on which the packet arrived
+	 * @param ofPort 	the original packetin
 	 * 
 	 * @return the entity from the packet
 	 */
@@ -501,18 +501,6 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 		// TODO Auto-generated method stub
 		return "OFMDeviceManager";
 	}
-
-//	@Override
-//	public boolean isCallbackOrderingPrereq(OFType type, String name) {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
-//
-//	@Override
-//	public boolean isCallbackOrderingPostreq(OFType type, String name) {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
 
 	@Override
 	public etri.sdn.controller.IListener.Command reconcileFlows(

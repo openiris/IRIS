@@ -6,6 +6,12 @@ import org.openflow.util.U16;
 import org.openflow.util.U32;
 import org.openflow.util.U8;
 
+/**
+ * This class is only to use internally to parse OFMessage objects.
+ * 
+ * @author bjlee
+ *
+ */
 public class OFHeader {
     public static int MINIMUM_LENGTH = 8;
 

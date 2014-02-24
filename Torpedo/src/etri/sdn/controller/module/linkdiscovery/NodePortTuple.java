@@ -77,7 +77,7 @@ public class NodePortTuple {
 	 * API to return a String value formed with NodeID and PortID
 	 * The portID is a 16-bit field, so mask it as an integer to get full
 	 * positive value
-	 * @return
+	 * @return	String
 	 */
 	public String toKeyString() {
 		return (HexString.toHexString(nodeId)+ "|" + (portId & 0xffff));

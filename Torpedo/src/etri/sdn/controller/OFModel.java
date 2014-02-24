@@ -14,7 +14,7 @@ import org.restlet.Restlet;
  * 
  * Further, we are planning to integrate NoSQL function with this class.
  * Currently the NoSQL(MongoDB)-related function are in a separate module
- * {@link etri.sdn.controller.module.storage.OFMStorageManager}. 
+ * {@link etri.sdn.controller.module.storagemanager.OFMStorageManager}. 
  * 
  * @author bjlee
  *
@@ -54,13 +54,13 @@ public abstract class OFModel {
 		
 		/**
 		 * returns a URI associated with this RESTApi object.
-		 * @return
+		 * @return String (URI)
 		 */
 		public String getURI() { return this.uri; }
 		
 		/**
 		 * returns a Restlet object that actually implements the api.
-		 * @return
+		 * @return	Restlet object
 		 */
 		public Restlet getAPI() { return this.api; }
 	}
