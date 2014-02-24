@@ -8,11 +8,10 @@ etri.sdn.controller.module.learningmac
 etri.sdn.controller.module.linkdiscovery
 etri.sdn.controller.module.routing
 etri.sdn.controller.module.statemanager
-etri.sdn.controller.module.staticentrypusher
-etri.sdn.controller.module.storage
 etri.sdn.controller.module.storagemanager
 etri.sdn.controller.module.topologymanager
 etri.sdn.controller.module.ui
+etri.sdn.controller.protocol
 etri.sdn.controller.protocol.io
 etri.sdn.controller.protocol.packet
 etri.sdn.controller.util
