@@ -1003,10 +1003,10 @@ public class OFProtocol {
 	/**
 	 * Set this OFMatch's parameters based on a comma-separated key=value pair
 	 * dpctl-style string, e.g., from the output of OFMatch.toString() <br>
-	 * <p>
+	 * <br>
 	 * Supported keys/values include <br>
-	 * <p>
-	 * <TABLE border=1>
+	 * <br>
+	 * <TABLE>
 	 * <TR>
 	 * <TD>KEY(s)
 	 * <TD>VALUE
@@ -1032,7 +1032,7 @@ public class OFProtocol {
 	 * <TD>integer (max 64k)
 	 * </TR>
 	 * </TABLE>
-	 * <p>
+	 * <br>
 	 * The CIDR-style netmasks assume 32 netmask if none given, so:
 	 * "128.8.128.118/32" is the same as "128.8.128.118"
 	 * 
