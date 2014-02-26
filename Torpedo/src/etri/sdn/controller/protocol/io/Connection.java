@@ -28,7 +28,11 @@ public final class Connection {
 	private Selector selector;
 	AtomicBoolean write_set = new AtomicBoolean(false);
 
-	public Connection(SocketChannel client) {
+	/**
+	 * Constructor to create a new Connection object.
+	 * @param client
+	 */
+	Connection(SocketChannel client) {
 		this.client = client;
 		this.sw = null;
 		this.client_status = STATUS.CONNECTED;
@@ -40,47 +44,90 @@ public final class Connection {
 		this.seq = ++SEQ;
 	}
 	
+	/**
+	 * Get IOFSwitch (switch) object
+	 * @return
+	 */
 	public IOFSwitch getSwitch () {
 		return this.sw;
 	}
 	
-	public void setSwitch(IOFSwitch sw) {
+	/**
+	 * Set switch connected via this connection
+	 * @param sw	IOFSwitch object to set
+	 */
+	void setSwitch(IOFSwitch sw) {
 		this.sw = sw;
 		this.sw.setConnection(this);
 	}
 	
+	/**
+	 * Get sequence number (identifier for this connection)
+	 * @return	sequence number (id) of this connection
+	 */
 	public int getSeq() { 
 		return this.seq;
 	}
 
+	/**
+	 * Get underlying socket channel
+	 * @return	SocketChannel object
+	 */
 	public SocketChannel getClient() {
 		return client;
 	}
 
-	public Set<IOFHandler> getHandlers() {
+	/**
+	 * Get all controller instances runninng
+	 * @return	Set<IOFHandler>
+	 */
+	Set<IOFHandler> getHandlers() {
 		return handlers;
 	}
 	
-	public void addHandler(IOFHandler handler) {
+	/**
+	 * Add controller instance
+	 * @param handler	IOFHandler (Controller) object
+	 */
+	void addHandler(IOFHandler handler) {
 		handlers.add(handler);
 	}
 	
-	public void addHandler(Set<IOFHandler> handlers ) {
+	/**
+	 * Add a set of controller instances
+	 * @param handlers	Set<IOFHandler>
+	 */
+	void addHandler(Set<IOFHandler> handlers ) {
 		this.handlers.addAll( handlers );
 	}
 
-	public STATUS getStatus() {
+	/**
+	 * Return the status of corrent connection
+	 * @return	STATUS value
+	 */
+	STATUS getStatus() {
 		return client_status;
 	}
 
-	public void setStatus(STATUS stat) {
+	/**
+	 * Set the status of the connection
+	 * @param stat	STATUS value
+	 */
+	void setStatus(STATUS stat) {
 		this.client_status = stat;
 	}
 
-	public OFMessageAsyncStream getStream() {
+	/**
+	 * Return the underlying message stream
+	 * @return	OFMessageAsyncStream object
+	 */
+	private OFMessageAsyncStream getStream() {
 		return stream;
 	}
 
+	/**
+	 * Close this connection
+	 */
 	public synchronized void close() {
 		client_status = STATUS.CLOSED;
 		try {
@@ -90,6 +137,10 @@ public final class Connection {
 		}
 	}
 
+	/**
+	 * Is this connection alive?
+	 * @return	true if alive, false otherwise
+	 */
 	public boolean isConnected() {
 		// client.isConnected() does not correctly return the 
 		// status of the channel after close() is called.
@@ -97,10 +148,20 @@ public final class Connection {
 		return client.isOpen();
 	}
 
-	public synchronized List<OFMessage> read() throws IOException {
+	/**
+	 * Read OF messages from the connection 
+	 * @return	List<OFMessage> object
+	 * @throws 	IOException
+	 */
+	synchronized List<OFMessage> read() throws IOException {
 		return getStream().read();
 	}
 
+	/**
+	 * Write an OF message to switch
+	 * @param fm	OF Message to write
+	 * @return		true if successful, false otherwise
+	 */
 	public synchronized boolean write(OFMessage fm) {
 		if ( fm == null ) return true;
 		
@@ -119,7 +180,11 @@ public final class Connection {
 		return true;
 	}
 
-	public synchronized boolean flush() {
+	/** 
+	 * Flush the connection to write all the pending buffer to switch
+	 * @return true if successful, false otherwise
+	 */
+	synchronized boolean flush() {
 		try {
 			getStream().flush();
 		} catch (IOException e) {
@@ -128,6 +193,11 @@ public final class Connection {
 		return true;
 	}
 
+	/**
+	 * Write OF messages to switch
+	 * @param out	OF messages to write
+	 * @return		true if successful, false otherwise
+	 */
 	public synchronized boolean write(List<OFMessage> out) {
 		for ( OFMessage m : out ) {
 			try { 
@@ -141,11 +211,18 @@ public final class Connection {
 		}
 		return true;
 	}
-		
-	public void setSelector(Selector read_selector) {
+	
+	/**
+	 * Append selector to this connection
+	 * @param read_selector selector to attach 
+	 */
+	void setSelector(Selector read_selector) {
 		this.selector = read_selector;
 	}
 	
+	/**
+	 * Mark the selector to monitor both read and write event
+	 */
 	private void markToWrite() {
 		if ( this.write_set.compareAndSet(false, true) ) {
 			this.client.keyFor(this.selector).interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE);
@@ -153,7 +230,10 @@ public final class Connection {
 		}
 	}
 
-	public void markFlushed() {
+	/**
+	 * Mark the selector to only monitor read event
+	 */
+	void markFlushed() {
 		if ( this.write_set.compareAndSet(true, false) ) {
 			this.client.keyFor(this.selector).interestOps(SelectionKey.OP_READ);
 			this.selector.wakeup();
