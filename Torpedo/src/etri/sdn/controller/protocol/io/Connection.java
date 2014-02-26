@@ -132,6 +132,9 @@ public final class Connection {
 		for ( OFMessage m : out ) {
 			try { 
 				getStream().write( m );
+				
+				// watch the channel 'client' for write!
+				this.markToWrite();
 			} catch ( IOException e ) {
 				return false;
 			}
