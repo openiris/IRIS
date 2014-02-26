@@ -426,8 +426,19 @@ public class Devices extends OFModel implements IDeviceService {
 				// use resulting device key to look up the device in the
 				// device map, and use the referenced Device below.
 				device = deviceIdToDeviceMap.get(deviceId);
-				if (device == null)
-					throw new IllegalStateException("Corrupted device index");
+				if (device == null) {
+					// currupted device id. 
+					// first we should remove the device id from the primary Index.
+					primaryIndex.removeEntity(entity);
+					// and we remove it from the alternative index.
+					if ( entityClass != null ) {
+						EntityToSingleDeviceIdIndex alternative = singleIndices.get(entityClass.getKeyFields());
+						alternative.removeEntity(entity);
+					}
+					// we start it all over again.
+					continue;
+				}
+					
 			} else {
 				// If the secondary index does not contain the entity,
 				// create a new Device object containing the entity, and

@@ -192,6 +192,11 @@ public class FirewallStorage extends OFModel{
 		}
 		
 		Collection<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+		
+		if ( entryList == null ) {
+			// this can be caused when we cannot connect to database.
+			return resultList;
+		}
 
 		for (Map<String, Object> entry : entryList) {
 			HashMap<String, Object> rule = null;

@@ -7,6 +7,7 @@ import java.nio.channels.SocketChannel;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.openflow.io.OFMessageAsyncStream;
 import org.openflow.protocol.OFMessage;
@@ -25,6 +26,7 @@ public final class Connection {
 	private int seq;
 
 	private Selector selector;
+	AtomicBoolean write_set = new AtomicBoolean(false);
 
 	public Connection(SocketChannel client) {
 		this.client = client;
@@ -142,12 +144,16 @@ public final class Connection {
 	}
 	
 	private void markToWrite() {
-		this.selector.wakeup();
-		this.client.keyFor(this.selector).interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+		if ( this.write_set.compareAndSet(false, true) ) {
+			this.client.keyFor(this.selector).interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+			this.selector.wakeup();
+		}
 	}
 
 	public void markFlushed() {
-		this.selector.wakeup();
-		this.client.keyFor(this.selector).interestOps(SelectionKey.OP_READ);
+		if ( this.write_set.compareAndSet(true, false) ) {
+			this.client.keyFor(this.selector).interestOps(SelectionKey.OP_READ);
+			this.selector.wakeup();
+		}
 	}
 }

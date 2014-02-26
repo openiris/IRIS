@@ -51,19 +51,24 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 		String db = conf.getString("storage-default-db");
 		String passwd = conf.getString("storage-password");
 		try {
-			this.mongoClient = new MongoClient(ip, port );
+			this.mongoClient = new MongoClient(ip, port);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		this.db = this.mongoClient.getDB(db);
-		boolean auth = this.db.authenticate(db, passwd.toCharArray());
-		
-		if(auth) {
-			Logger.stderr("login successful..");
-		} else {
-			Logger.stderr("login failed.");
+		try {
+			boolean auth = this.db.authenticate(db, passwd.toCharArray());
+			
+			if(auth) {
+				Logger.stderr("login successful..");
+			} else {
+				Logger.stderr("login failed.");
+			}
+		} catch ( Exception e ) {
+			System.err.println("cannot log in the database. We continue without database.");
+			this.mongoClient = null;
 		}
 		
 		om =  new ObjectMapper();
@@ -88,6 +93,10 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	@Override
 	public boolean insert(String dbName, String collection, Map<String, Object> query) throws StorageException {
 
+		if ( this.mongoClient == null ) {
+			return false;
+		}
+		
 		this.db = this.mongoClient.getDB(dbName);
 
 		BasicDBObject dbObject = StorageConverter.MapToDBObject(query);
@@ -124,6 +133,11 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	 */
 	@Override
 	public boolean insert(String dbName, String collection, String r) throws StorageException {
+
+		if ( this.mongoClient == null ) {
+			return false;
+		}
+		
 		boolean inserted = false;
 
 		this.db = this.mongoClient.getDB(dbName);
@@ -181,6 +195,11 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	 */
 	@Override
 	public boolean delete(String dbName, String collection, Map<String, Object> query) throws StorageException {
+
+		if ( this.mongoClient == null ) {
+			return false;
+		}
+		
 		this.db = this.mongoClient.getDB(dbName);
 
 		BasicDBObject dbObject = StorageConverter.MapToDBObject(query);
@@ -207,6 +226,11 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	 */
 	@Override
 	public boolean delete(String dbName, String collection, String r) throws StorageException {
+
+		if ( this.mongoClient == null ) {
+			return false;
+		}
+		
 
 		try {
 			this.db = this.mongoClient.getDB(dbName);
@@ -250,6 +274,11 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	@Override
 	public boolean update(String dbName, String collection, Map<String, Object> key, Map<String, Object> query) throws StorageException {
 
+		if ( this.mongoClient == null ) {
+			return false;
+		}
+		
+
 		this.db = this.mongoClient.getDB(dbName);
 
 		BasicDBObject dbKey = StorageConverter.MapToDBObject(key); 
@@ -289,6 +318,11 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	 */
 	@Override
 	public boolean update(String dbName, String collection, String key, String query) throws StorageException {
+
+		if ( this.mongoClient == null ) {
+			return false;
+		}
+		
 		this.db = this.mongoClient.getDB(dbName);
 
 		String s1 = StorageConverter.replaceDotToDotUtf(key);
@@ -343,6 +377,11 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	 */
 	@Override
 	public boolean upsert(String dbName, String collection, Map<String, Object> key, Map<String, Object> query) throws StorageException {
+
+		if ( this.mongoClient == null ) {
+			return false;
+		}
+		
 		this.db = this.mongoClient.getDB(dbName);
 
 		BasicDBObject dbKey = StorageConverter.MapToDBObject(key); 
@@ -386,6 +425,11 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	 */
 	@Override
 	public boolean upsert(String dbName, String collection, String key, String query) throws StorageException {
+
+		if ( this.mongoClient == null ) {
+			return false;
+		}
+		
 		this.db = this.mongoClient.getDB(dbName);
 
 		String s1 = StorageConverter.replaceDotToDotUtf(key);
@@ -433,6 +477,11 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	@Override
 	public List<String> retrieveAsStringAll(String dbName, String collection) throws StorageException {
 
+		if ( this.mongoClient == null ) {
+			return null;
+		}
+		
+
 		this.db = this.mongoClient.getDB(dbName);
 		List<String> resultList = new ArrayList<String>();
 		DBCursor cursor = db.getCollection(collection).find();
@@ -466,6 +515,10 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	@Override
 	public List<String> retrieveAsString(String dbName, String collection, String query) throws StorageException {
 
+		if ( this.mongoClient == null ) {
+			return null;
+		}
+		
 		BasicDBObject dbObject = null;
 		this.db = this.mongoClient.getDB(dbName);
 		String s = StorageConverter.replaceDotToDotUtf(query);
@@ -510,6 +563,10 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	@Override
 	public List<Map<String, Object>> retrieve(String dbName, String collection, Map<String, Object> query) throws StorageException {
 
+		if ( this.mongoClient == null ) {
+			return null;
+		}
+		
 		this.db = this.mongoClient.getDB(dbName);
 		BasicDBObject dbObject = StorageConverter.MapToDBObject(query);
 
@@ -540,7 +597,11 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	 */
 	@Override
 	public List<Map<String, Object>> retrieveAll(String dbName, String collection) throws StorageException {
-
+		
+		if ( this.mongoClient == null ) {
+			return null;
+		}
+		
 		this.db = this.mongoClient.getDB(dbName);
 		List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
 		DBCursor cursor = db.getCollection(collection).find();
@@ -571,6 +632,10 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	@Override
 	public void ensureIndex(String dbName, String collection, Map<String, Object> key) throws StorageException {
 
+		if ( this.mongoClient == null ) {
+			return;
+		}
+		
 		this.db = this.mongoClient.getDB(dbName);
 
 		Map<String, Object> unique = new HashMap<String, Object>();
@@ -594,6 +659,10 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	@Override
 	public void dropIndex(String dbName, String collection, Map<String, Object> key) throws StorageException {
 
+		if ( this.mongoClient == null ) {
+			return;
+		}
+		
 		this.db = this.mongoClient.getDB(dbName);
 
 		BasicDBObject dbObject = new BasicDBObject(key);
@@ -613,6 +682,10 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getIndex(String dbName, String collection) throws StorageException {
 
+		if ( this.mongoClient == null ) {
+			return null;
+		}
+		
 		this.db = this.mongoClient.getDB(dbName);
 		List<DBObject> listDBobject = db.getCollection(collection).getIndexInfo();
 		return (List<Map<String, Object>>) StorageConverter.toJSON(listDBobject);
@@ -626,6 +699,10 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	@Override
 	public List<String> retrieveDBs() throws StorageException {
 
+		if ( this.mongoClient == null ) {
+			return null;
+		}
+		
 		return mongoClient.getDatabaseNames();
 	}
 
@@ -637,6 +714,10 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	 */
 	@Override
 	public void dropDB(String dbName) throws StorageException {
+		if ( this.mongoClient == null ) {
+			return;
+		}
+		
 		mongoClient.dropDatabase(dbName);
 	}
 
