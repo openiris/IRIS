@@ -1,6 +1,8 @@
 package etri.sdn.controller.protocol.io;
 
 import java.io.IOException;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.List;
 import java.util.Set;
@@ -18,15 +20,15 @@ public final class Connection {
 	private SocketChannel client;
 	private IOFSwitch sw;
 	private Set<IOFHandler> handlers = new ConcurrentSkipListSet<IOFHandler>();
-//	private BasicFactory factory;
 	private STATUS client_status;
 	private OFMessageAsyncStream stream;
 	private int seq;
 
+	private Selector selector;
+
 	public Connection(SocketChannel client) {
 		this.client = client;
 		this.sw = null;
-//		this.factory = new BasicFactory();
 		this.client_status = STATUS.CONNECTED;
 		try {
 			this.stream = new OFMessageAsyncStream( client /*, VersionAdaptor.getMessageFactory() */ );
@@ -64,10 +66,6 @@ public final class Connection {
 	public void addHandler(Set<IOFHandler> handlers ) {
 		this.handlers.addAll( handlers );
 	}
-
-//	public BasicFactory getFactory() {
-//		return factory;
-//	}
 
 	public STATUS getStatus() {
 		return client_status;
@@ -107,12 +105,12 @@ public final class Connection {
 		if ( fm.getXid() == 0 ) {
 			fm.setXid(sw.getNextTransactionId());
 		}
-		
+
 		try {
-			getStream().write( 
-					fm.setLength( fm.computeLength() ) 
-			);
-//			System.err.println("writing >>>>>" + fm.toString());
+			getStream().write( fm.setLength( fm.computeLength() ) );
+			
+			// watch the channel 'client' for write!
+			this.markToWrite();
 		} catch (IOException e) {
 			return false;
 		}
@@ -137,5 +135,19 @@ public final class Connection {
 			}
 		}
 		return true;
+	}
+		
+	public void setSelector(Selector read_selector) {
+		this.selector = read_selector;
+	}
+	
+	private void markToWrite() {
+		this.selector.wakeup();
+		this.client.keyFor(this.selector).interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+	}
+
+	public void markFlushed() {
+		this.selector.wakeup();
+		this.client.keyFor(this.selector).interestOps(SelectionKey.OP_READ);
 	}
 }

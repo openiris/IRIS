@@ -69,10 +69,12 @@ public final class ClientChannelWatcher extends Thread {
 				}
 				
 				new_conn.addHandler( hset );
+				new_conn.setSelector( read_selector );
 				
 				client.register( 
 						read_selector.wakeup(), 
-						SelectionKey.OP_READ | SelectionKey.OP_WRITE, 
+						SelectionKey.OP_READ | SelectionKey.OP_WRITE,
+//						SelectionKey.OP_READ,
 						new_conn
 				);
 			} catch (ClosedChannelException e) {
@@ -99,7 +101,7 @@ public final class ClientChannelWatcher extends Thread {
 				// guard idiom to prevent deadlock at client.register() call
 				synchronized (guard) {}
 
-				int r = read_selector.select();
+				int r = read_selector.select(300);
 				if ( r > 0 ) { // there's something to read.
 
 					Set<SelectionKey> keys = read_selector.selectedKeys();
@@ -141,6 +143,9 @@ public final class ClientChannelWatcher extends Thread {
 									// it will not give immediate response to the request
 									// until the byte buffer is filled enough to flush.
 									conn.flush();
+									
+									// this will clear OP_WRITE from the channel.
+									conn.markFlushed();
 								}
 							}
 							if ( conn.getStatus() == Connection.STATUS.RUNNING && key.isReadable() ) {
