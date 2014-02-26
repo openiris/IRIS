@@ -13,14 +13,7 @@ import etri.sdn.controller.protocol.io.Connection;
 
 /**
  * <p>
- * This is a simple OF controller which is mainly used for demonstration.
- * This controller allows all kind of packets to go to their destinations 
- * using the {@link etri.sdn.controller.module.learningmac.OFMLearningMac} module.
- * </p>
- * <p>
- * The other modules are included to test their basic operations.
- * With this controller, you can check all the basic functionalities of IRIS 
- * are fully up and operational.
+ * This controller is only for cbench-based banchmarking. 
  * </p>
  * 
  * @author bjlee
