@@ -240,7 +240,6 @@ public final class Connection {
 	private void markFlushed() {
 		if ( this.write_set.compareAndSet(true, false) ) {
 			this.client.keyFor(this.selector).interestOps(SelectionKey.OP_READ);
-//			this.selector.wakeup();
 		}
 	}
 }
