@@ -206,6 +206,10 @@ public final class Connection {
 		this.markToWrite();
 		
 		for ( OFMessage m : out ) {
+			if ( m.getXid() == 0 ) {
+				m.setXid(sw.getNextTransactionId());
+			}
+			
 			try { 
 				getStream().write( m );
 			} catch ( IOException e ) {
