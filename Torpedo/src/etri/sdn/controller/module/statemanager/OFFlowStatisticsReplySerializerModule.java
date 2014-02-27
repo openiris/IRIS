@@ -98,41 +98,41 @@ final class OFMatchSerializer extends JsonSerializer<OFMatch> {
 		jgen.writeStartObject();
 		if ( match.isWildcardsSupported() ) {
 			int wildcard = match.getWildcardsWire();
+			
 			jgen.writeNumberField("wildcards", wildcard);
-			if ( (wildcard & OFBFlowWildcard.DL_DST) != 0 ) 
+			if ( (wildcard & OFBFlowWildcard.DL_DST) == 0 ) 
 				jgen.writeStringField("dataLayerDestination", HexString.toHexString(match.getDataLayerDestination()));
-			if ( (wildcard & OFBFlowWildcard.DL_SRC) != 0 ) 
+			if ( (wildcard & OFBFlowWildcard.DL_SRC) == 0 ) 
 				jgen.writeStringField("dataLayerSource", HexString.toHexString(match.getDataLayerSource()));
-			if ( (wildcard & OFBFlowWildcard.DL_TYPE) != 0 ) {
-		        String dataType = Integer.toHexString(match.getDataLayerType());
+			if ( (wildcard & OFBFlowWildcard.DL_TYPE) == 0 ) {
+		        String dataType = Integer.toHexString((int)match.getDataLayerType());
 		        while (dataType.length() < 4) {
 		            dataType = "0".concat(dataType);
 		        }
 		        jgen.writeStringField("dataLayerType", "0x" + dataType);
 			}
-			if ( (wildcard & OFBFlowWildcard.DL_VLAN) != 0 )
+			if ( (wildcard & OFBFlowWildcard.DL_VLAN) == 0 )
 				jgen.writeNumberField("dataLayerVirtualLan", match.getDataLayerVirtualLan());
-			if ( (wildcard & OFBFlowWildcard.DL_VLAN_PCP) != 0 )
+			if ( (wildcard & OFBFlowWildcard.DL_VLAN_PCP) == 0 )
 				jgen.writeNumberField("dataLayerVirtualLanPriorityCodePoint", match.getDataLayerVirtualLanPriorityCodePoint());
 			
-			if ( (wildcard & OFBFlowWildcard.IN_PORT) != 0 )
+			if ( (wildcard & OFBFlowWildcard.IN_PORT) == 0 )
 				jgen.writeNumberField("inputPort", match.getInputPort().get());
-	        
-			if ( (wildcard & OFBFlowWildcard.NW_PROTO) != 0 )
+			if ( (wildcard & OFBFlowWildcard.NW_PROTO) == 0 )
 	        	 jgen.writeNumberField("networkProtocol", match.getNetworkProtocol());
-	        if ( (wildcard & OFBFlowWildcard.NW_DST_ALL) != 0)
+	        if ( (wildcard & OFBFlowWildcard.NW_DST_ALL) == 0 )
 	        	jgen.writeStringField("networkDestination", intToIp(match.getNetworkDestination()));
-	        if ( (wildcard & OFBFlowWildcard.NW_DST_MASK) != 0)
+	        if ( (wildcard & OFBFlowWildcard.NW_DST_MASK) == 0 )
 	        	jgen.writeNumberField("networkDestinationMaskLen", getNetworkDestinationMaskLen(match));
-	        if ( (wildcard & OFBFlowWildcard.NW_SRC_ALL) != 0)
+	        if ( (wildcard & OFBFlowWildcard.NW_SRC_ALL) == 0 )
 		        jgen.writeStringField("networkSource", intToIp(match.getNetworkSource()));
-	        if ( (wildcard & OFBFlowWildcard.NW_SRC_MASK) != 0)
+	        if ( (wildcard & OFBFlowWildcard.NW_SRC_MASK) == 0 )
 		        jgen.writeNumberField("networkSourceMaskLen", getNetworkSourceMaskLen(match));
-	        if ( (wildcard & OFBFlowWildcard.NW_TOS) != 0 )
+	        if ( (wildcard & OFBFlowWildcard.NW_TOS) == 0 )
 	        	jgen.writeNumberField("networkTypeOfService", match.getNetworkTypeOfService());
-	        if ( (wildcard & OFBFlowWildcard.TP_DST) != 0 )
+	        if ( (wildcard & OFBFlowWildcard.TP_DST) == 0 )
 	        	jgen.writeNumberField("transportDestination", match.getTransportDestination());
-	        if ( (wildcard & OFBFlowWildcard.TP_SRC) != 0 )
+	        if ( (wildcard & OFBFlowWildcard.TP_SRC) == 0 )
 	        	jgen.writeNumberField("transportSource", match.getTransportSource());
 		}
 		else {

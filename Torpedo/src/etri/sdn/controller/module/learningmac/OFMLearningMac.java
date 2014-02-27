@@ -407,11 +407,17 @@ public final class OFMLearningMac extends OFModule {
 			if (LEARNING_SWITCH_REVERSE_FLOW) {
 				OFMatch.Builder builder = OFMessageFactory.createMatchBuilder(conn.getSwitch().getVersion());
 
-				if( match.isDataLayerSourceSupported()) {
+				if( match.isWildcardsSupported()) {
 					
 					builder
+					.setWildcardsWire(match.getWildcardsWire())
+					.setDataLayerVirtualLan(match.getDataLayerVirtualLan())
+					.setDataLayerVirtualLanPriorityCodePoint(match.getDataLayerVirtualLanPriorityCodePoint())
 					.setDataLayerSource(match.getDataLayerDestination())
 					.setDataLayerDestination(match.getDataLayerSource())
+					.setDataLayerType(match.getDataLayerType())
+					.setNetworkTypeOfService(match.getNetworkTypeOfService())
+					.setNetworkProtocol(match.getNetworkProtocol())
 					.setNetworkSource(match.getNetworkDestination())
 					.setNetworkDestination(match.getNetworkSource())
 					.setTransportSource(match.getTransportDestination())
