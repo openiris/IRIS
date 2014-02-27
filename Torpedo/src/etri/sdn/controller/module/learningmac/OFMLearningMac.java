@@ -394,34 +394,34 @@ public final class OFMLearningMac extends OFModule {
 						((Integer)conn.getSwitch().getAttribute(IOFSwitch.PROP_FASTWILDCARDS)).intValue()
 						& ~OFBFlowWildcard.IN_PORT
 						& ~OFBFlowWildcard.DL_VLAN & ~OFBFlowWildcard.DL_SRC & ~OFBFlowWildcard.DL_DST
-						& ~OFBFlowWildcard.NW_SRC_MASK & ~OFBFlowWildcard.NW_DST_MASK
+						& ~OFBFlowWildcard.NW_SRC_ALL & ~OFBFlowWildcard.NW_DST_ALL
 						);
-			} else {
-				// How to set wildcards in OF1.3?
-				// does nothing
-			}
+			} 
 
 			this.writeFlowMod(conn.getSwitch(), OFFlowModCommand.ADD, 
 					pi.getBufferId(), match, outPort, out);
 
 			if (LEARNING_SWITCH_REVERSE_FLOW) {
-				OFMatch.Builder builder = OFMessageFactory.createMatchBuilder(conn.getSwitch().getVersion());
+				OFMatch.Builder builder = OFMessageFactory.createMatchBuilder(pi.getVersion());
 
 				if( match.isWildcardsSupported()) {
 					
 					builder
-					.setWildcardsWire(match.getWildcardsWire())
+					.setWildcardsWire(((Integer)conn.getSwitch().getAttribute(IOFSwitch.PROP_FASTWILDCARDS)).intValue()
+							& ~OFBFlowWildcard.IN_PORT
+							& ~OFBFlowWildcard.DL_VLAN & ~OFBFlowWildcard.DL_SRC & ~OFBFlowWildcard.DL_DST
+							& ~OFBFlowWildcard.NW_SRC_ALL & ~OFBFlowWildcard.NW_DST_ALL)
 					.setDataLayerVirtualLan(match.getDataLayerVirtualLan())
-					.setDataLayerVirtualLanPriorityCodePoint(match.getDataLayerVirtualLanPriorityCodePoint())
+//					.setDataLayerVirtualLanPriorityCodePoint(match.getDataLayerVirtualLanPriorityCodePoint())
 					.setDataLayerSource(match.getDataLayerDestination())
 					.setDataLayerDestination(match.getDataLayerSource())
-					.setDataLayerType(match.getDataLayerType())
-					.setNetworkTypeOfService(match.getNetworkTypeOfService())
-					.setNetworkProtocol(match.getNetworkProtocol())
+//					.setDataLayerType(match.getDataLayerType())
+//					.setNetworkTypeOfService(match.getNetworkTypeOfService())
+//					.setNetworkProtocol(match.getNetworkProtocol())
 					.setNetworkSource(match.getNetworkDestination())
 					.setNetworkDestination(match.getNetworkSource())
-					.setTransportSource(match.getTransportDestination())
-					.setTransportDestination(match.getTransportSource())
+//					.setTransportSource(match.getTransportDestination())
+//					.setTransportDestination(match.getTransportSource())
 					.setInputPort(OFPort.of(outPort));
 					
 					this.writeFlowMod(conn.getSwitch(), OFFlowModCommand.ADD, -1,

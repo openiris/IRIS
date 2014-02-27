@@ -155,8 +155,7 @@ public class Main {
 			tmp_names.removeAll(ctrl_names);
 			if ( !tmp_names.isEmpty() ) {
 				for ( String ctrl_name : tmp_names ) {
-					// we should load 
-					Logger.stdout("loading " + ctrl_name);
+					
 					String basename = Basename.get(ctrl_name, "jar");
 					
 					if ( !sysconf.propertyExists(basename + ".instance-num") || 
@@ -168,6 +167,8 @@ public class Main {
 					if ( !sysconf.getString(basename + ".run").equals("true") ) {
 						continue;
 					}
+					
+					Logger.stdout("loading " + ctrl_name);
 					
 					OFController to_load = JarLoader.getController(
 							ctrl_name,

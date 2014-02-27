@@ -143,9 +143,6 @@ public final class ClientChannelWatcher extends Thread {
 									// it will not give immediate response to the request
 									// until the byte buffer is filled enough to flush.
 									conn.flush();
-									
-									// this will clear OP_WRITE from the channel.
-									conn.markFlushed();
 								}
 							}
 							if ( conn.getStatus() == Connection.STATUS.RUNNING && key.isReadable() ) {

@@ -171,7 +171,6 @@ public final class Connection {
 
 		try {
 			getStream().write( fm.setLength( fm.computeLength() ) );
-			
 			// watch the channel 'client' for write!
 			this.markToWrite();
 		} catch (IOException e) {
@@ -185,6 +184,7 @@ public final class Connection {
 	 * @return true if successful, false otherwise
 	 */
 	synchronized boolean flush() {
+		this.markFlushed();
 		try {
 			getStream().flush();
 		} catch (IOException e) {
@@ -199,16 +199,16 @@ public final class Connection {
 	 * @return		true if successful, false otherwise
 	 */
 	public synchronized boolean write(List<OFMessage> out) {
+		
 		for ( OFMessage m : out ) {
 			try { 
 				getStream().write( m );
-				
-				// watch the channel 'client' for write!
-				this.markToWrite();
 			} catch ( IOException e ) {
 				return false;
 			}
 		}
+		// watch the channel 'client' for write!
+		this.markToWrite();
 		return true;
 	}
 	
@@ -233,7 +233,7 @@ public final class Connection {
 	/**
 	 * Mark the selector to only monitor read event
 	 */
-	void markFlushed() {
+	private void markFlushed() {
 		if ( this.write_set.compareAndSet(true, false) ) {
 			this.client.keyFor(this.selector).interestOps(SelectionKey.OP_READ);
 			this.selector.wakeup();
