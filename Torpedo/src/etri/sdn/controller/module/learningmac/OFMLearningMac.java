@@ -199,7 +199,6 @@ public final class OFMLearningMac extends OFModule {
 			.setHardTimeout(HARD_TIMEOUT_DEFAULT)						//permanent if idle and hard timeout are zero
 			.setPriority(PRIORITY_DEFAULT)
 			.setBufferId(bufferId)										//refers to a packet buffered at the switch and sent to the controller
-//			.setOutGroup(0x18)										//OFPP_ANY
 			.setOutPort((command == OFFlowModCommand.DELETE) ? OFPort.of(outPort) : OFPort.NONE)
 			.setMatch(match)
 			.setInstructions(instructions);
@@ -215,15 +214,18 @@ public final class OFMLearningMac extends OFModule {
 			flowMod.setHardTimeout(HARD_TIMEOUT_DEFAULT);
 			flowMod.setPriority(PRIORITY_DEFAULT);
 			flowMod.setBufferId(bufferId);
-			//		flowMod.setOutPort(OFPort.o.of(command == OFFlowModCommand.DELETE ? outPort : OFPortNo.NONE);
 			flowMod.setOutPort(command == OFFlowModCommand.DELETE ? OFPort.of(outPort) : OFPort.NONE);
 			flowMod.setFlagsWire((command == OFFlowModCommand.DELETE ? 0 : (short) (1 << 0))); // OFPFF_SEND_FLOW_REM	
 
 			OFActionOutput action_output = OFMessageFactory.createActionOutput(sw.getVersion());
-			action_output.setPort(OFPort.of(outPort)).setMaxLength((short)0xffff).setLength(action_output.getLength());
+			action_output
+			.setPort(OFPort.of(outPort))
+			.setMaxLength((short)0xffff)
+			.setLength(action_output.computeLength());
 			
-			flowMod.setActions(Arrays.asList( (OFAction)action_output) );
-			flowMod.setLength( flowMod.computeLength() );
+			flowMod
+			.setActions(Arrays.asList((OFAction)action_output) )
+			.setLength( flowMod.computeLength() );
 		}
 
 		out.add(flowMod);
@@ -251,9 +253,10 @@ public final class OFMLearningMac extends OFModule {
 		// set actions
 		List<OFAction> actions = new ArrayList<OFAction>(1);      
 		OFActionOutput action_output = OFMessageFactory.createActionOutput(sw.getVersion());
-		action_output.setPort(egressPort).setMaxLength((short)0);
+		action_output.setPort(egressPort).setMaxLength((short)0).setLength(action_output.computeLength());
+		
 		actions.add(action_output);
-		packetOutMessage.setActionsLength( action_output.computeLength() );
+		packetOutMessage.setActionsLength( action_output.getLength() );
 		packetOutMessage.setActions(actions);
 
 		// set data - only if buffer_id == -1

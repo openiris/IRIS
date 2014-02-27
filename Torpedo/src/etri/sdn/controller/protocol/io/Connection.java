@@ -169,10 +169,11 @@ public final class Connection {
 			fm.setXid(sw.getNextTransactionId());
 		}
 
+		// watch the channel 'client' for write!
+		this.markToWrite();
+		
 		try {
-			getStream().write( fm.setLength( fm.computeLength() ) );
-			// watch the channel 'client' for write!
-			this.markToWrite();
+			getStream().write( fm.setLength( fm.computeLength() ) );	
 		} catch (IOException e) {
 			return false;
 		}
@@ -184,11 +185,12 @@ public final class Connection {
 	 * @return true if successful, false otherwise
 	 */
 	synchronized boolean flush() {
-		this.markFlushed();
 		try {
 			getStream().flush();
 		} catch (IOException e) {
 			return false;
+		} finally {
+			this.markFlushed();
 		}
 		return true;
 	}
@@ -200,6 +202,9 @@ public final class Connection {
 	 */
 	public synchronized boolean write(List<OFMessage> out) {
 		
+		// watch the channel 'client' for write!
+		this.markToWrite();
+		
 		for ( OFMessage m : out ) {
 			try { 
 				getStream().write( m );
@@ -207,8 +212,7 @@ public final class Connection {
 				return false;
 			}
 		}
-		// watch the channel 'client' for write!
-		this.markToWrite();
+		
 		return true;
 	}
 	
@@ -236,7 +240,7 @@ public final class Connection {
 	private void markFlushed() {
 		if ( this.write_set.compareAndSet(true, false) ) {
 			this.client.keyFor(this.selector).interestOps(SelectionKey.OP_READ);
-			this.selector.wakeup();
+//			this.selector.wakeup();
 		}
 	}
 }
