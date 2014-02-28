@@ -232,9 +232,15 @@ public final class Connection {
 	 * Mark the selector to monitor both read and write event
 	 */
 	private void markToWrite() {
-		if ( this.write_set.compareAndSet(false, true) ) {
-			this.client.keyFor(this.selector).interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE);
-			this.selector.wakeup();
+		try {
+			if ( this.write_set.compareAndSet(false, true) ) {
+				this.client.keyFor(this.selector).interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+				this.selector.wakeup();
+			}
+		} catch ( NullPointerException e ) {
+			// this is a truly exceptional case that there is no key
+			// bounded for the client. (connection is already cut.)
+			return;
 		}
 	}
 
@@ -242,8 +248,14 @@ public final class Connection {
 	 * Mark the selector to only monitor read event
 	 */
 	private void markFlushed() {
-		if ( this.write_set.compareAndSet(true, false) ) {
-			this.client.keyFor(this.selector).interestOps(SelectionKey.OP_READ);
+		try {
+			if ( this.write_set.compareAndSet(true, false) ) {
+				this.client.keyFor(this.selector).interestOps(SelectionKey.OP_READ);
+			}
+		} catch ( NullPointerException e ) {
+			// this is a truly exceptional case that there is no key
+			// bounded for the client. (connection is already cut.)
+			return;
 		}
 	}
 }

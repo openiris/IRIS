@@ -79,10 +79,11 @@ import etri.sdn.controller.util.TimedCache;
 public abstract class ForwardingBase extends OFModule implements IDeviceListener {
 
 	protected static int OFMESSAGE_DAMPER_CAPACITY = 50000; // TODO: find sweet spot
-	protected static int OFMESSAGE_DAMPER_TIMEOUT = 250; // ms 
+	protected static int OFMESSAGE_DAMPER_TIMEOUT = 250; 	// ms 
 
-	public static short FLOWMOD_DEFAULT_IDLE_TIMEOUT = 5; // in seconds
-	public static short FLOWMOD_DEFAULT_HARD_TIMEOUT = 0; // infinite
+	public static short FLOWMOD_DEFAULT_IDLE_TIMEOUT = 5; 	// in seconds
+	public static short FLOWMOD_DEFAULT_HARD_TIMEOUT = 0; 	// infinite
+	public static short FLOWMOD_DEFAULT_PRIORITY = 10;
 
 	protected IDeviceService deviceManager;
 	protected IRoutingService routingEngine;
@@ -251,10 +252,13 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 		.setCookie(cookie)
 		.setCommand(flowModCommand)
 		.setMatch(match)
-		.setFlags(OFFlowModFlags.SEND_FLOW_REM);
+		.setPriority(FLOWMOD_DEFAULT_PRIORITY);
 
 		if ( fm.isTableIdSupported() ) {
-			fm.setTableId( (byte) 0x0 );
+			fm.setFlags(OFFlowModFlags.SEND_FLOW_REM, OFFlowModFlags.CHECK_OVERLAP);
+			fm.setTableId((byte) 0x0);
+		} else {
+			fm.setFlags(OFFlowModFlags.SEND_FLOW_REM);
 		}
 
 		if ( fm.isInstructionsSupported() ) {
@@ -273,7 +277,6 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 		
 		List<NodePortTuple> switchPortList = route.getPath();
 
-//		for (int indx = switchPortList.size()-1; indx > 0; indx -= 2) {
 		for (int indx = switchPortList.size()-1; fm != null && indx > 0; indx -= 2) {
 			// indx and indx-1 will always have the same switch dpid.
 			long switchDPID = switchPortList.get(indx).getNodeId();
@@ -355,10 +358,12 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 //							new Object[] {indx, sw,
 //							fm.getMatch().getInputPort(), outPort });
 //				}
-				messageDamper.write(sw.getConnection(), fm);
-//				if (doFlush) {
-//					sw.flush();
+				
+//				if ( fm.getMatch().isOxmFieldsSupported() ) {
+//					fm.setPriority( (short) (fm.getPriority() + fm.getMatch().getOxmFields().size()));
 //				}
+				
+				messageDamper.write(sw.getConnection(), fm);
 
 				// Push the packet out the source switch
 				if (sw.getId() == pinSwitch) {
@@ -367,10 +372,11 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 					pushPacket(conn, match, pi, outPort, cntx);
 					srcSwitchIncluded = true;
 				}
+				
 			} catch (IOException e) {
 				Logger.stderr("Failure writing flow mod" + e.toString());
 			}
-
+			
 			// clone the OFFlowMod object
 			fm = fm.dup();
 		}

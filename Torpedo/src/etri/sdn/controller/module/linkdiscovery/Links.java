@@ -385,14 +385,21 @@ public class Links extends OFModel {
 				srcNpt = new NodePortTuple(lt.getSrc(), lt.getSrcPort());
 				dstNpt  =new NodePortTuple(lt.getDst(), lt.getDstPort());
 
-				switchLinks.get(lt.getSrc()).remove(lt);
-				switchLinks.get(lt.getDst()).remove(lt);
-				if (switchLinks.containsKey(lt.getSrc()) &&
-						switchLinks.get(lt.getSrc()).isEmpty())
-					this.switchLinks.remove(lt.getSrc());
-				if (this.switchLinks.containsKey(lt.getDst()) &&
-						this.switchLinks.get(lt.getDst()).isEmpty())
-					this.switchLinks.remove(lt.getDst());
+				Set<Link> slinks = switchLinks.get(lt.getSrc());
+				Set<Link> dlinks = switchLinks.get(lt.getDst());
+				
+				if ( slinks != null ) {
+					slinks.remove(lt);
+					if ( slinks.isEmpty() ) {
+						this.switchLinks.remove(lt.getSrc());
+					}
+				}
+				if ( dlinks != null ) {
+					dlinks.remove(lt);
+					if ( dlinks.isEmpty() ) {
+						this.switchLinks.remove(lt.getDst());
+					}
+				}
 
 				if (this.portLinks.get(srcNpt) != null) {
 					this.portLinks.get(srcNpt).remove(lt);

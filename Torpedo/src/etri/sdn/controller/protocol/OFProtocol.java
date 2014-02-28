@@ -602,14 +602,11 @@ public class OFProtocol {
 			OFPortStatus ps = (OFPortStatus) m;
 			OFPortDesc phyport = (OFPortDesc) ps.getDesc();
 			if ( ps.getReason() == OFPortReason.DELETE ) {
-				System.out.println("DELETE: " + phyport);
 				deletePort( sw, phyport.getPort().get() );
 			} else if ( ps.getReason() == OFPortReason.MODIFY ) {
-				System.out.println("MODIFY: " + phyport);
 				deletePort( sw, phyport.getPort().get() );
 				setPort( sw, phyport );
 			} else { /* ps.getReason() == OFPortReason.ADD */ 
-				System.out.println("ADD: " + phyport);
 				setPort( sw, phyport );
 			}
 
@@ -832,9 +829,13 @@ public class OFProtocol {
 
 		ret.setInputPort(OFPort.of(inputPort));
 
-		if ( ret.isWildcardsSupported() && inputPort == OFPort.ALL.get() ) {
-			// ret.wildcards |= OFBFlowWildcards.IN_PORT
-			ret.setWildcards( OFFlowWildcards.IN_PORT );
+		if ( ret.isWildcardsSupported() ) {
+			ret.setWildcardsWire(((Integer) (sw.getAttribute(IOFSwitch.PROP_FASTWILDCARDS))).intValue());
+			
+			if (inputPort == OFPort.ALL.get() ) {
+				// ret.wildcards |= OFBFlowWildcards.IN_PORT
+				ret.setWildcards( OFFlowWildcards.IN_PORT );
+			}
 		}
 
 		assert (limit >= 14);
@@ -862,18 +863,17 @@ public class OFProtocol {
 		// has vlan
 		if ( data_layer_type == (short) 0x8100 ) {
 			scratch = packetDataBB.getShort();
-			ret.setDataLayerVirtualLan((short)(0xfff & scratch));
-			ret.setDataLayerVirtualLanPriorityCodePoint((byte)((0xe000 & scratch) >> 13));
-			//			ret.setDataLayerType(packetDataBB.getShort());
-			if ( ret.isWildcardsSupported() ) {
-				ret.setWildcardsWire( ret.getWildcardsWire() 
-									  & ~OFBFlowWildcard.DL_VLAN 
-									  & ~OFBFlowWildcard.DL_VLAN_PCP);
+			if ( (0xfff & scratch) != 0 ) {
+				ret.setDataLayerVirtualLan((short)(0xfff & scratch));
+				ret.setDataLayerVirtualLanPriorityCodePoint((byte)((0xe000 & scratch) >> 13));
+				
+				if ( ret.isWildcardsSupported() ) {
+					ret.setWildcardsWire( ret.getWildcardsWire() 
+										  & ~OFBFlowWildcard.DL_VLAN 
+										  & ~OFBFlowWildcard.DL_VLAN_PCP);
+				}
 			}
-		} else {
-			ret.setDataLayerVirtualLan((short) 0xffff);
-			ret.setDataLayerVirtualLanPriorityCodePoint((byte) 0);
-		}
+		} 
 
 		byte network_protocol = 0;
 

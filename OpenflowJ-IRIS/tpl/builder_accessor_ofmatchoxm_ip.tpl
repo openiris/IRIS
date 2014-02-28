@@ -1,5 +1,5 @@
 		public Builder ${signature} {
-			return setValue(OFOxmMatchFields.${match_field}, (byte) 1, ByteBuffer.allocate(8).putInt(value).putInt(0xffffffff).array());
+			return setValue(OFOxmMatchFields.${match_field}, (byte) 0, ByteBuffer.allocate(4).putInt(value).array());
 		}
 		
 		public int get${method_name}() {

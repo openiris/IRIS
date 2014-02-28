@@ -379,11 +379,16 @@ public class State extends OFModel {
 					if ( req.isTableIdSupported() )
 						req.setTableId((byte)0xff /* OFPTT_ALL (all tables) */);
 
-					List<OFStatisticsReply> reply = protocol.getSwitchStatistics(sw, req);
-					for ( OFStatisticsReply s : reply ) {
-						if ( s instanceof OFStatisticsFlowReply ) {
-							resultValues.addAll( ((OFStatisticsFlowReply)s).getEntries() );
+					try { 
+						List<OFStatisticsReply> reply = protocol.getSwitchStatistics(sw, req);
+						for ( OFStatisticsReply s : reply ) {
+							if ( s instanceof OFStatisticsFlowReply ) {
+								resultValues.addAll( ((OFStatisticsFlowReply)s).getEntries() );
+							}
 						}
+					} catch ( Exception e ) {
+						e.printStackTrace();
+						return;
 					}
 					
 					// create an object mapper.

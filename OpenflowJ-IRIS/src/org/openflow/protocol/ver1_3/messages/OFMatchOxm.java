@@ -510,7 +510,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		}
 		
 		public Builder setNetworkSource(int value) {
-			return setValue(OFOxmMatchFields.OFB_IPV4_SRC, (byte) 1, ByteBuffer.allocate(8).putInt(value).putInt(0xffffffff).array());
+			return setValue(OFOxmMatchFields.OFB_IPV4_SRC, (byte) 0, ByteBuffer.allocate(4).putInt(value).array());
 		}
 		
 		public int getNetworkSource() {
@@ -528,7 +528,7 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		}
 		
 		public Builder setNetworkDestination(int value) {
-			return setValue(OFOxmMatchFields.OFB_IPV4_DST, (byte) 1, ByteBuffer.allocate(8).putInt(value).putInt(0xffffffff).array());
+			return setValue(OFOxmMatchFields.OFB_IPV4_DST, (byte) 0, ByteBuffer.allocate(4).putInt(value).array());
 		}
 		
 		public int getNetworkDestination() {

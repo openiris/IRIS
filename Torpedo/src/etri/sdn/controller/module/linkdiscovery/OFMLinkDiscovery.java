@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.openflow.protocol.OFBPortState;
@@ -141,7 +142,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	/**
 	 * structure that holds a disconnected switches temporarily.
 	 */
-	private class Disconnection {
+	private class Disconnection implements Comparable<Disconnection> {
 		private long timestamp;
 		private long switchId;
 		private Set<Short> ports;
@@ -167,12 +168,19 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		public Set<Short> getPorts() {
 			return this.ports;
 		}
+
+		@Override
+		public int compareTo(Disconnection o) {
+			if ( this.switchId < o.switchId ) return -1;
+			else if ( this.switchId > o.switchId ) return 1;
+			else return 0;
+		}
 	}
 	
 	/**
 	 * This is a set to hold information about disconnected switches and their ports temporarily.
 	 */
-	private Set<Disconnection> disconnections = Collections.synchronizedSet(new HashSet<Disconnection>());
+	private Set<Disconnection> disconnections = new ConcurrentSkipListSet<Disconnection>();
 	
 	/**
 	 * Model of this module. initialized within initialize()
