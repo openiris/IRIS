@@ -304,7 +304,7 @@ final class OFFlowStatsEntrySerializer extends JsonSerializer<OFFlowStatsEntry> 
         provider.defaultSerializeField("match", entry.getMatch(), jgen);
         jgen.writeNumberField("durationSeconds", entry.getDurationSec());
         jgen.writeNumberField("durationNanoSeconds", entry.getDurationNsec());
-        jgen.writeNumberField("priority", entry.getIdleTimeout());
+        jgen.writeNumberField("priority", entry.getPriority());
         jgen.writeNumberField("idleTimeout", entry.getIdleTimeout());
         jgen.writeNumberField("hardTimeout", entry.getHardTimeout());
         jgen.writeNumberField("cookie", entry.getCookie());
