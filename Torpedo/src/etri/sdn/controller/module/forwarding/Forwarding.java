@@ -311,11 +311,14 @@ public class Forwarding extends ForwardingBase {
 											.getAttribute(IOFSwitch.PROP_FASTWILDCARDS))
 											.intValue()
 											& ~OFBFlowWildcard.IN_PORT
-											& ~OFBFlowWildcard.DL_VLAN
 											& ~OFBFlowWildcard.DL_SRC
 											& ~OFBFlowWildcard.DL_DST
 											& ~OFBFlowWildcard.NW_SRC_MASK
 											& ~OFBFlowWildcard.NW_DST_MASK;
+									
+									if ( (match.getWildcardsWire() & OFBFlowWildcard.DL_VLAN) == 0 ) {
+										wildcard_hints &= ~OFBFlowWildcard.DL_VLAN;
+									}
 								}
 							}
 

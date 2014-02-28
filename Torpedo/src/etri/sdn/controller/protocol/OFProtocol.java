@@ -848,28 +848,31 @@ public class OFProtocol {
 		byte[] eth_src = new byte[6];
 		packetDataBB.get(eth_src);
 		ret.setDataLayerSource(eth_src);
+		
+		if ( ret.isWildcardsSupported() ) {
+			ret.setWildcardsWire( ret.getWildcardsWire() 
+								  & ~OFBFlowWildcard.DL_DST 
+								  & ~OFBFlowWildcard.DL_SRC );
+		}
 
 		// dl type
 		short data_layer_type = packetDataBB.getShort();
 		ret.setDataLayerType(data_layer_type);
 
-		//		if (data_layer_type != (short) 0x8100) { // need cast to avoid signed
-		//			// bug
-		//			ret.setDataLayerVirtualLan((short) 0xffff);
-		//			ret.setDataLayerVirtualLanPriorityCodePoint((byte) 0);
-		//		} else {
-		//			// has vlan tag
-		//			scratch = packetDataBB.getShort();
-		//			ret.setDataLayerVirtualLan((short)(0xfff & scratch));
-		//			ret.setDataLayerVirtualLanPriorityCodePoint((byte)((0xe000 & scratch) >> 13));
-		//			ret.setDataLayerType(packetDataBB.getShort());
-		//		}
-
+		// has vlan
 		if ( data_layer_type == (short) 0x8100 ) {
 			scratch = packetDataBB.getShort();
 			ret.setDataLayerVirtualLan((short)(0xfff & scratch));
 			ret.setDataLayerVirtualLanPriorityCodePoint((byte)((0xe000 & scratch) >> 13));
 			//			ret.setDataLayerType(packetDataBB.getShort());
+			if ( ret.isWildcardsSupported() ) {
+				ret.setWildcardsWire( ret.getWildcardsWire() 
+									  & ~OFBFlowWildcard.DL_VLAN 
+									  & ~OFBFlowWildcard.DL_VLAN_PCP);
+			}
+		} else {
+			ret.setDataLayerVirtualLan((short) 0xffff);
+			ret.setDataLayerVirtualLanPriorityCodePoint((byte) 0);
 		}
 
 		byte network_protocol = 0;
@@ -893,14 +896,23 @@ public class OFProtocol {
 			// nw dst
 			ret.setNetworkDestination(packetDataBB.getInt());
 			packetDataBB.position(transportOffset);
+			
+			if ( ret.isWildcardsSupported() ) {
+				ret.setWildcardsWire( ret.getWildcardsWire() 
+									  & ~OFBFlowWildcard.NW_TOS
+									  & ~OFBFlowWildcard.NW_PROTO
+									  & ~OFBFlowWildcard.NW_SRC_ALL
+									  & ~OFBFlowWildcard.NW_DST_ALL);
+			}
 			break;
 		case 0x0806:
 			// arp
 			int arpPos = packetDataBB.position();
 			// opcode
 			scratch = packetDataBB.getShort(arpPos + 6);
-			if ( sw.getVersion() == (byte) 0x01 ) {
+			if ( ret.isWildcardsSupported() ) {
 				ret.setNetworkProtocol(network_protocol = (byte) (0xff & scratch));
+				ret.setWildcardsWire( ret.getWildcardsWire() & ~OFBFlowWildcard.NW_PROTO );
 			} else {
 				ret.setValue(OFOxmMatchFields.OFB_ARP_OP, (byte) 0, ByteBuffer.allocate(2).putShort(scratch).array());
 			}
@@ -908,11 +920,14 @@ public class OFProtocol {
 			scratch = packetDataBB.getShort(arpPos + 2);
 			// if ipv4 and addr len is 4
 			if (scratch == 0x800 && packetDataBB.get(arpPos + 5) == 4) {
-				if ( sw.getVersion() == (byte) 0x01 ) {
+				if ( ret.isWildcardsSupported() ) {
 					// nw src
 					ret.setNetworkSource(packetDataBB.getInt(arpPos + 14));
 					// nw dst
 					ret.setNetworkDestination(packetDataBB.getInt(arpPos + 24));
+					ret.setWildcardsWire( ret.getWildcardsWire() 
+							  & ~OFBFlowWildcard.NW_SRC_ALL
+							  & ~OFBFlowWildcard.NW_DST_ALL);
 				} else {
 					ret.setValue(OFOxmMatchFields.OFB_ARP_SPA, (byte) 0, 
 							ByteBuffer.allocate(4).putInt(packetDataBB.getInt(arpPos + 14)).array());
@@ -932,6 +947,10 @@ public class OFProtocol {
 			ret.setTransportSource(U8.f(packetDataBB.get()));
 			// code
 			ret.setTransportDestination(U8.f(packetDataBB.get()));
+			if ( ret.isWildcardsSupported() )
+				ret.setWildcardsWire( ret.getWildcardsWire() 
+						  & ~OFBFlowWildcard.TP_DST
+						  & ~OFBFlowWildcard.TP_SRC);
 			break;
 		case 0x06:
 			// tcp
@@ -939,6 +958,10 @@ public class OFProtocol {
 			ret.setTransportSource(packetDataBB.getShort());
 			// tcp dst
 			ret.setTransportDestination(packetDataBB.getShort());
+			if ( ret.isWildcardsSupported() )
+				ret.setWildcardsWire( ret.getWildcardsWire() 
+						  & ~OFBFlowWildcard.TP_DST
+						  & ~OFBFlowWildcard.TP_SRC);
 			break;
 		case 0x11:
 			// udp
@@ -946,6 +969,10 @@ public class OFProtocol {
 			ret.setTransportSource(packetDataBB.getShort());
 			// udp dest
 			ret.setTransportDestination(packetDataBB.getShort());
+			if ( ret.isWildcardsSupported() )
+				ret.setWildcardsWire( ret.getWildcardsWire() 
+						  & ~OFBFlowWildcard.TP_DST
+						  & ~OFBFlowWildcard.TP_SRC);
 			break;
 		default:
 			break;
