@@ -391,12 +391,13 @@ public final class OFMLearningMac extends OFModule {
 			// NW_SRC and NW_DST as well
 
 			if(match.isWildcardsSupported()) {
-				match.setWildcardsWire(
-						((Integer)conn.getSwitch().getAttribute(IOFSwitch.PROP_FASTWILDCARDS)).intValue()
+				int wc = ((Integer)conn.getSwitch().getAttribute(IOFSwitch.PROP_FASTWILDCARDS)).intValue()
 						& ~OFBFlowWildcard.IN_PORT 
-//						& ~OFBFlowWildcard.DL_VLAN 
-						& ~OFBFlowWildcard.DL_SRC & ~OFBFlowWildcard.DL_DST
-						);
+						& ~OFBFlowWildcard.DL_SRC & ~OFBFlowWildcard.DL_DST;
+				if ( vlan > 0 ) {
+					wc = wc & ~OFBFlowWildcard.DL_VLAN;
+				}
+				match.setWildcardsWire(wc);
 			} 
 
 			this.writeFlowMod(conn.getSwitch(), OFFlowModCommand.ADD, 
