@@ -326,10 +326,8 @@ public final class OFMLearningMac extends OFModule {
 		}
 
 		OFPacketIn pi = (OFPacketIn) msg;
-
-		// Read in packet data headers by using OFMatch
-		//		OFMatch match = new OFMatch();
-		//		match.loadFromPacket(pi.getPacketData(), pi.getInPort());
+		
+//		System.out.println(pi);
 
 		OFMatch match = null;
 		Long sourceMac = null;
@@ -395,9 +393,9 @@ public final class OFMLearningMac extends OFModule {
 			if(match.isWildcardsSupported()) {
 				match.setWildcardsWire(
 						((Integer)conn.getSwitch().getAttribute(IOFSwitch.PROP_FASTWILDCARDS)).intValue()
-						& ~OFBFlowWildcard.IN_PORT
-						& ~OFBFlowWildcard.DL_VLAN & ~OFBFlowWildcard.DL_SRC & ~OFBFlowWildcard.DL_DST
-						& ~OFBFlowWildcard.NW_SRC_ALL & ~OFBFlowWildcard.NW_DST_ALL
+						& ~OFBFlowWildcard.IN_PORT 
+//						& ~OFBFlowWildcard.DL_VLAN 
+						& ~OFBFlowWildcard.DL_SRC & ~OFBFlowWildcard.DL_DST
 						);
 			} 
 
@@ -410,21 +408,10 @@ public final class OFMLearningMac extends OFModule {
 				if( match.isWildcardsSupported()) {
 					
 					builder
-					.setWildcardsWire(((Integer)conn.getSwitch().getAttribute(IOFSwitch.PROP_FASTWILDCARDS)).intValue()
-							& ~OFBFlowWildcard.IN_PORT
-							& ~OFBFlowWildcard.DL_VLAN & ~OFBFlowWildcard.DL_SRC & ~OFBFlowWildcard.DL_DST
-							& ~OFBFlowWildcard.NW_SRC_ALL & ~OFBFlowWildcard.NW_DST_ALL)
+					.setWildcardsWire(match.getWildcardsWire())
 					.setDataLayerVirtualLan(match.getDataLayerVirtualLan())
-//					.setDataLayerVirtualLanPriorityCodePoint(match.getDataLayerVirtualLanPriorityCodePoint())
 					.setDataLayerSource(match.getDataLayerDestination())
 					.setDataLayerDestination(match.getDataLayerSource())
-//					.setDataLayerType(match.getDataLayerType())
-//					.setNetworkTypeOfService(match.getNetworkTypeOfService())
-//					.setNetworkProtocol(match.getNetworkProtocol())
-					.setNetworkSource(match.getNetworkDestination())
-					.setNetworkDestination(match.getNetworkSource())
-//					.setTransportSource(match.getTransportDestination())
-//					.setTransportDestination(match.getTransportSource())
 					.setInputPort(OFPort.of(outPort));
 					
 					this.writeFlowMod(conn.getSwitch(), OFFlowModCommand.ADD, -1,
@@ -542,7 +529,7 @@ public final class OFMLearningMac extends OFModule {
 						return true;
 					}
 				}
-				);
+		);
 	}
 
 	/**
