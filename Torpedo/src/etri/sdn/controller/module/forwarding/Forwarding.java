@@ -161,7 +161,7 @@ public class Forwarding extends ForwardingBase {
 		int input_port = getInputPort(pi);
 		
 		// initialize match structure and populate it using the packet
-		OFMatch match = protocol.loadOFMatchFromPacket(sw, pi.getData(), (short) input_port);
+		OFMatch match = protocol.loadOFMatchFromPacket(sw, pi.getData(), (short) input_port, false);
 
 		// Create flow-mod based on packet-in and src-switch
 		OFFlowMod fm = OFMessageFactory.createFlowMod(pi.getVersion());
@@ -211,7 +211,7 @@ public class Forwarding extends ForwardingBase {
 		
 		int input_port = getInputPort(pi);
 		
-		OFMatch match = protocol.loadOFMatchFromPacket(sw, pi.getData(), (short) input_port);
+		OFMatch match = protocol.loadOFMatchFromPacket(sw, pi.getData(), (short) input_port, false);
 
 		// Check if we have the location of the destination
 		IDevice dstDevice = (IDevice) cntx.get(MessageContext.DST_DEVICE);

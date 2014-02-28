@@ -570,11 +570,16 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 
 	@Override
 	public ILinkDiscovery.LinkType getLinkType(Link lt, LinkInfo info) {
+		if ( lt == null || info == null ) {
+			return ILinkDiscovery.LinkType.INVALID_LINK;
+		}
+		
 		if (info.getUnicastValidTime() != null) {
 			return ILinkDiscovery.LinkType.DIRECT_LINK;
 		} else if (info.getMulticastValidTime() != null) {
 			return ILinkDiscovery.LinkType.MULTIHOP_LINK;
 		}
+		
 		return ILinkDiscovery.LinkType.INVALID_LINK;
 	}
 

@@ -818,7 +818,7 @@ public class OFProtocol {
 	 * @param inputPort		input port (short)
 	 * @return				OFMatch object
 	 */
-	public OFMatch loadOFMatchFromPacket(IOFSwitch sw, byte[] packetData, short inputPort) {
+	public OFMatch loadOFMatchFromPacket(IOFSwitch sw, byte[] packetData, short inputPort, boolean l2only) {
 
 		OFMatch.Builder ret = OFMessageFactory.createMatchBuilder(sw.getVersion());
 
@@ -875,6 +875,10 @@ public class OFProtocol {
 			}
 		} 
 
+		if ( l2only ) {
+			return ret.build();
+		}
+		
 		byte network_protocol = 0;
 
 		switch (data_layer_type) {

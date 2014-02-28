@@ -197,7 +197,7 @@ public final class OFMLearningMac extends OFModule {
 			.setCommand(command)
 			.setIdleTimeout(IDLE_TIMEOUT_DEFAULT)
 			.setHardTimeout(HARD_TIMEOUT_DEFAULT)						//permanent if idle and hard timeout are zero
-			.setPriority(PRIORITY_DEFAULT)
+			.setPriority((short) (PRIORITY_DEFAULT + match.getOxmFields().size()))
 			.setBufferId(bufferId)										//refers to a packet buffered at the switch and sent to the controller
 			.setOutPort((command == OFFlowModCommand.DELETE) ? OFPort.of(outPort) : OFPort.NONE)
 			.setMatch(match)
@@ -253,7 +253,7 @@ public final class OFMLearningMac extends OFModule {
 		// set actions
 		List<OFAction> actions = new ArrayList<OFAction>(1);      
 		OFActionOutput action_output = OFMessageFactory.createActionOutput(sw.getVersion());
-		action_output.setPort(egressPort).setMaxLength((short)0).setLength(action_output.computeLength());
+		action_output.setPort(egressPort).setMaxLength((short)0xffff).setLength(action_output.computeLength());
 		
 		actions.add(action_output);
 		packetOutMessage.setActionsLength( action_output.getLength() );
@@ -336,23 +336,24 @@ public final class OFMLearningMac extends OFModule {
 		Integer inputPort = null;
 
 		if ( pi.isInputPortSupported() ) { // is it OF 0x01 ?? 
-			match = (OFMatch) protocol.loadOFMatchFromPacket(conn.getSwitch(), pi.getData(), (short) pi.getInputPort().get());
+			match = protocol.loadOFMatchFromPacket(conn.getSwitch(), pi.getData(), (short) pi.getInputPort().get(), false);
 			inputPort = pi.getInputPort().get();
 			sourceMac = Ethernet.toLong(match.getDataLayerSource());
 			destMac = Ethernet.toLong(match.getDataLayerDestination());
 			vlan = (int) match.getDataLayerVirtualLan();
 
 		} else {
-			match = pi.getMatch();
 			inputPort = OFMatchUtil.getInt(pi.getMatch(), OFOxmMatchFields.OFB_IN_PORT);
 			sourceMac = OFMatchUtil.getEthAsLong(pi.getMatch(), OFOxmMatchFields.OFB_ETH_SRC);
 			destMac = OFMatchUtil.getEthAsLong(pi.getMatch(), OFOxmMatchFields.OFB_ETH_DST);
 			vlan = OFMatchUtil.getInt(pi.getMatch(), OFOxmMatchFields.OFB_VLAN_VID);
+			
 			if(vlan == null) {
 				vlan = -1;
 			}
+			
+			match = protocol.loadOFMatchFromPacket(conn.getSwitch(), pi.getData(), inputPort.shortValue(), true);
 			//System.out.println("match: " + match + "inputPort " + sourceMac +" sourceMac " + destMac + "destMac");
-
 		}
 
 
@@ -394,7 +395,7 @@ public final class OFMLearningMac extends OFModule {
 				int wc = ((Integer)conn.getSwitch().getAttribute(IOFSwitch.PROP_FASTWILDCARDS)).intValue()
 						& ~OFBFlowWildcard.IN_PORT 
 						& ~OFBFlowWildcard.DL_SRC & ~OFBFlowWildcard.DL_DST;
-				if ( vlan > 0 ) {
+				if ( (match.getWildcardsWire() & OFBFlowWildcard.DL_VLAN) == 0 ) {
 					wc = wc & ~OFBFlowWildcard.DL_VLAN;
 				}
 				match.setWildcardsWire(wc);
@@ -404,9 +405,9 @@ public final class OFMLearningMac extends OFModule {
 					pi.getBufferId(), match, outPort, out);
 
 			if (LEARNING_SWITCH_REVERSE_FLOW) {
-				OFMatch.Builder builder = OFMessageFactory.createMatchBuilder(pi.getVersion());
-
+				
 				if( match.isWildcardsSupported()) {
+					OFMatch.Builder builder = OFMessageFactory.createMatchBuilder(pi.getVersion());
 					
 					builder
 					.setWildcardsWire(match.getWildcardsWire())
@@ -422,19 +423,12 @@ public final class OFMLearningMac extends OFModule {
 							);
 				} else {
 					// how set to reverse flow in OF1.3
-					OFMatch m = match.dup();
+//					OFMatch m = match.dup();
+					match = match.dup();
 					
-					List<OFOxm> oxms = m.getOxmFields();
+					List<OFOxm> oxms = match.getOxmFields();
 					OFOxm ethSrcOxm = null;
 					OFOxm ethDstOxm = null;
-					OFOxm ipSrcOxm = null;
-					OFOxm ipDstOxm = null;
-					OFOxm tcpSrcOxm = null;
-					OFOxm tcpDstOxm = null;
-					OFOxm udpSrcOxm = null;
-					OFOxm udpDstOxm = null;
-					OFOxm sctpSrcOxm = null;
-					OFOxm sctpDstOxm = null;
 					
 					for ( OFOxm oxm : oxms ) {
 						byte field = oxm.getField();
@@ -448,41 +442,13 @@ public final class OFMLearningMac extends OFModule {
 						case 4:	// OFB_ETH_SRC
 							ethSrcOxm = oxm;
 							break;
-						case 11: // OFB_IPV4_SRC
-							ipSrcOxm = oxm;
-							break;
-						case 12: // OFB_IPV4_DST
-							ipDstOxm = oxm;
-							break;
-						case 13: // OFB_TCP_SRC
-							tcpSrcOxm = oxm;
-							break;
-						case 14: // OFB_TCP_DST
-							tcpDstOxm = oxm;
-							break;
-						case 15: // OFB_UDP_SRC
-							udpSrcOxm = oxm;
-							break;
-						case 16: // OFB_UDP_DST
-							udpDstOxm = oxm;
-							break;
-						case 17: // OFB_SCTP_SRC
-							sctpSrcOxm = oxm;
-							break;
-						case 18: // OFB_SCTP_DST
-							sctpDstOxm = oxm;
-							break;
 						}
 					}
 					
 					swap(ethSrcOxm, ethDstOxm);
-					swap(ipSrcOxm, ipDstOxm);
-					swap(tcpSrcOxm, tcpDstOxm);
-					swap(udpSrcOxm, udpDstOxm);
-					swap(sctpSrcOxm, sctpDstOxm);
 					
 					this.writeFlowMod(conn.getSwitch(), OFFlowModCommand.ADD, -1,
-							m,
+							match,
 							inputPort.shortValue(),
 							out
 							);

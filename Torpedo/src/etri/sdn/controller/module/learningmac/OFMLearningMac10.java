@@ -332,7 +332,7 @@ public final class OFMLearningMac10 extends OFModule {
 		// Read in packet data headers by using OFMatch
 //		OFMatch match = new OFMatch();
 //		match.loadFromPacket(pi.getPacketData(), pi.getInPort());
-		OFMatch match = (OFMatch) version_adaptor_10.loadOFMatchFromPacket(conn.getSwitch(), pi.getData(), (short) pi.getInputPort().get());
+		OFMatch match = (OFMatch) version_adaptor_10.loadOFMatchFromPacket(conn.getSwitch(), pi.getData(), (short) pi.getInputPort().get(), false);
 		Long sourceMac = Ethernet.toLong(match.getDataLayerSource());
 		Long destMac = Ethernet.toLong(match.getDataLayerDestination());
 		Short vlan = match.getDataLayerVirtualLan();

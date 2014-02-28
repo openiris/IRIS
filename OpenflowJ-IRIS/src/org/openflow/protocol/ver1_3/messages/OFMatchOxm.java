@@ -376,9 +376,10 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		}
 		
 		public Builder setDataLayerSource(byte[] value) {
-			byte[] mac = java.util.Arrays.copyOf(value, value.length + mac_mask.length);
-			System.arraycopy(mac_mask, 0, mac, value.length, mac_mask.length);
-			return setValue(OFOxmMatchFields.OFB_ETH_SRC, (byte) 1, mac);
+			// byte[] mac = java.util.Arrays.copyOf(value, value.length + mac_mask.length);
+			// System.arraycopy(mac_mask, 0, mac, value.length, mac_mask.length);
+			// return setValue(OFOxmMatchFields.OFB_ETH_SRC, (byte) 1, mac);
+			return setValue(OFOxmMatchFields.OFB_ETH_SRC, (byte) 0, value);
 		}
 		
 		public byte[] getDataLayerSource() {
@@ -398,9 +399,10 @@ public class OFMatchOxm extends OFMatch implements org.openflow.protocol.interfa
 		}
 		
 		public Builder setDataLayerDestination(byte[] value) {
-			byte[] mac = java.util.Arrays.copyOf(value, value.length + mac_mask.length);
-			System.arraycopy(mac_mask, 0, mac, value.length, mac_mask.length);
-			return setValue(OFOxmMatchFields.OFB_ETH_DST, (byte) 1, mac);
+			// byte[] mac = java.util.Arrays.copyOf(value, value.length + mac_mask.length);
+			// System.arraycopy(mac_mask, 0, mac, value.length, mac_mask.length);
+			// return setValue(OFOxmMatchFields.OFB_ETH_DST, (byte) 1, mac);
+			return setValue(OFOxmMatchFields.OFB_ETH_DST, (byte) 0, value);
 		}
 		
 		public byte[] getDataLayerDestination() {
