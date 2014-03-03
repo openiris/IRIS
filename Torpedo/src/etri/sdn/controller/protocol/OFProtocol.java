@@ -830,11 +830,10 @@ public class OFProtocol {
 		ret.setInputPort(OFPort.of(inputPort));
 
 		if ( ret.isWildcardsSupported() ) {
-			ret.setWildcardsWire(((Integer) (sw.getAttribute(IOFSwitch.PROP_FASTWILDCARDS))).intValue());
+			ret.setWildcardsWire(OFBFlowWildcard.ALL);
 			
 			if (inputPort == OFPort.ALL.get() ) {
-				// ret.wildcards |= OFBFlowWildcards.IN_PORT
-				ret.setWildcards( OFFlowWildcards.IN_PORT );
+				ret.setWildcardsWire( ret.getWildcardsWire() & ~OFBFlowWildcard.IN_PORT );
 			}
 		}
 

@@ -93,7 +93,7 @@ irisApp.controller('CntlSwitches',
 					$scope.getDescription();
 					$scope.getAggregateStatistics();
 				})
-				.error(function(){
+				.error(function() {
 					$scope.switches = [];
 					$scope.switch_dpids = [];
 				});
@@ -121,9 +121,20 @@ irisApp.controller('CntlSwitches',
 				_.each($scope.switches, function(sw) {
 					$http.get('/wm/core/switch/' + sw.id + '/aggregate/json')
 					.success(function(data) {
-						sw.packets = data[sw.id][0]['packetCount'];
-						sw.bytes = data[sw.id][0]['byteCount'];
-						sw.flows = data[sw.id][0]['flowCount'];
+						if ( data && data[sw.id] && data[sw.id][0] ) {
+							sw.packets = data[sw.id][0]['packetCount'];
+							sw.bytes = data[sw.id][0]['byteCount'];
+							sw.flows = data[sw.id][0]['flowCount'];
+						} else {
+							sw.packets = '-';
+							sw.bytes = '-';
+							sw.flows = '-';
+						}
+					})
+					.error(function() {
+						sw.packets = '-';
+						sw.bytes = '-';
+						sw.flows = '-';
 					});
 				});
 			};

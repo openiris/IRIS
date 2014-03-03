@@ -326,12 +326,11 @@ public final class OFMLearningMac extends OFModule {
 		}
 
 		OFPacketIn pi = (OFPacketIn) msg;
-		
-//		System.out.println(pi);
 
 		OFMatch match = null;
 		Long sourceMac = null;
 		Long destMac = null;
+		Short etherType = null;
 		Integer vlan = null;
 		Integer inputPort = null;
 
@@ -343,17 +342,36 @@ public final class OFMLearningMac extends OFModule {
 			vlan = (int) match.getDataLayerVirtualLan();
 
 		} else {
-			inputPort = OFMatchUtil.getInt(pi.getMatch(), OFOxmMatchFields.OFB_IN_PORT);
-			sourceMac = OFMatchUtil.getEthAsLong(pi.getMatch(), OFOxmMatchFields.OFB_ETH_SRC);
-			destMac = OFMatchUtil.getEthAsLong(pi.getMatch(), OFOxmMatchFields.OFB_ETH_DST);
-			vlan = OFMatchUtil.getInt(pi.getMatch(), OFOxmMatchFields.OFB_VLAN_VID);
+			OFMatch original = pi.getMatch();
+			inputPort = OFMatchUtil.getInt(original, OFOxmMatchFields.OFB_IN_PORT);
+			etherType = OFMatchUtil.getShort(original, OFOxmMatchFields.OFB_ETH_TYPE);
+			sourceMac = OFMatchUtil.getEthAsLong(original, OFOxmMatchFields.OFB_ETH_SRC);
+			destMac = OFMatchUtil.getEthAsLong(original, OFOxmMatchFields.OFB_ETH_DST);
+			vlan = OFMatchUtil.getInt(original, OFOxmMatchFields.OFB_VLAN_VID);
 			
-			if(vlan == null) {
+			OFMatch.Builder bld = OFMessageFactory.createMatchBuilder(pi.getVersion());
+			if ( inputPort != null ) {
+				bld.setInputPort(OFPort.of(inputPort));
+			}
+			if ( etherType != null ) {
+				bld.setDataLayerType(etherType);
+			}
+			if ( vlan != null ) {
+				bld.setDataLayerVirtualLan(vlan.shortValue());
+			}
+			if ( sourceMac != null ) {
+				bld.setDataLayerSource( OFMatchUtil.getEth(original, OFOxmMatchFields.OFB_ETH_SRC) );
+			}
+			if ( destMac != null ) {
+				bld.setDataLayerDestination( OFMatchUtil.getEth(original, OFOxmMatchFields.OFB_ETH_DST) );
+			}
+			
+			// this is to make addToPortMap call normally operate.
+			if ( vlan == null ) {
 				vlan = -1;
 			}
 			
-			match = protocol.loadOFMatchFromPacket(conn.getSwitch(), pi.getData(), inputPort.shortValue(), true);
-			//System.out.println("match: " + match + "inputPort " + sourceMac +" sourceMac " + destMac + "destMac");
+			match = bld.build();
 		}
 
 
@@ -377,9 +395,6 @@ public final class OFMLearningMac extends OFModule {
 			this.writePacketOutForPacketIn(conn.getSwitch(), pi, OFPort.FLOOD, inputPort.shortValue(), out);
 		} else if (outPort == inputPort.shortValue()) {
 			// ignore this packet.
-			//            log.trace("ignoring packet that arrived on same port as learned destination:"
-			//                    + " switch {} vlan {} dest MAC {} port {}",
-			//                    new Object[]{ sw, vlan, HexString.toHexString(destMac), outPort });
 		} else {
 			// Add flow table entry matching source MAC, dest MAC, VLAN and input port
 			// that sends to the port we previously learned for the dest MAC/VLAN.  Also
@@ -390,6 +405,8 @@ public final class OFMLearningMac extends OFModule {
 			// its former location does not keep the stale entry alive forever.
 			// FIXME: current HP switches ignore DL_SRC and DL_DST fields, so we have to match on
 			// NW_SRC and NW_DST as well
+			
+			this.writePacketOutForPacketIn(conn.getSwitch(), pi, OFPort.of(outPort), inputPort.shortValue(), out);
 
 			if(match.isWildcardsSupported()) {
 				int wc = ((Integer)conn.getSwitch().getAttribute(IOFSwitch.PROP_FASTWILDCARDS)).intValue()
@@ -423,7 +440,6 @@ public final class OFMLearningMac extends OFModule {
 							);
 				} else {
 					// how set to reverse flow in OF1.3
-//					OFMatch m = match.dup();
 					match = match.dup();
 					
 					List<OFOxm> oxms = match.getOxmFields();
