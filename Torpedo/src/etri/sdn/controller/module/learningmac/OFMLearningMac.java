@@ -382,9 +382,12 @@ public final class OFMLearningMac extends OFModule {
 			// FIXME: current HP switches ignore DL_SRC and DL_DST fields, so we have to match on
 			// NW_SRC and NW_DST as well
 			
-//			this.writePacketOutForPacketIn(conn.getSwitch(), pi, outPort, inputPort, out);
+			this.writePacketOutForPacketIn(conn.getSwitch(), pi, outPort, inputPort, out);
 
-			this.writeFlowMod(conn.getSwitch(), OFFlowModCommand.ADD, pi.getBufferId(), match, outPort, out);
+			// setting buffer id and do not write packet out cause some 
+			// initial ping messages dropped for OF1.3 switches.
+			this.writeFlowMod(conn.getSwitch(), OFFlowModCommand.ADD, 
+					OFBufferId.NO_BUFFER/*pi.getBufferId()*/, match, outPort, out);
 
 			if (LEARNING_SWITCH_REVERSE_FLOW) {
 				
