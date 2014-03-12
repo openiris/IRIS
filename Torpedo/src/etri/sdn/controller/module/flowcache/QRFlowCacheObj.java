@@ -1,5 +1,7 @@
 package etri.sdn.controller.module.flowcache;
 
+import org.projectfloodlight.openflow.protocol.match.Match;
+
 
 /**
  * Used in BigFlowCacheQueryResp as query result.
@@ -28,8 +30,14 @@ public class QRFlowCacheObj {
      * @param priority the priority
      * @param action the action
      */
-    public QRFlowCacheObj(short priority, byte action, long cookie) {
-        ofmWithSwDpid = new OFMatchWithSwDpid();
+    public QRFlowCacheObj(
+    		short priority, 
+    		byte action, 
+    		long cookie,
+    		Match match,
+    		long swdpid) 
+    {
+        ofmWithSwDpid = new OFMatchWithSwDpid(match, swdpid);
         this.action   = action;
         this.priority = priority;
         this.cookie   = cookie;

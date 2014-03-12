@@ -5,8 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-
-import org.openflow.util.HexString;
+import org.projectfloodlight.openflow.util.HexString;
 
 import etri.sdn.controller.module.linkdiscovery.Link;
 

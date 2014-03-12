@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.interfaces.OFMessageType;
-import org.openflow.protocol.interfaces.OFOxm;
-import org.openflow.protocol.interfaces.OFOxmMatchFields;
-import org.openflow.protocol.interfaces.OFPacketIn;
+import org.projectfloodlight.openflow.protocol.OFMessage;
+import org.projectfloodlight.openflow.protocol.OFPacketIn;
+import org.projectfloodlight.openflow.protocol.OFType;
+import org.projectfloodlight.openflow.protocol.match.MatchField;
+import org.projectfloodlight.openflow.types.OFPort;
 
 import etri.sdn.controller.IInfoProvider;
 import etri.sdn.controller.IOFTask;
@@ -61,20 +61,20 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 	private ITopologyService topology;
 	private IEntityClassifierService entityClassifier;
 
-	
+
 	/** 
 	 * All the devices that you want.
 	 *  
 	 * @see Devices
 	 */
 	private Devices devices;
-	
+
 	/*
 	 * Static member functions to reduce unnecessary references to OFMDeviceManager
 	 */
-	
+
 	private static ITopologyService topologyServiceCache = null;
-	
+
 	public static ITopologyService getTopologyServiceRef() {
 		if ( topologyServiceCache == null ) {
 			return topologyServiceCache = (ITopologyService) getModule(ITopologyService.class);
@@ -83,9 +83,9 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 			return topologyServiceCache;
 		}
 	}
-	
+
 	private static IEntityClassifierService entityClassifierServiceCache = null;
-	
+
 	public static IEntityClassifierService getEntityClassifierServiceRef() {
 		if ( entityClassifierServiceCache == null ) {
 			return entityClassifierServiceCache = (IEntityClassifierService) getModule(IEntityClassifierService.class);
@@ -94,9 +94,9 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 			return entityClassifierServiceCache;
 		}
 	}
-	
+
 	private static OFMDeviceManager ofmDeviceManagerCache = null;
-	
+
 	public static OFMDeviceManager getRef() {
 		if ( ofmDeviceManagerCache == null ) {
 			return ofmDeviceManagerCache = (OFMDeviceManager) getModule(IDeviceService.class);
@@ -105,21 +105,15 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 			return ofmDeviceManagerCache;
 		}
 	}
-	
-	protected int getInputPort(OFPacketIn pi) {
+
+	protected OFPort getInputPort(OFPacketIn pi) {
 		if ( pi == null ) {
 			throw new AssertionError("pi cannot refer null");
 		}
-		if ( pi.isInputPortSupported() ) {
-			return pi.getInputPort().get();
-		}
-		else {
-			OFOxm oxm = pi.getMatch().getOxmFromIndex(OFOxmMatchFields.OFB_IN_PORT);
-			if ( oxm == null ) {
-				Logger.debug("Packet-in does not have oxm object for OFB_IN_PORT");
-				throw new AssertionError("pi cannot refer null");
-			}
-			return ByteBuffer.wrap(oxm.getData()).getInt();
+		try {
+			return pi.getInPort();
+		} catch ( UnsupportedOperationException e ) {
+			return pi.getMatch().get(MatchField.IN_PORT);
 		}
 	}
 
@@ -128,43 +122,43 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 	 */
 	@Override
 	protected void initialize() {
-				
+
 		registerModule(IDeviceService.class, this);
 
 		this.topology = getTopologyServiceRef();		
 		this.entityClassifier = getEntityClassifierServiceRef();
 		this.devices = Devices.getInstance(topology, entityClassifier);
-		
+
 		// 'classes' now has an entry for the class IPv4,
 		// and this will create an entry within 'secondaryIndexMap' of ClassIndices object.
-//		addIndex(true, EnumSet.of(DeviceField.IPV4));
+		//		addIndex(true, EnumSet.of(DeviceField.IPV4));
 
 		registerFilter(
-				OFMessageType.PACKET_IN,
+				OFType.PACKET_IN,
 				new OFMFilter() {
 					@Override
 					public boolean filter(OFMessage m) {
 						OFPacketIn pi = (OFPacketIn) m;
 						byte[] data = pi.getData();
-						
+
 						if ( data == null || data.length <= 0 ) {
 							return false;
 						}
-						
+
 						if ( data[12] == (byte)0x86 && data[13] == (byte)0xdd ) {
 							// ethertype == IPv6
 							return false;
 						}
-						
+
 						if ( data[12] == (byte)0x00 && data[13] == (byte)0x01 ) {
 							// ethertype == 0001 (mininet internal?)
 							return false;
 						}
-									
+
 						return true;		// accept all messages regardless versions.
 					}
 				}
-		);
+				);
 
 		if (topology != null) {
 			topology.addListener(this);
@@ -181,8 +175,8 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 					}
 				}, 
 				ENTITY_CLEANUP_INTERVAL * 1000 /* milliseconds */
-		);
-		
+				);
+
 		if ( Main.debug ) {
 			this.controller.scheduleTask(
 					new IOFTask() {
@@ -191,10 +185,10 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 							Logger.debug(devices.getHostDebugInfo());
 							return true;
 						}
-						
+
 					}, 
 					1000
-			);
+					);
 		}
 	}
 
@@ -202,11 +196,11 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 	 * Cleans up expired entities/devices.
 	 */
 	private void cleanupEntities () {
-		
+
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.MILLISECOND, -ENTITY_TIMEOUT);
 		Date cutoff = c.getTime();
-		
+
 		devices.cleanupEntities(cutoff);
 	}
 
@@ -242,17 +236,17 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 		Device srcDevice = devices.learnDeviceByEntity(srcEntity);
 		if (srcDevice == null)
 			return true;
-		
-//		if ( Main.debug ) {
-//			byte[] srcMac = eth.getSourceMACAddress();
-//			byte[] dstMac = eth.getDestinationMACAddress();
-//			short etype = eth.getEtherType();
-//			System.out.printf("%d - src: %02x:%02x:%02x:%02x:%02x:%02x dst: %02x:%02x:%02x:%02x:%02x:%02x %04x\n", 
-//					sw.getId(),
-//					srcMac[0],srcMac[1],srcMac[2],srcMac[3],srcMac[4],srcMac[5], 
-//					dstMac[0],dstMac[1],dstMac[2],dstMac[3],dstMac[4],dstMac[5], etype);
-//		}
-		
+
+		//		if ( Main.debug ) {
+		//			byte[] srcMac = eth.getSourceMACAddress();
+		//			byte[] dstMac = eth.getDestinationMACAddress();
+		//			short etype = eth.getEtherType();
+		//			System.out.printf("%d - src: %02x:%02x:%02x:%02x:%02x:%02x dst: %02x:%02x:%02x:%02x:%02x:%02x %04x\n", 
+		//					sw.getId(),
+		//					srcMac[0],srcMac[1],srcMac[2],srcMac[3],srcMac[4],srcMac[5], 
+		//					dstMac[0],dstMac[1],dstMac[2],dstMac[3],dstMac[4],dstMac[5], etype);
+		//		}
+
 		// Store the source device in the context
 		cntx.put(MessageContext.SRC_DEVICE, srcDevice);
 
@@ -268,10 +262,10 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 
 		return true;
 	}
-	
+
 	@Override
 	protected boolean handleDisconnect(Connection conn) {
-//		this.devices.deleteDevice(conn.getSwitch().getId());
+		//		this.devices.deleteDevice(conn.getSwitch().getId());
 		return true;
 	}
 
@@ -284,9 +278,9 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 	 * 
 	 * @return the entity from the packet
 	 */
-	private Entity getSourceEntityFromPacket(Ethernet eth, IOFSwitch sw, int ofPort) {
+	private Entity getSourceEntityFromPacket(Ethernet eth, IOFSwitch sw, OFPort ofPort) {
 		long swdpid = sw.getId();
-		
+
 		byte[] dlAddrArr = eth.getSourceMACAddress();
 		long dlAddr = Ethernet.toLong(dlAddrArr);
 
@@ -331,8 +325,8 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 					}
 				}
 			}
- 			*/
-			
+			 */
+
 			// bjlee - 2013.10.11
 			return ipv4.getSourceAddress();
 		}
@@ -402,7 +396,7 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 	@Override
 	public IDevice findDevice(long macAddress, Short vlan, 
 			Integer ipv4Address, Long switchDPID, 
-			Integer switchPort)	throws IllegalArgumentException {
+			OFPort switchPort)	throws IllegalArgumentException {
 		return devices.findDevice(macAddress, vlan, ipv4Address, switchDPID, switchPort);
 	}
 
@@ -424,14 +418,14 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 
 	@Override
 	public Iterator<? extends IDevice> queryDevices(Long macAddress,
-			Short vlan, Integer ipv4Address, Long switchDPID, Integer switchPort) {
+			Short vlan, Integer ipv4Address, Long switchDPID, OFPort switchPort) {
 		return devices.queryDevices(macAddress, vlan, ipv4Address, switchDPID, switchPort);
 	}
 
 	@Override
 	public Iterator<? extends IDevice> queryClassDevices(IDevice reference,
 			Long macAddress, Short vlan, Integer ipv4Address, Long switchDPID,
-			Integer switchPort) {
+			OFPort switchPort) {
 		return devices.queryClassDevices(reference, macAddress, vlan, ipv4Address, switchDPID, switchPort);
 	}
 
@@ -441,12 +435,12 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 	}
 
 	@Override
-	public void addSuppressAPs(long swId, short port) {
+	public void addSuppressAPs(long swId, OFPort port) {
 		devices.addSuppressAPs(swId, port);
 	}
 
 	@Override
-	public void removeSuppressAPs(long swId, short port) {
+	public void removeSuppressAPs(long swId, OFPort port) {
 		devices.removeSuppressAPs(swId, port);
 	}
 

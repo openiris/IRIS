@@ -23,19 +23,22 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.openflow.protocol.OFBFlowWildcard;
-import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.OFPort;
-import org.openflow.protocol.factory.OFMessageFactory;
-import org.openflow.protocol.interfaces.OFAction;
-import org.openflow.protocol.interfaces.OFActionOutput;
-import org.openflow.protocol.interfaces.OFFlowMod;
-import org.openflow.protocol.interfaces.OFFlowModCommand;
-import org.openflow.protocol.interfaces.OFInstruction;
-import org.openflow.protocol.interfaces.OFMatch;
-import org.openflow.protocol.interfaces.OFMessageType;
-import org.openflow.protocol.interfaces.OFPacketIn;
-import org.openflow.protocol.interfaces.OFPacketOut;
+import org.projectfloodlight.openflow.protocol.OFFactories;
+import org.projectfloodlight.openflow.protocol.OFFactory;
+import org.projectfloodlight.openflow.protocol.OFFlowAdd;
+import org.projectfloodlight.openflow.protocol.OFFlowModCommand;
+import org.projectfloodlight.openflow.protocol.OFMessage;
+import org.projectfloodlight.openflow.protocol.OFPacketIn;
+import org.projectfloodlight.openflow.protocol.OFPacketOut;
+import org.projectfloodlight.openflow.protocol.OFType;
+import org.projectfloodlight.openflow.protocol.action.OFAction;
+import org.projectfloodlight.openflow.protocol.action.OFActionOutput;
+import org.projectfloodlight.openflow.protocol.instruction.OFInstruction;
+import org.projectfloodlight.openflow.protocol.match.Match;
+import org.projectfloodlight.openflow.types.OFBufferId;
+import org.projectfloodlight.openflow.types.OFPort;
+import org.projectfloodlight.openflow.types.TableId;
+import org.projectfloodlight.openflow.types.U64;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
@@ -80,7 +83,7 @@ public class Forwarding extends ForwardingBase {
 		this.protocol = getController().getProtocol();
 		
 		registerFilter(
-			OFMessageType.PACKET_IN, 
+			OFType.PACKET_IN, 
 			new OFMFilter() {
 				@Override
 				public boolean filter(OFMessage m) {
@@ -158,37 +161,39 @@ public class Forwarding extends ForwardingBase {
 	 * @param cntx the {@link MessageContext}
 	 */
 	protected void doDropFlow(IOFSwitch sw, OFPacketIn pi, IRoutingDecision decision, MessageContext cntx) {
-		int input_port = getInputPort(pi);
+		OFPort inPort = getInputPort(pi);
 		
 		// initialize match structure and populate it using the packet
-		OFMatch match = protocol.loadOFMatchFromPacket(sw, pi.getData(), (short) input_port, false);
+		Match match = protocol.loadOFMatchFromPacket(sw, pi.getData(), inPort, false);
 
 		// Create flow-mod based on packet-in and src-switch
-		OFFlowMod fm = OFMessageFactory.createFlowMod(pi.getVersion());
-		fm.setCommand(OFFlowModCommand.ADD);
+		OFFlowAdd.Builder fm = OFFactories.getFactory(pi.getVersion()).buildFlowAdd();
+		
 		// Drop
-		if ( fm.isInstructionsSupported() ) {
+		try {
 			fm.setInstructions(Collections.<OFInstruction>emptyList());
-		} else {
+		} catch ( UnsupportedOperationException u ) {
 			fm.setActions(Collections.<OFAction>emptyList());
 		}
 
 		long cookie = AppCookie.makeCookie(FORWARDING_APP_ID, 0);
 		
-		fm.setCookie(cookie)
-		.setHardTimeout((short) 0)
-		.setIdleTimeout((short) 5)
-		.setBufferId(0xffffffff /* OFP_NO_BUFFER */)
-		.setMatch(match);
-		if ( fm.isTableIdSupported() ) {
-			fm.setTableId((byte) 0x0);
+		try { 
+			fm
+			.setCookie(U64.of(cookie))
+			.setHardTimeout(0)
+			.setIdleTimeout(5)
+			.setBufferId(OFBufferId.NO_BUFFER)
+			.setMatch(match)
+			.setTableId(TableId.of(0));
+		} catch ( UnsupportedOperationException u ) {
+			// do nothing. possibly from setTableId() call
 		}
-		fm.setLength(fm.computeLength());		
 		
 		try {
 			Logger.debug("write drop flow-mod sw={} match={} flow-mod={}", 
 					new Object[] { sw, match, fm });
-			messageDamper.write(sw.getConnection(), fm);
+			messageDamper.write(sw.getConnection(), fm.build());
 		} catch (IOException e) {
 			Logger.stderr("Failure writing drop flow mod" + e.toString());
 		}
@@ -209,9 +214,9 @@ public class Forwarding extends ForwardingBase {
 			MessageContext cntx,
 			boolean requestFlowRemovedNotifn) {    
 		
-		int input_port = getInputPort(pi);
+		OFPort inPort = getInputPort(pi);
 		
-		OFMatch match = protocol.loadOFMatchFromPacket(sw, pi.getData(), (short) input_port, false);
+		Match match = protocol.loadOFMatchFromPacket(sw, pi.getData(), inPort, false);
 
 		// Check if we have the location of the destination
 		IDevice dstDevice = (IDevice) cntx.get(MessageContext.DST_DEVICE);
@@ -225,7 +230,7 @@ public class Forwarding extends ForwardingBase {
 				return;
 			}
 			if (srcIsland == null) {
-				Logger.stderr("No openflow island found for source {" + sw.getStringId() + "}/{" + input_port + "}");
+				Logger.stderr("No openflow island found for source {" + sw.getStringId() + "}/{" + inPort + "}");
 				return;
 			}
 			
@@ -238,7 +243,7 @@ public class Forwarding extends ForwardingBase {
 				Long dstIsland = topology.getL2DomainId(dstSwDpid);
 				if ((dstIsland != null) && dstIsland.equals(srcIsland)) {
 					on_same_island = true;
-					if ((sw.getId() == dstSwDpid) && (input_port == dstDap.getPort())) {
+					if ((sw.getId() == dstSwDpid) && (inPort == dstDap.getPort())) {
 						on_same_if = true;
 					}
 					break;
@@ -254,7 +259,7 @@ public class Forwarding extends ForwardingBase {
 
 			if (on_same_if) {
 				Logger.stdout("Both source and destination are on the same switch/port " + 
-						sw.toString() + "/" + input_port + ", Action = NOP");
+						sw.toString() + "/" + inPort + ", Action = NOP");
 				return;
 			}
 			
@@ -283,9 +288,9 @@ public class Forwarding extends ForwardingBase {
 							(dstCluster != null)) {
 						Route route = 
 								routingEngine.getRoute(srcDap.getSwitchDPID(),
-										(short)srcDap.getPort(),
+										srcDap.getPort(),
 										dstDap.getSwitchDPID(),
-										(short)dstDap.getPort());
+										dstDap.getPort());
 						if (route != null) {
 //							if (log.isTraceEnabled()) {
 //								log.trace("pushRoute match={} route={} " + 
@@ -295,34 +300,9 @@ public class Forwarding extends ForwardingBase {
 //										dstDap.getPort()});
 //							}
 							
-							long cookie = 
-									AppCookie.makeCookie(FORWARDING_APP_ID, 0);
+							long cookie = AppCookie.makeCookie(FORWARDING_APP_ID, 0);
 
-							// if there is prior routing decision use wildcard
-							Integer wildcard_hints = null;
-							IRoutingDecision decision = (IRoutingDecision) cntx.get(MessageContext.ROUTING_DECISION);
-							
-							if (match.isWildcardsSupported()){
-								if (decision != null) {
-									wildcard_hints = decision.getWildcards();
-								} else {
-									// L2 only wildcard if there is no prior route decision
-									wildcard_hints = ((Integer) sw
-											.getAttribute(IOFSwitch.PROP_FASTWILDCARDS))
-											.intValue()
-											& ~OFBFlowWildcard.IN_PORT
-											& ~OFBFlowWildcard.DL_SRC
-											& ~OFBFlowWildcard.DL_DST
-											& ~OFBFlowWildcard.NW_SRC_MASK
-											& ~OFBFlowWildcard.NW_DST_MASK;
-									
-									if ( (match.getWildcardsWire() & OFBFlowWildcard.DL_VLAN) == 0 ) {
-										wildcard_hints &= ~OFBFlowWildcard.DL_VLAN;
-									}
-								}
-							}
-
-							pushRoute(sw.getConnection(), route, match, wildcard_hints, pi, sw.getId(), cookie, 
+							pushRoute(sw.getConnection(), route, match, pi, sw.getId(), cookie, 
 									cntx, requestFlowRemovedNotifn, false,
 									OFFlowModCommand.ADD);
 						}
@@ -350,9 +330,9 @@ public class Forwarding extends ForwardingBase {
 	 * @param cntx the {@link MessageContext}
 	 */
 	protected void doFlood(IOFSwitch sw, OFPacketIn pi, MessageContext cntx) {
-		int input_port = getInputPort(pi);
+		OFPort inPort = getInputPort(pi);
 		
-		if (! topology.isIncomingBroadcastAllowed(sw.getId(), (short) input_port) ) {
+		if (! topology.isIncomingBroadcastAllowed(sw.getId(), inPort) ) {
 //			if (log.isTraceEnabled()) {
 //				log.trace("doFlood, drop broadcast packet, pi={}, " + 
 //						"from a blocked port, srcSwitch=[{},{}], linkInfo={}",
@@ -361,14 +341,17 @@ public class Forwarding extends ForwardingBase {
 			return;
 		}
 
-		// Set Action to flood
-		OFPacketOut po = OFMessageFactory.createPacketOut(pi.getVersion());
+		OFFactory fac = OFFactories.getFactory(pi.getVersion());
 		
-		po.setBufferId(pi.getBufferId());
-		po.setInputPort(OFPort.of(input_port));
+		// Set Action to flood
+		OFPacketOut.Builder po = fac.buildPacketOut();
+		
+		po
+		.setBufferId(pi.getBufferId())
+		.setInPort(inPort);
 		
 		List<OFAction> actions = new ArrayList<OFAction>();
-		OFActionOutput action_output = OFMessageFactory.createActionOutput(pi.getVersion());
+		OFActionOutput.Builder action_output = fac.actions().buildOutput();
 		
 //		action_output.setPort(OFPort.FLOOD).setMaxLength((short)0).setLength(action_output.computeLength());
 		if (sw.hasAttribute(IOFSwitch.PROP_SUPPORTS_OFPP_FLOOD)) {
@@ -376,24 +359,22 @@ public class Forwarding extends ForwardingBase {
 		} else {
 			action_output.setPort(OFPort.ALL);
 		}
-		action_output.setMaxLength((short)0xffff);
+		action_output.setMaxLen((short)0xffff);
 		
-		actions.add(action_output);
+		actions.add(action_output.build());
 		po.setActions(actions);
-		po.setActionsLength(action_output.computeLength());
 
 		// set buffer-id, in-port and packet-data based on packet-in
-		if (pi.getBufferId() == 0xffffffff /* OFP_NO_BUFFER */ ) {
+		if (pi.getBufferId() == OFBufferId.NO_BUFFER ) {
 			po.setData( pi.getData() );
 		}
-		po.setLength( po.computeLength() );
 		
 		try {
 //			if (log.isTraceEnabled()) {
 //				log.trace("Writing flood PacketOut switch={} packet-in={} packet-out={}",
 //						new Object[] {sw, pi, po});
 //			}
-			messageDamper.write(sw.getConnection(), po);
+			messageDamper.write(sw.getConnection(), po.build());
 		} catch (IOException e) {
 //			log.error("Failure writing PacketOut switch={} packet-in={} packet-out={}",
 //					new Object[] {sw, pi, po}, e);

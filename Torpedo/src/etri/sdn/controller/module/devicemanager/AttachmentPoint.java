@@ -21,6 +21,8 @@
 
 package etri.sdn.controller.module.devicemanager;
 
+import org.projectfloodlight.openflow.types.OFPort;
+
 /**
  * The AttachmentPoint class consists of various information for a device
  * such as the switch, the port number, and the time activated and last seen.
@@ -28,7 +30,7 @@ package etri.sdn.controller.module.devicemanager;
  */
 public class AttachmentPoint {
     long  sw;
-    short port;
+    OFPort port;
     long  activeSince;
     long  lastSeen;
 
@@ -47,7 +49,7 @@ public class AttachmentPoint {
      * @param activeSince the timestamp when this instance is activated
      * @param lastSeen the recent timestamp when this instance is used 
      */
-    public AttachmentPoint(long sw, short port, long activeSince,
+    public AttachmentPoint(long sw, OFPort port, long activeSince,
                            long lastSeen) {
         this.sw = sw;
         this.port = port;
@@ -62,7 +64,7 @@ public class AttachmentPoint {
      * @param port the switch port
      * @param lastSeen the recent timestamp when this instance is used 
      */
-    public AttachmentPoint(long sw, short port, long lastSeen) {
+    public AttachmentPoint(long sw, OFPort port, long lastSeen) {
         this.sw = sw;
         this.port = port;
         this.lastSeen = lastSeen;
@@ -104,7 +106,7 @@ public class AttachmentPoint {
      * 
      * @return the switch port
      */
-    public short getPort() {
+    public OFPort getPort() {
         return port;
     }
     
@@ -113,7 +115,7 @@ public class AttachmentPoint {
      * 
      * @param port the new switch port
      */
-    public void setPort(short port) {
+    public void setPort(OFPort port) {
         this.port = port;
     }
     
@@ -165,7 +167,7 @@ public class AttachmentPoint {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + port;
+        result = prime * result + ((port!=null)?port.getPortNumber():0);
         result = prime * result + (int) (sw ^ (sw >>> 32));
         return result;
     }

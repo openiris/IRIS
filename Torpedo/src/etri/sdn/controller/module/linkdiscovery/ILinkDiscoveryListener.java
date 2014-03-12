@@ -17,7 +17,8 @@
 
 package etri.sdn.controller.module.linkdiscovery;
 
-import org.openflow.util.HexString;
+import org.projectfloodlight.openflow.types.OFPort;
+import org.projectfloodlight.openflow.util.HexString;
 
 import etri.sdn.controller.module.linkdiscovery.ILinkDiscovery.LinkType;
 import etri.sdn.controller.protocol.io.IOFSwitch.SwitchType;
@@ -68,9 +69,9 @@ public interface ILinkDiscoveryListener {
 	 */
 	public class LDUpdate {
 		protected long src;
-		protected int srcPort;
+		protected OFPort srcPort;
 		protected long dst;
-		protected int dstPort;
+		protected OFPort dstPort;
 		protected SwitchType srcType;
 		protected LinkType type;
 		protected UpdateOperation operation;
@@ -85,8 +86,8 @@ public interface ILinkDiscoveryListener {
 		 * @param type		the type of link ({@link ILinkDiscovery.LinkType})
 		 * @param operation	the type of link update operation ({@link UpdateOperation})
 		 */
-		public LDUpdate(long src, int srcPort,
-						long dst, int dstPort,
+		public LDUpdate(long src, OFPort srcPort,
+						long dst, OFPort dstPort,
 						LinkType type,
 						UpdateOperation operation) {
 			this.src = src;
@@ -134,7 +135,7 @@ public interface ILinkDiscoveryListener {
 		 * @param port		port number
 		 * @param operation	{@link UpdateOperation}
 		 */
-		public LDUpdate(long sw, int port, UpdateOperation operation) {
+		public LDUpdate(long sw, OFPort port, UpdateOperation operation) {
 			this.src = sw;
 			this.srcPort = port;
 			this.operation = operation;
@@ -144,7 +145,7 @@ public interface ILinkDiscoveryListener {
 			return src;
 		}
 
-		public int getSrcPort() {
+		public OFPort getSrcPort() {
 			return srcPort;
 		}
 
@@ -152,7 +153,7 @@ public interface ILinkDiscoveryListener {
 			return dst;
 		}
 
-		public int getDstPort() {
+		public OFPort getDstPort() {
 			return dstPort;
 		}
 

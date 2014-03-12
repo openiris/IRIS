@@ -10,8 +10,8 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.openflow.io.OFMessageAsyncStream;
-import org.openflow.protocol.OFMessage;
 //import org.openflow.protocol.factory.BasicFactory;
+import org.projectfloodlight.openflow.protocol.OFMessage;
 
 public final class Connection {
 	public enum STATUS { CONNECTED, RUNNING, CLOSED };
@@ -43,7 +43,7 @@ public final class Connection {
 		}
 		this.seq = ++SEQ;
 	}
-	
+
 	/**
 	 * Get IOFSwitch (switch) object
 	 * @return
@@ -51,7 +51,7 @@ public final class Connection {
 	public IOFSwitch getSwitch () {
 		return this.sw;
 	}
-	
+
 	/**
 	 * Set switch connected via this connection
 	 * @param sw	IOFSwitch object to set
@@ -60,7 +60,7 @@ public final class Connection {
 		this.sw = sw;
 		this.sw.setConnection(this);
 	}
-	
+
 	/**
 	 * Get sequence number (identifier for this connection)
 	 * @return	sequence number (id) of this connection
@@ -84,7 +84,7 @@ public final class Connection {
 	Set<IOFHandler> getHandlers() {
 		return handlers;
 	}
-	
+
 	/**
 	 * Add controller instance
 	 * @param handler	IOFHandler (Controller) object
@@ -92,7 +92,7 @@ public final class Connection {
 	void addHandler(IOFHandler handler) {
 		handlers.add(handler);
 	}
-	
+
 	/**
 	 * Add a set of controller instances
 	 * @param handlers	Set<IOFHandler>
@@ -164,16 +164,12 @@ public final class Connection {
 	 */
 	public synchronized boolean write(OFMessage fm) {
 		if ( fm == null ) return true;
-		
-		if ( fm.getXid() == 0 ) {
-			fm.setXid(sw.getNextTransactionId());
-		}
 
 		// watch the channel 'client' for write!
 		this.markToWrite();
-		
+
 		try {
-			getStream().write( fm.setLength( fm.computeLength() ) );	
+			getStream().write( fm );	
 		} catch (IOException e) {
 			return false;
 		}
@@ -201,25 +197,21 @@ public final class Connection {
 	 * @return		true if successful, false otherwise
 	 */
 	public synchronized boolean write(List<OFMessage> out) {
-		
+
 		// watch the channel 'client' for write!
 		this.markToWrite();
-		
+
 		for ( OFMessage m : out ) {
-			if ( m.getXid() == 0 ) {
-				m.setXid(sw.getNextTransactionId());
-			}
-			
 			try { 
 				getStream().write( m );
 			} catch ( IOException e ) {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Append selector to this connection
 	 * @param read_selector selector to attach 
@@ -227,7 +219,7 @@ public final class Connection {
 	void setSelector(Selector read_selector) {
 		this.selector = read_selector;
 	}
-	
+
 	/**
 	 * Mark the selector to monitor both read and write event
 	 */

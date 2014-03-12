@@ -1,6 +1,7 @@
 package etri.sdn.controller.module.linkdiscovery;
 
-import org.openflow.util.HexString;
+import org.projectfloodlight.openflow.types.OFPort;
+import org.projectfloodlight.openflow.util.HexString;
 
 /**
  * A NodePortTuple is similar to a SwitchPortTuple
@@ -11,21 +12,21 @@ import org.openflow.util.HexString;
  */
 public class NodePortTuple {
 	protected long nodeId; // switch DPID
-	protected short portId; // switch port id
+	protected OFPort portId; // switch port id
 
 	/**
 	 * Creates a NodePortTuple
 	 * @param nodeId The DPID of the switch
 	 * @param portId The port of the switch
 	 */
-	public NodePortTuple(long nodeId, short portId) {
+	public NodePortTuple(long nodeId, OFPort portId) {
 		this.nodeId = nodeId;
 		this.portId = portId;
 	}
 
-	public NodePortTuple(long nodeId, int portId) {
+	public NodePortTuple(long nodeId, short portId) {
 		this.nodeId = nodeId;
-		this.portId = (short) portId;
+		this.portId = OFPort.of(portId);
 	}
 
 	public long getNodeId() {
@@ -36,16 +37,20 @@ public class NodePortTuple {
 		this.nodeId = nodeId;
 	}
 
-	public short getPortId() {
+	public OFPort getPortId() {
 		return portId;
 	}
 
-	public void setPortId(short portId) {
+	public void setPortId(OFPort portId) {
 		this.portId = portId;
+	}
+	
+	public void setPortId(short portId) {
+		this.portId = OFPort.of(portId);
 	}
 
 	public String toString() {
-		return "[id=" + HexString.toHexString(nodeId) + ", port=" + new Short(portId) + "]";
+		return "[id=" + HexString.toHexString(nodeId) + ", port=" + portId + "]";
 	}
 
 	@Override
@@ -53,7 +58,7 @@ public class NodePortTuple {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (int) (nodeId ^ (nodeId >>> 32));
-		result = prime * result + portId;
+		result = prime * result + portId.getPortNumber();
 		return result;
 	}
 
@@ -80,6 +85,6 @@ public class NodePortTuple {
 	 * @return	String
 	 */
 	public String toKeyString() {
-		return (HexString.toHexString(nodeId)+ "|" + (portId & 0xffff));
+		return (HexString.toHexString(nodeId)+ "|" + (portId.getPortNumber() & 0xffff));
 	}
 }

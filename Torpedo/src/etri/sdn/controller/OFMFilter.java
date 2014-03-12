@@ -1,6 +1,7 @@
 package etri.sdn.controller;
 
-import org.openflow.protocol.OFMessage;
+import org.projectfloodlight.openflow.protocol.OFMessage;
+
 
 /**
  * This class is to filer {@link OFMessage} objects coming from 

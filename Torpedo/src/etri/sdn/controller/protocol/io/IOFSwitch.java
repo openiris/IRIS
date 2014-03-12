@@ -17,17 +17,13 @@
 
 package etri.sdn.controller.protocol.io;
 
-//import java.util.Collection;
 import java.util.Date;
 //import java.util.List;
 import java.util.Map;
 
-//import org.openflow.protocol.OFFeaturesReply;
-//import org.openflow.protocol.OFPhysicalPort;
-//import org.openflow.protocol.OFStatisticsRequest;
-//import org.openflow.protocol.statistics.OFDescriptionStatistics;
-//import org.openflow.protocol.statistics.OFStatistics;
-//import org.openflow.util.HexString;
+import org.projectfloodlight.openflow.protocol.OFVersion;
+import org.projectfloodlight.openflow.types.OFPort;
+
 
 /**
  * This was originally written for Floodlight, but we slightly modified it to 
@@ -143,28 +139,28 @@ public interface IOFSwitch {
     /**
      * Update broadcast cache
      * @param entry		Long
-     * @param port		Short
+     * @param port		OFPort
      * @return true if there is a cache hit
      *         false if there is no cache hit.
      */
-    public boolean updateBroadcastCache(Long entry, Short port);
+    public boolean updateBroadcastCache(Long entry, OFPort port);
     
     /**
      * Get the portBroadcastCacheHits
-     * @return	Map<Short, Long> object
+     * @return	Map<OFPort, Long> object
      */
-    public Map<Short, Long> getPortBroadcastHits();
+    public Map<OFPort, Long> getPortBroadcastHits();
    
     /**
      * Get the version of the switch 
      * @return	version number (byte)
      */
-	public byte getVersion();
+	public OFVersion getVersion();
 	
 	/**
 	 * Set the version of the switch
 	 * @param version	version number (byte)
 	 */
-	public void setVersion(byte version);
+	public void setVersion(OFVersion version);
    
 }

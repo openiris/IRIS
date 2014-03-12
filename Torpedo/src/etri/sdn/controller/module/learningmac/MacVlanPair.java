@@ -17,6 +17,9 @@
 
 package etri.sdn.controller.module.learningmac;
 
+import org.projectfloodlight.openflow.types.MacAddress;
+import org.projectfloodlight.openflow.types.VlanVid;
+
 import etri.sdn.controller.protocol.io.IOFSwitch;
 
 /**
@@ -28,8 +31,8 @@ import etri.sdn.controller.protocol.io.IOFSwitch;
  *
  */
 public class MacVlanPair {
-    private final Long mac;
-    private final Short vlan;
+    private final MacAddress mac;
+    private final VlanVid vlan;
     private final IOFSwitch sw;
     
     /**
@@ -39,7 +42,7 @@ public class MacVlanPair {
      * @param vlan	VLAN value
      * @param sw	switch that reported the MAC and VLAN value
      */
-    public MacVlanPair(Long mac, Short vlan, IOFSwitch sw) {
+    public MacVlanPair(MacAddress mac, VlanVid vlan, IOFSwitch sw) {
         this.mac = mac;
         this.vlan = vlan;
         this.sw = sw;
@@ -50,8 +53,8 @@ public class MacVlanPair {
      * 
      * @return	MAC address (long type)
      */
-    public long getMac() {
-        return mac.longValue();
+    public MacAddress getMac() {
+        return mac;
     }
     
     /**
@@ -59,8 +62,8 @@ public class MacVlanPair {
      * 
      * @return	VLAN value (short type)
      */
-    public short getVlan() {
-        return vlan.shortValue();
+    public VlanVid getVlan() {
+        return vlan;
     }
     
     /**

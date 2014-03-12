@@ -17,6 +17,8 @@
 
 package etri.sdn.controller.module.routing;
 
+import org.projectfloodlight.openflow.types.OFPort;
+
 import etri.sdn.controller.IService;
 
 public interface IRoutingService extends IService {
@@ -29,12 +31,11 @@ public interface IRoutingService extends IService {
     public Route getRoute(long src, long dst, boolean tunnelEnabled);
 
 
-    public Route getRoute(long srcId, short srcPort, 
-                             long dstId, short dstPort);
+    public Route getRoute(long srcId, OFPort srcPort, long dstId, OFPort dstPort);
 
-    public Route getRoute(long srcId, short srcPort, 
-                             long dstId, short dstPort, 
-                             boolean tunnelEnabled);
+    public Route getRoute(long srcId, OFPort srcPort, 
+                          long dstId, OFPort dstPort, 
+                          boolean tunnelEnabled);
 
     /** Check if a route exists between src and dst, including tunnel links
      *  in the path.

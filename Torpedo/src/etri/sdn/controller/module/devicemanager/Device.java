@@ -30,7 +30,8 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.openflow.util.HexString;
+import org.projectfloodlight.openflow.types.OFPort;
+import org.projectfloodlight.openflow.util.HexString;
 
 import etri.sdn.controller.module.devicemanager.IDeviceService.DeviceField;
 import etri.sdn.controller.module.devicemanager.SwitchPort.ErrorStatus;
@@ -92,7 +93,7 @@ public class Device implements IDevice {
 		List<AttachmentPoint> aps = new LinkedList<AttachmentPoint>();
 		if (entity.getSwitchDPID() != null && entity.getSwitchPort() != null){
 			long sw = entity.getSwitchDPID();
-			short port = entity.getSwitchPort().shortValue();
+			OFPort port = entity.getSwitchPort();
 
 			if (Devices.getInstance().isValidAttachmentPoint(sw, port)) {
 				AttachmentPoint ap = 
@@ -310,7 +311,7 @@ public class Device implements IDevice {
 	 * @return true if there was any change to the list of attachment points 
 	 *         for the device -- which indicates a device move
 	 */
-	public boolean updateAttachmentPoint(long sw, short port, long lastSeen){
+	public boolean updateAttachmentPoint(long sw, OFPort port, long lastSeen){
 
 		if (!Devices.getInstance().isValidAttachmentPoint(sw, port)) 
 			return false;
@@ -386,7 +387,7 @@ public class Device implements IDevice {
 	 * 
 	 * @return true if deleted more than one attachment point, false otherwise
 	 */
-	public boolean deleteAttachmentPoint(long sw, short port) {
+	public boolean deleteAttachmentPoint(long sw, OFPort port) {
 		AttachmentPoint ap = new AttachmentPoint(sw, port, 0);
 
 		this.oldAPs.remove(ap);
@@ -573,8 +574,7 @@ public class Device implements IDevice {
 	public Short[] getSwitchPortVlanIds(SwitchPort swp) {
 		TreeSet<Short> vals = new TreeSet<Short>();
 		for (Entity e : entities) {
-			if (e.switchDPID == swp.getSwitchDPID() 
-					&& e.switchPort == swp.getPort()) {
+			if (e.switchDPID == swp.getSwitchDPID() && e.switchPort == swp.getPort()) {
 				if (e.getVlan() == null)
 					vals.add(Ethernet.VLAN_UNTAGGED);
 				else

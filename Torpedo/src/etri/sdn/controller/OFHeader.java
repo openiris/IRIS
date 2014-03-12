@@ -2,9 +2,10 @@ package etri.sdn.controller;
 
 import java.nio.ByteBuffer;
 
-import org.openflow.util.U16;
-import org.openflow.util.U32;
-import org.openflow.util.U8;
+import org.projectfloodlight.openflow.types.U16;
+import org.projectfloodlight.openflow.types.U32;
+import org.projectfloodlight.openflow.types.U8;
+
 
 /**
  * This class is only to use internally to parse OFMessage objects.

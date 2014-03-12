@@ -3,6 +3,7 @@ package etri.sdn.controller.module.statemanager;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Calendar;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,20 +12,26 @@ import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.Interval;
 import org.joda.time.Period;
-import org.openflow.protocol.OFPort;
-import org.openflow.protocol.factory.OFMessageFactory;
-import org.openflow.protocol.interfaces.OFFeaturesReply;
-import org.openflow.protocol.interfaces.OFMatch;
-import org.openflow.protocol.interfaces.OFStatisticsAggregateRequest;
-import org.openflow.protocol.interfaces.OFStatisticsDescReply;
-import org.openflow.protocol.interfaces.OFStatisticsFlowReply;
-import org.openflow.protocol.interfaces.OFStatisticsFlowRequest;
-import org.openflow.protocol.interfaces.OFStatisticsPortDescRequest;
-import org.openflow.protocol.interfaces.OFStatisticsPortDescReply;
-import org.openflow.protocol.interfaces.OFStatisticsPortReply;
-import org.openflow.protocol.interfaces.OFStatisticsPortRequest;
-import org.openflow.protocol.interfaces.OFStatisticsReply;
-import org.openflow.util.HexString;
+import org.projectfloodlight.openflow.protocol.OFAggregateStatsRequest;
+import org.projectfloodlight.openflow.protocol.OFDescStatsReply;
+import org.projectfloodlight.openflow.protocol.OFFactories;
+import org.projectfloodlight.openflow.protocol.OFFactory;
+import org.projectfloodlight.openflow.protocol.OFFeaturesReply;
+import org.projectfloodlight.openflow.protocol.OFFlowStatsEntry;
+import org.projectfloodlight.openflow.protocol.OFFlowStatsReply;
+import org.projectfloodlight.openflow.protocol.OFFlowStatsRequest;
+import org.projectfloodlight.openflow.protocol.OFPortDescStatsReply;
+import org.projectfloodlight.openflow.protocol.OFPortDescStatsRequest;
+import org.projectfloodlight.openflow.protocol.OFPortStatsEntry;
+import org.projectfloodlight.openflow.protocol.OFPortStatsReply;
+import org.projectfloodlight.openflow.protocol.OFPortStatsRequest;
+import org.projectfloodlight.openflow.protocol.OFStatsReply;
+import org.projectfloodlight.openflow.protocol.OFStatsRequestFlags;
+import org.projectfloodlight.openflow.protocol.match.Match;
+import org.projectfloodlight.openflow.types.OFGroup;
+import org.projectfloodlight.openflow.types.OFPort;
+import org.projectfloodlight.openflow.types.TableId;
+import org.projectfloodlight.openflow.util.HexString;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -89,38 +96,38 @@ public class State extends OFModel {
 		 * all switch information
 		 */
 		new RESTApi(
-			"/wm/core/controller/switches/json",
-			new Restlet() {
-				@Override
-				public void handle(Request request, Response response) {
-					StringWriter sWriter = new StringWriter();
-					JsonFactory f = new JsonFactory();
-					JsonGenerator g = null;
-					try { 
-						g = f.createJsonGenerator(sWriter);
-					
-						g.writeStartArray();
-						for ( IOFSwitch sw : manager.getController().getSwitches() ) {
-							g.writeStartObject();
-							g.writeFieldName("dpid");
-							g.writeString(HexString.toHexString(sw.getId()));
-							g.writeFieldName("inetAddress");
-							g.writeString(sw.getConnection().getClient().getRemoteAddress().toString());
-							g.writeFieldName("connectedSince");
-							g.writeNumber(sw.getConnectedSince().getTime());
-							g.writeEndObject();
+				"/wm/core/controller/switches/json",
+				new Restlet() {
+					@Override
+					public void handle(Request request, Response response) {
+						StringWriter sWriter = new StringWriter();
+						JsonFactory f = new JsonFactory();
+						JsonGenerator g = null;
+						try { 
+							g = f.createJsonGenerator(sWriter);
+
+							g.writeStartArray();
+							for ( IOFSwitch sw : manager.getController().getSwitches() ) {
+								g.writeStartObject();
+								g.writeFieldName("dpid");
+								g.writeString(HexString.toHexString(sw.getId()));
+								g.writeFieldName("inetAddress");
+								g.writeString(sw.getConnection().getClient().getRemoteAddress().toString());
+								g.writeFieldName("connectedSince");
+								g.writeNumber(sw.getConnectedSince().getTime());
+								g.writeEndObject();
+							}
+							g.writeEndArray();
+							g.close();
+
+						} catch (IOException e) {
+							e.printStackTrace();
 						}
-						g.writeEndArray();
-						g.close();
-						
-					} catch (IOException e) {
-						e.printStackTrace();
+
+						String r = sWriter.toString();
+						response.setEntity(r, MediaType.APPLICATION_JSON);
 					}
-					
-					String r = sWriter.toString();
-					response.setEntity(r, MediaType.APPLICATION_JSON);
 				}
-			}
 		),
 		
 		/**
@@ -128,53 +135,52 @@ public class State extends OFModel {
 		 * for retrieving switch aggregate flow statistics
 		 */
 		new RESTApi(
-			"/wm/core/switch/{switchid}/aggregate/json",
-			new Restlet() {
-				@Override
-				public void handle(Request request, Response response) {
-					String switchIdStr = (String) request.getAttributes().get("switchid");
-					Long switchId = HexString.toLong(switchIdStr);
-					IOFSwitch sw = manager.getController().getSwitch(switchId);
-					if ( sw == null ) {
-						return;		// switch is not completely set up.
-					}
-					
-					OFStatisticsAggregateRequest req = 
-							OFMessageFactory.createStatisticsAggregateRequest(sw.getVersion());
-					if ( req.isMatchSupported() ) {
-						OFMatch.Builder match = OFMessageFactory.createMatchBuilder(sw.getVersion());
-						if ( match.isWildcardsSupported() ) 
-							match.setWildcardsWire(0xffffffff);
-						req.setMatch(match.build());
-					}
-					if ( req.isOutPortSupported() ) 
-						req.setOutPort(OFPort.NONE);
-					if ( req.isOutGroupSupported() ) 
-						req.setOutGroup(0xffffffff /* OFPG_ANY (all group) */);
-					if ( req.isTableIdSupported() ) 
-						req.setTableId((byte)0xff /* OFPTT_ALL (all tables) */);
-					req.setLength( req.computeLength() );
-	                
-					List<OFStatisticsReply> reply = protocol.getSwitchStatistics(sw, req);
-					
-	                HashMap<String, List<OFStatisticsReply>> output = new HashMap<String, List<OFStatisticsReply>>();
-	                if ( reply != null && ! reply.isEmpty() ) {
-	                	output.put(switchIdStr, reply);
-	                }
-	                
-	                // create an object mapper.
-					ObjectMapper om = new ObjectMapper();
-					om.registerModule(port_module);
-					
-					try {
-						String r = om/*.writerWithDefaultPrettyPrinter()*/.writeValueAsString(output);
-						response.setEntity(r, MediaType.APPLICATION_JSON);
-					} catch (Exception e) {
-						e.printStackTrace();
-						return;
+				"/wm/core/switch/{switchid}/aggregate/json",
+				new Restlet() {
+					@Override
+					public void handle(Request request, Response response) {
+						String switchIdStr = (String) request.getAttributes().get("switchid");
+						Long switchId = HexString.toLong(switchIdStr);
+						IOFSwitch sw = manager.getController().getSwitch(switchId);
+						if ( sw == null ) {
+							return;		// switch is not completely set up.
+						}
+						OFFactory fac = OFFactories.getFactory(sw.getVersion());
+
+						OFAggregateStatsRequest.Builder req = fac.buildAggregateStatsRequest();
+						Match match = fac.matchWildcardAll();
+						
+						req.setMatch(match);
+
+						req.setOutPort(OFPort.ANY /* NONE for 1.0 */);
+						try { 
+							// this should be fixed to accept OFGroup object in the further release of Loxigen.
+							req.setOutGroup(OFGroup.ANY.getGroupNumber() /* OFPG_ANY (all group) */);
+							req.setTableId(TableId.ALL);
+						} catch ( UnsupportedOperationException u ) { 
+							// does nothing.
+						}
+
+						List<OFStatsReply> reply = protocol.getSwitchStatistics(sw, req.build());
+
+						HashMap<String, List<OFStatsReply>> output = new HashMap<String, List<OFStatsReply>>();
+						if ( reply != null && ! reply.isEmpty() ) {
+							output.put(switchIdStr, reply);
+						}
+
+						// create an object mapper.
+						ObjectMapper om = new ObjectMapper();
+						om.registerModule(port_module);
+
+						try {
+							String r = om/*.writerWithDefaultPrettyPrinter()*/.writeValueAsString(output);
+							response.setEntity(r, MediaType.APPLICATION_JSON);
+						} catch (Exception e) {
+							e.printStackTrace();
+							return;
+						}
 					}
 				}
-			}
 		),
 		
 		/**
@@ -182,50 +188,50 @@ public class State extends OFModel {
 		 * for retrieving switch description.
 		 */
 		new RESTApi(
-			"/wm/core/switch/{switchid}/desc/json",
-			new Restlet() {
-				@Override
-				public void handle(Request request, Response response) {
-					String switchIdStr = (String) request.getAttributes().get("switchid");
-					Long switchId = HexString.toLong(switchIdStr);
-					IOFSwitch sw = manager.getController().getSwitch(switchId);
-					if ( sw == null ) {
-						return;		// switch is not completely set up.
-					}
-					
-					StringWriter sWriter = new StringWriter();
-	                JsonFactory f = new JsonFactory();
-	                JsonGenerator g = null;
-	                OFStatisticsDescReply desc = protocol.getDescription(sw);
-	                
-	                try {
-	                	g = f.createJsonGenerator(sWriter);
-	                	g.writeStartObject();
-	                	g.writeFieldName(HexString.toHexString(sw.getId()));
-	                	g.writeStartArray();
-	                	g.writeStartObject();
-	                	g.writeFieldName("datapathDescription");
-	                	g.writeString( desc!=null ? desc.getDatapathDescription() : "-" );
-	                	g.writeFieldName("hardwareDescription");
-	                	g.writeString( desc!=null ? desc.getHardwareDescription() : "-" );
-	                	g.writeFieldName("manufacturerDescription");
-	                	g.writeString( desc!=null ? desc.getManufacturerDescription() : "-" );
-	                	g.writeFieldName("serialNumber");
-	                	g.writeString( desc!=null ? desc.getSerialNumber() : "-" );
-	                	g.writeFieldName("softwareDescription");
-	                	g.writeString( desc!=null ? desc.getSoftwareDescription() : "-" );
-	                	g.writeEndObject();
-	                	g.writeEndArray();
-	                	g.writeEndObject();
-	                	g.close();
-	                } catch (IOException e) {
-	                	e.printStackTrace();
-	                }
+				"/wm/core/switch/{switchid}/desc/json",
+				new Restlet() {
+					@Override
+					public void handle(Request request, Response response) {
+						String switchIdStr = (String) request.getAttributes().get("switchid");
+						Long switchId = HexString.toLong(switchIdStr);
+						IOFSwitch sw = manager.getController().getSwitch(switchId);
+						if ( sw == null ) {
+							return;		// switch is not completely set up.
+						}
 
-	                String r = sWriter.toString();
-	                response.setEntity(r, MediaType.APPLICATION_JSON);
+						StringWriter sWriter = new StringWriter();
+						JsonFactory f = new JsonFactory();
+						JsonGenerator g = null;
+						OFDescStatsReply desc = protocol.getSwitchInformation(sw).getDescStatsReply();
+
+						try {
+							g = f.createJsonGenerator(sWriter);
+							g.writeStartObject();
+							g.writeFieldName(HexString.toHexString(sw.getId()));
+							g.writeStartArray();
+							g.writeStartObject();
+							g.writeFieldName("datapathDescription");
+							g.writeString( desc!=null ? desc.getDpDesc() : "-" );
+							g.writeFieldName("hardwareDescription");
+							g.writeString( desc!=null ? desc.getHwDesc() : "-" );
+							g.writeFieldName("manufacturerDescription");
+							g.writeString( desc!=null ? desc.getMfrDesc() : "-" );
+							g.writeFieldName("serialNumber");
+							g.writeString( desc!=null ? desc.getSerialNum() : "-" );
+							g.writeFieldName("softwareDescription");
+							g.writeString( desc!=null ? desc.getSwDesc() : "-" );
+							g.writeEndObject();
+							g.writeEndArray();
+							g.writeEndObject();
+							g.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+
+						String r = sWriter.toString();
+						response.setEntity(r, MediaType.APPLICATION_JSON);
+					}
 				}
-			}
 		),
 		
 		/**
@@ -233,52 +239,52 @@ public class State extends OFModel {
 		 * for retrieving switch port information (all ports)
 		 */
 		new RESTApi(
-			"/wm/core/switch/{switchid}/port/json",
-			new Restlet() {
-				@Override
-				public void handle(Request request, Response response) {
+				"/wm/core/switch/{switchid}/port/json",
+				new Restlet() {
+					@Override
+					public void handle(Request request, Response response) {
 
-					String switchIdStr = (String) request.getAttributes().get("switchid");
-					Long switchId = HexString.toLong(switchIdStr);
-					IOFSwitch sw = manager.getController().getSwitch(switchId);
-					if ( sw == null ) {
-						return;		// switch is not completely set up.
-					}
-					
-					HashMap<String, List<org.openflow.protocol.interfaces.OFPortStatsEntry>> result = 
-						new HashMap<String, List<org.openflow.protocol.interfaces.OFPortStatsEntry>>();
-					
-					List<org.openflow.protocol.interfaces.OFPortStatsEntry> resultValues;
-					result.put( 
-						switchIdStr, 
-						resultValues = new java.util.LinkedList<org.openflow.protocol.interfaces.OFPortStatsEntry>() 
-					);
+						String switchIdStr = (String) request.getAttributes().get("switchid");
+						Long switchId = HexString.toLong(switchIdStr);
+						IOFSwitch sw = manager.getController().getSwitch(switchId);
+						if ( sw == null ) {
+							return;		// switch is not completely set up.
+						}
 
-					OFStatisticsPortRequest req = OFMessageFactory.createStatisticsPortRequest(sw.getVersion());
-					req.setPort(OFPort.NONE);
+						HashMap<String, List<OFPortStatsEntry>> result = 
+								new HashMap<String, List<OFPortStatsEntry>>();
 
-					List<OFStatisticsReply> reply = protocol.getSwitchStatistics(sw, req);
+						List<OFPortStatsEntry> resultValues;
+						result.put( 
+								switchIdStr, 
+								resultValues = new java.util.LinkedList<OFPortStatsEntry>() 
+								);
 
-					for ( OFStatisticsReply s : reply ) {
-						if ( s instanceof OFStatisticsPortReply ) {
-							resultValues.addAll( ((OFStatisticsPortReply)s).getEntries() );
+						OFPortStatsRequest.Builder req = OFFactories.getFactory(sw.getVersion()).buildPortStatsRequest();
+						req.setPortNo(OFPort.ANY /* NONE for 1.0 */);
+
+						List<OFStatsReply> reply = protocol.getSwitchStatistics(sw, req.build());
+
+						for ( OFStatsReply s : reply ) {
+							if ( s instanceof OFPortStatsReply ) {
+								resultValues.addAll( ((OFPortStatsReply)s).getEntries() );
+							}
+						}
+
+						// create an object mapper.
+						ObjectMapper om = new ObjectMapper();
+						// this is critical in providing the port statistics correctly.
+						om.registerModule(port_module);
+
+						try {
+							String r = om./*writerWithDefaultPrettyPrinter().*/writeValueAsString(result);
+							response.setEntity(r, MediaType.APPLICATION_JSON);
+						} catch (Exception e) {
+							e.printStackTrace();
+							return;
 						}
 					}
-
-					// create an object mapper.
-					ObjectMapper om = new ObjectMapper();
-					// this is critical in providing the port statistics correctly.
-					om.registerModule(port_module);
-					
-					try {
-						String r = om./*writerWithDefaultPrettyPrinter().*/writeValueAsString(result);
-						response.setEntity(r, MediaType.APPLICATION_JSON);
-					} catch (Exception e) {
-						e.printStackTrace();
-						return;
-					}
 				}
-			}
 		),
 		
 		/**
@@ -298,8 +304,30 @@ public class State extends OFModel {
 						return;		// switch is not completely set up.
 					}
 					
-					OFStatisticsPortDescRequest pdreq = OFMessageFactory.createStatisticsPortDescRequest(sw.getVersion());
-					if ( pdreq == null ) {
+					try { 
+						OFPortDescStatsRequest pdreq = OFFactories.getFactory(sw.getVersion()).portDescStatsRequest(EnumSet.noneOf(OFStatsRequestFlags.class));
+						
+						// the switch supports version 1.3
+						List<OFStatsReply> reply = protocol.getSwitchStatistics( sw, pdreq );
+						
+						if ( reply != null && ! reply.isEmpty() ) {
+							HashMap<String, OFPortDescStatsReply> result = new HashMap<String, OFPortDescStatsReply>();
+							result.put( switchIdStr, (OFPortDescStatsReply) reply.remove(0) );
+							
+							// create an object mapper.
+							ObjectMapper om = new ObjectMapper();
+							om.registerModule(features_reply_module);
+							
+							try {
+								String r = om./*writerWithDefaultPrettyPrinter().*/writeValueAsString(result);
+								response.setEntity(r, MediaType.APPLICATION_JSON);
+							} catch (Exception e) {
+								e.printStackTrace();
+								return;
+							}
+						}
+						
+					} catch ( UnsupportedOperationException u ) {
 						// this switch version is lower than 1.3. It does not support OFStatisticsPortDescRequest
 						OFFeaturesReply reply = protocol.getFeaturesReply(sw);
 						
@@ -316,26 +344,6 @@ public class State extends OFModel {
 						} catch (Exception e) {
 							e.printStackTrace();
 							return;
-						}
-					} else {
-						// the switch supports version 1.3
-						List<OFStatisticsReply> reply = protocol.getSwitchStatistics( sw, pdreq );
-						
-						if ( reply != null && ! reply.isEmpty() ) {
-							HashMap<String, OFStatisticsPortDescReply> result = new HashMap<String, OFStatisticsPortDescReply>();
-							result.put( switchIdStr, (OFStatisticsPortDescReply) reply.remove(0) );
-							
-							// create an object mapper.
-							ObjectMapper om = new ObjectMapper();
-							om.registerModule(features_reply_module);
-							
-							try {
-								String r = om./*writerWithDefaultPrettyPrinter().*/writeValueAsString(result);
-								response.setEntity(r, MediaType.APPLICATION_JSON);
-							} catch (Exception e) {
-								e.printStackTrace();
-								return;
-							}
 						}
 					}
 				}
@@ -359,31 +367,29 @@ public class State extends OFModel {
 						return;		// switch is not completely set up.
 					}
 					
-					HashMap<String, List<org.openflow.protocol.interfaces.OFFlowStatsEntry>> result = 
-						new HashMap<String, List<org.openflow.protocol.interfaces.OFFlowStatsEntry>>();
-					List<org.openflow.protocol.interfaces.OFFlowStatsEntry> resultValues = 
-						new java.util.LinkedList<org.openflow.protocol.interfaces.OFFlowStatsEntry>();
+					OFFactory fac = OFFactories.getFactory(sw.getVersion());
+					
+					HashMap<String, List<OFFlowStatsEntry>> result = 
+						new HashMap<String, List<OFFlowStatsEntry>>();
+					List<OFFlowStatsEntry> resultValues = 
+						new java.util.LinkedList<OFFlowStatsEntry>();
 					result.put(switchIdStr, resultValues);
 										
-					OFStatisticsFlowRequest req = OFMessageFactory.createStatisticsFlowRequest(sw.getVersion());
-					if ( req.isMatchSupported() ) {
-						OFMatch.Builder match = OFMessageFactory.createMatchBuilder(sw.getVersion());
-						if ( match.isWildcardsSupported() )
-							match.setWildcardsWire(0xffffffff);
-						req.setMatch(match.build());
-					}
-					if ( req.isOutPortSupported() ) 
-						req.setOutPort(OFPort.NONE);
-					if ( req.isOutGroupSupported() ) 
-						req.setOutGroup(0xffffffff /* OFPG_ANY (all group) */);
-					if ( req.isTableIdSupported() )
-						req.setTableId((byte)0xff /* OFPTT_ALL (all tables) */);
+					OFFlowStatsRequest.Builder req = fac.buildFlowStatsRequest();
+					req
+					.setMatch( fac.matchWildcardAll() )
+					.setOutPort( OFPort.ANY /* NONE for 1.0*/ );
+					try {
+						req
+						.setOutGroup(OFGroup.ANY /* OFPG_ANY (all group) */)
+						.setTableId(TableId.ALL);
+					} catch ( UnsupportedOperationException u ) {}
 
 					try { 
-						List<OFStatisticsReply> reply = protocol.getSwitchStatistics(sw, req);
-						for ( OFStatisticsReply s : reply ) {
-							if ( s instanceof OFStatisticsFlowReply ) {
-								resultValues.addAll( ((OFStatisticsFlowReply)s).getEntries() );
+						List<OFStatsReply> reply = protocol.getSwitchStatistics(sw, req.build());
+						for ( OFStatsReply s : reply ) {
+							if ( s instanceof OFFlowStatsReply ) {
+								resultValues.addAll( ((OFFlowStatsReply)s).getEntries() );
 							}
 						}
 					} catch ( Exception e ) {

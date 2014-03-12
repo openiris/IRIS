@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.projectfloodlight.openflow.types.OFPort;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -54,12 +55,12 @@ public class Devices extends OFModel implements IDeviceService {
 
 			//First compare based on L2 domain ID; 
 			long oldSw = oldAP.getSw();
-			short oldPort = oldAP.getPort();
+			OFPort oldPort = oldAP.getPort();
 			long oldDomain = topology.getL2DomainId(oldSw);
 			boolean oldBD = topology.isBroadcastDomainPort(oldSw, oldPort);
 
 			long newSw = newAP.getSw();
-			short newPort = newAP.getPort();
+			OFPort newPort = newAP.getPort();
 			long newDomain = topology.getL2DomainId(newSw);
 			boolean newBD = topology.isBroadcastDomainPort(newSw, newPort);
 
@@ -277,9 +278,9 @@ public class Devices extends OFModel implements IDeviceService {
 	 * 
 	 * @return true if it's a valid attachment point
 	 */
-	public boolean isValidAttachmentPoint(long switchDPID, int switchPort) {
+	public boolean isValidAttachmentPoint(long switchDPID, OFPort switchPort) {
 		
-		if ( !topology.isAttachmentPointPort(switchDPID,(short)switchPort) )
+		if ( !topology.isAttachmentPointPort(switchDPID, switchPort) )
 			return false;
 
 		if ( isSuppressedAP(new SwitchPort(switchDPID, switchPort) ) ) {
@@ -516,7 +517,7 @@ public class Devices extends OFModel implements IDeviceService {
 				if (device.entities[entityindex].getSwitchDPID() != null &&
 						device.entities[entityindex].getSwitchPort() != null) {
 					long sw = device.entities[entityindex].getSwitchDPID();
-					short port = device.entities[entityindex].getSwitchPort().shortValue();
+					OFPort port = device.entities[entityindex].getSwitchPort();
 
 					// TBD: to analysis
 					boolean moved = device.updateAttachmentPoint(sw, port, lastSeen.getTime());
@@ -536,7 +537,7 @@ public class Devices extends OFModel implements IDeviceService {
 				Device newDevice = Devices.allocateDevice(device, entity);
 				if (entity.getSwitchDPID() != null && entity.getSwitchPort() != null) {
 					moved = newDevice.updateAttachmentPoint(entity.getSwitchDPID(),
-							entity.getSwitchPort().shortValue(),
+							entity.getSwitchPort(),
 							entity.getLastSeenTimestamp().getTime());
 				}
 
@@ -1194,7 +1195,7 @@ public class Devices extends OFModel implements IDeviceService {
 			Short vlan,
 			Integer ipv4Address,
 			Long switchDPID,
-			Integer switchPort) {
+			OFPort switchPort) {
 		// FIXME: vlan==null is a valid search. Need to handle this
 		// case correctly. Note that the code will still work correctly. 
 		// But we might do a full device search instead of using an index.
@@ -1220,7 +1221,7 @@ public class Devices extends OFModel implements IDeviceService {
 	@Override
 	public IDevice findDevice(long macAddress, Short vlan, 
 			Integer ipv4Address, Long switchDPID, 
-			Integer switchPort)	throws IllegalArgumentException {
+			OFPort switchPort)	throws IllegalArgumentException {
 		if (vlan != null && vlan.shortValue() <= 0)
 			vlan = null;
 		if (ipv4Address != null && ipv4Address == 0)
@@ -1272,7 +1273,7 @@ public class Devices extends OFModel implements IDeviceService {
 
 	@Override
 	public Iterator<? extends IDevice> queryDevices(Long macAddress,
-			Short vlan, Integer ipv4Address, Long switchDPID, Integer switchPort) {
+			Short vlan, Integer ipv4Address, Long switchDPID, OFPort switchPort) {
 		DeviceIndex index = null;
 //		if (classToSecondaryIndexMap.size() > 0) {
 //			EnumSet<DeviceField> keys = getEntityKeys(macAddress, vlan, ipv4Address, switchDPID, switchPort);
@@ -1310,7 +1311,7 @@ public class Devices extends OFModel implements IDeviceService {
 	@Override
 	public Iterator<? extends IDevice> queryClassDevices(IDevice reference,
 			Long macAddress, Short vlan, Integer ipv4Address, Long switchDPID,
-			Integer switchPort) {
+			OFPort switchPort) {
 		IEntityClass entityClass = reference.getEntityClass();
 		ArrayList<Iterator<Device>> iterators = new ArrayList<Iterator<Device>>();
 //		ClassIndices classState = getClassIndices(entityClass);
@@ -1359,12 +1360,12 @@ public class Devices extends OFModel implements IDeviceService {
 	}
 
 	@Override
-	public void addSuppressAPs(long swId, short port) {
+	public void addSuppressAPs(long swId, OFPort port) {
 		this.suppressedAPs.add(new SwitchPort(swId, port));
 	}
 
 	@Override
-	public void removeSuppressAPs(long swId, short port) {
+	public void removeSuppressAPs(long swId, OFPort port) {
 		this.suppressedAPs.remove(new SwitchPort(swId, port));
 	}
 
@@ -1414,7 +1415,7 @@ public class Devices extends OFModel implements IDeviceService {
 	 *
 	 */
 	class RESTAttachmentPoint {
-		public final int port;
+		public final OFPort port;
 		public final String switchDPID;
 		public final ErrorStatus errorStatus;
 		

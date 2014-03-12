@@ -17,7 +17,8 @@
 
 package etri.sdn.controller.module.linkdiscovery;
 
-import org.openflow.util.HexString;
+import org.projectfloodlight.openflow.types.OFPort;
+import org.projectfloodlight.openflow.util.HexString;
 
 /**
  * This class represents a Link.
@@ -33,9 +34,9 @@ import org.openflow.util.HexString;
 public class Link {
 
     private long src;
-    private short srcPort;
+    private OFPort srcPort;
     private long dst;
-    private short dstPort;
+    private OFPort dstPort;
 
     /**
      * Constructor 
@@ -45,7 +46,7 @@ public class Link {
      * @param dstId		destination switch identifier
      * @param dstPort	destination port
      */
-    public Link(long srcId, short srcPort, long dstId, short dstPort) {
+    public Link(long srcId, OFPort srcPort, long dstId, OFPort dstPort) {
         this.src = srcId;
         this.srcPort = srcPort;
         this.dst = dstId;
@@ -64,16 +65,16 @@ public class Link {
      */
     public Link(long srcId, int srcPort, long dstId, int dstPort) {
         this.src = srcId;
-        this.srcPort = (short) srcPort;
+        this.srcPort = OFPort.of(srcPort);
         this.dst = dstId;
-        this.dstPort = (short) dstPort;
+        this.dstPort = OFPort.of(dstPort);
     }
 
     public long getSrc() {
         return src;
     }
 
-    public short getSrcPort() {
+    public OFPort getSrcPort() {
         return srcPort;
     }
 
@@ -81,7 +82,7 @@ public class Link {
         return dst;
     }
 
-    public short getDstPort() {
+    public OFPort getDstPort() {
         return dstPort;
     }
 
@@ -90,9 +91,9 @@ public class Link {
         final int prime = 31;
         int result = 1;
         result = prime * result + (int) (dst ^ (dst >>> 32));
-        result = prime * result + dstPort;
+        result = prime * result + dstPort.getPortNumber();
         result = prime * result + (int) (src ^ (src >>> 32));
-        result = prime * result + srcPort;
+        result = prime * result + srcPort.getPortNumber();
         return result;
     }
 
@@ -121,10 +122,10 @@ public class Link {
     public String toString() {
         return "Link [src=" + HexString.toHexString(this.src) 
                 + " outPort="
-                + (srcPort & 0xffff)
+                + (srcPort.getPortNumber() & 0xffff)
                 + ", dst=" + HexString.toHexString(this.dst)
                 + ", inPort="
-                + (dstPort & 0xffff)
+                + (dstPort.getPortNumber() & 0xffff)
                 + "]";
     }
     
@@ -136,9 +137,9 @@ public class Link {
      */
     public String toKeyString() {
     	return (HexString.toHexString(this.src) + "|" +
-    			(this.srcPort & 0xffff) + "|" +
+    			(this.srcPort.getPortNumber() & 0xffff) + "|" +
     			HexString.toHexString(this.dst) + "|" +
-    		    (this.dstPort & 0xffff) );
+    		    (this.dstPort.getPortNumber() & 0xffff) );
     }
 }
 

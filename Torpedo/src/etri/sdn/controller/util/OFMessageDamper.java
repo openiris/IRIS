@@ -8,9 +8,12 @@ import java.io.IOException;
 //import java.util.EnumSet;
 import java.util.Set;
 
-import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.interfaces.OFMessageType;
 //import org.openflow.protocol.OFType;
+
+
+
+import org.projectfloodlight.openflow.protocol.OFMessage;
+import org.projectfloodlight.openflow.protocol.OFType;
 
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
@@ -77,7 +80,7 @@ public final class OFMessageDamper {
     }
     
     private TimedCache<DamperEntry> cache;
-    private Set<OFMessageType> msgTypesToCache;
+    private Set<OFType> msgTypesToCache;
     /**
      * 
      * @param capacity the maximum number of messages that should be 
@@ -89,7 +92,7 @@ public final class OFMessageDamper {
      * timeout ms ago. 
      */
     public OFMessageDamper(int capacity, 
-                           Set<OFMessageType> typesToDampen,  
+                           Set<OFType> typesToDampen,  
                            int timeout) {
         cache = new TimedCache<DamperEntry>(capacity, timeout);
         msgTypesToCache = typesToDampen;

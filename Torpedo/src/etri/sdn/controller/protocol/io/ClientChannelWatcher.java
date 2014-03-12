@@ -11,9 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
-import org.openflow.protocol.OFMessage;
-//import org.openflow.protocol.ver1_0.messages.OFHello;
-//import org.openflow.protocol.OFType;
+import org.projectfloodlight.openflow.protocol.OFMessage;
 
 import etri.sdn.controller.util.Logger;
 
@@ -150,6 +148,7 @@ public final class ClientChannelWatcher extends Thread {
 									handleDisconnectedEvent( conn );
 									key.cancel();
 									conn.close();
+									continue;
 								}
 							}							
 						} catch ( CancelledKeyException e ) {

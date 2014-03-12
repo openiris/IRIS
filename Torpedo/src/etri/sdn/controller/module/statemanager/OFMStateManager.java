@@ -2,7 +2,7 @@ package etri.sdn.controller.module.statemanager;
 
 import java.util.List;
 
-import org.openflow.protocol.OFMessage;
+import org.projectfloodlight.openflow.protocol.OFMessage;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFModel;

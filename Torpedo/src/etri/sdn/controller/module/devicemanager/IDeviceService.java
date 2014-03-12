@@ -21,6 +21,8 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Iterator;
 
+import org.projectfloodlight.openflow.types.OFPort;
+
 import etri.sdn.controller.IService;
 
 /**
@@ -73,7 +75,7 @@ public interface IDeviceService extends IService {
      */
     public IDevice findDevice(long macAddress, Short vlan,
                               Integer ipv4Address, Long switchDPID,
-                              Integer switchPort)
+                              OFPort switchPort)
                               throws IllegalArgumentException;
     
     /**
@@ -141,7 +143,7 @@ public interface IDeviceService extends IService {
                                                     Short vlan,
                                                     Integer ipv4Address, 
                                                     Long switchDPID,
-                                                    Integer switchPort);
+                                                    OFPort switchPort);
 
     /**
      * Finds devices that match the provided query. Only the index for
@@ -167,7 +169,7 @@ public interface IDeviceService extends IService {
                                                          Short vlan,
                                                          Integer ipv4Address, 
                                                          Long switchDPID,
-                                                         Integer switchPort);
+                                                         OFPort switchPort);
     
     /**
      * Adds a listener to listen for IDeviceManagerServices notifications.
@@ -183,7 +185,7 @@ public interface IDeviceService extends IService {
      * @param swId a switchid
      * @param port a port number
      */
-	public void addSuppressAPs(long swId, short port);
+	public void addSuppressAPs(long swId, OFPort port);
 
 	/**
      * Removes setting of points in the network where attachment points
@@ -192,6 +194,6 @@ public interface IDeviceService extends IService {
      * @param swId a switchid
      * @param port a port number
      */
-	public void removeSuppressAPs(long swId, short port);
+	public void removeSuppressAPs(long swId, OFPort port);
 
 }

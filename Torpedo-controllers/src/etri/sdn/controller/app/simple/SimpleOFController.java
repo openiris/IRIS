@@ -3,8 +3,8 @@ package etri.sdn.controller.app.simple;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.interfaces.OFMessageType;
+import org.projectfloodlight.openflow.protocol.OFMessage;
+import org.projectfloodlight.openflow.protocol.OFType;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFController;
@@ -12,7 +12,6 @@ import etri.sdn.controller.OFModule;
 import etri.sdn.controller.module.devicemanager.OFMDefaultEntityClassifier;
 import etri.sdn.controller.module.devicemanager.OFMDeviceManager;
 import etri.sdn.controller.module.learningmac.OFMLearningMac;
-import etri.sdn.controller.module.learningmac.OFMLearningMac13;
 import etri.sdn.controller.module.linkdiscovery.OFMLinkDiscovery;
 import etri.sdn.controller.module.statemanager.OFMStateManager;
 import etri.sdn.controller.module.storagemanager.OFMStorageManager;
@@ -120,9 +119,9 @@ public class SimpleOFController extends OFController {
 	@Override
 	public boolean handleGeneric(Connection conn, MessageContext context, OFMessage m) {
 		
-		OFMessageType msgType = m.getType();
+		OFType msgType = m.getType();
 		
-		if ( msgType == OFMessageType.PORT_STATUS ) {
+		if ( msgType == OFType.PORT_STATUS ) {
 			List<OFMessage> out = new LinkedList<OFMessage>();
 
 			m_link_discovery.processMessage( conn, context, m, out );
@@ -131,7 +130,7 @@ public class SimpleOFController extends OFController {
 				return true;
 			}
 		}
-		else if ( msgType == OFMessageType.FEATURES_REPLY ) {
+		else if ( msgType == OFType.FEATURES_REPLY ) {
 			return m_link_discovery.processHandshakeFinished( conn, context );
 		}
 		else {

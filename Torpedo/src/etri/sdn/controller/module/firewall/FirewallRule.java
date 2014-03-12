@@ -7,7 +7,8 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.MappingJsonFactory;
-import org.openflow.util.HexString;
+import org.projectfloodlight.openflow.types.OFPort;
+import org.projectfloodlight.openflow.util.HexString;
 
 import etri.sdn.controller.protocol.packet.Ethernet;
 import etri.sdn.controller.protocol.packet.IPacket;
@@ -223,7 +224,7 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 	 * @return true if the rule matches the given packetin, false otherwise
 	 * 
 	 */
-	public boolean matchesFlow(long switchDpid, short inPort, Ethernet packet,
+	public boolean matchesFlow(long switchDpid, OFPort inPort, Ethernet packet,
 			WildcardsPair wildcards) {
 		IPacket pkt = packet.getPayload();
 
@@ -243,7 +244,7 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 			return false;
 
 		// in_port matches?
-		if (wildcard_in_port == false && in_port != inPort)
+		if (wildcard_in_port == false && in_port != inPort.getShortPortNumber())
 			return false;
 		if (action == FirewallRule.FirewallAction.DENY) {
 			wildcards.drop &= ~OFPFW_IN_PORT;

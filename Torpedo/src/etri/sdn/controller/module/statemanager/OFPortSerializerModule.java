@@ -8,7 +8,7 @@ import org.codehaus.jackson.Version;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 import org.codehaus.jackson.map.module.SimpleModule;
-import org.openflow.protocol.OFPort;
+import org.projectfloodlight.openflow.types.OFPort;
 
 /**
  * A Custom Serializer for OFFeaturesReply (FEATURES_REPLY) message.
@@ -20,7 +20,7 @@ final class OFPortSerializer extends JsonSerializer<OFPort> {
 	@Override
 	public void serialize(OFPort reply, JsonGenerator jgen, SerializerProvider provider) 
 	throws IOException, JsonProcessingException {
-		jgen.writeNumber(reply.get());
+		jgen.writeNumber(reply.getPortNumber());
 	}
 }
 

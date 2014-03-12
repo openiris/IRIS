@@ -18,9 +18,7 @@
 package etri.sdn.controller.module.topologymanager;
 import java.util.HashMap;
 
-
-
-import org.openflow.util.HexString;
+import org.projectfloodlight.openflow.util.HexString;
 
 import etri.sdn.controller.module.linkdiscovery.Link;
 

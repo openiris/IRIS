@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.projectfloodlight.openflow.types.OFPort;
+
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.module.devicemanager.IDevice;
 import etri.sdn.controller.module.devicemanager.SwitchPort;
@@ -18,7 +20,7 @@ public class RoutingDecision implements IRoutingDecision {
     protected List<SwitchPort> broadcastIntertfaces;
 
     public RoutingDecision(long swDipd,
-                                  short inPort,
+                                  OFPort inPort,
                                   IDevice srcDevice,
                                   RoutingAction action) {
         this.srcPort = new SwitchPort(swDipd, inPort);

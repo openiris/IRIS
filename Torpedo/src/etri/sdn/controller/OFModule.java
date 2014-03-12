@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.interfaces.OFMessageType;
+import org.projectfloodlight.openflow.protocol.OFMessage;
+import org.projectfloodlight.openflow.protocol.OFType;
 
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFHandler;
@@ -28,7 +28,7 @@ public abstract class OFModule {
 	/**
 	 * private map that holds filters for OFMessage objects for this module.
 	 */
-	private ConcurrentMap<OFMessageType, OFMFilter> filters = new ConcurrentHashMap<OFMessageType, OFMFilter>();
+	private ConcurrentMap<OFType, OFMFilter> filters = new ConcurrentHashMap<OFType, OFMFilter>();
 
 	/**
 	 * reference to the controller implementation. 
@@ -62,7 +62,7 @@ public abstract class OFModule {
 	 * @param messageType type of the OFMessage that the filter applies
 	 * @param filter a filter object to be applied to OFMessage objects
 	 */
-	public void registerFilter(OFMessageType messageType, OFMFilter filter) {
+	public void registerFilter(OFType messageType, OFMFilter filter) {
 		filters.put(messageType, filter);
 	}
 

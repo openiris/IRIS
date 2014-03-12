@@ -17,6 +17,8 @@
 
 package etri.sdn.controller.module.devicemanager;
 
+import org.projectfloodlight.openflow.types.OFPort;
+
 /**
  * A simple switch dpid/port pair
  * 
@@ -48,7 +50,7 @@ public class SwitchPort {
     }
     
     protected long switchDPID;
-    protected int port;
+    protected OFPort port;
     ErrorStatus errorStatus;
 
     /**
@@ -58,7 +60,7 @@ public class SwitchPort {
      * @param port the port
      * @param errorStatus any error status for the switch port
      */
-    public SwitchPort(long switchDPID, int port, ErrorStatus errorStatus) {
+    public SwitchPort(long switchDPID, OFPort port, ErrorStatus errorStatus) {
         super();
         this.switchDPID = switchDPID;
         this.port = port;
@@ -71,7 +73,7 @@ public class SwitchPort {
      * @param switchDPID the dpid
      * @param port the port
      */
-    public SwitchPort(long switchDPID, int port) {
+    public SwitchPort(long switchDPID, OFPort port) {
         super();
         this.switchDPID = switchDPID;
         this.port = port;
@@ -96,7 +98,7 @@ public class SwitchPort {
      * 
      * @return the switch port
      */
-    public int getPort() {
+    public OFPort getPort() {
         return port;
     }
     
@@ -121,7 +123,7 @@ public class SwitchPort {
                         + ((errorStatus == null)
                                 ? 0
                                 : errorStatus.hashCode());
-        result = prime * result + port;
+        result = prime * result + port.getPortNumber();
         result = prime * result + (int) (switchDPID ^ (switchDPID >>> 32));
         return result;
     }

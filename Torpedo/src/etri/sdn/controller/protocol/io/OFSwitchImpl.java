@@ -19,32 +19,15 @@ package etri.sdn.controller.protocol.io;
 
 import java.io.IOException;
 import java.net.SocketAddress;
-//import java.util.ArrayList;
-//import java.util.Collection;
-//import java.util.Collections;
 import java.util.Date;
-//import java.util.LinkedList;
-//import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-//import org.openflow.protocol.OFFeaturesReply;
-//import org.openflow.protocol.OFFeaturesRequest;
-//import org.openflow.protocol.OFFlowMod;
-//import org.openflow.protocol.OFMatch;
-//import org.openflow.protocol.OFMessage;
-//import org.openflow.protocol.OFPhysicalPort;
-//import org.openflow.protocol.OFPhysicalPort.OFPortConfig;
-//import org.openflow.protocol.OFPhysicalPort.OFPortState;
-//import org.openflow.protocol.OFPort;
-//import org.openflow.protocol.OFStatisticsRequest;
-//import org.openflow.protocol.OFType;
-//import org.openflow.protocol.statistics.OFDescriptionStatistics;
-//import org.openflow.protocol.statistics.OFStatistics;
-import org.openflow.util.HexString;
-//import org.openflow.util.U16;
+import org.projectfloodlight.openflow.protocol.OFVersion;
+import org.projectfloodlight.openflow.types.OFPort;
+import org.projectfloodlight.openflow.util.HexString;
 
 import etri.sdn.controller.protocol.io.IOFHandler.Role;
 //import etri.sdn.controller.util.Logger;
@@ -64,7 +47,7 @@ public final class OFSwitchImpl implements IOFSwitch {
 		"persists or occurs repeatedly, it likely indicates a defect " +
 		"in the switch HA implementation.";
 
-	private byte version;
+	private OFVersion version;
 	private ConcurrentMap<Object, Object> attributes;
 	private Date connectedSince;
 	private Connection conn;
@@ -90,44 +73,34 @@ public final class OFSwitchImpl implements IOFSwitch {
 	private Role role;
 
     private TimedCache<Long> timedCache;
-	private ConcurrentMap<Short, Long> portBroadcastCacheHitMap;
+	private ConcurrentMap<OFPort, Long> portBroadcastCacheHitMap;
 
-	/* Switch features from initial featuresReply */
-//	private int capabilities;
-//	private int buffers;
-//	private int actions;
-//	private byte tables;
 	private long datapathId;
 
 	public OFSwitchImpl() {
-		this.version = (byte) 0x01;		// IS THIS PROPER INITIALIZATION?
+		this.version = OFVersion.OF_10;		// IS THIS PROPER INITIALIZATION?
 		this.stringId = null;
 		this.attributes = new ConcurrentHashMap<Object, Object>();
 		this.connectedSince = new Date();
 		this.transactionIdSource = new AtomicInteger();
-//		this.portLock = new Object();
-//		this.portsByNumber = new ConcurrentHashMap<Short, OFPhysicalPort>();
-//		this.portsByName = new ConcurrentHashMap<String, OFPhysicalPort>();
-//		this.responsesCache = new ConcurrentHashMap<Integer, Object>();
 		this.role = Role.MASTER;		// FIXME: bjlee
 
 		this.timedCache = new TimedCache<Long>(100, 5*1000 );  // 5 seconds interval
-		this.portBroadcastCacheHitMap = new ConcurrentHashMap<Short, Long>();
+		this.portBroadcastCacheHitMap = new ConcurrentHashMap<OFPort, Long>();
 
 		// Defaults properties for an ideal switch
-//		this.setAttribute(PROP_FASTWILDCARDS, OFMatch.OFPFW_ALL);
 		this.setAttribute(PROP_FASTWILDCARDS, new Integer(0x3fffff)	/* OFPFW_ALL */);
 		this.setAttribute(PROP_SUPPORTS_OFPP_FLOOD, new Boolean(true));
 		this.setAttribute(PROP_SUPPORTS_OFPP_TABLE, new Boolean(true));
 	}
 	
 	@Override
-	public void setVersion(byte v) {
+	public void setVersion(OFVersion v) {
 		this.version = v;
 	}
 	
 	@Override
-	public byte getVersion() {
+	public OFVersion getVersion() {
 		return this.version;
 	}
 	
@@ -230,7 +203,7 @@ public final class OFSwitchImpl implements IOFSwitch {
 	}
 
 	@Override
-	public Map<Short, Long> getPortBroadcastHits() {
+	public Map<OFPort, Long> getPortBroadcastHits() {
 		return this.portBroadcastCacheHitMap;
 	}
 
@@ -244,7 +217,7 @@ public final class OFSwitchImpl implements IOFSwitch {
 	}
 
 	@Override
-	public boolean updateBroadcastCache(Long entry, Short port) {
+	public boolean updateBroadcastCache(Long entry, OFPort port) {
 		if (timedCache.update(entry)) {
             Long count = portBroadcastCacheHitMap.putIfAbsent(port, new Long(1));
             if (count != null) {

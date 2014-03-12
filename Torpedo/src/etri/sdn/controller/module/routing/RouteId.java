@@ -17,7 +17,7 @@
 
 package etri.sdn.controller.module.routing;
 
-import org.openflow.util.HexString;
+import org.projectfloodlight.openflow.util.HexString;
 
 /**
  * Stores the endpoints of a route, in this case datapath ids

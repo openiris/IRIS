@@ -19,7 +19,8 @@ package etri.sdn.controller.module.devicemanager;
 
 import java.util.Date;
 
-import org.openflow.util.HexString;
+import org.projectfloodlight.openflow.types.OFPort;
+import org.projectfloodlight.openflow.util.HexString;
 
 import etri.sdn.controller.protocol.packet.IPv4;
 
@@ -71,7 +72,7 @@ public class Entity implements Comparable<Entity> {
      * The port number of the switch for the ingress point for this entity,
      * or null if not present
      */
-    protected Integer switchPort;
+    protected OFPort switchPort;
     
     /**
      * The last time we observed this entity on the network
@@ -105,7 +106,7 @@ public class Entity implements Comparable<Entity> {
      * @param lastSeenTimestamp the recent timestamp
      */
     public Entity(long macAddress, Short vlan, 
-                  Integer ipv4Address, Long switchDPID, Integer switchPort, 
+                  Integer ipv4Address, Long switchDPID, OFPort switchPort, 
                   Date lastSeenTimestamp) {
         this.macAddress = macAddress;
         this.ipv4Address = ipv4Address;
@@ -161,7 +162,7 @@ public class Entity implements Comparable<Entity> {
      * 
      * @return the switch port
      */
-    public Integer getSwitchPort() {
+    public OFPort getSwitchPort() {
         return switchPort;
     }
 

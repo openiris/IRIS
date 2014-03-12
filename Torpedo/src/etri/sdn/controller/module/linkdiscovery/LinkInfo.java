@@ -16,9 +16,10 @@
 
 package etri.sdn.controller.module.linkdiscovery;
 
-//import org.openflow.protocol.OFPhysicalPort.OFPortState;
+import java.util.EnumSet;
+import java.util.Set;
 
-import org.openflow.protocol.ver1_0.types.OFPortState;
+import org.projectfloodlight.openflow.protocol.OFPortState;
 
 import etri.sdn.controller.module.linkdiscovery.ILinkDiscovery.LinkType;
 
@@ -27,8 +28,8 @@ public class LinkInfo {
     public LinkInfo(Long firstSeenTime,
                     Long lastLldpReceivedTime,
                     Long lastBddpReceivedTime,
-                    int srcPortState,
-                    int dstPortState) {
+                    Set<OFPortState> srcPortState,
+                    Set<OFPortState> dstPortState) {
         super();
         this.srcPortState = srcPortState;
         this.dstPortState = dstPortState;
@@ -37,8 +38,8 @@ public class LinkInfo {
         this.lastBddpReceivedTime = lastBddpReceivedTime;
     }
 
-    protected Integer srcPortState;
-    protected Integer dstPortState;
+    protected Set<OFPortState> srcPortState;
+    protected Set<OFPortState> dstPortState;
     protected Long firstSeenTime;
     protected Long lastLldpReceivedTime; /* Standard LLLDP received time */
     protected Long lastBddpReceivedTime; /* Modified LLDP received time  */
@@ -54,8 +55,7 @@ public class LinkInfo {
      */
 
     public boolean linkStpBlocked() {
-        return ((srcPortState & OFPortState.STP_MASK) == OFPortState.STP_BLOCK) ||
-            ((dstPortState & OFPortState.STP_MASK) == OFPortState.STP_BLOCK);
+    	return (srcPortState.contains(OFPortState.STP_BLOCK) || dstPortState.contains(OFPortState.STP_BLOCK));
     }
 
     public Long getFirstSeenTime() {
@@ -90,19 +90,19 @@ public class LinkInfo {
         this.lastBddpReceivedTime = multicastValidTime;
     }
 
-    public Integer getSrcPortState() {
+    public Set<OFPortState> getSrcPortState() {
         return srcPortState;
     }
 
-    public void setSrcPortState(Integer srcPortState) {
+    public void setSrcPortState(Set<OFPortState> srcPortState) {
         this.srcPortState = srcPortState;
     }
 
-    public Integer getDstPortState() {
+    public Set<OFPortState> getDstPortState() {
         return dstPortState;
     }
 
-    public void setDstPortState(int dstPortState) {
+    public void setDstPortState(Set<OFPortState> dstPortState) {
         this.dstPortState = dstPortState;
     }
 

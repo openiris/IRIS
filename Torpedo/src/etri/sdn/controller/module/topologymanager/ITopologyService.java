@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.projectfloodlight.openflow.types.OFPort;
+
 import etri.sdn.controller.IService;
 import etri.sdn.controller.module.linkdiscovery.ILinkDiscoveryListener.LDUpdate;
 import etri.sdn.controller.module.linkdiscovery.NodePortTuple;
@@ -24,8 +26,8 @@ public interface ITopologyService extends IService {
     /**
      * Query to determine if devices must be learned on a given switch port.
      */
-    public boolean isAttachmentPointPort(long switchid, short port);
-    public boolean isAttachmentPointPort(long switchid, short port,
+    public boolean isAttachmentPointPort(long switchid, OFPort port);
+    public boolean isAttachmentPointPort(long switchid, OFPort port,
                                          boolean tunnelEnabled);
 
     public long getOpenflowDomainId(long switchId);
@@ -61,22 +63,22 @@ public interface ITopologyService extends IService {
     public boolean inSameL2Domain(long switch1, long switch2, 
                                   boolean tunnelEnabled);
 
-    public boolean isBroadcastDomainPort(long sw, short port);
-    public boolean isBroadcastDomainPort(long sw, short port, 
+    public boolean isBroadcastDomainPort(long sw, OFPort port);
+    public boolean isBroadcastDomainPort(long sw, OFPort port, 
                                          boolean tunnelEnabled);
 
 
-    public boolean isAllowed(long sw, short portId);
-    public boolean isAllowed(long sw, short portId, boolean tunnelEnabled);
+    public boolean isAllowed(long sw, OFPort portId);
+    public boolean isAllowed(long sw, OFPort portId, boolean tunnelEnabled);
 
     /**
      * Indicates if an attachment point on the new switch port is consistent
      * with the attachment point on the old switch port or not.
      */
-    public boolean isConsistent(long oldSw, short oldPort,
-                                long newSw, short newPort);
-    public boolean isConsistent(long oldSw, short oldPort,
-                                long newSw, short newPort,
+    public boolean isConsistent(long oldSw, OFPort oldPort,
+                                long newSw, OFPort newPort);
+    public boolean isConsistent(long oldSw, OFPort oldPort,
+                                long newSw, OFPort newPort,
                                 boolean tunnelEnabled);
 
     /**
@@ -88,10 +90,10 @@ public interface ITopologyService extends IService {
      * @param p2
      * @return	true if two switch port is in the same broadcast domain, false otherwise
      */
-    public boolean isInSameBroadcastDomain(long s1, short p1, 
-                                           long s2, short p2);
-    public boolean isInSameBroadcastDomain(long s1, short p1,
-                                           long s2, short p2,
+    public boolean isInSameBroadcastDomain(long s1, OFPort p1, 
+                                           long s2, OFPort p2);
+    public boolean isInSameBroadcastDomain(long s1, OFPort p1,
+                                           long s2, OFPort p2,
                                            boolean tunnelEnabled);
 
     /**
@@ -99,41 +101,41 @@ public interface ITopologyService extends IService {
      * @param sw The switch DPID in long
      * @return The set of ports on this switch
      */
-    public Set<Integer> getPortsWithLinks(long sw);
-    public Set<Integer> getPortsWithLinks(long sw, boolean tunnelEnabled);
+    public Set<OFPort> getPortsWithLinks(long sw);
+    public Set<OFPort> getPortsWithLinks(long sw, boolean tunnelEnabled);
 
     /** Get broadcast ports on a target switch for a given attachmentpoint
      * point port.
      */
-    public Set<Short> getBroadcastPorts(long targetSw, long src, short srcPort);
+    public Set<OFPort> getBroadcastPorts(long targetSw, long src, OFPort srcPort);
 
-    public Set<Short> getBroadcastPorts(long targetSw, long src, short srcPort,
+    public Set<OFPort> getBroadcastPorts(long targetSw, long src, OFPort srcPort,
                                         boolean tunnelEnabled);
 
     /**
      * 
      */
-    public boolean isIncomingBroadcastAllowed(long sw, short portId);
-    public boolean isIncomingBroadcastAllowed(long sw, short portId,
+    public boolean isIncomingBroadcastAllowed(long sw, OFPort portId);
+    public boolean isIncomingBroadcastAllowed(long sw, OFPort portId,
                                               boolean tunnelEnabled);
 
 
     /** Get the proper outgoing switchport for a given pair of src-dst
      * switchports.
      */
-    public NodePortTuple getOutgoingSwitchPort(long src, short srcPort,
-                                               long dst, short dstPort);
+    public NodePortTuple getOutgoingSwitchPort(long src, OFPort srcPort,
+                                               long dst, OFPort dstPort);
 
 
-    public NodePortTuple getOutgoingSwitchPort(long src, short srcPort,
-                                               long dst, short dstPort,
+    public NodePortTuple getOutgoingSwitchPort(long src, OFPort srcPort,
+                                               long dst, OFPort dstPort,
                                                boolean tunnelEnabled);
 
 
-    public NodePortTuple getIncomingSwitchPort(long src, short srcPort,
-                                               long dst, short dstPort);
-    public NodePortTuple getIncomingSwitchPort(long src, short srcPort,
-                                               long dst, short dstPort,
+    public NodePortTuple getIncomingSwitchPort(long src, OFPort srcPort,
+                                               long dst, OFPort dstPort);
+    public NodePortTuple getIncomingSwitchPort(long src, OFPort srcPort,
+                                               long dst, OFPort dstPort,
                                                boolean tunnelEnabled);
 
     /**
@@ -145,15 +147,15 @@ public interface ITopologyService extends IService {
      */
     public NodePortTuple 
     getAllowedOutgoingBroadcastPort(long src,
-                                    short srcPort,
+    									 OFPort srcPort,
                                     long dst,
-                                    short dstPort);
+                                    OFPort dstPort);
 
     public NodePortTuple 
     getAllowedOutgoingBroadcastPort(long src,
-                                    short srcPort,
+                                    OFPort srcPort,
                                     long dst,
-                                    short dstPort,
+                                    OFPort dstPort,
                                     boolean tunnelEnabled);
 
     /**
@@ -166,11 +168,11 @@ public interface ITopologyService extends IService {
      */
     public NodePortTuple
     getAllowedIncomingBroadcastPort(long src,
-                                    short srcPort);
+                                    OFPort srcPort);
 
     public NodePortTuple
     getAllowedIncomingBroadcastPort(long src,
-                                    short srcPort,
+                                    OFPort srcPort,
                                     boolean tunnelEnabled);
 
 
@@ -201,5 +203,5 @@ public interface ITopologyService extends IService {
     /**
      * Switch methods
      */
-    public Set<Integer> getPorts(long sw);
+    public Set<OFPort> getPorts(long sw);
 }

@@ -1,5 +1,7 @@
 package etri.sdn.controller.module.flowcache;
 
+import org.projectfloodlight.openflow.protocol.match.Match;
+
 import etri.sdn.controller.MessageContext;
 
 /**
@@ -55,8 +57,8 @@ public class OFMatchReconcile  {
     /**
      * Instantiates a new oF match reconcile object.
      */
-    public OFMatchReconcile() {
-        ofmWithSwDpid      = new OFMatchWithSwDpid();
+    public OFMatchReconcile(Match match, long swdpid) {
+        ofmWithSwDpid      = new OFMatchWithSwDpid(match, swdpid);
         rcAction = ReconcileAction.NO_CHANGE;
         cntx = new MessageContext();
     }

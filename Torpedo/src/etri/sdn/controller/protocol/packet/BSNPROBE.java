@@ -21,7 +21,8 @@ package etri.sdn.controller.protocol.packet;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-import org.openflow.util.HexString;
+
+import org.projectfloodlight.openflow.util.HexString;
 
 /**
  * @author Shudong Zhou (shudong.zhou@bigswitch.com)

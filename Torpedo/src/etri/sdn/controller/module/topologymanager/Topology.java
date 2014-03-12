@@ -3,9 +3,10 @@ package etri.sdn.controller.module.topologymanager;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Iterator;
+
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
-import org.openflow.util.HexString;
+import org.projectfloodlight.openflow.util.HexString;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;

@@ -1,29 +1,24 @@
 package etri.sdn.controller.module.flowcache;
 
-import org.openflow.protocol.ver1_0.messages.OFMatch;
-import org.openflow.util.HexString;
+import org.projectfloodlight.openflow.protocol.match.Match;
+import org.projectfloodlight.openflow.util.HexString;
 
 public class OFMatchWithSwDpid {
-    protected OFMatch ofMatch;
+    protected Match match;
     protected long  switchDataPathId;
 
-    public OFMatchWithSwDpid() {
-    	this.ofMatch = new OFMatch();
-    	this.switchDataPathId = 0;
-    }
-    
-    public OFMatchWithSwDpid(OFMatch ofm, long swDpid) {
+    public OFMatchWithSwDpid(Match ofm, long swDpid) {
     	//	this.ofMatch = (OFMatch) ofm.clone();
-		this.ofMatch = new OFMatch(ofm);
+		this.match = ofm;
     	this.switchDataPathId = swDpid;
     }
-    public OFMatch getOfMatch() {
-		return ofMatch;
+    public Match getOfMatch() {
+		return match;
 	}
 
-	public void setOfMatch(OFMatch ofMatch) {
+	public void setOfMatch(Match ofMatch) {
 		//	this.ofMatch = (OFMatch) ofMatch.clone();
-		this.ofMatch = new OFMatch(ofMatch);
+		this.match = ofMatch;
 	}
 
 	public long getSwitchDataPathId() {
@@ -37,6 +32,6 @@ public class OFMatchWithSwDpid {
     
     @Override
     public String toString() {
-        return "OFMatchWithSwDpid [" + HexString.toHexString(switchDataPathId) + ofMatch + "]";
+        return "OFMatchWithSwDpid [" + HexString.toHexString(switchDataPathId) + match + "]";
     }
 }

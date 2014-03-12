@@ -6,53 +6,66 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.openflow.protocol.OFMessage;
-import org.openflow.protocol.factory.OFMessageFactory;
-import org.openflow.protocol.interfaces.OFAction;
-import org.openflow.protocol.interfaces.OFActionOutput;
-import org.openflow.protocol.interfaces.OFEchoReply;
-import org.openflow.protocol.interfaces.OFFeaturesReply;
-import org.openflow.protocol.interfaces.OFFeaturesRequest;
-import org.openflow.protocol.interfaces.OFFlowMod;
-import org.openflow.protocol.interfaces.OFFlowModCommand;
-import org.openflow.protocol.interfaces.OFFlowModFlags;
-import org.openflow.protocol.interfaces.OFFlowWildcards;
-import org.openflow.protocol.interfaces.OFHello;
-import org.openflow.protocol.interfaces.OFInstruction;
-import org.openflow.protocol.interfaces.OFInstructionApplyActions;
-import org.openflow.protocol.interfaces.OFMatch;
-import org.openflow.protocol.interfaces.OFMatchOxm;
-import org.openflow.protocol.interfaces.OFMessageType;
-import org.openflow.protocol.interfaces.OFOxmMatchFields;
-import org.openflow.protocol.interfaces.OFPortConfig;
-import org.openflow.protocol.interfaces.OFPortDesc;
-import org.openflow.protocol.interfaces.OFPortReason;
-import org.openflow.protocol.interfaces.OFPortState;
-import org.openflow.protocol.interfaces.OFPortStatus;
-import org.openflow.protocol.interfaces.OFSetConfig;
-import org.openflow.protocol.interfaces.OFStatisticsDescReply;
-import org.openflow.protocol.interfaces.OFStatisticsDescRequest;
-import org.openflow.protocol.interfaces.OFStatisticsPortDescReply;
-import org.openflow.protocol.interfaces.OFStatisticsPortDescRequest;
-import org.openflow.protocol.interfaces.OFStatisticsReply;
-import org.openflow.protocol.interfaces.OFStatisticsRequest;
-import org.openflow.protocol.interfaces.OFStatisticsType;
-import org.openflow.util.HexString;
-import org.openflow.protocol.OFBFlowWildcard;
-import org.openflow.protocol.OFPort;
-import org.openflow.util.U16;
-import org.openflow.util.U8;
+import org.projectfloodlight.openflow.protocol.OFConfigFlags;
+import org.projectfloodlight.openflow.protocol.OFDescStatsReply;
+import org.projectfloodlight.openflow.protocol.OFDescStatsRequest;
+import org.projectfloodlight.openflow.protocol.OFEchoReply;
+import org.projectfloodlight.openflow.protocol.OFEchoRequest;
+import org.projectfloodlight.openflow.protocol.OFFactories;
+import org.projectfloodlight.openflow.protocol.OFFeaturesReply;
+import org.projectfloodlight.openflow.protocol.OFFeaturesRequest;
+import org.projectfloodlight.openflow.protocol.OFFlowAdd;
+import org.projectfloodlight.openflow.protocol.OFFlowModFlags;
+import org.projectfloodlight.openflow.protocol.OFHello;
+import org.projectfloodlight.openflow.protocol.OFHelloElem;
+import org.projectfloodlight.openflow.protocol.OFMessage;
+import org.projectfloodlight.openflow.protocol.OFPortConfig;
+import org.projectfloodlight.openflow.protocol.OFPortDesc;
+import org.projectfloodlight.openflow.protocol.OFPortDescStatsReply;
+import org.projectfloodlight.openflow.protocol.OFPortDescStatsRequest;
+import org.projectfloodlight.openflow.protocol.OFPortReason;
+import org.projectfloodlight.openflow.protocol.OFPortState;
+import org.projectfloodlight.openflow.protocol.OFPortStatus;
+import org.projectfloodlight.openflow.protocol.OFSetConfig;
+import org.projectfloodlight.openflow.protocol.OFStatsReply;
+import org.projectfloodlight.openflow.protocol.OFStatsRequest;
+import org.projectfloodlight.openflow.protocol.OFStatsRequestFlags;
+import org.projectfloodlight.openflow.protocol.OFStatsType;
+import org.projectfloodlight.openflow.protocol.OFType;
+import org.projectfloodlight.openflow.protocol.OFVersion;
+import org.projectfloodlight.openflow.protocol.action.OFAction;
+import org.projectfloodlight.openflow.protocol.action.OFActionOutput;
+import org.projectfloodlight.openflow.protocol.instruction.OFInstruction;
+import org.projectfloodlight.openflow.protocol.instruction.OFInstructionApplyActions;
+import org.projectfloodlight.openflow.protocol.match.Match;
+import org.projectfloodlight.openflow.protocol.match.MatchField;
+import org.projectfloodlight.openflow.types.ArpOpcode;
+import org.projectfloodlight.openflow.types.EthType;
+import org.projectfloodlight.openflow.types.ICMPv4Code;
+import org.projectfloodlight.openflow.types.ICMPv4Type;
+import org.projectfloodlight.openflow.types.IPv4Address;
+import org.projectfloodlight.openflow.types.IpDscp;
+import org.projectfloodlight.openflow.types.IpEcn;
+import org.projectfloodlight.openflow.types.IpProtocol;
+import org.projectfloodlight.openflow.types.MacAddress;
+import org.projectfloodlight.openflow.types.Masked;
+import org.projectfloodlight.openflow.types.OFBufferId;
+import org.projectfloodlight.openflow.types.OFGroup;
+import org.projectfloodlight.openflow.types.OFPort;
+import org.projectfloodlight.openflow.types.OFVlanVidMatch;
+import org.projectfloodlight.openflow.types.TableId;
+import org.projectfloodlight.openflow.types.TransportPort;
+import org.projectfloodlight.openflow.types.VlanPcp;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFController;
-import etri.sdn.controller.PortInformation;
-import etri.sdn.controller.SwitchInformation;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.util.Logger;
@@ -80,26 +93,20 @@ public class OFProtocol {
 	/**
 	 * IOFSwitch to SwitchInformation map.
 	 */
-	private Map<IOFSwitch, SwitchInformation> switchInformations = 
-			new ConcurrentHashMap<IOFSwitch, SwitchInformation>();
+	private Map<IOFSwitch, SwitchInfo> switchInformations = 
+			new ConcurrentHashMap<IOFSwitch, SwitchInfo>();
 	
 	/**
 	 * Port Number to PortInformation map.
 	 */
-	private Map<IOFSwitch, Map<Integer, PortInformation>> portInformations = 
-			new ConcurrentHashMap<IOFSwitch, Map<Integer, PortInformation>>();
-	
-	/**
-	 * Switch to <PortName, PortInformation> map.
-	 */
-	private Map<IOFSwitch, Map<String, PortInformation>> portInformationsByName = 
-			new ConcurrentHashMap<IOFSwitch, Map<String, PortInformation>>();
+	private Map<IOFSwitch, Map<OFPort, OFPortDesc>> portInformations = 
+			new ConcurrentHashMap<IOFSwitch, Map<OFPort, OFPortDesc>>();
 
 	/**
 	 * This field is used to exchange information with switch.
 	 */
-	private Map<IOFSwitch, Map<Integer/*xid*/, Object>> responsesCache = 
-			new ConcurrentHashMap<IOFSwitch, Map<Integer, Object>>();
+	private Map<IOFSwitch, Map<Long/*xid*/, Object>> responsesCache = 
+			new ConcurrentHashMap<IOFSwitch, Map<Long, Object>>();
 
 	/**
 	 * reference to OFController object.
@@ -133,10 +140,10 @@ public class OFProtocol {
 	 * @param xid	transaction id
 	 * @param item	object to set as a response for the transaction id
 	 */
-	public void setResponseCacheItem(IOFSwitch sw, int xid, Object item) {
-		Map<Integer, Object> rcache = this.responsesCache.get(sw);
+	public void setResponseCacheItem(IOFSwitch sw, long xid, Object item) {
+		Map<Long, Object> rcache = this.responsesCache.get(sw);
 		if ( rcache == null ) {
-			rcache = new ConcurrentHashMap<Integer, Object>();
+			rcache = new ConcurrentHashMap<Long, Object>();
 			this.responsesCache.put(sw, rcache);
 		}
 		rcache.put( xid, item );
@@ -148,8 +155,8 @@ public class OFProtocol {
 	 * @param xid	transaction id to get the response object
 	 * @return		Object set by setResponseCacheItem as a response for the transaction id
 	 */
-	public Object getResponseCacheItem(IOFSwitch sw, int xid) {
-		Map<Integer, Object> rcache = this.responsesCache.get(sw);
+	public Object getResponseCacheItem(IOFSwitch sw, long xid) {
+		Map<Long, Object> rcache = this.responsesCache.get(sw);
 		if ( rcache == null ) {
 			return null;
 		}
@@ -161,28 +168,45 @@ public class OFProtocol {
 	 * @param sw	IOFSwitch object
 	 * @param xid	transaction id to remove the response object
 	 */
-	public void removeResponseCacheItem(IOFSwitch sw, int xid) {
-		Map<Integer, Object> rcache = this.responsesCache.get(sw);
+	public void removeResponseCacheItem(IOFSwitch sw, long xid) {
+		Map<Long, Object> rcache = this.responsesCache.get(sw);
 		if ( rcache == null ) {
 			return;
 		}
 		rcache.remove(xid);
 	}
 
-	/**
-	 * Get switch information
-	 * @param sw	Switch to retrieve the SwitchInformation object
-	 * @return		SwitchInformation object
-	 */
-	public SwitchInformation getSwitchInformation(IOFSwitch sw) {
-		SwitchInformation si = this.switchInformations.get(sw);
-		if ( si == null ) {
-			si = new SwitchInformation();
-			this.switchInformations.put(sw, si);
+	public SwitchInfo getSwitchInformation(IOFSwitch sw) {
+		return this.switchInformations.get(sw);
+	}
+	
+	public void setSwitchInformation(IOFSwitch sw, OFDescStatsReply r) {
+		SwitchInfo swinfo = this.getSwitchInformation(sw);
+		if ( swinfo == null ) {
+			swinfo = new SwitchInfo();
+			this.switchInformations.put(sw, swinfo);
 		}
-		return si;
+		swinfo.setDescStatsReply(r);
+	}
+	
+	public void setSwitchInformation(IOFSwitch sw, OFFeaturesReply r) {
+		SwitchInfo swinfo = this.getSwitchInformation(sw);
+		if ( swinfo == null ) {
+			swinfo = new SwitchInfo();
+			this.switchInformations.put(sw, swinfo);
+		}
+		swinfo.setFeaturesReply(r);
 	}
 
+	public void setPortInformation(IOFSwitch sw, OFPortDesc desc) {
+		Map<OFPort, OFPortDesc> inner = portInformations.get(sw);
+		if ( inner == null ) {
+			inner = new ConcurrentHashMap<OFPort, OFPortDesc>();
+			portInformations.put(sw, inner);
+		}
+		inner.put( desc.getPortNo(), desc );
+	}
+	
 	/**
 	 * Get port information by the port number. 
 	 * If none existent, null is returned.
@@ -190,10 +214,10 @@ public class OFProtocol {
 	 * @param port	port number to retrieve the information
 	 * @return		PortInformation object
 	 */
-	public PortInformation getPortInformation(IOFSwitch sw, int port) {
-		Map<Integer, PortInformation> inner = portInformations.get(sw);
+	public OFPortDesc getPortInformation(IOFSwitch sw, OFPort port) {
+		Map<OFPort, OFPortDesc> inner = portInformations.get(sw);
 		if ( inner == null ) {
-			inner = new ConcurrentHashMap<Integer, PortInformation>();
+			inner = new ConcurrentHashMap<OFPort, OFPortDesc>();
 			portInformations.put(sw, inner);
 		}
 		return inner.get(port);
@@ -204,8 +228,8 @@ public class OFProtocol {
 	 * @param sw	IOFSwitch object
 	 * @return		Collection<PortInformation>
 	 */
-	public Collection<PortInformation> getPortInformations(IOFSwitch sw) {
-		Map<Integer, PortInformation> inner = portInformations.get(sw);
+	public Collection<OFPortDesc> getPortInformations(IOFSwitch sw) {
+		Map<OFPort, OFPortDesc> inner = portInformations.get(sw);
 		if ( inner != null ) {
 			return inner.values();
 		}
@@ -217,10 +241,10 @@ public class OFProtocol {
 	 * @param datapathId	datapath id of the switch
 	 * @return				Collection<PortInformation>
 	 */
-	public Collection<PortInformation> getPortInformations(long datapathId) {
+	public Collection<OFPortDesc> getPortInformations(long datapathId) {
 		for ( IOFSwitch sw : portInformations.keySet() ) {
 			if ( sw.getId() == datapathId ) {
-				Map<Integer, PortInformation> inner = portInformations.get(sw);
+				Map<OFPort, OFPortDesc> inner = portInformations.get(sw);
 				if ( inner != null ) {
 					return inner.values();
 				}
@@ -234,14 +258,10 @@ public class OFProtocol {
 	 * @param sw	IOFSwitch object
 	 * @param pi	PortInformation object
 	 */
-	public void removePortInformation(IOFSwitch sw, PortInformation pi) {
-		Map<Integer, PortInformation> inner = portInformations.get(sw);
+	public void removePortInformation(IOFSwitch sw, OFPortDesc pi) {
+		Map<OFPort, OFPortDesc> inner = portInformations.get(sw);
 		if ( inner != null ) {
-			inner.remove(pi.getPort());
-			Map<String, PortInformation> inner2 = portInformationsByName.get(sw);
-			if ( inner2 != null ) {
-				inner2.remove( pi.getNameString() );
-			}
+			inner.remove(pi.getPortNo());
 		}
 	}
 
@@ -251,205 +271,16 @@ public class OFProtocol {
 	 * @param name	name of the port
 	 * @return		Null can be returned if the item that you looking for is non-existent
 	 */
-	public PortInformation getPortInformationByName(IOFSwitch sw, String name) {
-		Map<String, PortInformation> inner = portInformationsByName.get(sw);
-		if ( inner == null ) {
-			inner = new ConcurrentHashMap<String, PortInformation>();
-			portInformationsByName.put(sw, inner);
-		}
-		return inner.get(name);
-	}
-
-	/**
-	 * Set the port information
-	 * @param sw	IOFSwitch object
-	 * @param name	port name
-	 * @param pi	PortInformation object
-	 */
-	public void setPortInformationByName(IOFSwitch sw, String name, PortInformation pi) {
-		Map<String, PortInformation> inner = portInformationsByName.get(sw);
-		if ( inner == null ) {
-			inner = new ConcurrentHashMap<String, PortInformation>();
-			portInformationsByName.put(sw, inner);
-		}
-		inner.put(name, pi);
-	}
-
-	/**
-	 * Modify switch description using OFStatisticsDescReply object
-	 * @param sw	IOFswitch object
-	 * @param r		OFStatisticsDescReply object
-	 */
-	public void setDescription(IOFSwitch sw, OFStatisticsDescReply r) {
-		this.getSwitchInformation(sw)
-		.setManufacturerDescription(r.getManufacturerDescription())
-		.setDatapathDescription(r.getDatapathDescription())
-		.setHardwareDescription(r.getHardwareDescription())
-		.setSoftwareDescription(r.getSoftwareDescription())
-		.setSerialNumber(r.getSerialNumber());
-	}
-
-	/**
-	 * Get switch description as a OFStatisticsDescReply form
-	 * @param sw	IOFSwitch object
-	 * @return		OFStatisticsDescReply object
-	 */
-	public OFStatisticsDescReply getDescription(IOFSwitch sw) {
-		SwitchInformation si = this.getSwitchInformation(sw);
-		if ( si == null || si.getManufacturerDescription() == null ) {
-			return null;
-		}
-
-		OFStatisticsDescReply ret = OFMessageFactory.createStatisticsDescReply(sw.getVersion());
-		ret.setManufacturerDescription(si.getManufacturerDescription());
-		ret.setDatapathDescription(si.getDatapathDescription());
-		ret.setHardwareDescription(si.getHardwareDescription());
-		ret.setSoftwareDescription(si.getSoftwareDescription());
-		ret.setSerialNumber(si.getSerialNumber());
-
-		return ret;
-	}
-
-	/**
-	 * Get port description as an OFPortDesc object
-	 * @param sw		IOFSwitch object
-	 * @param portNum	port number
-	 * @return			OFPortDesc object
-	 */
-	public OFPortDesc getPort(IOFSwitch sw, int portNum) {
-		PortInformation pi = this.getPortInformation(sw, portNum);
-		if ( pi != null ) {
-			OFPortDesc pd = OFMessageFactory.createPortDesc(sw.getVersion());
-			pd
-			.setPort(OFPort.of(portNum))
-			.setHwAddr(pi.getHwAddr())
-			.setName(pi.getName())
-			.setConfigWire(pi.getConfig())
-			.setStateWire(pi.getState())
-			.setCurrentFeatures(pi.getCurrentFeatures())
-			.setAdvertisedFeatures(pi.getAdvertisedFeatures())
-			.setSupportedFeatures(pi.getSupportedFeatures())
-			.setPeerFeatures(pi.getPeerFeatures());
-			if ( pd.isCurrSpeedSupported() )
-				pd.setCurrSpeed(pi.getCurrSpeed());
-			if ( pd.isMaxSpeedSupported() ) 
-				pd.setMaxSpeed(pi.getMaxSpeed());
-			return pd;
+	public OFPortDesc getPortInformation(IOFSwitch sw, String name) {
+		Map<OFPort, OFPortDesc> inner = portInformations.get(sw);
+		for ( OFPortDesc i : inner.values() ) {
+			if ( i.getName().equals(name) ) {
+				return i;
+			}
 		}
 		return null;
 	}
 
-	/**
-	 * Get all port information as a collection of OFPortDesc objects
-	 * @param sw	IOFSwitch object
-	 * @return		Collection<OFPortDesc>
-	 */
-	public Collection<OFPortDesc> getPorts(IOFSwitch sw) {
-		List<OFPortDesc> ret = new LinkedList<OFPortDesc>();
-		for ( PortInformation pi : this.getPortInformations(sw) ) {
-			OFPortDesc pd = OFMessageFactory.createPortDesc(sw.getVersion());
-			pd
-			.setPort(OFPort.of(pi.getPort()))
-			.setHwAddr(pi.getHwAddr())
-			.setName(pi.getName())
-			.setConfigWire(pi.getConfig())
-			.setStateWire(pi.getState())
-			.setCurrentFeatures(pi.getCurrentFeatures())
-			.setAdvertisedFeatures(pi.getAdvertisedFeatures())
-			.setSupportedFeatures(pi.getSupportedFeatures())
-			.setPeerFeatures(pi.getPeerFeatures());
-			if ( pd.isCurrSpeedSupported() )
-				pd.setCurrSpeed(pi.getCurrSpeed());
-			if ( pd.isMaxSpeedSupported() ) 
-				pd.setMaxSpeed(pi.getMaxSpeed());
-			ret.add( pd );
-		}
-		return ret;
-	}
-	
-	/**
-	 * Get all port information as a list of OFPortDesc objects (TODO: why not collection?)
-	 * @param datapathId	datapath id (long)
-	 * @return				List<OFPortDesc>
-	 */
-	public List<OFPortDesc> getPorts(long datapathId) {
-		List<OFPortDesc> ret = new LinkedList<OFPortDesc>();
-		for ( PortInformation pi : this.getPortInformations(datapathId) ) {
-			IOFSwitch sw = this.controller.getSwitch(datapathId);
-			if ( sw == null ) {
-				return Collections.emptyList();
-			}
-			OFPortDesc pd = OFMessageFactory.createPortDesc(sw.getVersion());
-			pd
-			.setPort(OFPort.of(pi.getPort()))
-			.setHwAddr(pi.getHwAddr())
-			.setName(pi.getName())
-			.setConfigWire(pi.getConfig())
-			.setStateWire(pi.getState())
-			.setCurrentFeatures(pi.getCurrentFeatures())
-			.setAdvertisedFeatures(pi.getAdvertisedFeatures())
-			.setSupportedFeatures(pi.getSupportedFeatures())
-			.setPeerFeatures(pi.getPeerFeatures());
-			if ( pd.isCurrSpeedSupported() )
-				pd.setCurrSpeed(pi.getCurrSpeed());
-			if ( pd.isMaxSpeedSupported() ) 
-				pd.setMaxSpeed(pi.getMaxSpeed());
-			ret.add( pd );
-		}
-		return ret;
-	}
-
-	/**
-	 * Set port information using OFPortDesc object
-	 * @param sw		IOFSwitch object
-	 * @param portDesc	OFPortDesc object
-	 */
-	public void setPort(IOFSwitch sw, OFPortDesc portDesc) {
-		PortInformation pi = this.getPortInformation(sw, portDesc.getPort().get());
-		
-		if ( pi == null ) {
-			pi = this.createPortInformation(sw, portDesc.getPort().get());
-		}
-		
-		pi.setHwAddr(portDesc.getHwAddr())
-		.setName(portDesc.getName())
-		.setConfig(portDesc.getConfigWire())
-		.setState(portDesc.getStateWire())
-		.setCurrentFeatures(portDesc.getCurrentFeatures())
-		.setAdvertisedFeatures(portDesc.getAdvertisedFeatures())
-		.setSupportedFeatures(portDesc.getSupportedFeatures())
-		.setPeerFeatures(portDesc.getPeerFeatures());
-		if ( portDesc.isCurrSpeedSupported() )
-			pi.setCurrSpeed(portDesc.getCurrSpeed());
-		if ( portDesc.isMaxSpeedSupported() ) 
-			pi.setMaxSpeed(portDesc.getMaxSpeed());
-		
-		this.setPortInformationByName(sw, new String(portDesc.getName()), pi);
-	}
-
-
-	private PortInformation createPortInformation(IOFSwitch sw, int port) {
-		PortInformation pi = new PortInformation(port);
-		Map<Integer, PortInformation> inner = this.portInformations.get(sw);
-		if ( inner == null ) {
-			inner = new ConcurrentHashMap<Integer, PortInformation>();
-			this.portInformations.put(sw, inner);
-		}
-		inner.put(port, pi);
-		return pi;
-	}
-
-	/**
-	 * Delete port information by the number
-	 * @param sw			IOFSwitch object
-	 * @param portNumber	number of the port
-	 */
-	public void deletePort(IOFSwitch sw, int portNumber) {
-		PortInformation pi = this.getPortInformation(sw, portNumber);
-		if ( pi != null ) {
-			this.removePortInformation(sw, pi);
-		}
-	}
 
 	/**
 	 * Callback called by underlying platform when a connection to a switch is established
@@ -458,9 +289,9 @@ public class OFProtocol {
 	 */
 	public boolean handleConnectedEvent(Connection conn) {
 		// This is a greeting that says 'Hey. We know up to 1.3.2.' 
-		OFHello hello = OFMessageFactory.createHello((byte)0x04);
-		hello.setVersion((byte)0x04);
-		conn.write(hello);
+//		Logger.debug("writing hello...");
+//		OFHello hello = OFFactories.getFactory(OFVersion.OF_13).hello(Collections.<OFHelloElem>emptyList());
+//		conn.write( hello );
 		return true;
 	}
 
@@ -473,7 +304,7 @@ public class OFProtocol {
 	 */
 	public boolean process(Connection conn, MessageContext context, OFMessage m) {
 		IOFSwitch sw = conn.getSwitch();
-		OFMessageType t = m.getType();
+		OFType t = m.getType();
 
 		switch (t) {
 		case HELLO:
@@ -483,14 +314,17 @@ public class OFProtocol {
 			} catch (IOException e1) {
 				return false;
 			}
-
+			
 			// set the version number in the switch.
 			if ( sw != null ) {
 				sw.setVersion(m.getVersion());
 			}
+			
+			OFHello hello = OFFactories.getFactory(OFVersion.OF_13).hello(Collections.<OFHelloElem>emptyList());
+			conn.write( hello );
 
 			// send feature request message.
-			OFFeaturesRequest freq = OFMessageFactory.createFeaturesRequest(m.getVersion());
+			OFFeaturesRequest freq = OFFactories.getFactory(m.getVersion()).featuresRequest();
 			conn.write(freq);
 			break;
 
@@ -500,85 +334,90 @@ public class OFProtocol {
 
 		case ECHO_REQUEST:
 			Logger.debug("ECHO_REQUEST is received");
-			OFEchoReply reply = OFMessageFactory.createEchoReply(m.getVersion());
-			reply.setXid(m.getXid());
-			conn.write(reply);
+			OFEchoReply.Builder builder = OFFactories.getFactory(m.getVersion()).buildEchoReply();
+			builder
+			.setXid(m.getXid())
+			.setData( ((OFEchoRequest)m).getData() );
+			conn.write( builder.build() );
 			break;
 
 		case FEATURES_REPLY:
+			Logger.debug("FEATURES_REPLY is received.");
+			
 			if ( sw == null ) return false;
 
 			synchronized ( portLock ) {
 				OFFeaturesReply fr = (OFFeaturesReply) m;
-				sw.setId(fr.getDatapathId());
+				sw.setId( fr.getDatapathId().getLong() );
 
-				SwitchInformation si = this.getSwitchInformation(sw);
-				si
-				.setId(fr.getDatapathId())
-				.setCapabilities(fr.getCapabilitiesWire())
-				.setBuffers(fr.getNBuffers())
-				.setTables(fr.getNTables());
-				if (fr.isActionsSupported() ) 
-					si.setActions(fr.getActions());
-
-				// for version 1.3, there is no fr.getPorts() method.
-				if ( fr.isPortsSupported() ) {
+				this.setSwitchInformation(sw, fr);
+				
+				try { 
 					List<OFPortDesc> ports = fr.getPorts();
 					for ( OFPortDesc port: ports ) {
-						setPort(sw, port);
+						setPortInformation(sw, port);
 					}
-				} 
+				} catch ( UnsupportedOperationException e ) {
+					// port list is not retrieved.
+					
+					// send port desc request message to retrieve all port list.
+					// preq might be null if m.getVersion() == 0x01. But it's OK because
+					// conn.write ignore null preq.
+					OFPortDescStatsRequest preq = 
+							OFFactories
+							.getFactory(m.getVersion())
+							.portDescStatsRequest(Collections.<OFStatsRequestFlags>emptySet());
+					conn.write(preq);
+				}
 			}
 
-			if ( m.getVersion() > (byte)0x01 ) {
+			if ( m.getVersion() != OFVersion.OF_10 ) {
 				// set configuration parameters in the switch.
 				// The switch does not reply to a request to set the configuration.
 				// The flags indicate whether IP fragments should be treated normally, dropped, or reassembled. [jshin]
-				OFSetConfig sc = OFMessageFactory.createSetConfig(m.getVersion());
-				sc.setFlags((short) 0).setMissSendLength((short) 0xffff);
-				conn.write(sc);
+				
+				OFSetConfig.Builder sc = OFFactories.getFactory(m.getVersion()).buildSetConfig();
+				sc
+				.setFlags(EnumSet.<OFConfigFlags>of(OFConfigFlags.FRAG_NORMAL))
+				.setMissSendLen(0xffff);
+				conn.write(sc.build());
 			}
 
-			// send port desc request message to retrieve all port list.
-			// preq might be null if m.getVersion() == 0x01. But it's OK because
-			// conn.write ignore null preq.
-			OFStatisticsPortDescRequest preq = OFMessageFactory.createStatisticsPortDescRequest(m.getVersion());
-			conn.write(preq);
-
-			OFStatisticsDescRequest req = OFMessageFactory.createStatisticsDescRequest(m.getVersion());
+			OFDescStatsRequest req = 
+					OFFactories.getFactory(m.getVersion()).descStatsRequest(EnumSet.noneOf(OFStatsRequestFlags.class));
 			conn.write(req);
 
-			// send flow_mod to process table miss packets [jshin]
-			OFInstructionApplyActions instruction = 
-					OFMessageFactory.createInstructionApplyActions(m.getVersion());
-			if ( instruction != null ) {	// version > 1.0
-				List<OFInstruction> instructions = new LinkedList<OFInstruction>();
-				OFMatchOxm match = OFMessageFactory.createMatchOxm(m.getVersion());
-				OFActionOutput action = OFMessageFactory.createActionOutput(m.getVersion());
+			try {
+				// send flow_mod to process table miss packets [jshin]
+				OFInstructionApplyActions.Builder instruction = 
+						OFFactories.getFactory(m.getVersion()).instructions().buildApplyActions();
+				
 				List<OFAction> actions = new LinkedList<OFAction>();
-
-				OFFlowMod fm = OFMessageFactory.createFlowMod(m.getVersion());
-
-				action.setPort(OFPort.CONTROLLER).setMaxLength((short)0).setLength(action.computeLength());
-				actions.add(action);
-
-				instruction.setActions(actions).setLength(instruction.computeLength());
-				instructions.add(instruction);
-
-				fm.setTableId((byte) 0x0)			//the table which the flow entry should be inserted
-				.setCommand(OFFlowModCommand.ADD)
-				.setIdleTimeout((short) 0)
-				.setHardTimeout((short) 0)			//permanent if idle and hard timeout are zero
-				.setPriority((short) 0)
-				.setBufferId(0x00000000)			//refers to a packet buffered at the switch and sent to the controller
-				.setOutGroup(OFPort.ANY.get())		
+				OFActionOutput.Builder action = OFFactories.getFactory(m.getVersion()).actions().buildOutput();
+				action.setPort(OFPort.CONTROLLER).setMaxLen(0);
+				actions.add( action.build() );
+				
+				instruction.setActions(actions);
+				List<OFInstruction> instructions = new LinkedList<OFInstruction>();
+				instructions.add( instruction.build() );
+				
+				OFFlowAdd.Builder fm = OFFactories.getFactory(m.getVersion()).buildFlowAdd();
+				fm
+				.setTableId(TableId.ZERO)
+				.setIdleTimeout(0)
+				.setHardTimeout(0)
+				.setPriority(0)
+				.setBufferId(OFBufferId.NO_BUFFER)
+				.setOutGroup(OFGroup.ANY)
 				.setOutPort(OFPort.ANY)
-				.setMatch(match)
+				.setMatch(OFFactories.getFactory(m.getVersion()).matchWildcardAll())
 				.setInstructions(instructions)
-				.setFlags( OFFlowModFlags.SEND_FLOW_REM );
-				//send flow removed message when flow expires or is deleted
-
-				conn.write(fm);
+				.setFlags(EnumSet.of(OFFlowModFlags.SEND_FLOW_REM));
+				
+				conn.write(fm.build());
+				
+			} catch ( UnsupportedOperationException e ) {
+				// we can just ignore this exception.
 			}
 
 			// now the handshaking is fully done.
@@ -586,9 +425,9 @@ public class OFProtocol {
 			// into the switches map. This map is used heavily by
 			// link discovery module.
 			//			Logger.stdout("adding a switch with id = " + conn.getSwitch().getId());
-			getController().addSwitch( conn.getSwitch().getId(), conn.getSwitch() );
+			this.getController().addSwitch( conn.getSwitch().getId(), conn.getSwitch() );
 
-			deliverFeaturesReply( conn.getSwitch(), m.getXid(), (OFFeaturesReply) m );
+			this.deliverFeaturesReply( conn.getSwitch(), m.getXid(), (OFFeaturesReply) m );
 
 			if ( !getController().handleGeneric(conn, context, m) ) {
 				return false;
@@ -602,12 +441,12 @@ public class OFProtocol {
 			OFPortStatus ps = (OFPortStatus) m;
 			OFPortDesc phyport = (OFPortDesc) ps.getDesc();
 			if ( ps.getReason() == OFPortReason.DELETE ) {
-				deletePort( sw, phyport.getPort().get() );
+				removePortInformation( sw, phyport );
 			} else if ( ps.getReason() == OFPortReason.MODIFY ) {
-				deletePort( sw, phyport.getPort().get() );
-				setPort( sw, phyport );
+				removePortInformation( sw, phyport );
+				setPortInformation( sw, phyport );
 			} else { /* ps.getReason() == OFPortReason.ADD */ 
-				setPort( sw, phyport );
+				setPortInformation( sw, phyport );
 			}
 
 			if ( !getController().handleGeneric(conn, context, m) ) {
@@ -615,35 +454,33 @@ public class OFProtocol {
 			}
 			break;
 
-		case STATISTICS_REPLY:
+		case STATS_REPLY:
 			if ( sw == null ) return false;
 
-			OFStatisticsReply stat = (OFStatisticsReply) m;
-			if ( stat.getStatisticsType() == OFStatisticsType.PORT_DESC ) {
-				OFStatisticsPortDescReply portDesc = (OFStatisticsPortDescReply) m;
+			OFStatsReply stat = (OFStatsReply) m;
+			if ( stat.getStatsType() == OFStatsType.PORT_DESC ) {
+				OFPortDescStatsReply portDesc = (OFPortDescStatsReply) m;
 				synchronized ( portLock ) {
 					List<OFPortDesc> ports = portDesc.getEntries();
 					for ( OFPortDesc port: ports ) {
-						setPort(sw, port);
+						setPortInformation(sw, port);
 					}
 				}
 				
 				deliverSwitchStatistics( sw, portDesc );
-			} else if ( stat.getStatisticsType() == OFStatisticsType.DESC ) {
-				setDescription(sw, (OFStatisticsDescReply) stat);
+			} else if ( stat.getStatsType() == OFStatsType.DESC ) {
+				this.setSwitchInformation(sw, (OFDescStatsReply) stat);
 			} else {
 				deliverSwitchStatistics( sw, stat );
 			}
 			break;
 
 		case PACKET_IN:
-			try { 
-				sw.getId();
-			} catch ( RuntimeException e ) {
-				// FEATURES_REPLY is not set.
+			if ( sw.getStringId() == null ) {
+				// FEATURES_REPLY is not received.
 				return false;
 			}
-			
+
 			if ( !getController().handlePacketIn(conn, context, m) ) {
 				return false;
 			}
@@ -662,9 +499,9 @@ public class OFProtocol {
 	 * Modules that use IOFSwitch objects use this method to request statistics to the switch.
 	 * @param req OFStatisticsRequest object.
 	 */
-	public List<OFStatisticsReply> getSwitchStatistics(IOFSwitch sw, OFStatisticsRequest req) {
-		List<OFStatisticsReply> response = new LinkedList<OFStatisticsReply>();
-		int xid = req.setXid(sw.getNextTransactionId()).getXid();
+	public List<OFStatsReply> getSwitchStatistics(IOFSwitch sw, @SuppressWarnings("rawtypes") OFStatsRequest req) {
+		List<OFStatsReply> response = new LinkedList<OFStatsReply>();
+		long xid = req.getXid();
 
 		this.setResponseCacheItem(sw, xid, response);
 		if ( sw.getConnection() != null ) {
@@ -683,14 +520,14 @@ public class OFProtocol {
 		return null;
 	}
 
-	private void deliverSwitchStatistics(IOFSwitch sw, OFStatisticsReply m) {
+	private void deliverSwitchStatistics(IOFSwitch sw, OFStatsReply m) {
 		Object response = getResponseCacheItem(sw, m.getXid());
 		if ( response == null ) {
 			return;
 		}
 		if ( response instanceof List<?> ) {
 			@SuppressWarnings("unchecked")
-			List<OFStatisticsReply> rl = (List<OFStatisticsReply>) response;
+			List<OFStatsReply> rl = (List<OFStatsReply>) response;
 			synchronized ( response ) {
 				rl.add( m );
 				response.notifyAll();
@@ -704,8 +541,7 @@ public class OFProtocol {
 	 * @return		OFFeaturesReply object
 	 */
 	public OFFeaturesReply getFeaturesReply(IOFSwitch sw) {
-		OFFeaturesRequest req = OFMessageFactory.createFeaturesRequest(sw.getVersion());
-		req.setXid( sw.getNextTransactionId() );
+		OFFeaturesRequest req = OFFactories.getFactory(sw.getVersion()).featuresRequest();
 		List<OFFeaturesReply> response = new LinkedList<OFFeaturesReply>();
 		this.setResponseCacheItem(sw, req.getXid(), response);
 		sw.getConnection().write( req );
@@ -726,7 +562,7 @@ public class OFProtocol {
 		}
 	}
 
-	private void deliverFeaturesReply(IOFSwitch sw, int xid, OFFeaturesReply reply) {
+	private void deliverFeaturesReply(IOFSwitch sw, long xid, OFFeaturesReply reply) {
 		Object response = this.getResponseCacheItem(sw, xid);
 		if ( response == null ) {
 			return;
@@ -748,7 +584,7 @@ public class OFProtocol {
 	 */
 	public Collection<OFPortDesc> getEnabledPorts(IOFSwitch sw) {		
 		List<OFPortDesc> result = new ArrayList<OFPortDesc>();
-		Collection<OFPortDesc> allPorts = this.getPorts(sw);
+		Collection<OFPortDesc> allPorts = this.getPortInformations(sw);
 		if ( allPorts == null ) return null;
 
 		for (OFPortDesc port: allPorts) {
@@ -764,14 +600,14 @@ public class OFProtocol {
 	 * @param sw	IOFSwitch object
 	 * @return		Collection<Integer>
 	 */
-	public Collection<Integer> getEnabledPortNumbers(IOFSwitch sw) {
-		List<Integer> result = new ArrayList<Integer>();
-		Collection<OFPortDesc> allPorts = this.getPorts(sw);
+	public Collection<OFPort> getEnabledPortNumbers(IOFSwitch sw) {
+		List<OFPort> result = new ArrayList<OFPort>();
+		Collection<OFPortDesc> allPorts = this.getPortInformations(sw);
 		if ( allPorts == null ) return null;
 
 		for (OFPortDesc port: allPorts) {
 			if (portEnabled(port)) {
-				result.add(port.getPort().get());
+				result.add(port.getPortNo());
 			}
 		}
 		return result;
@@ -802,8 +638,8 @@ public class OFProtocol {
 	 * @param port		port number (short)
 	 * @return			true if enabled, false otherwise
 	 */
-	public boolean portEnabled(IOFSwitch sw, short port) {
-		OFPortDesc desc = this.getPort(sw, port);
+	public boolean portEnabled(IOFSwitch sw, OFPort port) {
+		OFPortDesc desc = this.getPortInformation(sw, port);
 		if ( desc == null ) {
 			return false;
 		}
@@ -818,59 +654,39 @@ public class OFProtocol {
 	 * @param inputPort		input port (short)
 	 * @return				OFMatch object
 	 */
-	public OFMatch loadOFMatchFromPacket(IOFSwitch sw, byte[] packetData, short inputPort, boolean l2only) {
+	public Match loadOFMatchFromPacket(IOFSwitch sw, byte[] packetData, OFPort inputPort, boolean l2only) {
 
-		OFMatch.Builder ret = OFMessageFactory.createMatchBuilder(sw.getVersion());
+		Match.Builder ret = OFFactories.getFactory(sw.getVersion()).buildMatch();
 
 		short scratch = 0;
 		int transportOffset = 34;
 		ByteBuffer packetDataBB = ByteBuffer.wrap(packetData);
 		int limit = packetDataBB.limit();
 
-		ret.setInputPort(OFPort.of(inputPort));
-
-		if ( ret.isWildcardsSupported() ) {
-			ret.setWildcardsWire(OFBFlowWildcard.ALL);
-			
-			if (inputPort == OFPort.ALL.get() ) {
-				ret.setWildcardsWire( ret.getWildcardsWire() & ~OFBFlowWildcard.IN_PORT );
-			}
-		}
+		ret.setExact(MatchField.IN_PORT, inputPort);
 
 		assert (limit >= 14);
 		
 		// dl dst
 		byte[] eth_dst = new byte[6];
 		packetDataBB.get(eth_dst);
-		ret.setDataLayerDestination(eth_dst);
+		ret.setExact(MatchField.ETH_DST, MacAddress.of(eth_dst));
 
 		// dl src
 		byte[] eth_src = new byte[6];
 		packetDataBB.get(eth_src);
-		ret.setDataLayerSource(eth_src);
-		
-		if ( ret.isWildcardsSupported() ) {
-			ret.setWildcardsWire( ret.getWildcardsWire() 
-								  & ~OFBFlowWildcard.DL_DST 
-								  & ~OFBFlowWildcard.DL_SRC );
-		}
+		ret.setExact(MatchField.ETH_SRC, MacAddress.of(eth_src));
 
 		// dl type
 		short data_layer_type = packetDataBB.getShort();
-		ret.setDataLayerType(data_layer_type);
+		ret.setExact(MatchField.ETH_TYPE, EthType.of(data_layer_type));
 
 		// has vlan
 		if ( data_layer_type == (short) 0x8100 ) {
 			scratch = packetDataBB.getShort();
 			if ( (0xfff & scratch) != 0 ) {
-				ret.setDataLayerVirtualLan((short)(0xfff & scratch));
-				ret.setDataLayerVirtualLanPriorityCodePoint((byte)((0xe000 & scratch) >> 13));
-				
-				if ( ret.isWildcardsSupported() ) {
-					ret.setWildcardsWire( ret.getWildcardsWire() 
-										  & ~OFBFlowWildcard.DL_VLAN 
-										  & ~OFBFlowWildcard.DL_VLAN_PCP);
-				}
+				ret.setExact(MatchField.VLAN_VID, OFVlanVidMatch.ofVlan((short)(0xfff & scratch)));
+				ret.setExact(MatchField.VLAN_PCP, VlanPcp.of((byte)((0xe000 & scratch) >> 13)));
 			}
 		} 
 
@@ -881,62 +697,42 @@ public class OFProtocol {
 		byte network_protocol = 0;
 
 		switch (data_layer_type) {
-		case 0x0800:
-			// ipv4
+		case 0x0800:							// IPv4
 			// check packet length
 			scratch = packetDataBB.get();
 			scratch = (short) (0xf & scratch);
 			transportOffset = (packetDataBB.position() - 1) + (scratch * 4);
-			// nw tos (dscp)
+			
+			// nw tos (dscp & ecn)
 			scratch = packetDataBB.get();
-			ret.setNetworkTypeOfService((byte) ((0xfc & scratch) >> 2));
+			ret.setExact(MatchField.IP_DSCP, IpDscp.of((byte)((0b11111100 & scratch) >> 2)));
+			ret.setExact(MatchField.IP_ECN, IpEcn.of((byte)(0b00000011 & scratch)));
+
 			// nw protocol
 			packetDataBB.position(packetDataBB.position() + 7);
-			ret.setNetworkProtocol(network_protocol = packetDataBB.get());
-			// nw src
+			ret.setExact(MatchField.IP_PROTO, IpProtocol.of(packetDataBB.get()));
+
+			// nw src & dst
 			packetDataBB.position(packetDataBB.position() + 2);
-			ret.setNetworkSource(packetDataBB.getInt());
-			// nw dst
-			ret.setNetworkDestination(packetDataBB.getInt());
-			packetDataBB.position(transportOffset);
+			ret.setExact(MatchField.IPV4_SRC, IPv4Address.of(packetDataBB.getInt()));
+			ret.setExact(MatchField.IPV4_DST, IPv4Address.of(packetDataBB.getInt()));
 			
-			if ( ret.isWildcardsSupported() ) {
-				ret.setWildcardsWire( ret.getWildcardsWire() 
-									  & ~OFBFlowWildcard.NW_TOS
-									  & ~OFBFlowWildcard.NW_PROTO
-									  & ~OFBFlowWildcard.NW_SRC_ALL
-									  & ~OFBFlowWildcard.NW_DST_ALL);
-			}
+			packetDataBB.position(transportOffset);
 			break;
-		case 0x0806:
+			
+		case 0x0806:							// ARP
 			// arp
 			int arpPos = packetDataBB.position();
 			// opcode
 			scratch = packetDataBB.getShort(arpPos + 6);
-			if ( ret.isWildcardsSupported() ) {
-				ret.setNetworkProtocol(network_protocol = (byte) (0xff & scratch));
-				ret.setWildcardsWire( ret.getWildcardsWire() & ~OFBFlowWildcard.NW_PROTO );
-			} else {
-				ret.setValue(OFOxmMatchFields.OFB_ARP_OP, (byte) 0, ByteBuffer.allocate(2).putShort(scratch).array());
-			}
+			
+			ret.setExact(MatchField.ARP_OP, ArpOpcode.of(network_protocol = (byte) (0xff & scratch)));
 
 			scratch = packetDataBB.getShort(arpPos + 2);
 			// if ipv4 and addr len is 4
 			if (scratch == 0x800 && packetDataBB.get(arpPos + 5) == 4) {
-				if ( ret.isWildcardsSupported() ) {
-					// nw src
-					ret.setNetworkSource(packetDataBB.getInt(arpPos + 14));
-					// nw dst
-					ret.setNetworkDestination(packetDataBB.getInt(arpPos + 24));
-					ret.setWildcardsWire( ret.getWildcardsWire() 
-							  & ~OFBFlowWildcard.NW_SRC_ALL
-							  & ~OFBFlowWildcard.NW_DST_ALL);
-				} else {
-					ret.setValue(OFOxmMatchFields.OFB_ARP_SPA, (byte) 0, 
-							ByteBuffer.allocate(4).putInt(packetDataBB.getInt(arpPos + 14)).array());
-					ret.setValue(OFOxmMatchFields.OFB_ARP_TPA, (byte) 0, 
-							ByteBuffer.allocate(4).putInt(packetDataBB.getInt(arpPos + 24)).array());
-				}
+				ret.setExact(MatchField.ARP_SPA, IPv4Address.of(packetDataBB.getInt(arpPos + 14)));
+				ret.setExact(MatchField.ARP_TPA, IPv4Address.of(packetDataBB.getInt(arpPos + 24)));
 			}
 			break;
 		default:
@@ -946,36 +742,18 @@ public class OFProtocol {
 		switch (network_protocol) {
 		case 0x01:
 			// icmp
-			// type
-			ret.setTransportSource(U8.f(packetDataBB.get()));
-			// code
-			ret.setTransportDestination(U8.f(packetDataBB.get()));
-			if ( ret.isWildcardsSupported() )
-				ret.setWildcardsWire( ret.getWildcardsWire() 
-						  & ~OFBFlowWildcard.TP_DST
-						  & ~OFBFlowWildcard.TP_SRC);
+			ret.setExact(MatchField.ICMPV4_TYPE, ICMPv4Type.of(packetDataBB.get()));
+			ret.setExact(MatchField.ICMPV4_CODE, ICMPv4Code.of(packetDataBB.get()));
 			break;
 		case 0x06:
 			// tcp
-			// tcp src
-			ret.setTransportSource(packetDataBB.getShort());
-			// tcp dst
-			ret.setTransportDestination(packetDataBB.getShort());
-			if ( ret.isWildcardsSupported() )
-				ret.setWildcardsWire( ret.getWildcardsWire() 
-						  & ~OFBFlowWildcard.TP_DST
-						  & ~OFBFlowWildcard.TP_SRC);
+			ret.setExact(MatchField.TCP_SRC, TransportPort.of(packetDataBB.getShort()));
+			ret.setExact(MatchField.TCP_DST, TransportPort.of(packetDataBB.getShort()));
 			break;
 		case 0x11:
 			// udp
-			// udp src
-			ret.setTransportSource(packetDataBB.getShort());
-			// udp dest
-			ret.setTransportDestination(packetDataBB.getShort());
-			if ( ret.isWildcardsSupported() )
-				ret.setWildcardsWire( ret.getWildcardsWire() 
-						  & ~OFBFlowWildcard.TP_DST
-						  & ~OFBFlowWildcard.TP_SRC);
+			ret.setExact(MatchField.UDP_SRC, TransportPort.of(packetDataBB.getShort()));
+			ret.setExact(MatchField.UDP_DST, TransportPort.of(packetDataBB.getShort()));
 			break;
 		default:
 			break;
@@ -994,7 +772,7 @@ public class OFProtocol {
 	 *            one of STR_NW_DST or STR_NW_SRC
 	 * @throws IllegalArgumentException
 	 */
-	private void setFromCIDR(OFMatch.Builder match, String cidr, String which)
+	private void setFromCIDR(Match.Builder match, String cidr, String which)
 			throws IllegalArgumentException {
 		String values[] = cidr.split("/");
 		String[] ip_str = values[0].split("\\.");
@@ -1007,27 +785,12 @@ public class OFProtocol {
 
 		if (values.length >= 2)
 			prefix = Integer.valueOf(values[1]);
-
-		if ( match.isWildcardsSupported() ) {
-			int mask = 32 - prefix;
-			if (which.equals(STR_NW_DST)) {
-				match.setNetworkDestination(ip);
-				match.setWildcardsWire((match.getWildcardsWire() & ~OFBFlowWildcard.NW_DST_MASK) | 
-						(mask << OFBFlowWildcard.NW_DST_SHIFT));
-			} else if (which.equals(STR_NW_SRC)) {
-				match.setNetworkSource(ip);
-				match.setWildcardsWire((match.getWildcardsWire() & ~OFBFlowWildcard.NW_SRC_MASK) | 
-						(mask << OFBFlowWildcard.NW_SRC_SHIFT));
-			}
-		} else {
-			int mask = 0x80000000 >> (prefix-1);
-
-						if (which.equals(STR_NW_DST)) {
-							match.setValue(OFOxmMatchFields.OFB_IPV4_DST, (byte) 1, ByteBuffer.allocate(8).putInt(ip).putInt(mask).array());
-						} else if (which.equals(STR_NW_SRC)) {
-							match.setValue(OFOxmMatchFields.OFB_IPV4_SRC, (byte) 1, ByteBuffer.allocate(8).putInt(ip).putInt(mask).array());
-						}
-		}
+		
+		int mask = 0x80000000 >> (prefix-1);
+		if ( which.equals(STR_NW_DST) )
+			match.setMasked(MatchField.IPV4_DST, Masked.of(IPv4Address.of(ip), IPv4Address.of(mask)));
+		else if ( which.equals(STR_NW_SRC) ) 
+			match.setMasked(MatchField.IPV4_SRC, Masked.of(IPv4Address.of(ip), IPv4Address.of(mask)));
 	}
 
 	/**
@@ -1072,9 +835,9 @@ public class OFProtocol {
 	 * @return OFMatch object
 	 * @throws IllegalArgumentException on unexpected key or value
 	 */
-	public OFMatch loadOFMatchFromString(IOFSwitch sw, String match)
+	public Match loadOFMatchFromString(IOFSwitch sw, String match)
 			throws IllegalArgumentException {
-		OFMatch.Builder ret = OFMessageFactory.createMatchBuilder(sw.getVersion());
+		Match.Builder ret = OFFactories.getFactory(sw.getVersion()).buildMatch();
 
 		if (match.equals("") || match.equalsIgnoreCase("any")
 				|| match.equalsIgnoreCase("all") || match.equals("[]"))
@@ -1084,9 +847,8 @@ public class OFProtocol {
 		int initArg = 0;
 		if (tokens[0].equals("OFMatch"))
 			initArg = 1;
-		if ( ret.isWildcardsSupported() ) {
-			ret.setWildcards(OFFlowWildcards.ALL);
-		}
+		
+		IpProtocol nw_proto = null;
 
 		int i;
 		for (i = initArg; i < tokens.length; i++) {
@@ -1096,60 +858,58 @@ public class OFProtocol {
 						+ " does not have form 'key=value' parsing " + match);
 			values[0] = values[0].toLowerCase(); // try to make this case insens
 			if (values[0].equals(STR_IN_PORT) || values[0].equals("input_port")) {
-				ret.setInputPort(OFPort.of(Integer.valueOf(values[1])));
-				if ( ret.isWildcardsSupported() )
-					ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.IN_PORT);
+				ret.setExact(MatchField.IN_PORT, OFPort.of(Integer.valueOf(values[1])));
 			} else if (values[0].equals(STR_DL_DST)
 					|| values[0].equals("eth_dst")) {
-				ret.setDataLayerDestination(HexString.fromHexString(values[1]));
-				if ( ret.isWildcardsSupported() )
-					ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.DL_DST);
+				ret.setExact(MatchField.ETH_DST, MacAddress.of(values[1]));
 			} else if (values[0].equals(STR_DL_SRC)
 					|| values[0].equals("eth_src")) {
-				ret.setDataLayerSource(HexString.fromHexString(values[1]));
-				if ( ret.isWildcardsSupported() )
-					ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.DL_SRC);
+				ret.setExact(MatchField.ETH_SRC, MacAddress.of(values[1]));
 			} else if (values[0].equals(STR_DL_TYPE)
 					|| values[0].equals("eth_type")) {
 				if (values[1].startsWith("0x"))
-					ret.setDataLayerType(U16.t(Integer.valueOf(values[1].replaceFirst("0x", ""), 16)));
+					ret.setExact(MatchField.ETH_TYPE, EthType.of(Integer.valueOf(values[1].replaceFirst("0x", ""), 16)));
 				else
-					ret.setDataLayerType(U16.t(Integer.valueOf(values[1])));
-				if ( ret.isWildcardsSupported() )
-					ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.DL_TYPE);
+					ret.setExact(MatchField.ETH_TYPE, EthType.of(Integer.valueOf(values[1])));
 			} else if (values[0].equals(STR_DL_VLAN)) {
 				if (values[1].contains("0x")) {
-					ret.setDataLayerVirtualLan(U16.t(Integer.valueOf(values[1].replaceFirst("0x", ""), 16)));
+					ret.setExact(MatchField.VLAN_VID, OFVlanVidMatch.ofVlan(Integer.valueOf(values[1].replaceFirst("0x", ""), 16)));
 				} else {
-					ret.setDataLayerVirtualLan(U16.t(Integer.valueOf(values[1])));
+					ret.setExact(MatchField.VLAN_VID, OFVlanVidMatch.ofVlan(Integer.valueOf(values[1])));
 				}
-				if ( ret.isWildcardsSupported() )
-					ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.DL_VLAN);
 			} else if (values[0].equals(STR_DL_VLAN_PCP)) {
-				ret.setDataLayerVirtualLanPriorityCodePoint(U8.t(Short.valueOf(values[1])));
-				if ( ret.isWildcardsSupported() )
-					ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.DL_VLAN_PCP);
+				ret.setExact(MatchField.VLAN_PCP, VlanPcp.of(Byte.valueOf(values[1])));
 			} else if (values[0].equals(STR_NW_DST)
 					|| values[0].equals("ip_dst"))
 				setFromCIDR(ret, values[1], STR_NW_DST);
 			else if (values[0].equals(STR_NW_SRC) || values[0].equals("ip_src"))
 				setFromCIDR(ret, values[1], STR_NW_SRC);
 			else if (values[0].equals(STR_NW_PROTO)) {
-				ret.setNetworkProtocol(U8.t(Short.valueOf(values[1])));
-				if ( ret.isWildcardsSupported() )
-					ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.NW_PROTO);
+				ret.setExact(MatchField.IP_PROTO, nw_proto = IpProtocol.of(Short.valueOf(values[1])));
 			} else if (values[0].equals(STR_NW_TOS)) {
-				ret.setNetworkTypeOfService(U8.t(Short.valueOf(values[1])));
-				if ( ret.isWildcardsSupported() )
-					ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.NW_TOS);
+				byte scratch = Byte.valueOf(values[1]);
+				ret.setExact(MatchField.IP_DSCP, IpDscp.of((byte)((0b11111100 & scratch) >> 2)));
+				ret.setExact(MatchField.IP_ECN, IpEcn.of((byte)(0b00000011 & scratch)));
 			} else if (values[0].equals(STR_TP_DST)) {
-				ret.setTransportDestination(U16.t(Integer.valueOf(values[1])));
-				if ( ret.isWildcardsSupported() )
-					ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.TP_DST);
+				if ( nw_proto != null ) {
+					if ( nw_proto == IpProtocol.ICMP ) {
+						ret.setExact(MatchField.ICMPV4_CODE, ICMPv4Code.of(Short.valueOf(values[1])));						
+					} else if ( nw_proto == IpProtocol.TCP ) {
+						ret.setExact(MatchField.TCP_DST, TransportPort.of(Short.valueOf(values[1])));
+					} else if ( nw_proto == IpProtocol.UDP ) {
+						ret.setExact(MatchField.UDP_DST, TransportPort.of(Short.valueOf(values[1])));
+					}
+				}
 			} else if (values[0].equals(STR_TP_SRC)) {
-				ret.setTransportSource(U16.t(Integer.valueOf(values[1])));
-				if ( ret.isWildcardsSupported() )
-					ret.setWildcardsWire(ret.getWildcardsWire() & ~OFBFlowWildcard.TP_SRC);
+				if ( nw_proto != null ) {
+					if ( nw_proto == IpProtocol.ICMP ) {
+						ret.setExact(MatchField.ICMPV4_TYPE, ICMPv4Type.of(Short.valueOf(values[1])));						
+					} else if ( nw_proto == IpProtocol.TCP ) {
+						ret.setExact(MatchField.TCP_SRC, TransportPort.of(Short.valueOf(values[1])));
+					} else if ( nw_proto == IpProtocol.UDP ) {
+						ret.setExact(MatchField.UDP_SRC, TransportPort.of(Short.valueOf(values[1])));
+					}
+				}				
 			} else
 				throw new IllegalArgumentException("unknown token " + tokens[i]
 						+ " parsing " + match);

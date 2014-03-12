@@ -2,6 +2,7 @@ package etri.sdn.controller.module.linkdiscovery;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -14,7 +15,10 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.openflow.protocol.interfaces.OFPortDesc;
+import org.projectfloodlight.openflow.protocol.OFPortDesc;
+import org.projectfloodlight.openflow.protocol.OFPortState;
+import org.projectfloodlight.openflow.protocol.OFPortStatus;
+import org.projectfloodlight.openflow.types.OFPort;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -213,16 +217,16 @@ public class Links extends OFModel {
 	 */
 	public Link addOrUpdateLink(
 			long remoteSwitchId, 
-			int remotePort,
+			OFPort remotePort,
 			OFPortDesc remotePhyPort,
 			long localSwitchId, 
-			int localInPort,
+			OFPort localInPort,
 			OFPortDesc localInPhyPort,
 			boolean isStandard,
 			boolean isReverse) 
 	{
-		int srcPortState = (remotePhyPort != null) ? remotePhyPort.getStateWire() : 0;
-		int dstPortState = (localInPhyPort != null) ? localInPhyPort.getStateWire() : 0;
+		Set<OFPortState> srcPortState = (remotePhyPort != null) ? remotePhyPort.getState() : EnumSet.noneOf(OFPortState.class);
+		Set<OFPortState> dstPortState = (localInPhyPort != null) ? localInPhyPort.getState() : EnumSet.noneOf(OFPortState.class);
 		
 		// Store the time of update to this link, and push it out to routingEngine
 		Link lt = new Link(remoteSwitchId, remotePort, localSwitchId, localInPort);
@@ -296,7 +300,7 @@ public class Links extends OFModel {
 	 * @param ps		OFPortStatus message
 	 * @return			true if link info changed, false otherwise
 	 */
-	public boolean updatePortStatus(Long switchId, int portnum, org.openflow.protocol.interfaces.OFPortStatus ps) {
+	public boolean updatePortStatus(Long switchId, OFPort portnum, OFPortStatus ps) {
 		
 		NodePortTuple npt = new NodePortTuple(switchId, portnum);
 		
@@ -308,20 +312,20 @@ public class Links extends OFModel {
 				for (Link lt: this.portLinks.get(npt)) {
 					LinkInfo linkInfo = links.get(lt);
 					assert(linkInfo != null);
-					Integer updatedSrcPortState = null;
-					Integer updatedDstPortState = null;
+					Set<OFPortState> updatedSrcPortState = null;
+					Set<OFPortState> updatedDstPortState = null;
 					// update if source port state has been changed
-					if (lt.getSrc() == npt.getNodeId() && 
-						lt.getSrcPort() == npt.getPortId() &&
-						(linkInfo.getSrcPortState() != ps.getDesc().getStateWire())) {
-						updatedSrcPortState = ps.getDesc().getStateWire();
+					if ( lt.getSrc() == npt.getNodeId() && 
+						 lt.getSrcPort().equals(npt.getPortId()) &&
+						 !linkInfo.getSrcPortState().equals(ps.getDesc().getState()) ) {
+						updatedSrcPortState = ps.getDesc().getState();
 						linkInfo.setSrcPortState(updatedSrcPortState);
 					}
 					// update if destination port state has been changed
-					if (lt.getDst() == npt.getNodeId() &&
-						lt.getDstPort() == npt.getPortId() &&
-						(linkInfo.getDstPortState() != ps.getDesc().getStateWire())) {
-						updatedDstPortState = ps.getDesc().getStateWire();
+					if ( lt.getDst() == npt.getNodeId() &&
+						 lt.getDstPort().equals(npt.getPortId()) &&
+						 !linkInfo.getDstPortState().equals(ps.getDesc().getState()) ) {
+						updatedDstPortState = ps.getDesc().getState();
 						linkInfo.setDstPortState(updatedDstPortState);
 					}
 					if ((updatedSrcPortState != null) || 
@@ -338,7 +342,7 @@ public class Links extends OFModel {
 			lock.writeLock().unlock();
 		}
 
-		this.manager.addLinkUpdate(switchId, portnum, ps.getDesc().getStateWire());
+		this.manager.addLinkUpdate(switchId, portnum, ps.getDesc().getState());
 		
 		return linkInfoChanged;
 	}
@@ -549,10 +553,8 @@ public class Links extends OFModel {
 				}
 
 				// Only update the port states if they've changed
-				if (newInfo.getSrcPortState().intValue() !=
-					oldInfo.getSrcPortState().intValue() ||
-					newInfo.getDstPortState().intValue() !=
-						oldInfo.getDstPortState().intValue())
+				if ( !newInfo.getSrcPortState().equals(oldInfo.getSrcPortState()) ||
+					  !newInfo.getDstPortState().equals(oldInfo.getDstPortState()) )
 					linkChanged = true;
 
 				// Write changes to storage. This will always write the updated
@@ -585,19 +587,19 @@ public class Links extends OFModel {
 		public String srcdpid;
 		
 		@JsonProperty("src-port")
-		public short srcport;
+		public OFPort srcport;
 		
 		@JsonProperty("src-port-state")
-		public int srcstatus;
+		public Set<OFPortState> srcstatus;
 		
 		@JsonProperty("dst-switch")
 		public String dstdpid;
 		
 		@JsonProperty("dst-port")
-		public short dstport;
+		public OFPort dstport;
 		
 		@JsonProperty("dst-port-state")
-		public int dststatus;
+		public Set<OFPortState> dststatus;
 		
 		public String type;
 		
