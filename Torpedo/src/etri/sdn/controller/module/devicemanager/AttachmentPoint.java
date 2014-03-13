@@ -188,7 +188,7 @@ public class AttachmentPoint {
         if (getClass() != obj.getClass())
             return false;
         AttachmentPoint other = (AttachmentPoint) obj;
-        if (port != other.port)
+        if (! port.equals(other.port) )
             return false;
         if (sw != other.sw)
             return false;

@@ -99,7 +99,7 @@ public final class ClientChannelWatcher extends Thread {
 				// guard idiom to prevent deadlock at client.register() call
 				synchronized (guard) {}
 
-				int r = read_selector.select(300);
+				int r = read_selector.select();
 				if ( r > 0 ) { // there's something to read.
 
 					Set<SelectionKey> keys = read_selector.selectedKeys();

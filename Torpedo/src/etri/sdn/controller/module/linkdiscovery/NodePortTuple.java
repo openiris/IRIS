@@ -73,7 +73,7 @@ public class NodePortTuple {
 		NodePortTuple other = (NodePortTuple) obj;
 		if (nodeId != other.nodeId)
 			return false;
-		if (portId != other.portId)
+		if (!portId.equals(other.portId))
 			return false;
 		return true;
 	}

@@ -6,12 +6,13 @@ package org.openflow.io;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
+import org.openflow.protocol.factory.OFHeader;
 import org.openflow.protocol.factory.OFMessageParser;
-import org.openflow.protocol.factory.VersionedMessageParser;
+import org.projectfloodlight.openflow.exceptions.OFParseError;
+import org.projectfloodlight.openflow.protocol.OFFactories;
 import org.projectfloodlight.openflow.protocol.OFMessage;
 
 /**
@@ -22,24 +23,17 @@ import org.projectfloodlight.openflow.protocol.OFMessage;
  * @author David Erickson (daviderickson@cs.stanford.edu)
  * 
  */
-public class OFMessageAsyncStream implements OFMessageInStream,
-OFMessageOutStream {
+public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStream, OFMessageParser {
 	static public int DEFAULT_BUFFER_SIZE = 65536;
 
 	protected ByteBuffer inBuf, outBuf;
-	protected ChannelBuffer outChannel;
-	protected OFMessageParser messageFactory;
 	protected SocketChannel sock;
 	protected int partialReadCount = 0;
 
-	public OFMessageAsyncStream(SocketChannel sock /*,
-            OFMessageFactory messageFactory */) throws IOException {
+	public OFMessageAsyncStream(SocketChannel sock) throws IOException {
 		this.inBuf = ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE);
 		this.outBuf = ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE);
-		this.outChannel = ChannelBuffers.wrappedBuffer(this.outBuf);
-		this.outChannel.writerIndex(0);
 		this.sock = sock;
-		this.messageFactory = new VersionedMessageParser(this.inBuf);
 		// this.sock.configureBlocking(false);
 	}
 
@@ -59,7 +53,7 @@ OFMessageOutStream {
 			throw new IOException("connection closed");
 		}
 		inBuf.flip();
-		l = messageFactory.parseMessages(inBuf, limit);
+		l = this.parseMessages(inBuf, limit);
 		if (inBuf.hasRemaining())
 			inBuf.compact();
 		else
@@ -68,23 +62,7 @@ OFMessageOutStream {
 	}
 
 	protected void appendMessageToOutBuf(OFMessage m) throws IOException {
-
-		do {
-			try { 
-//				System.out.println("1:"+this.outBuf);
-				ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
-				m.writeTo( cb);
-				this.outBuf.put( cb.toByteBuffer() );
-//				this.outBuf.position( this.outBuf.position() + this.outChannel.writerIndex() );
-//				System.out.println("2:"+this.outBuf);
-//				this.outChannel.writerIndex(0);
-				this.flush();
-			} catch ( IndexOutOfBoundsException eo ) {
-				eo.printStackTrace();
-				this.flush();
-				continue;
-			}
-		} while ( false );
+		m.writeTo(outBuf);
 	}
 
 	/**
@@ -104,6 +82,44 @@ OFMessageOutStream {
 			appendMessageToOutBuf(m);
 		}
 	}
+	
+	@Override
+	public List<OFMessage> parseMessages(ByteBuffer data) {
+		return parseMessages(data, 0);
+	}
+
+	@Override
+	public List<OFMessage> parseMessages(ByteBuffer data, int limit) {
+		
+		
+		List<OFMessage> results = new ArrayList<OFMessage>();
+		OFHeader demux = new OFHeader();
+
+		while (limit == 0 || results.size() <= limit) {
+			if (data.remaining() < OFHeader.MINIMUM_LENGTH)
+				break;
+
+			data.mark();
+			demux.readFrom(data);
+			data.reset();
+			
+			if (demux.getLengthU() > data.remaining())
+				break;
+			
+			try {
+				OFMessage msg = OFFactories.getGenericReader().readFrom( data );
+				if ( msg != null ) {
+					results.add( msg );
+				}
+				
+			} catch (OFParseError e) {
+				e.printStackTrace();
+				// we skip this message: not parse
+				continue;
+			}
+		}
+		return results;
+	}
 
 	/**
 	 * Flush buffered outgoing data. Keep flushing until needsFlush() returns
@@ -121,20 +137,5 @@ OFMessageOutStream {
 	 */
 	public boolean needsFlush() {
 		return outBuf.position() > 0;
-	}
-
-	/**
-	 * @return the messageFactory
-	 */
-	public OFMessageParser getMessageFactory() {
-		return messageFactory;
-	}
-
-	/**
-	 * @param messageFactory
-	 *            the messageFactory to set
-	 */
-	public void setMessageFactory(OFMessageParser messageFactory) {
-		this.messageFactory = messageFactory;
 	}
 }

@@ -155,7 +155,7 @@ public class State extends OFModel {
 						req.setOutPort(OFPort.ANY /* NONE for 1.0 */);
 						try { 
 							// this should be fixed to accept OFGroup object in the further release of Loxigen.
-							req.setOutGroup(OFGroup.ANY.getGroupNumber() /* OFPG_ANY (all group) */);
+							req.setOutGroup(OFGroup.ANY);
 							req.setTableId(TableId.ALL);
 						} catch ( UnsupportedOperationException u ) { 
 							// does nothing.

@@ -16,7 +16,6 @@
 
 package etri.sdn.controller.module.linkdiscovery;
 
-import java.util.EnumSet;
 import java.util.Set;
 
 import org.projectfloodlight.openflow.protocol.OFPortState;

@@ -389,7 +389,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 
 		// The assumption here is (sw) is the switch that generated the packet-in. 
 		// If the input port is the same as output port, then the packet-out should be ignored.
-		if ( inPort == outPort ) {
+		if ( inPort.equals(outPort) ) {
 			return;
 		}
 		

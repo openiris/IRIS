@@ -133,11 +133,11 @@ public class SimpleOFController extends OFController {
 		else if ( msgType == OFType.FEATURES_REPLY ) {
 			return m_link_discovery.processHandshakeFinished( conn, context );
 		}
-		else {
-			System.err.println("Unhandled OF message: "
-					+ m.toString() + " from "
-					+ conn.getClient().socket().getInetAddress());
-		}
+//		else {
+//			System.err.println("Unhandled OF message: "
+//					+ m.toString() + " from "
+//					+ conn.getClient().socket().getInetAddress());
+//		}
 		return true;
 	}
 }

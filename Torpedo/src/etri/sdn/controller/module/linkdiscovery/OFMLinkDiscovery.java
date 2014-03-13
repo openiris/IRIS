@@ -696,7 +696,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		dpidBB.putLong(dpid);
 		// set the ethernet source mac to last 6 bytes of dpid
 //		System.arraycopy(dpidArray, 2, ofpPort.getHardwareAddress(), 0, 6);
-		System.arraycopy(dpidArray, 2, ofpPort.getHwAddr(), 0, 6);
+		System.arraycopy(dpidArray, 2, ofpPort.getHwAddr().getBytes(), 0, 6);
 		// set the chassis id's value to last 6 bytes of dpid
 		System.arraycopy(dpidArray, 2, chassisId, 1, 6);
 		// set the optional tlv to the full dpid
@@ -748,13 +748,13 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		po.setInPort(OFPort.ANY /*Openflow 1.0 calls this 'None'*/);
 
 		
-		// set actions
 		List<OFAction> actions = new ArrayList<OFAction>();
 		OFActionOutput.Builder action_output = fac.actions().buildOutput();
 		actions.add( action_output.setPort(port).setMaxLen(0).build());
 
-		// set data
-		po.setData(data);
+		po
+		.setData(data)
+		.setActions(actions);
 
 		return sw.getConnection().write(po.build());
 	}

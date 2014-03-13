@@ -96,9 +96,9 @@ public class BasicOFController extends OFController {
 		else if ( t == OFType.FEATURES_REPLY ) {
 			return m_link_discovery.processHandshakeFinished( conn, context );
 		}
-		else {
+//		else {
 //			System.err.println("Unhandled OF message: "	+ m.toString());
-		}
+//		}
 		return true;
 	}
 }

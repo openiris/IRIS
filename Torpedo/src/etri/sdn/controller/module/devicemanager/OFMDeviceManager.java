@@ -1,6 +1,5 @@
 package etri.sdn.controller.module.devicemanager;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;

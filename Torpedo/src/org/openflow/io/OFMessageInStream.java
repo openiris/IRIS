@@ -34,18 +34,4 @@ public interface OFMessageInStream {
      * 
      */
     public List<OFMessage> read(int limit) throws java.io.IOException;
-
-    /**
-     * Sets the OFMessageFactory used to create messages on this stream
-     * 
-     * @param factory
-     */
-    public void setMessageFactory(OFMessageParser factory);
-
-    /**
-     * Returns the OFMessageFactory used to create messages on this stream
-     * 
-     * @return
-     */
-    public OFMessageParser getMessageFactory();
 }

@@ -108,11 +108,11 @@ public class Link {
         Link other = (Link) obj;
         if (dst != other.dst)
             return false;
-        if (dstPort != other.dstPort)
+        if (! dstPort.equals(other.dstPort) )
             return false;
         if (src != other.src)
             return false;
-        if (srcPort != other.srcPort)
+        if (! srcPort.equals(other.srcPort) )
             return false;
         return true;
     }
