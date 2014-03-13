@@ -70,6 +70,9 @@ public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStre
 	 */
 	@Override
 	public void write(OFMessage m) throws IOException {
+		if ( this.outBuf.remaining() < 1024 ) {
+			flush();
+		}
 		appendMessageToOutBuf(m);
 	}
 

@@ -289,7 +289,7 @@ public class OFProtocol {
 	 */
 	public boolean handleConnectedEvent(Connection conn) {
 		// This is a greeting that says 'Hey. We know up to 1.3.2.' 
-		Logger.debug("writing hello...");
+		//Logger.debug("writing hello...");
 		OFHello hello = OFFactories.getFactory(OFVersion.OF_13).hello(Collections.<OFHelloElem>emptyList());
 		conn.write( hello );
 		return true;
@@ -342,7 +342,7 @@ public class OFProtocol {
 			break;
 
 		case FEATURES_REPLY:
-			Logger.debug("FEATURES_REPLY is received.");
+			//Logger.debug("FEATURES_REPLY is received.");
 			
 			if ( sw == null ) return false;
 
