@@ -470,7 +470,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	}
 
 	/**
-	 * This method is to fastly convery to newer topology my eliminating 
+	 * This method is to fastly converge to newer topology my eliminating 
 	 * useless and outdated flow records from the network.
 	 * TODO: the scalability problem of this method should be fixed.
 	 * TODO: this method does not achieve global optimization.
