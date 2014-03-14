@@ -8,6 +8,7 @@ import org.codehaus.jackson.Version;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 import org.codehaus.jackson.map.module.SimpleModule;
+import org.projectfloodlight.openflow.types.ArpOpcode;
 import org.projectfloodlight.openflow.types.OFPort;
 import org.projectfloodlight.openflow.types.U64;
 
@@ -34,6 +35,17 @@ final class U64Serializer extends JsonSerializer<U64> {
 	}
 }
 
+final class ArpOpcodeSerializer extends JsonSerializer<ArpOpcode> {
+
+	@Override
+	public void serialize(ArpOpcode val, JsonGenerator jgen, SerializerProvider provider) throws IOException,
+			JsonProcessingException {
+		// TODO Auto-generated method stub
+		jgen.writeString(val.toString());
+	}
+	
+}
+
 
 /**
  * A Custom Serializer Module which consists of 
@@ -49,5 +61,6 @@ public final class OFTypeSerializerModule extends SimpleModule {
 		
 		addSerializer(OFPort.class, new OFPortSerializer());
 		addSerializer(U64.class, new U64Serializer());
+		addSerializer(ArpOpcode.class, new ArpOpcodeSerializer());
 	}
 }

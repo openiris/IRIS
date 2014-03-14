@@ -669,7 +669,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		OFPortDesc ofpPort = protocol.getPortInformation(sw, port);
 
 		if (ofpPort == null) {
-			Logger.error("sw: %d,  port: %d is null", sw.getId(), port);
+			Logger.error("sw: %d,  port: %d is null", sw.getId(), port.getPortNumber());
 			return true;
 		}
 		

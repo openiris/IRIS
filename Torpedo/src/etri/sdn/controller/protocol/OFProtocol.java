@@ -706,7 +706,11 @@ public class OFProtocol {
 			// nw tos (dscp & ecn)
 			scratch = packetDataBB.get();
 			ret.setExact(MatchField.IP_DSCP, IpDscp.of((byte)((0b11111100 & scratch) >> 2)));
-			ret.setExact(MatchField.IP_ECN, IpEcn.of((byte)(0b00000011 & scratch)));
+			try { 
+				ret.setExact(MatchField.IP_ECN, IpEcn.of((byte)(0b00000011 & scratch)));
+			} catch (UnsupportedOperationException u) {
+				// does nothing
+			}
 
 			// nw protocol
 			packetDataBB.position(packetDataBB.position() + 7);
@@ -742,8 +746,8 @@ public class OFProtocol {
 		switch (network_protocol) {
 		case 0x01:
 			// icmp
-			ret.setExact(MatchField.ICMPV4_TYPE, ICMPv4Type.of(packetDataBB.get()));
-			ret.setExact(MatchField.ICMPV4_CODE, ICMPv4Code.of(packetDataBB.get()));
+//			ret.setExact(MatchField.ICMPV4_TYPE, ICMPv4Type.of(packetDataBB.get()));
+//			ret.setExact(MatchField.ICMPV4_CODE, ICMPv4Code.of(packetDataBB.get()));
 			break;
 		case 0x06:
 			// tcp

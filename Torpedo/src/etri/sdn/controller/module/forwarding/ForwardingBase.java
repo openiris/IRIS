@@ -265,7 +265,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 		.setCookie(U64.of(cookie))
 		.setMatch(match)
 		.setPriority(FLOWMOD_DEFAULT_PRIORITY)
-		.setFlags( EnumSet.of(OFFlowModFlags.CHECK_OVERLAP) );
+		.setFlags( EnumSet.noneOf(OFFlowModFlags.class) );
 		
 		try { 
 			fm.setTableId(TableId.ZERO);
@@ -296,7 +296,8 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 				// source switch. The removal message is used to maintain the flow cache.
 				// Don't set the flag for ARP messages - TODO generalize check
 				if ( match.get(MatchField.ETH_TYPE) != EthType.ARP ) {
-					fm.setFlags(EnumSet.of(OFFlowModFlags.SEND_FLOW_REM, OFFlowModFlags.CHECK_OVERLAP));
+//					fm.setFlags(EnumSet.of(OFFlowModFlags.SEND_FLOW_REM, OFFlowModFlags.CHECK_OVERLAP));
+					fm.setFlags(EnumSet.of(OFFlowModFlags.SEND_FLOW_REM));
 				}
 			}
 
@@ -333,6 +334,8 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			}
 			
 			fm.setMatch(fm_match.build());
+			
+			fm.setBufferId(OFBufferId.NO_BUFFER); //?
 
 			try {
 //				counterStore.updatePktOutFMCounterStore(sw, fm);

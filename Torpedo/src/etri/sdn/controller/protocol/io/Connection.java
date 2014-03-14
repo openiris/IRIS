@@ -129,9 +129,12 @@ public final class Connection {
 	 * Close this connection
 	 */
 	public synchronized void close() {
-		client_status = STATUS.CLOSED;
+		this.client_status = STATUS.CLOSED;
 		try {
-			client.close();
+			this.client.close();
+			this.client = null;
+			this.sw = null;
+			this.stream = null;
 		} catch (IOException e) {
 			// does nothing.
 		}

@@ -187,6 +187,7 @@ public final class ClientChannelWatcher extends Thread {
 	}
 	
 	private boolean handleReadEvent(Connection conn) {
+		
 		List<OFMessage> msgs = null;
 		try {
 			msgs = conn.read();

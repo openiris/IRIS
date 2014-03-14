@@ -417,7 +417,7 @@ public class State extends OFModel {
 					.setOutPort( OFPort.ANY /* NONE for 1.0*/ );
 					try {
 						req
-						.setOutGroup(OFGroup.ANY /* OFPG_ANY (all group) */)
+						.setOutGroup(OFGroup.ANY)
 						.setTableId(TableId.ALL);
 					} catch ( UnsupportedOperationException u ) {}
 

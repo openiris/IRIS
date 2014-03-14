@@ -33,6 +33,8 @@ public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStre
 	public OFMessageAsyncStream(SocketChannel sock) throws IOException {
 		this.inBuf = ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE);
 		this.outBuf = ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE);
+		this.inBuf.clear();
+		this.outBuf.clear();
 		this.sock = sock;
 		// this.sock.configureBlocking(false);
 	}
@@ -109,15 +111,20 @@ public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStre
 			if (demux.getLengthU() > data.remaining())
 				break;
 			
+			int start = data.position();
 			try {
 				OFMessage msg = OFFactories.getGenericReader().readFrom( data );
 				if ( msg != null ) {
 					results.add( msg );
+				} else {
+					data.position( start );
 				}
 				
 			} catch (OFParseError e) {
-				e.printStackTrace();
+//				e.printStackTrace();
+//				System.err.println(data);
 				// we skip this message: not parse
+				data.position( start + demux.getLengthU() );
 				continue;
 			}
 		}
