@@ -15,70 +15,10 @@ irisApp.controller('CntlFlows',
 					_.each(data[$scope.id], function(f) {
 						f.matchHTML = '';
 						
-						if ( f.match.inputPort ) {
-							f.matchHTML += "port=" + f.match.inputPort + ", ";
+						for ( var k in f.match ) {
+							f.matchHTML += k.replace("_","") + "=" + f.match[k] + ", "
 						}
-						// ---
-						if ( f.match.dataLayerVirtualLan ) {
-							f.matchHTML += "VLAN=" + f.match.dataLayerVirtualLan + ", ";
-						} 
-						if ( f.match.dataLayerVirtualLanPriorityCodePoint ) {
-							f.matchHTML += "prio=" + f.match.dataLayerVirtualLanPriorityCodePoint  + ", ";
-						} 
-						if ( f.match.dataLayerSource ) {
-							f.matchHTML += "src=" + f.match.dataLayerSource + ", ";
-						}
-						if ( f.match.dataLayerDestination ) {
-							f.matchHTML += "dest=" + f.match.dataLayerDestination + ", ";
-						}
-						if ( f.match.dataLayerType ) {
-							f.matchHTML += "ethertype=" + f.match.dataLayerType + ", ";
-						}
-						// ---
-						if ( f.match.networkProtocol ) { // IP protocol
-							f.matchHTML += "proto=" + f.match.networkProtocol + ", ";
-						}
-						if ( f.match.networkTypeOfService ) { // IP TOS
-							f.matchHTML += "TOS=" + f.match.networkTypeOfService  + ", ";
-						}
-						if ( f.match.networkDscp ) {
-							f.matchHTML += "DSCP=" + f.match.networkDscp  + ", ";
-						}
-						if ( f.match.networkEcn ) {
-							f.matchHTML += "DSCP=" + f.match.networkEcn  + ", ";
-						}
-						if ( f.match.networkSource ) { // src IP
-							f.matchHTML += "src=" + f.match.networkSource  + ", ";
-						}
-						if ( f.match.networkDestination ) { // dest IP
-							f.matchHTML += "dest=" + f.match.networkDestination  + ", ";
-						}
-						// ---
-						if ( f.match.transportSource ) { // TCP/UDP source port
-							f.matchHTML += "IP src port=" + f.match.transportSource + ", ";
-						}
-						if ( f.match.transportDestination ) { // TCP/UDP dest port
-							f.matchHTML += "IP dest port=" + f.match.transportDestination  + ", ";
-						}
-						if ( f.match.tcpSource ) {
-							f.matchHTML += "TCP src port=" + f.match.tcpSource + ", ";
-						}
-						if ( f.match.tcpDestination ) {
-							f.matchHTML += "TCP dst port=" + f.match.tcpDestination + ", ";
-						}
-						if ( f.match.udpSource ) {
-							f.matchHTML += "UDP src port=" + f.match.udpSource + ", ";
-						}
-						if ( f.match.udpDestination ) {
-							f.matchHTML += "UDP dst port=" + f.match.udpDestination + ", ";
-						}
-						if ( f.match.icmpType ) {
-							f.matchHTML += "ICMP type=" + f.match.icmpType + ", ";
-						}
-						if ( f.match.icmpCode ) {
-							f.matchHTML += "ICMP code=" + f.match.icmpCode + ", ";
-						}
-						
+												
 						// remove trailing ", "
 						f.matchHTML = f.matchHTML.substr(0, f.matchHTML.length - 2);
 						

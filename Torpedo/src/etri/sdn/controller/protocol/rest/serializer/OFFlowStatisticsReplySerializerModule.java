@@ -1,4 +1,4 @@
-package etri.sdn.controller.module.statemanager;
+package etri.sdn.controller.protocol.rest.serializer;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

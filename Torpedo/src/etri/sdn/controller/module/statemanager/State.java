@@ -40,6 +40,10 @@ import org.restlet.data.MediaType;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.protocol.OFProtocol;
 import etri.sdn.controller.protocol.io.IOFSwitch;
+import etri.sdn.controller.protocol.rest.serializer.ModuleListSerializerModule;
+import etri.sdn.controller.protocol.rest.serializer.OFFeaturesReplySerializerModule;
+import etri.sdn.controller.protocol.rest.serializer.OFFlowStatisticsReplySerializerModule;
+import etri.sdn.controller.protocol.rest.serializer.OFTypeSerializerModule;
 
 /**
  * Model that represents the internal data of {@link OFMStateManager}. 
@@ -74,9 +78,9 @@ public class State extends OFModel {
 	}
 	
 	/**
-	 * Custom Serializer for OFPort
+	 * Custom Serializer for OF types
 	 */
-	private OFPortSerializerModule port_module = new OFPortSerializerModule();
+	private OFTypeSerializerModule type_module = new OFTypeSerializerModule();
 	
 	/**
 	 * Custom Serializer for FLOW_STATISTICS_REPLY message.
@@ -170,7 +174,7 @@ public class State extends OFModel {
 
 						// create an object mapper.
 						ObjectMapper om = new ObjectMapper();
-						om.registerModule(port_module);
+						om.registerModule(type_module);
 
 						try {
 							String r = om/*.writerWithDefaultPrettyPrinter()*/.writeValueAsString(output);
@@ -270,19 +274,51 @@ public class State extends OFModel {
 								resultValues.addAll( ((OFPortStatsReply)s).getEntries() );
 							}
 						}
-
-						// create an object mapper.
-						ObjectMapper om = new ObjectMapper();
-						// this is critical in providing the port statistics correctly.
-						om.registerModule(port_module);
-
+						
+						StringWriter sWriter = new StringWriter();
+						JsonFactory f = new JsonFactory();
+						
 						try {
-							String r = om./*writerWithDefaultPrettyPrinter().*/writeValueAsString(result);
-							response.setEntity(r, MediaType.APPLICATION_JSON);
-						} catch (Exception e) {
+							JsonGenerator g = f.createJsonGenerator(sWriter);
+							g.writeStartObject();
+							g.writeFieldName(switchIdStr);
+							g.writeStartArray();
+							for ( OFPortStatsEntry entry : resultValues ) {
+
+								g.writeStartObject();
+								
+								try { 
+									g.writeNumberField("portNumber", entry.getPortNo().getPortNumber());
+									g.writeNumberField("transmitBytes", entry.getTxBytes().getValue());
+									g.writeNumberField("receiveBytes", entry.getRxBytes().getValue());
+									g.writeNumberField("transmitPackets", entry.getTxPackets().getValue());
+									g.writeNumberField("receivePackets", entry.getRxPackets().getValue());
+									g.writeNumberField("transmitDropped", entry.getTxDropped().getValue());
+									g.writeNumberField("receiveDropped", entry.getRxDropped().getValue());
+									g.writeNumberField("transmitErrors", entry.getTxErrors().getValue());
+									g.writeNumberField("receiveErrors", entry.getRxErrors().getValue());
+									g.writeNumberField("receiveFrameErrors", entry.getRxFrameErr().getValue());
+									g.writeNumberField("receiveOverErrors", entry.getRxOverErr().getValue());
+									g.writeNumberField("receiveCrcErros", entry.getRxCrcErr().getValue());
+									g.writeNumberField("collisions", entry.getCollisions().getValue());
+									g.writeNumberField("durationSec", entry.getDurationSec());
+									g.writeNumberField("durationNSec", entry.getDurationNsec());
+								} catch ( UnsupportedOperationException u ) {
+									// does nothing.
+								}
+								g.writeEndObject();
+							}
+							
+							g.writeEndArray();
+							g.writeEndObject();
+							g.close();
+						} catch (IOException e) {
 							e.printStackTrace();
 							return;
 						}
+						
+						String r = sWriter.toString();
+						response.setEntity(r, MediaType.APPLICATION_JSON);
 					}
 				}
 		),
@@ -400,7 +436,7 @@ public class State extends OFModel {
 					// create an object mapper.
 					ObjectMapper om = new ObjectMapper();
 					om.registerModule(flow_statistics_reply_module);
-					om.registerModule(port_module);
+					om.registerModule(type_module);
 					
 					try {
 						String r = om/*.writerWithDefaultPrettyPrinter()*/.writeValueAsString(result);

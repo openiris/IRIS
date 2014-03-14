@@ -12,8 +12,9 @@ irisApp.controller('CntlPorts',
 				// scope.id is set externally.
 				$http.get('/wm/core/switch/'+ $scope.id +'/port/json')
 				.success(function(data) {
-					
+					// array response.
 					_.each(data[$scope.id], function(port) {
+
 						if ( ! $scope.portsMap[port.portNumber] ) {
 							$scope.ports.push( port );
 						
@@ -24,6 +25,7 @@ irisApp.controller('CntlPorts',
 							px.transmitBytes = port.transmitBytes;
 							px.receiveBytes = port.receiveBytes;
 							px.transmitPackets = port.transmitPackets;
+							px.receivePackets = port.receivePackets;
 							px.receiveDropped = port.receiveDropped;
 							px.transmitDropped = port.transmitDropped;
 							px.receiveErrors = port.receiveErrors;
@@ -41,30 +43,13 @@ irisApp.controller('CntlPorts',
 						_.each(feature_ports, function(p)  {
 							var px = $scope.portsMap[p.portNumber];
 							if ( px ) {
-								px.status = (p.currentFeatures == 0 || p.state & 1) ? 'DOWN' : 'UP';
-								switch(p.currentFeatures & 0x7f) {
-								case 1:
-									px.status += ' 10 Mbps';
-									break;
-								case 2:
-									px.status += ' 10 Mbps FDX';
-									break;
-								case 4:
-									px.status += ' 100 Mbps';
-									break;
-								case 8:
-									px.status += ' 100 Mbps FDX';
-									break;
-								case 16:
-									px.status += ' 1 Gbps'; // RLY?
-									break;
-								case 32:
-									px.status += ' 1 Gbps FDX';
-									break;
-								case 64:
-									px.status += ' 10 Gbps FDX';
-									break;
-								}
+								px.status = 'UP'
+								if ( p.config.indexOf("DOWN") >= 0 || p.state.indexOf("DOWN") >=0 )
+									px.status = 'DOWN';
+								px.status += ' ';
+								px.status += p.currentFeatures.replace(/(PF_|\s+)/gi, "")
+								                              .replace(/_/," ")
+								                              .replace(/\[\]/,"");
 								px.name = p.name;
 							}
 						});

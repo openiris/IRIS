@@ -27,6 +27,7 @@ import etri.sdn.controller.OFModel;
 import etri.sdn.controller.module.devicemanager.SwitchPort.ErrorStatus;
 import etri.sdn.controller.module.topologymanager.ITopologyService;
 import etri.sdn.controller.protocol.packet.IPv4;
+import etri.sdn.controller.protocol.rest.serializer.OFTypeSerializerModule;
 import etri.sdn.controller.util.Logger;
 import etri.sdn.controller.util.MultiIterator;
 
@@ -40,6 +41,11 @@ public class Devices extends OFModel implements IDeviceService {
 	public ITopologyService topology;
 	public IEntityClassifierService classifier;
 	public AttachmentPointComparator apComparator;
+	
+	/**
+	 * Custom Serializer for OF types
+	 */
+	private OFTypeSerializerModule type_module = new OFTypeSerializerModule();
 
 	/**
 	 * AttachmentPointComparator class compares two attachment points 
@@ -1484,6 +1490,7 @@ public class Devices extends OFModel implements IDeviceService {
 				public void handle(Request request, Response response) {
 					// create an object mapper.
 					ObjectMapper om = new ObjectMapper();
+					om.registerModule(type_module);
 
 					// retrieve all device information as JSON.
 					List<RESTDevice> list = new LinkedList<RESTDevice>();
