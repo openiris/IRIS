@@ -40,8 +40,7 @@ public class BasicOFController extends OFController {
 			m_entity_classifier, 
 			m_device_manager,
 			m_firewall,
-			m_forwarding,
-			m_netfailover
+			m_forwarding
 	};
 
 	public BasicOFController(int num_of_queue, String role) {
@@ -59,7 +58,7 @@ public class BasicOFController extends OFController {
 		m_device_manager.init(this);
 		m_state_manager.init(this);			// this is not a part of the pipeline.
 		m_user_interface.init(this);		// this is not a part of the pipeline.
-		m_storage_manager.init(this);		// this is not a part of the pipeline.s
+		m_storage_manager.init(this);		// this is not a part of the pipeline.
 		m_firewall.init(this);
 		m_forwarding.init(this);
 		m_netfailover.init(this);
