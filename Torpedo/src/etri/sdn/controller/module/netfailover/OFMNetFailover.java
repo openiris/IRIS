@@ -1,5 +1,6 @@
 /**
- *    Copyright 2011, Big Switch Networks, Inc. 
+ *    Copyright 2014, ETRI.
+ *     
  *    Originally created by Byungjoon Lee, ETRI
  * 
  *    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -20,6 +21,7 @@ package etri.sdn.controller.module.netfailover;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.projectfloodlight.openflow.protocol.OFFactories;
 import org.projectfloodlight.openflow.protocol.OFFactory;
@@ -34,6 +36,7 @@ import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
 import etri.sdn.controller.module.linkdiscovery.ILinkDiscoveryListener;
+import etri.sdn.controller.module.linkdiscovery.ILinkDiscoveryListener.LDUpdate;
 import etri.sdn.controller.module.linkdiscovery.ILinkDiscoveryService;
 import etri.sdn.controller.module.linkdiscovery.NodePortTuple;
 import etri.sdn.controller.module.routing.IRoutingService;
@@ -43,23 +46,62 @@ import etri.sdn.controller.module.topologymanager.ITopologyService;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 
-public class OFMNetFailover extends OFModule implements ILinkDiscoveryListener,
-		ITopologyListener {
+
+/**
+ * Thread that relays LDUpdate notification to a real worker method.
+ * @author Byungjoon Lee
+ *
+ */
+class LDUpdateProcessor extends Thread {
+	private OFMNetFailover parent;
+	private LinkedBlockingQueue<LDUpdate> queue = new LinkedBlockingQueue<LDUpdate>(128);
+	
+	LDUpdateProcessor(OFMNetFailover parent) {
+		this.parent = parent;
+	}
+	
+	void put(LDUpdate t) {
+		queue.add(t);
+	}
+	
+	public void run() {
+		do {
+			try {
+				LDUpdate t = queue.take();
+				parent.removeRoutesOnLink(t.getSrc(),t.getSrcPort(),
+						t.getDst(),t.getDstPort());
+			} catch (InterruptedException e) {
+				// quit further processing
+				return;
+			}
+			
+		} while ( true );
+	}
+}
+
+/**
+ * Network Failover module.
+ * 
+ * @author Byungjoon Lee
+ *
+ */
+public class OFMNetFailover 
+extends OFModule
+implements ILinkDiscoveryListener, ITopologyListener {
 
 	private ILinkDiscoveryService linkDiscoveryService;
 	private ITopologyService topologyService;
 	private IRoutingService routingService;
 	
+	private LDUpdateProcessor processor;
+		
 	@Override
 	public void topologyChanged() {
 		List<LDUpdate> updates = this.topologyService.getLastLinkUpdates();
 		for ( LDUpdate u : updates ) {
 			switch ( u.getOperation() ) {
 			case LINK_UPDATED:
-				// new link is added. We need to find all the affected routes 
-				// and remove them from the flow tables of the switches.
-				removeRoutesOnLink(u.getSrc(), u.getSrcPort(), 
-						   		   u.getDst(), u.getDstPort());
+				this.processor.put(u);
 				break;
 			default:
 				// does nothing
@@ -68,21 +110,19 @@ public class OFMNetFailover extends OFModule implements ILinkDiscoveryListener,
 	}
 
 	@Override
-	public void linkDiscoveryUpdate(LDUpdate update) {
-		UpdateOperation op = update.getOperation();
-		switch (op) {
+	public void linkDiscoveryUpdate(LDUpdate u) {
+		switch ( u.getOperation() ) {
 		case LINK_REMOVED:
 			// a link is removed. We need to find all routes on the link
 			// and remove them from the flow tables of the switches. 
-			removeRoutesOnLink(update.getSrc(), update.getSrcPort(), 
-							   update.getDst(), update.getDstPort());
+			this.processor.put(u);
 			break;
 		default:
 			// does nothing
 		}
 	}
 
-	private void removeRoutesOnLink(long src, OFPort srcPort, long dst,	OFPort dstPort) {
+	void removeRoutesOnLink(long src, OFPort srcPort, long dst,	OFPort dstPort) {
 		NodePortTuple srcNpt = new NodePortTuple(src, srcPort);
 		NodePortTuple dstNpt = new NodePortTuple(dst, dstPort);
 
@@ -169,6 +209,11 @@ public class OFMNetFailover extends OFModule implements ILinkDiscoveryListener,
 		
 		this.linkDiscoveryService.addListener(this);
 		this.topologyService.addListener(this);
+		
+		this.processor = new LDUpdateProcessor(this);
+		
+		// start the token processor
+		this.processor.start();
 	}
 
 	@Override
