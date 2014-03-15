@@ -17,6 +17,7 @@
 
 package etri.sdn.controller.module.netfailover;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -24,7 +25,6 @@ import org.projectfloodlight.openflow.protocol.OFFactories;
 import org.projectfloodlight.openflow.protocol.OFFactory;
 import org.projectfloodlight.openflow.protocol.OFFlowDelete;
 import org.projectfloodlight.openflow.protocol.OFMessage;
-import org.projectfloodlight.openflow.protocol.match.Match;
 import org.projectfloodlight.openflow.types.OFPort;
 import org.projectfloodlight.openflow.types.TableId;
 
@@ -79,28 +79,57 @@ public class OFMNetFailover extends OFModule implements ILinkDiscoveryListener,
 		NodePortTuple srcNpt = new NodePortTuple(src, srcPort);
 		NodePortTuple dstNpt = new NodePortTuple(dst, dstPort);
 
+		// get all switch identifiers
 		Set<Long> sws = this.controller.getSwitchIdentifiers();
+		
+		// this is a set of access switch identifiers
+		Set<Long> asws = new HashSet<Long>();
+		
 		for ( long s : sws ) {
-			for ( long d : sws ) {
+			Set<OFPort> ports = this.topologyService.getPorts(s);
+			for ( OFPort p: ports ) {
+				// if the switch has an attachment point port, 
+				// then it's used as an access switch.
+				if ( this.topologyService.isAttachmentPointPort(s, p) ) {
+					// if this is an access switch, we include it in the calculation.
+					asws.add(s);
+					break;
+				}
+			}
+		}
+		
+		// now, for every pair of access switches,
+		for ( long s : asws ) {
+			for ( long d : asws ) {
+				// we don't do the removal for the reverse direction.
 				// can this be some source of evil?
 				if ( s <= d ) continue;
 				
 				 Route r = this.routingService.getRoute(s, d);
 				 BloomFilter<NodePortTuple> bf = r.getBloomFilter();
 				 if ( bf.mightContain(srcNpt) && bf.mightContain(dstNpt) ) {
-					 removeRouteFromNetwork(r, srcNpt, dstNpt);
+					 removeRouteFromNetwork(r);
 				 }
 			}
 		}		
 	}
 
-	private void removeRouteFromNetwork(Route r, NodePortTuple srcNpt,
-			NodePortTuple dstNpt) {
+	/**
+	 * Remove a route from network by eliminating flow-mod records
+	 * @param r			Route object
+	 */
+	private void removeRouteFromNetwork(Route r) {
 		for ( NodePortTuple npt: r.getPath()) {
 			removeOutgoingFlowRecord( npt.getNodeId(), npt.getPortId() );
 		}
 	}
 	
+	/**
+	 * Remove Flow-mod record from the switch
+	 * 
+	 * @param srcId		long identifier of the switch
+	 * @param outPort	outgoing port where the flow-del would be applied
+	 */
 	private void removeOutgoingFlowRecord(long srcId, OFPort outPort) {
 		IOFSwitch sw = this.getController().getSwitch(srcId);
 		if ( sw == null ) {
@@ -149,13 +178,11 @@ public class OFMNetFailover extends OFModule implements ILinkDiscoveryListener,
 	
 	@Override
 	protected boolean handleDisconnect(Connection conn) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public OFModel[] getModels() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

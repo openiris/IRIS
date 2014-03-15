@@ -224,6 +224,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 	 * 
 	 * @return true if the source switch is included in this route
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean pushRoute(
 			Connection conn,
 			Route route, 
@@ -289,15 +290,12 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 				return srcSwitchIncluded;
 			}
 
-			// fm.setMatch(match);
-			
 			// set buffer id if it is the source switch
 			if (1 == indx) {
 				// Set the flag to request flow-mod removal notifications only for the
 				// source switch. The removal message is used to maintain the flow cache.
 				// Don't set the flag for ARP messages - TODO generalize check
 				if ( match.get(MatchField.ETH_TYPE) != EthType.ARP ) {
-//					fm.setFlags(EnumSet.of(OFFlowModFlags.SEND_FLOW_REM, OFFlowModFlags.CHECK_OVERLAP));
 					fm.setFlags(EnumSet.of(OFFlowModFlags.SEND_FLOW_REM));
 				}
 			}
@@ -308,7 +306,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			Match.Builder fm_match = match.createBuilder();
 			
 			// copy construct the original match object.
-			for ( MatchField mf : match.getMatchFields() ) {
+			for ( @SuppressWarnings("rawtypes") MatchField mf : match.getMatchFields() ) {
 				if ( match.isExact(mf) ) {
 					fm_match.setExact(mf, match.get(mf));
 				} else {
