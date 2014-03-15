@@ -110,11 +110,10 @@ public class OFMNetFailover extends OFModule implements ILinkDiscoveryListener,
 		OFFactory fac = OFFactories.getFactory(sw.getVersion());
 		
 		OFFlowDelete.Builder del = fac.buildFlowDelete();
-		Match.Builder dm = fac.buildMatch();
 		try {
 			del
 			.setOutPort(outPort)
-			.setMatch(dm.build())
+			.setMatch(fac.matchWildcardAll())
 			.setTableId(TableId.ZERO);
 		} catch ( UnsupportedOperationException u ) {
 			// does nothing.
