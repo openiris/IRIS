@@ -14,6 +14,7 @@ import etri.sdn.controller.module.devicemanager.OFMDeviceManager;
 import etri.sdn.controller.module.firewall.OFMFirewall;
 import etri.sdn.controller.module.forwarding.Forwarding;
 import etri.sdn.controller.module.linkdiscovery.OFMLinkDiscovery;
+import etri.sdn.controller.module.netfailover.OFMNetFailover;
 import etri.sdn.controller.module.statemanager.OFMStateManager;
 import etri.sdn.controller.module.storagemanager.OFMStorageManager;
 import etri.sdn.controller.module.topologymanager.OFMTopologyManager;
@@ -31,6 +32,7 @@ public class BasicOFController extends OFController {
 	private OFMStorageManager m_storage_manager = new OFMStorageManager();	
 	private Forwarding m_forwarding = new Forwarding();
 	private OFMFirewall m_firewall = new OFMFirewall();
+	private OFMNetFailover m_netfailover = new OFMNetFailover();
 	
 	private OFModule[] packet_in_pipeline = { 
 			m_link_discovery, 
@@ -38,8 +40,8 @@ public class BasicOFController extends OFController {
 			m_entity_classifier, 
 			m_device_manager,
 			m_firewall,
-			m_forwarding
-			
+			m_forwarding,
+			m_netfailover
 	};
 
 	public BasicOFController(int num_of_queue, String role) {
@@ -60,6 +62,7 @@ public class BasicOFController extends OFController {
 		m_storage_manager.init(this);		// this is not a part of the pipeline.s
 		m_firewall.init(this);
 		m_forwarding.init(this);
+		m_netfailover.init(this);
 	}
 
 	@Override

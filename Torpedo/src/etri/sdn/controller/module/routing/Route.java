@@ -1,6 +1,7 @@
 /**
  *    Copyright 2011, Big Switch Networks, Inc. 
  *    Originally created by David Erickson, Stanford University
+ *    Modified by Byungjoon Lee, ETRI
  * 
  *    Licensed under the Apache License, Version 2.0 (the "License"); you may
  *    not use this file except in compliance with the License. You may obtain
@@ -20,6 +21,10 @@ package etri.sdn.controller.module.routing;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.hash.BloomFilter;
+import com.google.common.hash.Funnel;
+import com.google.common.hash.PrimitiveSink;
+
 import etri.sdn.controller.module.linkdiscovery.NodePortTuple;
 
 
@@ -31,6 +36,15 @@ import etri.sdn.controller.module.linkdiscovery.NodePortTuple;
 public class Route implements Comparable<Route> {
 	protected RouteId id;
 	protected List<NodePortTuple> switchPorts;
+	
+	private static enum RouteFunnel implements Funnel<NodePortTuple> {
+		INSTANCE;
+		@Override
+		public void funnel(NodePortTuple tuple, PrimitiveSink sink) {
+			sink.putLong(tuple.getNodeId())
+				.putInt(tuple.getPortId().getPortNumber());
+		}
+	}
 
 	public Route(RouteId id, List<NodePortTuple> switchPorts) {
 		super();
@@ -127,6 +141,20 @@ public class Route implements Comparable<Route> {
 				return true;
 			}
 			prev = npt;
+		}
+		return ret;
+	}
+	/**
+	 * This method returns a bloom filter (set) that contains all node-port tuple 
+	 * inside the route. This bloom filter is used to test a link is within the 
+	 * route very fast.
+	 * 
+	 * @return BloomFilter<NodePortTuple>
+	 */
+	public BloomFilter<NodePortTuple> getBloomFilter() {
+		BloomFilter<NodePortTuple> ret = BloomFilter.create(RouteFunnel.INSTANCE, 20);
+		for ( NodePortTuple npt: this.switchPorts ) {
+			ret.put(npt);
 		}
 		return ret;
 	}

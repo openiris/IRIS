@@ -63,7 +63,7 @@ public final class MessageContext {
      * for the current packet-in, if applicable.
      */
     public static final String DST_DEVICE = 
-            "net.floodlightcontroller.devicemanager.dstDevice"; 
+            "net.floodlightcontroller.devicemanager.dstDevice";
 
     /**
      * Return the actual storage associated with the message context.

@@ -466,7 +466,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		linksUpdated = true;
 		
 		// purge all useless flow records.
-		purgeAllFlowRecords(srcId, srcPort, dstId, dstPort);		
+//		purgeAllFlowRecords(srcId, srcPort, dstId, dstPort);		
 	}
 
 	/**
@@ -478,21 +478,21 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	 * @param srcId
 	 * @param dstId
 	 */
-	private void purgeAllFlowRecords(long srcId, OFPort srcPort, long dstId, OFPort dstPort) {
-		IOFSwitch src = this.controller.getSwitch(srcId);
-		IOFSwitch dst = this.controller.getSwitch(dstId);
-		List<IOFSwitch> switches = new LinkedList<IOFSwitch>();
-		if ( src != null ) switches.add(src);
-		if ( dst != null ) switches.add(dst);
-		for ( IOFSwitch s : switches ) {
-			Collection<OFPort> ports = this.protocol.getEnabledPortNumbers(s);
-			for ( OFPort p: ports ) {
-				if ( !p.equals(srcPort) ) {
-					this.removeOutgoingFlowRecord(s.getId(), p);
-				}
-			}
-		}		
-	}
+//	private void purgeAllFlowRecords(long srcId, OFPort srcPort, long dstId, OFPort dstPort) {
+//		IOFSwitch src = this.controller.getSwitch(srcId);
+//		IOFSwitch dst = this.controller.getSwitch(dstId);
+//		List<IOFSwitch> switches = new LinkedList<IOFSwitch>();
+//		if ( src != null ) switches.add(src);
+//		if ( dst != null ) switches.add(dst);
+//		for ( IOFSwitch s : switches ) {
+//			Collection<OFPort> ports = this.protocol.getEnabledPortNumbers(s);
+//			for ( OFPort p: ports ) {
+//				if ( !p.equals(srcPort) ) {
+//					this.removeOutgoingFlowRecord(s.getId(), p);
+//				}
+//			}
+//		}		
+//	}
 
 	public void removeLink(Link link)  {
 		boolean flag1 = false, flag2 = false;
@@ -536,35 +536,35 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 						   long dstId, OFPort dstPort) {
 		Link link = new Link(srcId, srcPort, dstId, dstPort);
 		removeLink(link);
-		removeUselessFlowRecord(link);
+//		removeUselessFlowRecord(link);
 	}
 
-	private void removeOutgoingFlowRecord(long srcId, OFPort outPort) {
-		IOFSwitch sw = this.getController().getSwitch(srcId);
-		if ( sw == null ) {
-			return;
-		}
-		
-		OFFactory fac = OFFactories.getFactory(sw.getVersion());
-		
-		OFFlowDelete.Builder del = fac.buildFlowDelete();
-		Match.Builder dm = fac.buildMatch();
-		try {
-			del
-			.setOutPort(outPort)
-			.setMatch(dm.build())
-			.setTableId(TableId.ZERO);
-		} catch ( UnsupportedOperationException u ) {
-			// does nothing.
-		}
-		
-		sw.getConnection().write( del.build() );
-	}
+//	private void removeOutgoingFlowRecord(long srcId, OFPort outPort) {
+//		IOFSwitch sw = this.getController().getSwitch(srcId);
+//		if ( sw == null ) {
+//			return;
+//		}
+//		
+//		OFFactory fac = OFFactories.getFactory(sw.getVersion());
+//		
+//		OFFlowDelete.Builder del = fac.buildFlowDelete();
+//		Match.Builder dm = fac.buildMatch();
+//		try {
+//			del
+//			.setOutPort(outPort)
+//			.setMatch(dm.build())
+//			.setTableId(TableId.ZERO);
+//		} catch ( UnsupportedOperationException u ) {
+//			// does nothing.
+//		}
+//		
+//		sw.getConnection().write( del.build() );
+//	}
 
-	private void removeUselessFlowRecord(Link link) {
-		removeOutgoingFlowRecord(link.getSrc(), link.getSrcPort());
-		removeOutgoingFlowRecord(link.getDst(), link.getDstPort());
-	}
+//	private void removeUselessFlowRecord(Link link) {
+//		removeOutgoingFlowRecord(link.getSrc(), link.getSrcPort());
+//		removeOutgoingFlowRecord(link.getDst(), link.getDstPort());
+//	}
 
 	public void clear() {
 		switchPorts.clear();
