@@ -52,18 +52,25 @@ public class OFMNetFailover extends OFModule implements ILinkDiscoveryListener,
 	
 	@Override
 	public void topologyChanged() {
-		// TODO Auto-generated method stub
+		List<LDUpdate> updates = this.topologyService.getLastLinkUpdates();
+		for ( LDUpdate u : updates ) {
+			switch ( u.getOperation() ) {
+			case LINK_UPDATED:
+				// new link is added. We need to find all the affected routes 
+				// and remove them from the flow tables of the switches.
+				removeRoutesOnLink(u.getSrc(), u.getSrcPort(), 
+						   		   u.getDst(), u.getDstPort());
+				break;
+			default:
+				// does nothing
+			}
+		}
 	}
 
 	@Override
 	public void linkDiscoveryUpdate(LDUpdate update) {
 		UpdateOperation op = update.getOperation();
 		switch (op) {
-		case LINK_UPDATED:
-			// new link is added. We need to find all the affected routes 
-			// and remove them from the flow tables of the switches.
-			// TODO:
-			break;
 		case LINK_REMOVED:
 			// a link is removed. We need to find all routes on the link
 			// and remove them from the flow tables of the switches. 
