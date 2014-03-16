@@ -108,7 +108,6 @@ implements ILinkDiscoveryListener, ITopologyListener {
 	public void topologyChanged() {
 		List<LDUpdate> updates = this.topologyService.getLastLinkUpdates();
 		for ( LDUpdate u : updates ) {
-			System.out.println(u.getOperation());
 			switch ( u.getOperation() ) {
 			case LINK_UPDATED:
 				this.processor.put(u);
