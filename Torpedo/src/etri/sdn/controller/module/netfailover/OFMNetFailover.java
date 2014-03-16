@@ -29,12 +29,14 @@ import org.projectfloodlight.openflow.protocol.OFFlowDelete;
 import org.projectfloodlight.openflow.protocol.OFMessage;
 import org.projectfloodlight.openflow.types.OFPort;
 import org.projectfloodlight.openflow.types.TableId;
+import org.projectfloodlight.openflow.types.U64;
 
 import com.google.common.hash.BloomFilter;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
+import etri.sdn.controller.module.forwarding.Forwarding;
 import etri.sdn.controller.module.linkdiscovery.ILinkDiscoveryListener;
 import etri.sdn.controller.module.linkdiscovery.ILinkDiscoveryListener.LDUpdate;
 import etri.sdn.controller.module.linkdiscovery.ILinkDiscoveryService;
@@ -45,6 +47,7 @@ import etri.sdn.controller.module.topologymanager.ITopologyListener;
 import etri.sdn.controller.module.topologymanager.ITopologyService;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
+import etri.sdn.controller.util.AppCookie;
 
 
 /**
@@ -103,6 +106,8 @@ implements ILinkDiscoveryListener, ITopologyListener {
 	private IRoutingService routingService;
 	
 	private LDUpdateProcessor processor;
+	
+	private long cookie = AppCookie.makeCookie(Forwarding.FORWARDING_APP_ID, 0);
 		
 	@Override
 	public void topologyChanged() {
@@ -239,6 +244,8 @@ implements ILinkDiscoveryListener, ITopologyListener {
 		OFFlowDelete.Builder del = fac.buildFlowDelete();
 		try {
 			del
+			.setCookie(U64.of(this.cookie))
+			.setCookieMask(U64.of(0xffffffffffffffffL))
 			.setOutPort(outPort)
 			.setMatch(fac.matchWildcardAll())
 			.setTableId(TableId.ZERO);
