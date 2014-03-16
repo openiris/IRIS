@@ -148,7 +148,8 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 						this.queue.drainTo( qis );
 
 						for ( QI item : qis ) {
-							process( item.connection(), item.messages() );
+							if ( item.connection().isConnected() )
+								process( item.connection(), item.messages() );
 						}
 
 					} catch (InterruptedException e) {

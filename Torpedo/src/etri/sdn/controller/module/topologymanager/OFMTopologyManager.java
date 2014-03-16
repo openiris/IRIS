@@ -148,7 +148,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 					}
 
 				},
-				1 * 100 /* milliseconds */);
+				1 * 300 /* milliseconds */);
 	}
 
 	public void init() {
@@ -624,7 +624,6 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		for(int i=0; i<topologyAware.size(); ++i) {
 			ITopologyListener listener = topologyAware.get(i);
 			listener.topologyChanged();
-//			currentInstance.printTopology();
 		}
 	}
 
@@ -653,7 +652,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 					return false;
 				}
 
-			}, 1 /* millisecond */);
+			}, 1000 /* millisecond */);
 		}
 	}
 

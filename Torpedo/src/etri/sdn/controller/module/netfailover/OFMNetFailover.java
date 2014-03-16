@@ -68,8 +68,17 @@ class LDUpdateProcessor extends Thread {
 		do {
 			try {
 				LDUpdate t = queue.take();
-				parent.removeRoutesOnLink(t.getSrc(),t.getSrcPort(),
-						t.getDst(),t.getDstPort());
+				switch ( t.getOperation() ) {
+				case LINK_UPDATED:
+					parent.removeRoutesOnAnyLink(t.getSrc(),t.getSrcPort(), t.getDst(),t.getDstPort());
+					break;
+				case LINK_REMOVED:
+					parent.removeRoutesOnLink(t.getSrc(),t.getSrcPort(), t.getDst(),t.getDstPort());
+					break;
+				default:
+					break;
+				}
+				
 			} catch (InterruptedException e) {
 				// quit further processing
 				return;
@@ -99,6 +108,7 @@ implements ILinkDiscoveryListener, ITopologyListener {
 	public void topologyChanged() {
 		List<LDUpdate> updates = this.topologyService.getLastLinkUpdates();
 		for ( LDUpdate u : updates ) {
+			System.out.println(u.getOperation());
 			switch ( u.getOperation() ) {
 			case LINK_UPDATED:
 				this.processor.put(u);
@@ -126,6 +136,55 @@ implements ILinkDiscoveryListener, ITopologyListener {
 		NodePortTuple srcNpt = new NodePortTuple(src, srcPort);
 		NodePortTuple dstNpt = new NodePortTuple(dst, dstPort);
 
+		Set<Long> asws = getAccessSwitches();
+		
+		// now, for every pair of access switches,
+		for ( long s : asws ) {
+			for ( long d : asws ) {
+				// we don't do the removal for the reverse direction.
+				// can this be some source of evil?
+				if ( s <= d ) continue;
+				
+				 Route r = this.routingService.getRoute(s, d);
+				 if  (r == null) 
+					 // topology is not ready right now.
+					 continue;
+				 
+				 BloomFilter<NodePortTuple> bf = r.getBloomFilter();
+				 if ( bf.mightContain(srcNpt) || bf.mightContain(dstNpt) ) {
+					 removeRouteFromNetwork(r);
+				 }
+			}
+		}		
+	}
+	
+	void removeRoutesOnAnyLink(long src, OFPort srcPort, long dst,	OFPort dstPort) {
+		NodePortTuple srcNpt = new NodePortTuple(src, srcPort);
+		NodePortTuple dstNpt = new NodePortTuple(dst, dstPort);
+
+		Set<Long> asws = getAccessSwitches();
+		
+		// now, for every pair of access switches,
+		for ( long s : asws ) {
+			for ( long d : asws ) {
+				// we don't do the removal for the reverse direction.
+				// can this be some source of evil?
+				if ( s <= d ) continue;
+				
+				 Route r = this.routingService.getRoute(s, d);
+				 if  (r == null) 
+					 // topology is not ready right now.
+					 continue;
+				 
+				 BloomFilter<NodePortTuple> bf = r.getBloomFilter();
+				 if ( bf.mightContain(srcNpt) || bf.mightContain(dstNpt) ) {
+					 removeAnyRouteFromNetwork(r);
+				 }
+			}
+		}		
+	}
+
+	private Set<Long> getAccessSwitches() {
 		// get all switch identifiers
 		Set<Long> sws = this.controller.getSwitchIdentifiers();
 		
@@ -144,21 +203,7 @@ implements ILinkDiscoveryListener, ITopologyListener {
 				}
 			}
 		}
-		
-		// now, for every pair of access switches,
-		for ( long s : asws ) {
-			for ( long d : asws ) {
-				// we don't do the removal for the reverse direction.
-				// can this be some source of evil?
-				if ( s <= d ) continue;
-				
-				 Route r = this.routingService.getRoute(s, d);
-				 BloomFilter<NodePortTuple> bf = r.getBloomFilter();
-				 if ( bf.mightContain(srcNpt) && bf.mightContain(dstNpt) ) {
-					 removeRouteFromNetwork(r);
-				 }
-			}
-		}		
+		return asws;
 	}
 
 	/**
@@ -170,6 +215,13 @@ implements ILinkDiscoveryListener, ITopologyListener {
 			removeOutgoingFlowRecord( npt.getNodeId(), npt.getPortId() );
 		}
 	}
+	
+	private void removeAnyRouteFromNetwork(Route r) {
+		for ( NodePortTuple npt: r.getPath()) {
+			removeOutgoingFlowRecord( npt.getNodeId(), OFPort.ANY );
+		}
+	}
+	
 	
 	/**
 	 * Remove Flow-mod record from the switch

@@ -303,6 +303,10 @@ public class OFProtocol {
 	 * @return			true of correctly handled, false otherwise
 	 */
 	public boolean process(Connection conn, MessageContext context, OFMessage m) {
+		if ( !conn.isConnected() ) {
+			return false;
+		}
+		
 		IOFSwitch sw = conn.getSwitch();
 		OFType t = m.getType();
 
