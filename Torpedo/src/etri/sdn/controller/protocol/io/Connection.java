@@ -145,6 +145,8 @@ public final class Connection {
 	 * @return	true if alive, false otherwise
 	 */
 	public boolean isConnected() {
+		if ( client == null ) return false;
+		
 		// client.isConnected() does not correctly return the 
 		// status of the channel after close() is called.
 		// thus, we choose to use isOpen() instead.
