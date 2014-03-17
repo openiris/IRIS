@@ -232,6 +232,7 @@ public class FirewallStorage extends OFModel{
 							if (op.toLowerCase().equals("storagerules")){
 								// create an object mapper.
 								ObjectMapper om = new ObjectMapper();
+								om.registerModule( new OFFirewallRuleReplySerializerModule() );
 								
 								try {
 									result = om./*writerWithDefaultPrettyPrinter().*/writeValueAsString( firewallEntryTable.values() );
@@ -291,7 +292,6 @@ public class FirewallStorage extends OFModel{
 							if (m == Method.GET){		
 								// create an object mapper.
 								ObjectMapper om = new ObjectMapper();
-								om.registerModule( new OFFirewallRuleReplySerializerModule() );
 								
 								try {
 									result = om./*writerWithDefaultPrettyPrinter().*/writeValueAsString( manager.getRules() );

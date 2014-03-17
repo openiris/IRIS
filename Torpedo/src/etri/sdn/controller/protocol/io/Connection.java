@@ -169,6 +169,7 @@ public final class Connection {
 	 */
 	public synchronized boolean write(OFMessage fm) {
 		if ( fm == null ) return true;
+		if ( getStream() == null ) return false;
 
 		// watch the channel 'client' for write!
 		this.markToWrite();
@@ -205,7 +206,8 @@ public final class Connection {
 
 		// watch the channel 'client' for write!
 		this.markToWrite();
-
+		if ( getStream() == null ) return false;
+		
 		for ( OFMessage m : out ) {
 			try { 
 				getStream().write( m );

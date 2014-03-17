@@ -183,6 +183,7 @@ public class Forwarding extends ForwardingBase {
 			.setCookie(U64.of(cookie))
 			.setHardTimeout(0)
 			.setIdleTimeout(5)
+			.setPriority(ForwardingBase.FLOWMOD_DEFAULT_PRIORITY)
 			.setBufferId(OFBufferId.NO_BUFFER)
 			.setMatch(match)
 			.setTableId(TableId.of(0));

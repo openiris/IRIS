@@ -1,21 +1,30 @@
 package etri.sdn.controller.module.firewall;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+import org.projectfloodlight.openflow.protocol.OFFactories;
+import org.projectfloodlight.openflow.protocol.OFFactory;
+import org.projectfloodlight.openflow.protocol.OFFlowDelete;
 import org.projectfloodlight.openflow.protocol.OFMessage;
 import org.projectfloodlight.openflow.protocol.OFPacketIn;
 import org.projectfloodlight.openflow.protocol.OFType;
+import org.projectfloodlight.openflow.protocol.match.Match;
 import org.projectfloodlight.openflow.protocol.match.MatchField;
+import org.projectfloodlight.openflow.types.EthType;
+import org.projectfloodlight.openflow.types.IPv4Address;
+import org.projectfloodlight.openflow.types.IPv4AddressWithMask;
+import org.projectfloodlight.openflow.types.IpProtocol;
+import org.projectfloodlight.openflow.types.MacAddress;
 import org.projectfloodlight.openflow.types.OFPort;
+import org.projectfloodlight.openflow.types.TableId;
+import org.projectfloodlight.openflow.types.TransportPort;
+import org.projectfloodlight.openflow.types.U64;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
@@ -23,6 +32,7 @@ import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
 import etri.sdn.controller.TorpedoProperties;
 import etri.sdn.controller.module.devicemanager.IDevice;
+import etri.sdn.controller.module.forwarding.Forwarding;
 import etri.sdn.controller.module.routing.IRoutingDecision;
 import etri.sdn.controller.module.routing.RoutingDecision;
 import etri.sdn.controller.module.storagemanager.IStorageService;
@@ -32,6 +42,7 @@ import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.Ethernet;
 import etri.sdn.controller.protocol.packet.IPv4;
+import etri.sdn.controller.util.AppCookie;
 import etri.sdn.controller.util.Logger;
 
 /**
@@ -53,6 +64,8 @@ public class OFMFirewall extends OFModule implements IFirewallService
 	protected List<FirewallRule> rules;		// protected by synchronized
 	protected boolean enabled;
 	protected int subnet_mask = IPv4.toIPv4Address("255.255.255.0");
+
+	private long cookie = AppCookie.makeCookie(Forwarding.FORWARDING_APP_ID, 0);
 
 	@SuppressWarnings("unused")
 	private OFProtocol protocol;
@@ -562,142 +575,275 @@ public class OFMFirewall extends OFModule implements IFirewallService
 		return new OFModel[] { this.firewallStorage };
 	}
 
+	private void purgeAllFlowRecords(IOFSwitch sw) {
+		if ( sw == null ) {
+			return;
+		}
+
+		OFFactory fac = OFFactories.getFactory(sw.getVersion());
+
+		OFFlowDelete.Builder del = fac.buildFlowDelete();
+		try {
+			del
+			.setCookie(U64.of(this.cookie))
+			.setCookieMask(U64.of(0xffffffffffffffffL))
+			.setOutPort(OFPort.ANY)
+			.setMatch(fac.matchWildcardAll())
+			.setTableId(TableId.ALL);
+		} catch ( UnsupportedOperationException u ) {
+			// does nothing.
+		}
+
+		sw.getConnection().write( del.build() );
+	}
+
 	/*
 	 * IFirewallService methods
 	 */
-	 @Override
-	 public void enableFirewall(boolean enabled) {
-		 Logger.debug("Setting firewall to {}", enabled);
-		 this.enabled = enabled;
-	 }
+	@Override
+	public void enableFirewall(boolean enabled) {
+		Logger.debug("Setting firewall to {}", enabled);
+		this.enabled = enabled;
 
-	 @Override
-	 public boolean isEnabled() {
-		 return enabled;
-	 }
+		Collection<IOFSwitch> switches = getController().getSwitches();
+		for ( IOFSwitch sw : switches ) {
+			purgeAllFlowRecords(sw);
+		}
+	}
 
-	 @Override
-	 public List<FirewallRule> getRules() {
-		 return this.rules;
-	 }
+	@Override
+	public boolean isEnabled() {
+		return enabled;
+	}
 
-	 @Override
-	 public String getSubnetMask() {
-		 return IPv4.fromIPv4Address(this.subnet_mask);
-	 }
+	@Override
+	public List<FirewallRule> getRules() {
+		return this.rules;
+	}
 
-	 @Override
-	 public void setSubnetMask(String newMask) {
-		 if (newMask.trim().isEmpty())
-			 return;
-		 this.subnet_mask = IPv4.toIPv4Address(newMask.trim());
-	 }
+	@Override
+	public String getSubnetMask() {
+		return IPv4.fromIPv4Address(this.subnet_mask);
+	}
 
-	 @Override
-	 public List<Map<String, Object>> getStorageRules() {
-		 ArrayList<Map<String, Object>> l = new ArrayList<Map<String, Object>>();
+	@Override
+	public void setSubnetMask(String newMask) {
+		if (newMask.trim().isEmpty())
+			return;
+		this.subnet_mask = IPv4.toIPv4Address(newMask.trim());
+	}
 
-		 Collection<Map<String, Object>> resultSet = firewallStorage.getAllDBEntries(storageInstance, dbName, collectionName);
+	@Override
+	public List<Map<String, Object>> getStorageRules() {
+		ArrayList<Map<String, Object>> l = new ArrayList<Map<String, Object>>();
 
-		 // Insert data of DB into FirewallEntryTable because it has no data at initialization
-		 firewallStorage.synchronizeStorage(resultSet);
+		Collection<Map<String, Object>> resultSet = firewallStorage.getAllDBEntries(storageInstance, dbName, collectionName);
 
-		 try {
-			 for (Iterator<Map<String, Object>> it = resultSet.iterator(); it.hasNext();) {
-				 l.add(it.next());
-			 }
-		 } catch (Exception e) {
-			 Logger.stderr("failed to access storage: " + e.getMessage());
-			 // if the table doesn't exist, then wait to populate later via setStorageSource()
-		 }
-		 return l;
-	 }
+		// Insert data of DB into FirewallEntryTable because it has no data at initialization
+		firewallStorage.synchronizeStorage(resultSet);
 
-	 @Override
-	 public void addRule(FirewallRule rule) {
+		try {
+			for (Iterator<Map<String, Object>> it = resultSet.iterator(); it.hasNext();) {
+				l.add(it.next());
+			}
+		} catch (Exception e) {
+			Logger.stderr("failed to access storage: " + e.getMessage());
+			// if the table doesn't exist, then wait to populate later via setStorageSource()
+		}
+		return l;
+	}
 
-		 // generate random ruleid for each newly created rule
-		 // may want to return to caller if useful
-		 // may want to check conflict
-		 rule.ruleid = rule.genID();
+	private void purgeMatchingRulesFromSwitches(FirewallRule rule) {
+		Collection<IOFSwitch> switches = getController().getSwitches();
+		for ( IOFSwitch sw: switches ) {
+			if ( !rule.wildcard_dpid ) {
+				if ( sw.getId() != rule.dpid ) {
+					continue;
+				}
+			}
 
-		 int i = 0;
-		 // locate the position of the new rule in the sorted arraylist
-		 for (i = 0; i < this.rules.size(); i++) {
-			 if (this.rules.get(i).priority >= rule.priority)
-				 break;
-		 }
-		 // now, add rule to the list
-		 if (i <= this.rules.size()) {
-			 this.rules.add(i, rule);
-		 } else {
-			 this.rules.add(rule);
-		 }
+			OFFactory fac = OFFactories.getFactory(sw.getVersion());
+			OFFlowDelete.Builder del = fac.buildFlowDelete();
 
-		 Map<String, Object> entry = new HashMap<String, Object>();
-		 entry.put(COLUMN_RULEID, Integer.toString(rule.ruleid));
-		 entry.put(COLUMN_DPID, Long.toString(rule.dpid));
-		 entry.put(COLUMN_IN_PORT, Short.toString(rule.in_port));
-		 entry.put(COLUMN_DL_SRC, Long.toString(rule.dl_src));
-		 entry.put(COLUMN_DL_DST, Long.toString(rule.dl_dst));
-		 entry.put(COLUMN_DL_TYPE, Short.toString(rule.dl_type));
-		 entry.put(COLUMN_NW_SRC_PREFIX, Integer.toString(rule.nw_src_prefix));
-		 entry.put(COLUMN_NW_SRC_MASKBITS, Integer.toString(rule.nw_src_maskbits));
-		 entry.put(COLUMN_NW_DST_PREFIX, Integer.toString(rule.nw_dst_prefix));
-		 entry.put(COLUMN_NW_DST_MASKBITS, Integer.toString(rule.nw_dst_maskbits));
-		 entry.put(COLUMN_NW_PROTO, Short.toString(rule.nw_proto));
-		 entry.put(COLUMN_TP_SRC, Integer.toString(rule.tp_src));
-		 entry.put(COLUMN_TP_DST, Integer.toString(rule.tp_dst));
-		 entry.put(COLUMN_WILDCARD_DPID,
-				 Boolean.toString(rule.wildcard_dpid));
-		 entry.put(COLUMN_WILDCARD_IN_PORT,
-				 Boolean.toString(rule.wildcard_in_port));
-		 entry.put(COLUMN_WILDCARD_DL_SRC,
-				 Boolean.toString(rule.wildcard_dl_src));
-		 entry.put(COLUMN_WILDCARD_DL_DST,
-				 Boolean.toString(rule.wildcard_dl_dst));
-		 entry.put(COLUMN_WILDCARD_DL_TYPE,
-				 Boolean.toString(rule.wildcard_dl_type));
-		 entry.put(COLUMN_WILDCARD_NW_SRC,
-				 Boolean.toString(rule.wildcard_nw_src));
-		 entry.put(COLUMN_WILDCARD_NW_DST,
-				 Boolean.toString(rule.wildcard_nw_dst));
-		 entry.put(COLUMN_WILDCARD_NW_PROTO,
-				 Boolean.toString(rule.wildcard_nw_proto));
-		 entry.put(COLUMN_WILDCARD_TP_SRC,
-				 Boolean.toString(rule.wildcard_tp_src));
-		 entry.put(COLUMN_WILDCARD_TP_DST,
-				 Boolean.toString(rule.wildcard_tp_dst));
-		 entry.put(COLUMN_PRIORITY, Integer.toString(rule.priority));
-		 entry.put(COLUMN_ACTION, Integer.toString(rule.action.ordinal()));
+			try {
+				del
+				.setCookie(U64.of(this.cookie))
+				.setCookieMask(U64.of(0xffffffffffffffffL));
 
-		 firewallStorage.getFirewallEntryTable().insertFirewallEntry(Integer.toString(rule.ruleid), entry);
-		 firewallStorage.insertDBEntry(storageInstance, dbName, collectionName, entry);
-	 }
+				Match.Builder match = fac.buildMatch();
+				if ( ! rule.wildcard_dl_type ) {
+					match.setExact(MatchField.ETH_TYPE, EthType.of(rule.dl_type));
+				}
+				if ( ! rule.wildcard_dl_src ) {
+					match.setExact(MatchField.ETH_SRC, MacAddress.of(rule.dl_src));
+				}
+				if ( ! rule.wildcard_dl_dst ) {
+					match.setExact(MatchField.ETH_DST, MacAddress.of(rule.dl_dst));
+				}
+				if ( ! rule.wildcard_nw_proto ) {
+					match.setExact(MatchField.IP_PROTO, IpProtocol.of(rule.nw_proto));
+				}
 
-	 @Override
-	 public void deleteRule(int ruleid) {
-		 Iterator<FirewallRule> iter = this.rules.iterator();
-		 while (iter.hasNext()) {
-			 FirewallRule r = iter.next();
-			 if (r.ruleid == ruleid) {
-				 // found the rule, now remove it
-				 iter.remove();
-				 break;
-			 }
-		 }
+				if ( ! rule.wildcard_in_port ) {
+					match.setExact(MatchField.IN_PORT, OFPort.of(rule.in_port));
+				}
 
-		 firewallStorage.getFirewallEntryTable().deleteFirewallEntry(Integer.toString(ruleid));
-		 firewallStorage.deleteDBEntry(storageInstance, dbName, collectionName, ruleid);
-	 }
+				if ( ! rule.wildcard_nw_proto ) {
+					switch ( rule.nw_proto ) {
+					case 0x800:
+						if ( rule.wildcard_nw_src ) {
+							if ( rule.nw_src_maskbits == 32 ) {
+								match.setExact(MatchField.IPV4_SRC, IPv4Address.of(rule.nw_src_prefix));
+							} else {
+								int mask = (-1) << (32 - rule.nw_src_maskbits);
+								match.setMasked(MatchField.IPV4_SRC, IPv4AddressWithMask.of(IPv4Address.of(rule.nw_src_prefix), IPv4Address.of(mask)));
+							}
+						}
+						if ( rule.wildcard_nw_dst ) {
+							if ( rule.nw_dst_maskbits == 32 ) {
+								match.setExact(MatchField.IPV4_DST, IPv4Address.of(rule.nw_dst_prefix));
+							} else {
+								int mask = (-1) << (32 - rule.nw_dst_maskbits);
+								match.setMasked(MatchField.IPV4_DST, IPv4AddressWithMask.of(IPv4Address.of(rule.nw_dst_prefix), IPv4Address.of(mask)));
+							}
+						}
+						break;
+					case 0x806:
+						if ( rule.wildcard_nw_src ) {
+							if ( rule.nw_src_maskbits == 32 ) {
+								match.setExact(MatchField.ARP_SPA, IPv4Address.of(rule.nw_src_prefix));
+							} else {
+								int mask = (-1) << (32 - rule.nw_src_maskbits);
+								match.setMasked(MatchField.ARP_SPA, IPv4AddressWithMask.of(IPv4Address.of(rule.nw_src_prefix), IPv4Address.of(mask)));
+							}
+						}
+						if ( rule.wildcard_nw_dst ) {
+							if ( rule.nw_dst_maskbits == 32 ) {
+								match.setExact(MatchField.ARP_TPA, IPv4Address.of(rule.nw_dst_prefix));
+							} else {
+								int mask = (-1) << (32 - rule.nw_dst_maskbits);
+								match.setMasked(MatchField.ARP_TPA, IPv4AddressWithMask.of(IPv4Address.of(rule.nw_dst_prefix), IPv4Address.of(mask)));
+							}
+						}
+						break;
+					}
+				}
+				if ( ! rule.wildcard_tp_src ) {
+					match.setExact(MatchField.TCP_SRC, TransportPort.of(rule.tp_src));
+				}
+				if ( ! rule.wildcard_tp_dst ) {
+					match.setExact(MatchField.TCP_DST, TransportPort.of(rule.tp_dst));
+				}
+				del
+				.setMatch( match.build() )
+				.setOutPort( OFPort.ANY )
+				.setTableId( TableId.ALL );
+			} catch ( UnsupportedOperationException u ) {
+				// does nothing. Probably because setTableId().
+			}
+			System.out.println(del.build());
+			sw.getConnection().write( del.build() );
+		}
+	}
 
-	 @Override
-	 public void clearRules() {
-		 for ( FirewallRule rule : this.rules ) {
-			 firewallStorage.getFirewallEntryTable().deleteFirewallEntry(Integer.toString(rule.ruleid));
-			 firewallStorage.deleteDBEntry(storageInstance, dbName, collectionName, rule.ruleid);
-		 }
-		 this.rules.clear();
-	 }
+	@Override
+	public void addRule(FirewallRule rule) {
+
+		// generate random ruleid for each newly created rule
+		// may want to return to caller if useful
+		// may want to check conflict
+		rule.ruleid = rule.genID();
+
+		synchronized( this.rules ) {
+			int i = 0;
+			// locate the position of the new rule in the sorted arraylist
+			for (i = 0; i < this.rules.size(); i++) {
+				if (this.rules.get(i).priority >= rule.priority)
+					break;
+			}
+			// now, add rule to the list
+			if (i <= this.rules.size()) {
+				this.rules.add(i, rule);
+			} else {
+				this.rules.add(rule);
+			}
+		}
+
+		Map<String, Object> entry = new HashMap<String, Object>();
+		entry.put(COLUMN_RULEID, Integer.toString(rule.ruleid));
+		entry.put(COLUMN_DPID, Long.toString(rule.dpid));
+		entry.put(COLUMN_IN_PORT, Short.toString(rule.in_port));
+		entry.put(COLUMN_DL_SRC, Long.toString(rule.dl_src));
+		entry.put(COLUMN_DL_DST, Long.toString(rule.dl_dst));
+		entry.put(COLUMN_DL_TYPE, Short.toString(rule.dl_type));
+		entry.put(COLUMN_NW_SRC_PREFIX, Integer.toString(rule.nw_src_prefix));
+		entry.put(COLUMN_NW_SRC_MASKBITS, Integer.toString(rule.nw_src_maskbits));
+		entry.put(COLUMN_NW_DST_PREFIX, Integer.toString(rule.nw_dst_prefix));
+		entry.put(COLUMN_NW_DST_MASKBITS, Integer.toString(rule.nw_dst_maskbits));
+		entry.put(COLUMN_NW_PROTO, Short.toString(rule.nw_proto));
+		entry.put(COLUMN_TP_SRC, Integer.toString(rule.tp_src));
+		entry.put(COLUMN_TP_DST, Integer.toString(rule.tp_dst));
+		entry.put(COLUMN_WILDCARD_DPID,
+				Boolean.toString(rule.wildcard_dpid));
+		entry.put(COLUMN_WILDCARD_IN_PORT,
+				Boolean.toString(rule.wildcard_in_port));
+		entry.put(COLUMN_WILDCARD_DL_SRC,
+				Boolean.toString(rule.wildcard_dl_src));
+		entry.put(COLUMN_WILDCARD_DL_DST,
+				Boolean.toString(rule.wildcard_dl_dst));
+		entry.put(COLUMN_WILDCARD_DL_TYPE,
+				Boolean.toString(rule.wildcard_dl_type));
+		entry.put(COLUMN_WILDCARD_NW_SRC,
+				Boolean.toString(rule.wildcard_nw_src));
+		entry.put(COLUMN_WILDCARD_NW_DST,
+				Boolean.toString(rule.wildcard_nw_dst));
+		entry.put(COLUMN_WILDCARD_NW_PROTO,
+				Boolean.toString(rule.wildcard_nw_proto));
+		entry.put(COLUMN_WILDCARD_TP_SRC,
+				Boolean.toString(rule.wildcard_tp_src));
+		entry.put(COLUMN_WILDCARD_TP_DST,
+				Boolean.toString(rule.wildcard_tp_dst));
+		entry.put(COLUMN_PRIORITY, Integer.toString(rule.priority));
+		entry.put(COLUMN_ACTION, Integer.toString(rule.action.ordinal()));
+
+		firewallStorage.getFirewallEntryTable().insertFirewallEntry(Integer.toString(rule.ruleid), entry);
+		firewallStorage.insertDBEntry(storageInstance, dbName, collectionName, entry);
+
+		purgeMatchingRulesFromSwitches(rule);
+	}
+
+	@Override
+	public void deleteRule(int ruleid) {
+		firewallStorage.getFirewallEntryTable().deleteFirewallEntry(Integer.toString(ruleid));
+		firewallStorage.deleteDBEntry(storageInstance, dbName, collectionName, ruleid);
+
+		synchronized ( this.rules ) {
+			Iterator<FirewallRule> iter = this.rules.iterator();
+			while (iter.hasNext()) {
+				FirewallRule r = iter.next();
+				if (r.ruleid == ruleid) {
+					// found the rule, now remove it
+					purgeMatchingRulesFromSwitches(r);
+
+					iter.remove();
+					break;
+				}
+			}	
+		}
+	}
+
+	@Override
+	public void clearRules() {
+		synchronized ( this.rules ) {
+			for ( FirewallRule rule : this.rules ) {
+				firewallStorage.getFirewallEntryTable().deleteFirewallEntry(Integer.toString(rule.ruleid));
+				firewallStorage.deleteDBEntry(storageInstance, dbName, collectionName, rule.ruleid);
+
+				// found the rule, now remove it
+				purgeMatchingRulesFromSwitches(rule);
+			}
+			this.rules.clear();
+		}
+	}
 
 }

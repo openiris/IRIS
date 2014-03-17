@@ -8,6 +8,9 @@ import org.codehaus.jackson.Version;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 import org.codehaus.jackson.map.module.SimpleModule;
+import org.projectfloodlight.openflow.types.IPAddress;
+import org.projectfloodlight.openflow.types.IPv4Address;
+import org.projectfloodlight.openflow.util.HexString;
 
 /**
  * This class is the serializer of {@link FirewallRule}.
@@ -26,10 +29,10 @@ final class OFFirewallRuleSerializer extends JsonSerializer<FirewallRule> {
 		jgen.writeNumberField("in_port", rule.in_port);
 		jgen.writeNumberField("dl_src", rule.dl_src);
 		jgen.writeNumberField("dl_dst", rule.dl_dst);
-		jgen.writeNumberField("dl_type", rule.dl_type);
-		jgen.writeNumberField("nw_src_prefix", rule.nw_src_prefix);
+		jgen.writeStringField("dl_type", "0x" + Integer.toHexString(0x0000ffff & rule.dl_type));
+		jgen.writeStringField("nw_src_prefix", IPv4Address.of(rule.nw_src_prefix).toString());
 		jgen.writeNumberField("nw_src_maskbits", rule.nw_src_maskbits);
-		jgen.writeNumberField("nw_dst_prefix", rule.nw_dst_prefix);
+		jgen.writeStringField("nw_dst_prefix", IPv4Address.of(rule.nw_dst_prefix).toString());
 		jgen.writeNumberField("nw_dst_maskbits", rule.nw_dst_maskbits);
 		jgen.writeNumberField("nw_proto", rule.nw_proto);
 		jgen.writeNumberField("tp_src", rule.tp_src);

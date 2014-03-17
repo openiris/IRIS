@@ -248,7 +248,7 @@ implements ILinkDiscoveryListener, ITopologyListener {
 			.setCookieMask(U64.of(0xffffffffffffffffL))
 			.setOutPort(outPort)
 			.setMatch(fac.matchWildcardAll())
-			.setTableId(TableId.ZERO);
+			.setTableId(TableId.ALL);
 		} catch ( UnsupportedOperationException u ) {
 			// does nothing.
 		}
