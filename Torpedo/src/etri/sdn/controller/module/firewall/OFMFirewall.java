@@ -741,7 +741,6 @@ public class OFMFirewall extends OFModule implements IFirewallService
 			} catch ( UnsupportedOperationException u ) {
 				// does nothing. Probably because setTableId().
 			}
-			System.out.println(del.build());
 			sw.getConnection().write( del.build() );
 		}
 	}
