@@ -26,6 +26,7 @@ import org.restlet.data.MediaType;
 
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.module.linkdiscovery.ILinkDiscoveryListener.UpdateOperation;
+import etri.sdn.controller.protocol.rest.serializer.OFTypeSerializerModule;
 
 /**
  * Model of the module {@link OFMLinkDiscovery}
@@ -637,6 +638,7 @@ public class Links extends OFModel {
 				public void handle(Request request, Response response) {
 					// create an object mapper.
 					ObjectMapper om = new ObjectMapper();
+					om.registerModule(new OFTypeSerializerModule());
 
 					// retrieve all link information as JSON.
 					List<RESTLink> list = new LinkedList<RESTLink>();
