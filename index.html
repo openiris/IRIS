@@ -53,7 +53,8 @@ underlying data plane.</p>
 <p>Technically, IRIS is built on Beacon-like NIO-based event handler.
 On top of the IO engine, we have ported many of Floodlight core/application
 modules including Learning Switch, Link Discovery, Topology Manager,
-Device Manager, Forwarding, Firewall, and Static Flow Entry Pusher. </p>
+Device Manager, Forwarding, Firewall, and Static Flow Entry Pusher. 
+Firewall module is improved, and Net Failover module is newly introduced.</p>
 
 <p>Though a large portion of the IRIS functions take after those of 
 Floodlight and Beacon, we did not want to stop at merely creating an 
@@ -68,6 +69,8 @@ open-source IRIS):
 	based on Openflow</li>
 </ol>
 </p>
+
+<iframe src="http://www.slideshare.net/slideshow/embed_code/32433453" width="476" height="400" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
 
 <p>We strived to satisfy above qualities with much simpler architecture
 that facilitates developers to comfortably use and customize.
@@ -114,15 +117,17 @@ In this page, you can find various resources about the open-source IRIS.
 <h2>Key features</h2>
 
 <ol>
-	<li>Supports Openflow 1.0.1 and 1.3.2</li>
+	<li>Supports Openflow 1.0.1 ~ 1.3.2</li>
 	<li>Pure Java-based Implementation</li>
+	<!-- 
 	<li>Handles 5 million Mac Learning Requests per second with Commodity HW (can handle 10 million Mac Learning requests if you can affort a 20-core box) </li>
+	-->
 	<li>Supports about 500 concurrent connections to switches with Commodity HW</li>
 	<li>Follows the same license polity with Floodlight (Apache-2.0 license)</li>
 	<li>Provides with Learning mac, Link discovery, Topology management,
-		Forwarding, Device manager, Firewall, Static Flow pusher,
+		Forwarding, Device manager, Firewall, Net Failover, Static Flow pusher,
 		and State manager modules</li>
-	<li>Includes two sample controller implementations, which are 
+	<li>Includes three sample controller implementations, which are 
 		fully functional</li>
 </ol>
 
