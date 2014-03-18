@@ -84,7 +84,7 @@ public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStre
 	@Override
 	public void write(List<OFMessage> l) throws IOException {
 		for (OFMessage m : l) {
-			appendMessageToOutBuf(m);
+			this.write(m);
 		}
 	}
 	
