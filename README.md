@@ -9,6 +9,7 @@ that can effectively deliver network policies to the underlying data plane.
 Technically, IRIS is built on Beacon-like NIO-based event handler. On top of the IO engine, 
 we have ported many of Floodlight core/application modules including Learning Switch, 
 Link Discovery, Topology Manager, Device Manager, Forwarding, Firewall, and Static Flow Entry Pusher.
+Further, we have enhanced the Firewall module, and newly introduced a Nettwork Failover Module. 
 
 Though a large portion of the IRIS functions take after those of Floodlight and Beacon, 
 we did not want to stop at merely creating an improved version of the famous open-source controllers. 
@@ -31,11 +32,12 @@ Some of its improvements in the IRIS UI enable zoom-in, zoom-out, and panning of
 Specification
 -------------
 
-1. Supports Openflow 1.0.1 and 1.3.2
+1. Supports Openflow 1.0.1 ~ 1.3.2
 2. Pure Java-based Implementation
 3. Handles more than 5 million Mac Learning Requests per second with commodity HW
 4. Supports about 500 concurrent connections to switches with commodity HW
 5. The same license policy with Floodlight (Apache license)
+6. Loxigen-based Openflow API
 
 Authors
 -------
