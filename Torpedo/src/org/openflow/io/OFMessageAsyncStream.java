@@ -139,7 +139,7 @@ public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStre
 	public void flush() throws IOException {
 		outBuf.flip(); // swap pointers; lim = pos; pos = 0;
 		sock.write(outBuf); // write data starting at pos up to lim
-		outBuf.compact();
+		outBuf.clear();
 	}
 
 	/**
