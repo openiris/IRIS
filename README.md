@@ -1,6 +1,6 @@
 IRIS
 ====
-IRIS (pronounced ai-ri-s) is the Resursive SDN Openflow Controller created by IRIS Research Section of ETRI.
+IRIS (pronounced ai-ri-s) is the Openflow-based Resursive SDN Openflow Controller created by SDN Research Section, ETRI.
 
 In Greek mythodology, Iris is the goddess of the rainbow as well as the messenger of the other gods. 
 We named our controller after Iris in the hopes of creating a control plane architecture 
