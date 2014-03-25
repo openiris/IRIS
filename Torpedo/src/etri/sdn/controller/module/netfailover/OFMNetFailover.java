@@ -245,10 +245,10 @@ implements ILinkDiscoveryListener, ITopologyListener {
 		try {
 			del
 			.setCookie(U64.of(this.cookie))
-			.setCookieMask(U64.of(0xffffffffffffffffL))
 			.setOutPort(outPort)
 			.setMatch(fac.matchWildcardAll())
-			.setTableId(TableId.ALL);
+			.setCookieMask(U64.of(0xffffffffffffffffL))				// >1.3
+			.setTableId(TableId.ALL);								// >1.3
 		} catch ( UnsupportedOperationException u ) {
 			// does nothing.
 		}

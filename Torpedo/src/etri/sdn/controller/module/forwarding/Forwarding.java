@@ -186,6 +186,7 @@ public class Forwarding extends ForwardingBase {
 			.setPriority(ForwardingBase.FLOWMOD_DEFAULT_PRIORITY)
 			.setBufferId(OFBufferId.NO_BUFFER)
 			.setMatch(match)
+			.setCookieMask(U64.of(0xffffffffffffffffL))
 			.setTableId(TableId.of(0));
 		} catch ( UnsupportedOperationException u ) {
 			// do nothing. possibly from setTableId() call

@@ -270,7 +270,9 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 		.setFlags( EnumSet.noneOf(OFFlowModFlags.class) );
 		
 		try { 
-			fm.setTableId(TableId.ZERO);
+			fm
+			.setTableId(TableId.ZERO)
+			.setCookieMask(U64.of(0xffffffffffffffffL));
 		} catch ( UnsupportedOperationException u ) {
 			// does nothing
 		}
