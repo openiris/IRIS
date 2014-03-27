@@ -1,1 +1,0 @@
-	$name($value, org.openflow.protocol.interfaces.${typename}.${name}),
