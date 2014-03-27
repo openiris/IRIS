@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,6 +20,7 @@ import org.projectfloodlight.openflow.types.OFPort;
 
 import etri.sdn.controller.IInfoProvider;
 import etri.sdn.controller.IOFTask;
+import etri.sdn.controller.IService;
 import etri.sdn.controller.Main;
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
@@ -115,14 +117,19 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 			return pi.getMatch().get(MatchField.IN_PORT);
 		}
 	}
+	
+	@Override
+	protected Collection<Class<? extends IService>> services() {
+		List<Class<? extends IService>> ret = new LinkedList<Class<? extends IService>>();
+		ret.add(IDeviceService.class);
+		return ret;
+	}
 
 	/**
 	 * Initializes this module.
 	 */
 	@Override
 	protected void initialize() {
-
-		registerModule(IDeviceService.class, this);
 
 		this.topology = getTopologyServiceRef();		
 		this.entityClassifier = getEntityClassifierServiceRef();

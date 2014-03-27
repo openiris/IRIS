@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,6 +25,7 @@ import org.projectfloodlight.openflow.types.OFBufferId;
 import org.projectfloodlight.openflow.types.OFPort;
 
 import etri.sdn.controller.IOFTask;
+import etri.sdn.controller.IService;
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
 import etri.sdn.controller.OFModel;
@@ -106,6 +108,14 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	private Topology topologyModel;
 	
 	private OFProtocol protocol;
+	
+	@Override
+	protected Collection<Class<? extends IService>> services() {
+		List<Class<? extends IService>> ret = new LinkedList<Class<? extends IService>>();
+		ret.add(ITopologyService.class);
+		ret.add(IRoutingService.class);
+		return ret;
+	}
 
 	@Override
 	public void initialize() {
@@ -116,9 +126,6 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		linkDiscovery.addListener(this);
 		
 		protocol = (OFProtocol) getController().getProtocol();
-
-		registerModule(ITopologyService.class, this);
-		registerModule(IRoutingService.class, this);
 
 		// I will receive all PACKET_IN messages.
 		registerFilter(

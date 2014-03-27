@@ -1,5 +1,6 @@
 package etri.sdn.controller;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -22,7 +23,7 @@ public abstract class OFModule {
 	/**
 	 * static map that holds all the references to module instances.
 	 */
-	private static ConcurrentMap<Class<? extends IService>, OFModule> modules
+	private static ConcurrentMap<Class<? extends IService>, OFModule> services
 	= new ConcurrentHashMap<Class<? extends IService>, OFModule>();
 
 	/**
@@ -34,25 +35,21 @@ public abstract class OFModule {
 	 * reference to the controller implementation. 
 	 */
 	protected IOFHandler controller = null;
-
+	
 	/**
-	 * register a module to the static map {@link #modules}.
-	 * 
-	 * @param c represents a service that the module implements
-	 * @param m the module instance
+	 * Return services that a module implements
+	 * @return	Collection<IService>
 	 */
-	public static void registerModule(Class<? extends IService> c, OFModule m) {
-		modules.put( c, m );
-	}
+	protected abstract Collection<Class<? extends IService>> services();
 
 	/**
 	 * return a module that implements a specific service from the 
-	 * static map {@link #modules}.
+	 * static map {@link #services}.
 	 * @param c class of the service that this module implements
 	 * @return	OFModule object
 	 */
 	public static OFModule getModule(Class<? extends IService> c) {
-		return modules.get( c );
+		return services.get( c );
 	}
 
 	/**
@@ -75,6 +72,16 @@ public abstract class OFModule {
 	public final void init(IOFHandler ctrl) {
 		this.controller = ctrl;
 		ctrl.addModule(this);
+		for ( Class<? extends IService> srv : this.services() ) {
+			services.put( srv, this );
+		}
+	}
+	
+	/**
+	 * start all modules by calling their initialize() method.
+	 * This method is called by {@link OFController#init()}.
+	 */
+	public final void start() {
 		initialize();
 	}
 	

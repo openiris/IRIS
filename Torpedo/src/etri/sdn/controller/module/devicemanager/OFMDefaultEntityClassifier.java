@@ -19,10 +19,12 @@ package etri.sdn.controller.module.devicemanager;
 
 import java.util.Collection;
 import java.util.EnumSet;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.projectfloodlight.openflow.protocol.OFMessage;
 
+import etri.sdn.controller.IService;
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
@@ -111,10 +113,17 @@ public final class OFMDefaultEntityClassifier extends OFModule implements IEntit
 	/*
 	 * OFModule methods
 	 */
+	
+	@Override
+	protected Collection<Class<? extends IService>> services() {
+		List<Class<? extends IService>> ret = new LinkedList<Class<? extends IService>>();
+		ret.add(IEntityClassifierService.class);
+		return ret;
+	}
 
 	@Override
 	protected void initialize() {
-		registerModule(IEntityClassifierService.class, this);
+		// does nothing
 	}
 
 	@Override

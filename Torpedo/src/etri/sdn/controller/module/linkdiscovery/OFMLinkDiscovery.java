@@ -6,9 +6,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -35,6 +34,7 @@ import org.projectfloodlight.openflow.types.OFPort;
 import org.projectfloodlight.openflow.util.HexString;
 
 import etri.sdn.controller.IOFTask;
+import etri.sdn.controller.IService;
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
 import etri.sdn.controller.OFModel;
@@ -208,6 +208,13 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		}
 	}
 	
+	@Override
+	protected Collection<Class<? extends IService>> services() {
+		List<Class<? extends IService>> ret = new LinkedList<Class<? extends IService>>();
+		ret.add(ILinkDiscoveryService.class);
+		return ret;
+	}
+	
 	/**
 	 * Initialize this module to receive 
 	 * 
@@ -228,8 +235,6 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		
 		// initialize controller TLV
 		setControllerTLV();
-		
-		registerModule(ILinkDiscoveryService.class, this);
 
 		// I will receive PACKET_IN messages selectively.
 		registerFilter(

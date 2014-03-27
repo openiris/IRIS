@@ -18,6 +18,8 @@
 
 package etri.sdn.controller.module.netfailover;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +35,7 @@ import org.projectfloodlight.openflow.types.U64;
 
 import com.google.common.hash.BloomFilter;
 
+import etri.sdn.controller.IService;
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
@@ -254,6 +257,12 @@ implements ILinkDiscoveryListener, ITopologyListener {
 		}
 		
 		sw.getConnection().write( del.build() );
+	}
+	
+	@Override
+	protected Collection<Class<? extends IService>> services() {
+		// no service to implement
+		return Collections.emptyList();
 	}
 
 	@Override

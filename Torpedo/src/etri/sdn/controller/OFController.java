@@ -242,6 +242,33 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 	 * initialization you should do. 
 	 */
 	public abstract void init();
+	
+	/**
+	 * Start all Queue Processors.
+	 */
+	public void start() {
+		for ( QP qp : processors ) {
+			qp.start();
+		}
+	}
+	
+	/**
+	 * Shutdown this OF Controller instance including all the Queue Processors
+	 */
+	public void shutdown() {
+		for ( QP qp : processors ) {
+			qp.shutdown();
+		}
+	}
+	
+	/**
+	 * Start all modules.
+	 */
+	public void startModules() {
+		for ( OFModule m : this.modules ) {
+			m.start();
+		}
+	}
 
 	/**
 	 * get the role of this controller. But currently, the return value of this function 
@@ -274,24 +301,6 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 
 		if ( this.server != null ) {
 			this.server.deregisterConroller( this );
-		}
-	}
-
-	/**
-	 * Shutdown this OF Controller instance including all the Queue Processors
-	 */
-	public void shutdown() {
-		for ( QP qp : processors ) {
-			qp.shutdown();
-		}
-	}
-
-	/**
-	 * Start all Queue Processors.
-	 */
-	public void start() {
-		for ( QP qp : processors ) {
-			qp.start();
 		}
 	}
 

@@ -1,5 +1,6 @@
 package etri.sdn.controller.module.learningmac;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.LinkedList;
@@ -32,6 +33,7 @@ import org.projectfloodlight.openflow.types.U64;
 import org.projectfloodlight.openflow.types.VlanVid;
 import org.projectfloodlight.openflow.util.LRULinkedHashMap;
 
+import etri.sdn.controller.IService;
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
 import etri.sdn.controller.OFModel;
@@ -427,6 +429,12 @@ public final class OFMLearningMac extends OFModule {
 	    ethAddress[5] = (byte)(eth >>>  0);
 
 	    return ethAddress;
+	}
+	
+	@Override
+	protected Collection<Class<? extends IService>> services() {
+		// no service implemented.
+		return Collections.emptyList();
 	}
 	
 	/**

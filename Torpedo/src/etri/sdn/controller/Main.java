@@ -178,6 +178,7 @@ public class Main {
 
 					if ( to_load != null ) {
 						to_load.init();
+						to_load.startModules();
 						to_load.start();
 						
 						tcp_server.registerController(to_load);

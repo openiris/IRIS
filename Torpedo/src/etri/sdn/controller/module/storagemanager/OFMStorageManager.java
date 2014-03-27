@@ -3,7 +3,9 @@ package etri.sdn.controller.module.storagemanager;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +20,7 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.WriteResult;
 
+import etri.sdn.controller.IService;
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
@@ -39,6 +42,13 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	private DB db;
 	private ObjectMapper om;
 	private Storage storage;
+	
+	@Override
+	protected Collection<Class<? extends IService>> services() {
+		List<Class<? extends IService>> ret = new LinkedList<Class<? extends IService>>();
+		ret.add(IStorageService.class);
+		return ret;
+	}
 
 	@Override
 	protected void initialize() {
@@ -74,7 +84,6 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 		
 		om =  new ObjectMapper();
 
-		registerModule(IStorageService.class, this);
 		Logger.stderr("OFMStorageManager initialize");
 
 	}

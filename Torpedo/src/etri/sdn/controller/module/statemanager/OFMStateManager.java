@@ -1,9 +1,12 @@
 package etri.sdn.controller.module.statemanager;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.projectfloodlight.openflow.protocol.OFMessage;
 
+import etri.sdn.controller.IService;
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
@@ -27,6 +30,12 @@ public class OFMStateManager extends OFModule {
 	 * Model of this module. initialized by {@link #initialize()}.
 	 */
 	private State state;
+	
+	@Override
+	protected Collection<Class<? extends IService>> services() {
+		// no service to implement
+		return Collections.emptyList();
+	}
 
 	/**
 	 * initialize the model object of this module.

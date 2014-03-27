@@ -1,9 +1,12 @@
 package etri.sdn.controller.module.ui;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.projectfloodlight.openflow.protocol.OFMessage;
 
+import etri.sdn.controller.IService;
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
@@ -12,6 +15,11 @@ import etri.sdn.controller.protocol.io.Connection;
 public class OFMUserInterface extends OFModule {
 
 	private WebUserInterface web;
+	
+	@Override
+	protected Collection<Class<? extends IService>> services() {
+		return Collections.emptyList();
+	}
 	
 	@Override
 	protected void initialize() {

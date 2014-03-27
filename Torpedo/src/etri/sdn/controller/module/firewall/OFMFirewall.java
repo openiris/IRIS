@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,7 @@ import org.projectfloodlight.openflow.types.TableId;
 import org.projectfloodlight.openflow.types.TransportPort;
 import org.projectfloodlight.openflow.types.U64;
 
+import etri.sdn.controller.IService;
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
 import etri.sdn.controller.OFModel;
@@ -495,6 +497,13 @@ public class OFMFirewall extends OFModule implements IFirewallService
 	/*
 	 * OFModule methods
 	 */
+	
+	@Override
+	protected Collection<Class<? extends IService>> services() {
+		List<Class<? extends IService>> ret = new LinkedList<Class<? extends IService>>();
+		ret.add(IFirewallService.class);
+		return ret;
+	}
 
 	/**
 	 * Initializes this module. As this module processes all PACKET_IN messages,
@@ -504,8 +513,6 @@ public class OFMFirewall extends OFModule implements IFirewallService
 	protected void initialize() {
 
 		TorpedoProperties conf = TorpedoProperties.loadConfiguration();
-
-		registerModule(IFirewallService.class, this);
 
 		this.firewallStorage = new FirewallStorage (this, "FirewallStorage");
 		this.storageInstance = (OFMStorageManager) getModule(IStorageService.class);

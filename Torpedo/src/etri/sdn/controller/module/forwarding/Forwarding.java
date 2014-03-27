@@ -20,6 +20,7 @@ package etri.sdn.controller.module.forwarding;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,6 +41,7 @@ import org.projectfloodlight.openflow.types.OFPort;
 import org.projectfloodlight.openflow.types.TableId;
 import org.projectfloodlight.openflow.types.U64;
 
+import etri.sdn.controller.IService;
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
 import etri.sdn.controller.OFModel;
@@ -67,6 +69,12 @@ import etri.sdn.controller.util.Logger;
 public class Forwarding extends ForwardingBase {
 	
 	OFProtocol protocol;
+	
+	@Override
+	protected Collection<Class<? extends IService>> services() {
+		// no service implemented.
+		return Collections.emptyList();
+	}
 	
 	/**
 	 * Initializes this module. As this module processes all PACKET_IN messages,
