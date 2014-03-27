@@ -79,7 +79,8 @@ public abstract class OFModule {
 	
 	/**
 	 * start all modules by calling their initialize() method.
-	 * This method is called by {@link OFController#init()}.
+	 * This method is called by the {@link OFController#startModules()}
+	 * after {@link #init(IOFHandler)} is called.
 	 */
 	public final void start() {
 		initialize();
