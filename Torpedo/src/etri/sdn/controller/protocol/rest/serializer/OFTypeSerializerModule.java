@@ -8,10 +8,66 @@ import org.codehaus.jackson.Version;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 import org.codehaus.jackson.map.module.SimpleModule;
+import org.projectfloodlight.openflow.protocol.match.Match;
+import org.projectfloodlight.openflow.protocol.match.MatchField;
+import org.projectfloodlight.openflow.protocol.oxm.OFOxm;
 import org.projectfloodlight.openflow.types.ArpOpcode;
+import org.projectfloodlight.openflow.types.Masked;
 import org.projectfloodlight.openflow.types.OFPort;
 import org.projectfloodlight.openflow.types.U64;
 
+
+/**
+ * Custom serializer for OFMatch message. 
+ * 
+ * @author bjlee
+ *
+ */
+final class OFMatchSerializer extends JsonSerializer<Match> {
+
+	/**
+	 * Serialize function that converts OFMatch to JSON format.
+	 * 
+	 * @param match		OFMatch object
+	 * @param jgen		JsonGenerator object
+	 * @param provider	SerializerProvider object. not used.
+	 */
+	@Override
+	public void serialize(Match match, JsonGenerator jgen, SerializerProvider provider) 
+			throws IOException, JsonProcessingException {
+
+		jgen.writeStartObject();
+		for ( MatchField mf: match.getMatchFields() ) {
+			if ( match.isExact(mf) ) {
+				jgen.writeStringField(mf.getName(), match.get(mf).toString());
+			} else {
+				Masked mv = match.getMasked(mf);
+				jgen.writeStringField(mf.getName(), mv.getValue().toString());
+				jgen.writeStringField(mf.getName()+"_MASK", mv.getMask().toString());
+			}
+		}
+		jgen.writeEndObject();
+	}
+}
+
+/**
+ * Custom serializer for OFOxm object.
+ * 
+ * @author bjlee
+ */
+final class OFOxmSerializer extends JsonSerializer<OFOxm> {
+
+	@Override
+	public void serialize(@SuppressWarnings("rawtypes") OFOxm oxm, JsonGenerator jgen, SerializerProvider provider) 
+			throws IOException, JsonProcessingException {
+		jgen.writeStartObject();
+		jgen.writeStringField(oxm.getMatchField().getName(), oxm.getValue().toString());
+		if ( oxm.isMasked() ) {
+			jgen.writeStringField(oxm.getMatchField().getName() + "_MASK", oxm.getMask().toString());
+		}
+		jgen.writeEndObject();
+	}
+}
 
 /**
  * A Custom Serializer for OFFeaturesReply (FEATURES_REPLY) message.
@@ -62,5 +118,8 @@ public final class OFTypeSerializerModule extends SimpleModule {
 		addSerializer(OFPort.class, new OFPortSerializer());
 		addSerializer(U64.class, new U64Serializer());
 		addSerializer(ArpOpcode.class, new ArpOpcodeSerializer());
+		addSerializer(Match.class, new OFMatchSerializer());
+		addSerializer(OFOxm.class, new OFOxmSerializer());
 	}
 }
+
