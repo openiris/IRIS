@@ -1,6 +1,8 @@
 package etri.sdn.controller.module.staticentrymanager;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -8,6 +10,7 @@ import java.util.Set;
 import org.projectfloodlight.openflow.protocol.OFFlowModCommand;
 import org.projectfloodlight.openflow.protocol.OFMessage;
 
+import etri.sdn.controller.IService;
 import etri.sdn.controller.Main;
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFModel;
@@ -77,6 +80,14 @@ public class OFMStaticFlowEntryManager extends OFModule implements IStaticFlowEn
 	/*
 	 * OFModule methods
 	 */
+	
+	@Override
+	protected Collection<Class<? extends IService>> services() {
+		List<Class<? extends IService>> ret = new LinkedList<Class<? extends IService>>();
+		ret.add(IStaticFlowEntryService.class);
+		return ret;
+	}
+	
 	/**
 	 * Initialize this module.
 	 * This module does not use registerFilter
@@ -84,7 +95,6 @@ public class OFMStaticFlowEntryManager extends OFModule implements IStaticFlowEn
 	 */
 	@Override
 	protected void initialize() {
-		registerModule(IStaticFlowEntryService.class, this);
 
 		protocol = getController().getProtocol();
 
