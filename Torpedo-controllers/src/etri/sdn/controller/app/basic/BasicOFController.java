@@ -16,6 +16,7 @@ import etri.sdn.controller.module.forwarding.Forwarding;
 import etri.sdn.controller.module.linkdiscovery.OFMLinkDiscovery;
 import etri.sdn.controller.module.netfailover.OFMNetFailover;
 import etri.sdn.controller.module.statemanager.OFMStateManager;
+import etri.sdn.controller.module.staticentrymanager.OFMStaticFlowEntryManager;
 import etri.sdn.controller.module.storagemanager.OFMStorageManager;
 import etri.sdn.controller.module.topologymanager.OFMTopologyManager;
 import etri.sdn.controller.module.ui.OFMUserInterface;
@@ -32,6 +33,7 @@ public class BasicOFController extends OFController {
 	private OFMStorageManager m_storage_manager = new OFMStorageManager();	
 	private Forwarding m_forwarding = new Forwarding();
 	private OFMFirewall m_firewall = new OFMFirewall();
+	private OFMStaticFlowEntryManager m_staticflow = new OFMStaticFlowEntryManager();
 	private OFMNetFailover m_netfailover = new OFMNetFailover();
 	
 	private OFModule[] packet_in_pipeline = { 
@@ -61,6 +63,7 @@ public class BasicOFController extends OFController {
 		m_storage_manager.init(this);		// this is not a part of the pipeline.
 		m_firewall.init(this);
 		m_forwarding.init(this);
+		m_staticflow.init(this);			// this is not a part of the pipeline.
 		m_netfailover.init(this);
 	}
 

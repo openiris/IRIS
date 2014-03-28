@@ -62,6 +62,14 @@ irisApp.controller('CntlFlows',
 								return memo + "src port=" + a.transportPort + ', ';
 							case "SET_TP_DST":
 								return memo + "dest port=" + a.transportPort + ', ';
+							case "SET_FIELD":
+								var ret = memo;
+								for ( key in a.field ) {
+									ret += key + ":" + a.field[key] + ', ';
+								}
+								//remove trailing ", "
+								ret = ret.substr(0, ret.length - 2);
+								return (ret += ", ");
 							}
 						}, "");
 						// remove trailing ", "
