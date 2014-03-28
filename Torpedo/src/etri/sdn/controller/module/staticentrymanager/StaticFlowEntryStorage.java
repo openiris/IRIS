@@ -331,15 +331,15 @@ public class StaticFlowEntryStorage extends OFModel{
 
 		Collection<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
 
-		for (Map<String, Object> entry : entries) {
-			HashMap<String, Object> result = null;
-			result = (HashMap<String, Object>) entry;
-			results.add(result);
-		}
+		if ( entries != null )
+			for (Map<String, Object> entry : entries) {
+				HashMap<String, Object> result = null;
+				result = (HashMap<String, Object>) entry;
+				results.add(result);
+			}
 
 		return results;
 	}
-
 
 	
 	/**

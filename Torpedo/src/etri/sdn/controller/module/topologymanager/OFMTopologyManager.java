@@ -109,6 +109,17 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	
 	private OFProtocol protocol;
 	
+	public OFMTopologyManager() {
+		switchPorts = new HashMap<Long,Set<OFPort>>();
+		switchPortLinks = new HashMap<NodePortTuple, Set<Link>>();
+		directLinks = new HashMap<NodePortTuple, Set<Link>>();
+		portBroadcastDomainLinks = new HashMap<NodePortTuple, Set<Link>>();
+		tunnelLinks = new HashMap<NodePortTuple, Set<Link>>();
+		topologyAware = new ArrayList<ITopologyListener>();
+		ldUpdates = new LinkedBlockingQueue<LDUpdate>();
+		appliedUpdates = new ArrayList<LDUpdate>();
+	}
+	
 	@Override
 	protected Collection<Class<? extends IService>> services() {
 		List<Class<? extends IService>> ret = new LinkedList<Class<? extends IService>>();
@@ -119,6 +130,8 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 
 	@Override
 	public void initialize() {
+		
+		clearCurrentTopology();
 		
 		topologyModel = new Topology(this);
 		
@@ -138,7 +151,6 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 				}
 		);
 
-		init();
 //		initiatePeriodicTopologyUpdate();
 	}
 	
@@ -158,17 +170,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 				1 * 300 /* milliseconds */);
 	}
 
-	public void init() {
-		switchPorts = new HashMap<Long,Set<OFPort>>();
-		switchPortLinks = new HashMap<NodePortTuple, Set<Link>>();
-		directLinks = new HashMap<NodePortTuple, Set<Link>>();
-		portBroadcastDomainLinks = new HashMap<NodePortTuple, Set<Link>>();
-		tunnelLinks = new HashMap<NodePortTuple, Set<Link>>();
-		topologyAware = new ArrayList<ITopologyListener>();
-		ldUpdates = new LinkedBlockingQueue<LDUpdate>();
-		appliedUpdates = new ArrayList<LDUpdate>();
-		clearCurrentTopology();
-	}
+	
 
 	public boolean updateTopology() {
 		boolean newInstanceFlag;

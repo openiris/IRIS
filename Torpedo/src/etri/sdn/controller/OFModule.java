@@ -24,7 +24,7 @@ public abstract class OFModule {
 	 * static map that holds all the references to module instances.
 	 */
 	private static ConcurrentMap<Class<? extends IService>, OFModule> services
-	= new ConcurrentHashMap<Class<? extends IService>, OFModule>();
+				= new ConcurrentHashMap<Class<? extends IService>, OFModule>();
 
 	/**
 	 * private map that holds filters for OFMessage objects for this module.
