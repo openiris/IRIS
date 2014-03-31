@@ -199,6 +199,9 @@ public class OFMStaticFlowEntryManager extends OFModule implements IStaticFlowEn
 		}
 
 		IOFSwitch sw = getController().getSwitch(Long.parseLong(dpid.replaceAll(":", "")));
+		if (sw == null) {
+			throw new StaticFlowEntryException("No switch exists: " + dpid);
+		}
 
 		OFMessage message = StaticFlowEntry.makeFlowMod(
 				sw,

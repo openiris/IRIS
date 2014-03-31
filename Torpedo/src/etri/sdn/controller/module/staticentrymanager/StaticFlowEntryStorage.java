@@ -21,9 +21,9 @@ import org.restlet.data.Method;
 
 import etri.sdn.controller.Main;
 import etri.sdn.controller.OFModel;
-import etri.sdn.controller.util.Logger;
 import etri.sdn.controller.module.storagemanager.IStorageService;
 import etri.sdn.controller.module.storagemanager.StorageException;
+import etri.sdn.controller.util.Logger;
 
 /**
  * This class implements the storage-related functions to manage static flow entries.
@@ -122,15 +122,24 @@ public class StaticFlowEntryStorage extends OFModel{
 	 * @throws StaticFlowEntryException 
 	 */
 	public void reloadFlowModsToSwitch() throws StaticFlowEntryException {
+		//Avoiding ConcurrentModificationException
+		Map<String, Map<String, Object>> entries = new HashMap<String, Map<String, Object>>();
 		for (String flowName : getFlowModMap().keySet()) {
-
-			// This method will throw exception when flow add failed.
-			getManager().addFlow(
-					flowName, 
-					getFlowModMap().get(flowName), 
-					(String) getFlowModMap().get(flowName).get("switch"));
-
-			Logger.stdout("Entry loaded to switch: " + getFlowModMap().get(flowName));
+			entries.put(flowName, getFlowModMap().get(flowName));
+		}
+		
+		for (String flowName : entries.keySet()) {
+			if (getManager().getController().getSwitch(
+					Long.parseLong(((String) entries.get(flowName).get("switch")).replaceAll(":", ""))
+					) != null) {
+				// This method will throw exception when flow add failed.
+				getManager().addFlow(
+						flowName, 
+						entries.get(flowName), 
+						(String) entries.get(flowName).get("switch"));
+	
+				Logger.stdout("Entry loaded to switch: " + getFlowModMap().get(flowName));
+			}
 		}
 	}
 
@@ -331,12 +340,13 @@ public class StaticFlowEntryStorage extends OFModel{
 
 		Collection<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
 
-		if ( entries != null )
+		if ( entries != null ) {
 			for (Map<String, Object> entry : entries) {
 				HashMap<String, Object> result = null;
 				result = (HashMap<String, Object>) entry;
 				results.add(result);
 			}
+		}
 
 		return results;
 	}
@@ -543,8 +553,7 @@ public class StaticFlowEntryStorage extends OFModel{
 					 * OFMStaticFlowEntryManager supports the unified input format. e.g. the user
 					 * input have to contain 'instructions' entry although switches support OF1.0
 					 * only. In this case, OFMStaticFlowEntryManager sets not OFInstruction but
-					 * OFAction directly when it builds OFFlowMod. This can be applied only when
-					 * the command is 'apply_actions'.
+					 * OFAction directly when it builds OFFlowMod.
 					 */
 					/*
 					 * ADD example
