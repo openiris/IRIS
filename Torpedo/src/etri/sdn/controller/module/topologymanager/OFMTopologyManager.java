@@ -83,6 +83,9 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	protected TopologyInstance currentInstance;
 	protected TopologyInstance currentInstanceWithoutTunnels;
 
+	protected TopologyInstance oldInstance;
+	protected TopologyInstance oldInstanceWithoutTunnels;
+
 	/**
 	 * Flag that indicates if links (direct/tunnel/multihop links) were
 	 * updated as part of LDUpdate.
@@ -104,22 +107,22 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	protected List<LDUpdate> appliedUpdates;
 
 	private Date lastUpdateTime;
-	
+
 	private Topology topologyModel;
-	
+
 	private OFProtocol protocol;
-	
+
 	public OFMTopologyManager() {
-		switchPorts = new HashMap<Long,Set<OFPort>>();
-		switchPortLinks = new HashMap<NodePortTuple, Set<Link>>();
-		directLinks = new HashMap<NodePortTuple, Set<Link>>();
-		portBroadcastDomainLinks = new HashMap<NodePortTuple, Set<Link>>();
-		tunnelLinks = new HashMap<NodePortTuple, Set<Link>>();
-		topologyAware = new ArrayList<ITopologyListener>();
-		ldUpdates = new LinkedBlockingQueue<LDUpdate>();
-		appliedUpdates = new ArrayList<LDUpdate>();
+		this.switchPorts = new HashMap<Long,Set<OFPort>>();
+		this.switchPortLinks = new HashMap<NodePortTuple, Set<Link>>();
+		this.directLinks = new HashMap<NodePortTuple, Set<Link>>();
+		this.portBroadcastDomainLinks = new HashMap<NodePortTuple, Set<Link>>();
+		this.tunnelLinks = new HashMap<NodePortTuple, Set<Link>>();
+		this.topologyAware = new ArrayList<ITopologyListener>();
+		this.ldUpdates = new LinkedBlockingQueue<LDUpdate>();
+		this.appliedUpdates = new ArrayList<LDUpdate>();
 	}
-	
+
 	@Override
 	protected Collection<Class<? extends IService>> services() {
 		List<Class<? extends IService>> ret = new LinkedList<Class<? extends IService>>();
@@ -130,14 +133,14 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 
 	@Override
 	public void initialize() {
-		
+
 		clearCurrentTopology();
-		
+
 		topologyModel = new Topology(this);
-		
+
 		linkDiscovery = (ILinkDiscoveryService) getModule(ILinkDiscoveryService.class);
 		linkDiscovery.addListener(this);
-		
+
 		protocol = (OFProtocol) getController().getProtocol();
 
 		// I will receive all PACKET_IN messages.
@@ -149,28 +152,8 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 						return true;
 					}
 				}
-		);
-
-//		initiatePeriodicTopologyUpdate();
+				);
 	}
-	
-	protected void initiatePeriodicTopologyUpdate() {
-
-		// registered task will be re-executed every DISCOVERY_TASK_INTERVAL seconds.
-		this.controller.scheduleTask(
-				new IOFTask() {
-
-					@Override
-					public boolean execute() {
-						updateTopology();
-						return true;
-					}
-
-				},
-				1 * 300 /* milliseconds */);
-	}
-
-	
 
 	public boolean updateTopology() {
 		boolean newInstanceFlag;
@@ -204,7 +187,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 
 		return true;
 	}
-	
+
 	@Override
 	protected boolean handleDisconnect(Connection conn) {
 		// does nothing currently
@@ -213,12 +196,20 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 
 	public TopologyInstance getCurrentInstance(boolean tunnelEnabled) {
 		if (tunnelEnabled)
-			return currentInstance;
-		else return this.currentInstanceWithoutTunnels;
+			return this.currentInstance;
+		else 
+			return this.currentInstanceWithoutTunnels;
 	}
 
 	public TopologyInstance getCurrentInstance() {
 		return this.getCurrentInstance(true);
+	}
+
+	public TopologyInstance getOldInstance(boolean tunnelEnabled) {
+		if ( tunnelEnabled )
+			return this.oldInstance;
+		else
+			return this.oldInstanceWithoutTunnels;
 	}
 
 	public boolean isAllowed(long sw, OFPort portId) {
@@ -229,7 +220,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		TopologyInstance ti = getCurrentInstance(tunnelEnabled);
 		return ti.isAllowed(sw, portId);
 	}
-	
+
 	protected OFPort getInputPort(OFPacketIn pi) {
 		if ( pi == null ) {
 			throw new AssertionError("pi cannot refer null");
@@ -279,9 +270,9 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 
 		if (ports == null) return;
 		if (packetData == null || packetData.length <= 0) return;
-		
+
 		OFFactory fac = OFFactories.getFactory(sw.getVersion());
-		
+
 		OFPacketOut.Builder po = fac.buildPacketOut();
 
 		List<OFAction> actions = new ArrayList<OFAction>();
@@ -296,7 +287,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		.setBufferId(OFBufferId.NO_BUFFER)
 		.setInPort(OFPort.ANY /* for 1.0, ANY is NONE */)
 		.setData(packetData);
-		
+
 		sw.getConnection().write(po.build());
 	}
 
@@ -310,7 +301,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	 * @param pi			packet-in message
 	 */
 	protected void doFloodBDDP(long pinSwitch, OFPacketIn pi) {
-		
+
 		TopologyInstance ti = getCurrentInstance(false);
 
 		Set<Long> switches = ti.getSwitchesInOpenflowDomain(pinSwitch);
@@ -351,7 +342,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 			}
 
 			// we have all the switch ports to which we need to broadcast.
-//			doMultiActionPacketOut(pi.getPacketData(), sw, ports);
+			//			doMultiActionPacketOut(pi.getPacketData(), sw, ports);
 			doMultiActionPacketOut(pi.getData(), sw, ports);
 		}
 
@@ -442,8 +433,8 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	}
 
 	public void addOrUpdateLink(long srcId, OFPort srcPort, long dstId, 
-								OFPort dstPort, LinkType type) {
-		
+			OFPort dstPort, LinkType type) {
+
 		boolean flag1 = false, flag2 = false;
 
 		Link link = new Link(srcId, srcPort, dstId, dstPort);
@@ -484,9 +475,9 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		removeLinkFromStructure(switchPortLinks, link);
 
 		NodePortTuple srcNpt = 
-			new NodePortTuple(link.getSrc(), link.getSrcPort());
+				new NodePortTuple(link.getSrc(), link.getSrcPort());
 		NodePortTuple dstNpt = 
-			new NodePortTuple(link.getDst(), link.getDstPort());
+				new NodePortTuple(link.getDst(), link.getDstPort());
 
 		// Remove switch ports if there are no links through those switch ports
 		if (switchPortLinks.get(srcNpt) == null) {
@@ -510,7 +501,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	}
 
 	public void removeLink(long srcId, OFPort srcPort,
-						   long dstId, OFPort dstPort) {
+			long dstId, OFPort dstPort) {
 		Link link = new Link(srcId, srcPort, dstId, dstPort);
 		removeLink(link);
 	}
@@ -587,9 +578,6 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	}
 
 	/**
-	 * This function computes a new topology.
-	 */
-	/**
 	 * This function computes a new topology instance.
 	 * It ignores links connected to all broadcast domain ports
 	 * and tunnel ports. The method returns if a new instance of
@@ -602,7 +590,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 
 		Map<NodePortTuple, Set<Link>> openflowLinks;
 		openflowLinks = 
-			new HashMap<NodePortTuple, Set<Link>>(switchPortLinks);
+				new HashMap<NodePortTuple, Set<Link>>(switchPortLinks);
 
 		// Remove all tunnel links.
 		for(NodePortTuple npt: tunnelLinks.keySet()) {
@@ -622,6 +610,11 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 				portBroadcastDomainLinks.keySet(), 
 				tunnelLinks.keySet());
 		nt.compute();
+
+		// update old topology instance
+		oldInstance = currentInstance;
+		oldInstanceWithoutTunnels = currentInstanceWithoutTunnels;
+
 		// We set the instances with and without tunnels to be identical.
 		// If needed, we may compute them differently.
 		currentInstance = nt;
@@ -661,7 +654,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 					return false;
 				}
 
-			}, 1000 /* millisecond */);
+			}, 300 /* millisecond */);
 		}
 	}
 
@@ -692,12 +685,12 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		// Check whether the port is a physical port. We should not learn
 		// attachment points on "special" ports.
 		if ((port.getShortPortNumber() & 0xff00) == 0xff00 && 
-			 port != OFPort.LOCAL) return false;
+				port != OFPort.LOCAL) return false;
 
 		// Make sure that the port is enabled.
 		IOFSwitch sw =  controller.getSwitch(switchid);
 		if (sw == null) return false;
-		
+
 		return protocol.portEnabled(sw, port);
 	}
 
@@ -890,7 +883,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	public Set<NodePortTuple> getBlockedPorts() {
 		Set<NodePortTuple> bp;
 		Set<NodePortTuple> blockedPorts =
-			new HashSet<NodePortTuple>();
+				new HashSet<NodePortTuple>();
 
 		// As we might have two topologies, simply get the union of
 		// both of them and send it.
@@ -917,7 +910,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		if (iofSwitch == null) return null;
 
 		Collection<OFPort> ofpList = protocol.getEnabledPortNumbers(iofSwitch);
-		
+
 		if (ofpList == null) return null;
 
 		Set<Integer> qPorts = linkDiscovery.getQuarantinedPorts(sw);
@@ -927,7 +920,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		ports.addAll(ofpList);
 		return ports;
 	}
-	
+
 	/*
 	 * IRoutingService methods
 	 */
@@ -963,16 +956,60 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 	@Override
 	public boolean routeExists(long src, long dst, boolean tunnelEnabled) {
 		TopologyInstance ti = getCurrentInstance(tunnelEnabled);
-        return ti.routeExists(src, dst);
+		return ti.routeExists(src, dst);
 	}
-	
+
+	@Override
+	public Route getOldRoute(long src, long dst) {
+		return getOldRoute(src, dst, true);
+	}
+
+	@Override
+	public Route getOldRoute(long src, long dst, boolean tunnelEnabled) {
+		TopologyInstance ti = getOldInstance(tunnelEnabled);
+		if ( ti == null ) 
+			return null;
+		
+		return ti.getRoute(src, dst);
+	}
+
+	@Override
+	public Route getOldRoute(long srcId, OFPort srcPort, long dstId, OFPort dstPort) {
+		return getOldRoute(srcId, srcPort, dstId, dstPort, true);
+	}
+
+	@Override
+	public Route getOldRoute(long srcId, OFPort srcPort, long dstId, OFPort dstPort, boolean tunnelEnabled) {
+		TopologyInstance ti = getOldInstance(tunnelEnabled);
+		if ( ti == null ) {
+			return null;
+		}
+		return ti.getRoute(srcId, srcPort, dstId, dstPort);
+	}
+
+	@Override
+	public boolean oldRouteExists(long src, long dst) {
+		return oldRouteExists(src, dst, true);
+	}
+
+	@Override
+	public boolean oldRouteExists(long src, long dst, boolean tunnelEnabled) {
+		TopologyInstance ti = getOldInstance(tunnelEnabled);
+		if ( ti == null ) {
+			return false;
+		}
+		return ti.routeExists(src, dst);
+	}
+
 	/*
 	 * OFModule methods
 	 */
-	
+
 	@Override
 	public OFModel[] getModels() {
 		// TODO Auto-generated method stub
 		return  new OFModel[] { this.topologyModel };
 	}
+
+
 }

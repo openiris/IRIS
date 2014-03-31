@@ -43,7 +43,11 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	private ObjectMapper om;
 	private Storage storage;
 	
-	public OFMStorageManager() {
+	/**
+	 * Constructor that creates all member variables
+	 */
+	public OFMStorageManager()  {
+		
 		TorpedoProperties conf = TorpedoProperties.loadConfiguration();
 		
 		String ip = conf.getString("storage-ip");
@@ -52,22 +56,25 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 		String passwd = conf.getString("storage-password");
 
 		this.storage = new Storage(this);
-
+		
 		try {
+			
 			this.mongoClient = new MongoClient(ip, port);
 			this.db = this.mongoClient.getDB(db);
 			
 			boolean auth = this.db.authenticate(db, passwd.toCharArray());
 			
 			if(auth) {
-				Logger.stderr("login successful..");
+				Logger.stdout("DB login successful..");
 			} else {
-				Logger.stderr("login failed.");
+				Logger.stdout("DB login failed.");
 			}
 			
-		} catch (UnknownHostException e) {
+		} catch ( UnknownHostException e ) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("unknown DB host. We continue without database.");
+			this.mongoClient = null;
+			
 		} catch ( Exception e ) {
 			System.err.println("cannot log in the database. We continue without database.");
 			this.mongoClient = null;
