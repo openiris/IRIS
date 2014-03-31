@@ -5,7 +5,6 @@ package org.openflow.io;
 
 import java.util.List;
 
-import org.openflow.protocol.factory.OFMessageParser;
 import org.projectfloodlight.openflow.protocol.OFMessage;
 
 /**

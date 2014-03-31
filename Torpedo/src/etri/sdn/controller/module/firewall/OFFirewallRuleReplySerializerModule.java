@@ -8,9 +8,7 @@ import org.codehaus.jackson.Version;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 import org.codehaus.jackson.map.module.SimpleModule;
-import org.projectfloodlight.openflow.types.IPAddress;
 import org.projectfloodlight.openflow.types.IPv4Address;
-import org.projectfloodlight.openflow.util.HexString;
 
 /**
  * This class is the serializer of {@link FirewallRule}.
