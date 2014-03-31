@@ -303,18 +303,22 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 			this.server.deregisterConroller( this );
 		}
 	}
-
-	/**
-	 * Schedule a task to be executed after 'after'. 
-	 * Unless the task.execute() returns false, the task periodically repeated 
-	 * using 'after' as a period value.
-	 * 
-	 * @param task
-	 * @param after re-schedule this task after 'after' milliseconds. If zero is given,
-	 *              the task will start immediately, and never be repeated.
-	 */
+	
 	@Override
 	public void scheduleTask(final IOFTask task, final long after) {
+		this.scheduleTask(task, after, after);
+	}
+
+	/**
+	 * Schedule a task to be executed periodically.
+	 * if period is specified zero, the task will be only executed once. 
+	 * 
+	 * @param task	IOFTask object to run
+	 * @param delay 	start the task after this amount of time.
+	 * @param period	after this amount of time, the task will be re-scheduled.
+	 */
+	@Override
+	public void scheduleTask(final IOFTask task, final long delay, final long period) {
 		timer.scheduleAtFixedRate(
 				new TimerTask() { 
 					public void run() {
@@ -324,14 +328,14 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 							return;
 						}
 
-						if ( after == 0 ) {
+						if ( period == 0 ) {
 							// this guarantees only one-time execution.
 							this.cancel();
 						}
 					}
 				},
-				0,
-				after
+				delay,
+				period
 		);
 	}
 

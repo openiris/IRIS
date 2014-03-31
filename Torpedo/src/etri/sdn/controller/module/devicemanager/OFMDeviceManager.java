@@ -180,6 +180,7 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 						return true;
 					}
 				}, 
+				0,
 				ENTITY_CLEANUP_INTERVAL * 1000 /* milliseconds */
 				);
 
@@ -193,6 +194,7 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 						}
 
 					}, 
+					0, 
 					1000
 					);
 		}

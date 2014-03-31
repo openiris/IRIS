@@ -40,9 +40,7 @@ import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
 import etri.sdn.controller.module.forwarding.Forwarding;
-import etri.sdn.controller.module.linkdiscovery.ILinkDiscoveryListener;
 import etri.sdn.controller.module.linkdiscovery.ILinkDiscoveryListener.LDUpdate;
-import etri.sdn.controller.module.linkdiscovery.ILinkDiscoveryService;
 import etri.sdn.controller.module.linkdiscovery.NodePortTuple;
 import etri.sdn.controller.module.routing.IRoutingService;
 import etri.sdn.controller.module.routing.Route;
@@ -74,12 +72,13 @@ class LDUpdateProcessor extends Thread {
 		do {
 			try {
 				LDUpdate t = queue.take();
+				
 				switch ( t.getOperation() ) {
 				case LINK_UPDATED:
 					parent.removeRoutesOnAnyLink(t.getSrc(),t.getSrcPort(), t.getDst(),t.getDstPort());
 					break;
 				case LINK_REMOVED:
-					parent.removeRoutesOnLink(t.getSrc(),t.getSrcPort(), t.getDst(),t.getDstPort());
+					parent.removeOldRoutesOnLink(t.getSrc(),t.getSrcPort(), t.getDst(),t.getDstPort());
 					break;
 				default:
 					break;
@@ -102,9 +101,8 @@ class LDUpdateProcessor extends Thread {
  */
 public class OFMNetFailover 
 extends OFModule
-implements ILinkDiscoveryListener, ITopologyListener {
+implements ITopologyListener {
 
-	private ILinkDiscoveryService linkDiscoveryService;
 	private ITopologyService topologyService;
 	private IRoutingService routingService;
 	
@@ -118,6 +116,12 @@ implements ILinkDiscoveryListener, ITopologyListener {
 		for ( LDUpdate u : updates ) {
 			switch ( u.getOperation() ) {
 			case LINK_UPDATED:
+				// a link is added or updated.
+				this.processor.put(u);
+				break;
+			case LINK_REMOVED:
+				// a link is removed. We need to find all routes on the link
+				// and remove them from the flow tables of the switches. 
 				this.processor.put(u);
 				break;
 			default:
@@ -126,20 +130,7 @@ implements ILinkDiscoveryListener, ITopologyListener {
 		}
 	}
 
-	@Override
-	public void linkDiscoveryUpdate(LDUpdate u) {
-		switch ( u.getOperation() ) {
-		case LINK_REMOVED:
-			// a link is removed. We need to find all routes on the link
-			// and remove them from the flow tables of the switches. 
-			this.processor.put(u);
-			break;
-		default:
-			// does nothing
-		}
-	}
-
-	void removeRoutesOnLink(long src, OFPort srcPort, long dst,	OFPort dstPort) {
+	void removeOldRoutesOnLink(long src, OFPort srcPort, long dst,	OFPort dstPort) {
 		NodePortTuple srcNpt = new NodePortTuple(src, srcPort);
 		NodePortTuple dstNpt = new NodePortTuple(dst, dstPort);
 
@@ -152,7 +143,7 @@ implements ILinkDiscoveryListener, ITopologyListener {
 				// can this be some source of evil?
 				if ( s <= d ) continue;
 				
-				 Route r = this.routingService.getRoute(s, d);
+				 Route r = this.routingService.getOldRoute(s, d);
 				 if  (r == null) 
 					 // topology is not ready right now.
 					 continue;
@@ -267,14 +258,11 @@ implements ILinkDiscoveryListener, ITopologyListener {
 
 	@Override
 	protected void initialize() {
-		this.linkDiscoveryService = 
-				(ILinkDiscoveryService) OFModule.getModule(ILinkDiscoveryService.class);
 		this.topologyService = 
 				(ITopologyService) OFModule.getModule(ITopologyService.class);
 		this.routingService = 
 				(IRoutingService) OFModule.getModule(IRoutingService.class);
-		
-		this.linkDiscoveryService.addListener(this);
+
 		this.topologyService.addListener(this);
 		
 		this.processor = new LDUpdateProcessor(this);

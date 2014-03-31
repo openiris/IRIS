@@ -413,6 +413,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 						return true;
 					}
 				}, 
+				0,
 				DISCOVERY_TASK_INTERVAL * 1000 /* milliseconds */);
 	}
 	
@@ -473,6 +474,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 						return true;
 					}
 				},
+				0,
 				BDDP_TASK_INTERVAL /* milliseconds */);
 	}
 
@@ -521,6 +523,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 						} while ( true );
 					}
 				},
+				0,
 				300 /* milliseconds */);
 	}
 
