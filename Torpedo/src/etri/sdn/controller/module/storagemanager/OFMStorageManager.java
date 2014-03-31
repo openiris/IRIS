@@ -43,6 +43,39 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 	private ObjectMapper om;
 	private Storage storage;
 	
+	public OFMStorageManager() {
+		TorpedoProperties conf = TorpedoProperties.loadConfiguration();
+		
+		String ip = conf.getString("storage-ip");
+		int port = conf.getInt("storage-port");
+		String db = conf.getString("storage-default-db");
+		String passwd = conf.getString("storage-password");
+
+		this.storage = new Storage(this);
+
+		try {
+			this.mongoClient = new MongoClient(ip, port);
+			this.db = this.mongoClient.getDB(db);
+			
+			boolean auth = this.db.authenticate(db, passwd.toCharArray());
+			
+			if(auth) {
+				Logger.stderr("login successful..");
+			} else {
+				Logger.stderr("login failed.");
+			}
+			
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch ( Exception e ) {
+			System.err.println("cannot log in the database. We continue without database.");
+			this.mongoClient = null;
+		}
+		
+		this.om =  new ObjectMapper();
+	}
+	
 	@Override
 	protected Collection<Class<? extends IService>> services() {
 		List<Class<? extends IService>> ret = new LinkedList<Class<? extends IService>>();
@@ -52,40 +85,7 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 
 	@Override
 	protected void initialize() {
-		
-		TorpedoProperties conf = TorpedoProperties.loadConfiguration();
-
-		storage = new Storage(this);
-
-		String ip = conf.getString("storage-ip");
-		int port = conf.getInt("storage-port");
-		String db = conf.getString("storage-default-db");
-		String passwd = conf.getString("storage-password");
-		try {
-			this.mongoClient = new MongoClient(ip, port);
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		this.db = this.mongoClient.getDB(db);
-		try {
-			boolean auth = this.db.authenticate(db, passwd.toCharArray());
-			
-			if(auth) {
-				Logger.stderr("login successful..");
-			} else {
-				Logger.stderr("login failed.");
-			}
-		} catch ( Exception e ) {
-			System.err.println("cannot log in the database. We continue without database.");
-			this.mongoClient = null;
-		}
-		
-		om =  new ObjectMapper();
-
 		Logger.stderr("OFMStorageManager initialize");
-
 	}
 
 	/**
