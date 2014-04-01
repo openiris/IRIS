@@ -294,7 +294,7 @@ public class Device implements IDevice {
 			}
 		}
 
-		// Set the oldAPs to null.
+		// empty the old ap list.
 		this.oldAPs.clear();
 		
 		return moved;
@@ -377,6 +377,14 @@ public class Device implements IDevice {
 			this.oldAPs.add( newAP );
 		}
 		return false;
+	}
+	
+	/**
+	 * get the number of the attachment points.
+	 * @return the number of the attachment points.
+	 */
+	public int getNumberOfAttachmentPoints() {
+		return this.attachmentPoints.size();
 	}
 
 	/**

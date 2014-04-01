@@ -950,7 +950,10 @@ public class Devices extends OFModel implements IDeviceService {
 			}
 		}
 		for ( Device d : to_remove ) {
-			deleteDevice( d );
+			d.deleteAttachmentPoint( datapathid );
+			if ( d.getNumberOfAttachmentPoints() == 0 ) {
+				deleteDevice( d );
+			}
 		}
 	}	
 

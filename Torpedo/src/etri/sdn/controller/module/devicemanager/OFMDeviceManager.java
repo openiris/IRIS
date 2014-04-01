@@ -273,7 +273,13 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 
 	@Override
 	protected boolean handleDisconnect(Connection conn) {
-		//		this.devices.deleteDevice(conn.getSwitch().getId());
+		// the deleteDevice will remove the device from the learned device list 
+		// whose attachment point is only one switch, which is the disconnected. 
+		try { 
+			this.devices.deleteDevice(conn.getSwitch().getId());
+		} catch ( NullPointerException e ) {
+			return false;
+		}
 		return true;
 	}
 

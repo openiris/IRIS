@@ -187,6 +187,8 @@ public final class Connection {
 	 * @return true if successful, false otherwise
 	 */
 	synchronized boolean flush() {
+		if ( getStream() == null ) return false;
+		
 		try {
 			getStream().flush();
 		} catch (IOException e) {
