@@ -71,7 +71,7 @@ import etri.sdn.controller.util.AppCookie;
 import etri.sdn.controller.util.Logger;
 import etri.sdn.controller.util.OFMessageDamper;
 import etri.sdn.controller.util.TimedCache;
-//import java.util.EnumSet;
+
 
 /**
  * Abstract base class for implementing a forwarding module. Forwarding is responsible
