@@ -1,5 +1,6 @@
 package etri.sdn.controller.module.staticentrymanager;
 
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -66,7 +67,8 @@ public class OFMStaticFlowEntryManager extends OFModule implements IStaticFlowEn
 	 * @param message the OFMessage to write
 	 */
 	private boolean writeOFMessageToSwitch(String dpid, OFMessage message) {
-		IOFSwitch sw = getController().getSwitch(Long.parseLong(dpid.replaceAll(":", "")));
+		BigInteger bi = new BigInteger(dpid.replaceAll(":", ""), 16);
+		IOFSwitch sw = getController().getSwitch(bi.longValue());
 		if (sw == null) {
 			return false;
 		}
@@ -162,7 +164,8 @@ public class OFMStaticFlowEntryManager extends OFModule implements IStaticFlowEn
 			deleteFlow(name);
 		}
 
-		IOFSwitch sw = getController().getSwitch(Long.parseLong(dpid.replaceAll(":", "")));
+		BigInteger bi = new BigInteger(dpid.replaceAll(":", ""), 16);
+		IOFSwitch sw = getController().getSwitch(bi.longValue());
 		if (sw == null) {
 			throw new StaticFlowEntryException("No switch exists: " + dpid);
 		}
@@ -198,7 +201,8 @@ public class OFMStaticFlowEntryManager extends OFModule implements IStaticFlowEn
 			throw new StaticFlowEntryException("Inconsistent internal state: no switch has rule " + name);
 		}
 
-		IOFSwitch sw = getController().getSwitch(Long.parseLong(dpid.replaceAll(":", "")));
+		BigInteger bi = new BigInteger(dpid.replaceAll(":", ""), 16);
+		IOFSwitch sw = getController().getSwitch(bi.longValue());
 		if (sw == null) {
 			throw new StaticFlowEntryException("No switch exists: " + dpid);
 		}

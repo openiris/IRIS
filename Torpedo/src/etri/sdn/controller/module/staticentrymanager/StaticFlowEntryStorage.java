@@ -2,6 +2,7 @@ package etri.sdn.controller.module.staticentrymanager;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -129,9 +130,8 @@ public class StaticFlowEntryStorage extends OFModel{
 		}
 		
 		for (String flowName : entries.keySet()) {
-			if (getManager().getController().getSwitch(
-					Long.parseLong(((String) entries.get(flowName).get("switch")).replaceAll(":", ""))
-					) != null) {
+			BigInteger bi = new BigInteger(((String) entries.get(flowName).get("switch")).replaceAll(":", ""), 16);
+			if (getManager().getController().getSwitch(bi.longValue()) != null) {
 				// This method will throw exception when flow add failed.
 				getManager().addFlow(
 						flowName, 
