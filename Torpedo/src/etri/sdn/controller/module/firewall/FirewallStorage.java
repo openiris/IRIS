@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jackson.map.MappingJsonFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -259,8 +260,23 @@ public class FirewallStorage extends OFModel{
 								result = "{\"status\" : \"success\", \"details\" : \"firewall stopped\"}";
 							}
 
-							else if (op.toLowerCase().equals("subnet-mask")){
-								result = firewall.getSubnetMask();
+							else if (op.toLowerCase().equals("get-subnet-mask")){
+								result = "{\"subnet-mask\" : \"" + firewall.getSubnetMask() + "\"}"; 
+							}
+
+							else if (op.toLowerCase().equals("set-subnet-mask")){
+								String entityText = request.getEntityAsText();
+								entityText = entityText.replaceAll("[\']", "");
+								
+								try {
+									firewall.setSubnetMask(FirewallRule.jsonToSubnetMask(entityText));
+									result = "{\"status\" : \"success\", \"details\" : \"subnet-mask is set\"}";
+								}
+								catch (IOException e) {
+									Logger.error("Error parsing subnet-mask: " + entityText, e);
+									e.printStackTrace();
+									return;
+								}
 							}
 
 							else {
