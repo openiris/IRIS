@@ -14,6 +14,7 @@ import java.util.Set;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -84,6 +85,24 @@ public class StaticFlowEntryStorage extends OFModel{
 
 	public Map<String, Map<String, Object>> getFlowModMap() {
 		return flowModMap;
+	}
+	
+	public Map<String, Map<String, Object>> getFlowModMap(String dpid) {
+		Set<String> names = null;
+		if ( !dpid.equals("all") ) {
+			names = this.getDpidToFlowModNameIndex().get(dpid);
+		} else {
+			names = this.getFlowModMap().keySet();
+		}
+		
+		Map<String, Map<String, Object>> flowmods = new HashMap<String, Map<String, Object>>();
+		if ( names != null ) { 
+			for ( String name : names ) {
+				flowmods.put(name, this.getFlowModMap().get(name));
+			}
+		}
+	
+		return flowmods;
 	}
 
 	public Map<String, Set<String>> getDpidToFlowModNameIndex() {
@@ -366,40 +385,25 @@ public class StaticFlowEntryStorage extends OFModel{
 					new Restlet() {
 				@Override
 				public void handle(Request request, Response response) {
-					StringWriter sWriter = new StringWriter();
-					JsonFactory f = new JsonFactory();
-					JsonGenerator g = null;
-
-					try {
-						g = f.createJsonGenerator(sWriter);
-						g.writeStartObject();
-						
-						String sw = (String) request.getAttributes().get("switch");
-						Set<String> flows = new HashSet<String>();
-						if (sw.toLowerCase().equals("all")) {
-							flows = getFlowModMap().keySet();
-							if (flows.isEmpty()) {
-								flows = null;
-							}
-						} else {
-							flows = getDpidToFlowModNameIndex().get(sw);
+					String sw = (String) request.getAttributes().get("switch");
+					Set<String> flows = new HashSet<String>();
+					if (sw.toLowerCase().equals("all")) {
+						flows = getFlowModMap().keySet();
+						if (flows.isEmpty()) {
+							flows = null;
 						}
-
-						if (flows != null) {
-							for (String flow : flows) {
-								g.writeFieldName(flow);
-								g.writeString( getFlowModMap().get(flow).toString() );
-							}
-						}
-						
-						g.writeEndObject();
-						g.close();
-					} catch (Exception e) {
-						e.printStackTrace();
+					} else {
+						flows = getDpidToFlowModNameIndex().get(sw);
 					}
 					
-					String r = sWriter.toString();
-					response.setEntity(r, MediaType.APPLICATION_JSON);
+					ObjectMapper om = new ObjectMapper();
+					try {
+						String r = om.writeValueAsString(getFlowModMap(sw));
+						response.setEntity(r, MediaType.APPLICATION_JSON);
+					} catch ( Exception e ) {
+						e.printStackTrace();
+						return;
+					}
 				}
 			}),
 

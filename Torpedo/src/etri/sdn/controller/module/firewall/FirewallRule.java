@@ -461,6 +461,48 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 	}
 
 	/**
+	 * Turns a JSON formatted subnet-mask into the subnet-mask String of "255.255.255.0" format
+	 * 
+	 * @param fmJson The JSON formatted subnet-mask
+	 * @return the subnet-mask String
+	 * 
+	 * @throws IOException If there was an error parsing the JSON
+	 */
+	public static String jsonToSubnetMask(String fmJson) throws IOException {
+		String result = null;
+		MappingJsonFactory f = new MappingJsonFactory();
+		JsonParser jp;
+
+		try {
+			jp = f.createJsonParser(fmJson);
+		} catch (JsonParseException e) {
+			throw new IOException(e);
+		}
+		
+		jp.nextToken();
+		if (jp.getCurrentToken() != JsonToken.START_OBJECT) {
+			throw new IOException("Expected START_OBJECT");
+		}
+
+		while (jp.nextToken() != JsonToken.END_OBJECT) {
+			if (jp.getCurrentToken() != JsonToken.FIELD_NAME) {
+				throw new IOException("Expected FIELD_NAME");
+			}
+
+			String n = jp.getCurrentName();
+			jp.nextToken();
+			if (jp.getText().equals("")) 
+				continue;
+			
+			if (n == "subnet-mask") {
+				result = (String)jp.getText();
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
 	 * Turns a JSON formatted Firewall Rule string into a {@link FirewallRule} instance
 	 * 
 	 * @param fmJson The JSON formatted static firewall rule
