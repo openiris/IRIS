@@ -18,6 +18,7 @@ import org.projectfloodlight.openflow.protocol.OFMessage;
 import org.projectfloodlight.openflow.protocol.OFPacketIn;
 import org.projectfloodlight.openflow.protocol.OFPacketOut;
 import org.projectfloodlight.openflow.protocol.OFType;
+import org.projectfloodlight.openflow.protocol.OFVersion;
 import org.projectfloodlight.openflow.protocol.action.OFAction;
 import org.projectfloodlight.openflow.protocol.action.OFActionOutput;
 import org.projectfloodlight.openflow.protocol.match.MatchField;
@@ -280,12 +281,16 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 			OFActionOutput.Builder action_out = fac.actions().buildOutput();
 			actions.add( action_out.setPort(p).setMaxLen(0).build());
 		}
+		
+		if ( sw.getVersion() == OFVersion.OF_10 ) 
+			po.setInPort(OFPort.ANY);			// for 1.0, ANY is NONE
+		else
+			po.setInPort(OFPort.CONTROLLER);	// for >1.1, ANY cannot be used as input port
 
 		// set actions
 		po
 		.setActions(actions)
 		.setBufferId(OFBufferId.NO_BUFFER)
-		.setInPort(OFPort.ANY /* for 1.0, ANY is NONE */)
 		.setData(packetData);
 
 		sw.getConnection().write(po.build());
