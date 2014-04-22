@@ -26,6 +26,7 @@ import org.projectfloodlight.openflow.protocol.OFPortReason;
 import org.projectfloodlight.openflow.protocol.OFPortState;
 import org.projectfloodlight.openflow.protocol.OFPortStatus;
 import org.projectfloodlight.openflow.protocol.OFType;
+import org.projectfloodlight.openflow.protocol.OFVersion;
 import org.projectfloodlight.openflow.protocol.action.OFAction;
 import org.projectfloodlight.openflow.protocol.action.OFActionOutput;
 import org.projectfloodlight.openflow.protocol.match.MatchField;
@@ -753,8 +754,10 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		OFPacketOut.Builder po = fac.buildPacketOut();
 		
 		po.setBufferId(OFBufferId.NO_BUFFER);
-		po.setInPort(OFPort.ANY /*Openflow 1.0 calls this 'None'*/);
-
+		if ( sw.getVersion() == OFVersion.OF_10 ) 
+			po.setInPort(OFPort.ANY /*Openflow 1.0 calls this 'None'*/);
+		else 
+			po.setInPort(OFPort.CONTROLLER);		// packet-out is created by the controller.
 		
 		List<OFAction> actions = new ArrayList<OFAction>();
 		OFActionOutput.Builder action_output = fac.actions().buildOutput();
