@@ -1,7 +1,14 @@
 **/*.[oa]
+*.[oa]
 **/*.class
+*.class
 **/*.bak
+*.bak
 **/*.cld
+*.cld
 **/*.pyc
-**/*.gitignore
+*.pyc
+**/.gitignore
+.gitignore
 **/*~
+*~
