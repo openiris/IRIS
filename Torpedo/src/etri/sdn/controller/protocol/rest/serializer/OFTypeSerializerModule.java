@@ -37,11 +37,11 @@ final class OFMatchSerializer extends JsonSerializer<Match> {
 			throws IOException, JsonProcessingException {
 
 		jgen.writeStartObject();
-		for ( MatchField mf: match.getMatchFields() ) {
+		for ( MatchField<?> mf: match.getMatchFields() ) {
 			if ( match.isExact(mf) ) {
 				jgen.writeStringField(mf.getName(), match.get(mf).toString());
 			} else {
-				Masked mv = match.getMasked(mf);
+				Masked<?> mv = match.getMasked(mf);
 				jgen.writeStringField(mf.getName(), mv.getValue().toString());
 				jgen.writeStringField(mf.getName()+"_MASK", mv.getMask().toString());
 			}
@@ -55,10 +55,10 @@ final class OFMatchSerializer extends JsonSerializer<Match> {
  * 
  * @author bjlee
  */
+@SuppressWarnings("rawtypes")
 final class OFOxmSerializer extends JsonSerializer<OFOxm> {
-
 	@Override
-	public void serialize(@SuppressWarnings("rawtypes") OFOxm oxm, JsonGenerator jgen, SerializerProvider provider) 
+	public void serialize(OFOxm oxm, JsonGenerator jgen, SerializerProvider provider) 
 			throws IOException, JsonProcessingException {
 		jgen.writeStartObject();
 		jgen.writeStringField(oxm.getMatchField().getName(), oxm.getValue().toString());
