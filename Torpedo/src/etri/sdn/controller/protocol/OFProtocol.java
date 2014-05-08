@@ -398,7 +398,7 @@ public class OFProtocol {
 				
 				List<OFAction> actions = new LinkedList<OFAction>();
 				OFActionOutput.Builder action = OFFactories.getFactory(m.getVersion()).actions().buildOutput();
-				action.setPort(OFPort.CONTROLLER).setMaxLen(0);
+				action.setPort(OFPort.CONTROLLER).setMaxLen(0xffff);
 				actions.add( action.build() );
 				
 				instruction.setActions(actions);
