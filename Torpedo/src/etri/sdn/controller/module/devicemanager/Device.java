@@ -319,14 +319,30 @@ public class Device implements IDevice {
 		boolean oldAPFlag = false;
 
 		AttachmentPoint newAP = new AttachmentPoint(sw, port, lastSeen);
-
-		int index = this.oldAPs.indexOf(newAP);
-		if ( index >= 0 ) {
-			newAP = this.oldAPs.remove(index);
-			newAP.setLastSeen(lastSeen);
-			// in the oldAPs, there was newAP.
-			oldAPFlag = true;
-		}
+		
+		do {
+			int index = this.oldAPs.indexOf(newAP);
+			if ( index >= 0 ) {
+				try { 
+					AttachmentPoint tmp = this.oldAPs.remove(index);
+					if ( ! tmp.equals(newAP) ) {
+						// this is not what we are looking for.
+						// so, just put it back.
+						this.oldAPs.add(tmp);
+						continue;
+					} 
+					
+					// now the tmp is the new AP that we are looking for. 
+					newAP = tmp;
+				} catch ( IndexOutOfBoundsException e ) {
+					// the element might be already removed.
+					continue;
+				}
+				newAP.setLastSeen(lastSeen);
+				// in the oldAPs, there was newAP.
+				oldAPFlag = true;
+			}
+		} while ( false );
 
 		Map<Long, AttachmentPoint> apMap = getAPMap(this.attachmentPoints);
 		if ( apMap.isEmpty() ) {
