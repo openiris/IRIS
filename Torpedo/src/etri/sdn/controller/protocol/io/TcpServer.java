@@ -16,12 +16,15 @@ import java.util.Set;
  */
 public final class TcpServer extends Thread implements IOFProtocolServer {
 	private volatile boolean quit = false;
-	private ClientChannelWatcher[] watchers;
 	
-	public TcpServer(int watcher_num) throws IOException {
-		watchers = new ClientChannelWatcher[watcher_num];
+	private ClientChannelWatcher[] watchers;
+	private int port_number;
+	
+	public TcpServer(int port_number, int watcher_num) throws IOException {
+		this.port_number = port_number;
+		this.watchers = new ClientChannelWatcher[watcher_num];
 		for ( int i = 0; i < watchers.length; ++i ) {
-			watchers[i] = new ClientChannelWatcher();
+			this.watchers[i] = new ClientChannelWatcher();
 		}
 	}
 	
@@ -65,7 +68,7 @@ public final class TcpServer extends Thread implements IOFProtocolServer {
 			Selector accept_selector = Selector.open();
 
 			ServerSocketChannel tcp_server = ServerSocketChannel.open();
-			tcp_server.socket().bind(new InetSocketAddress(6633));
+			tcp_server.socket().bind(new InetSocketAddress(this.port_number));
 			tcp_server.configureBlocking(false);
 			tcp_server.register( accept_selector, SelectionKey.OP_ACCEPT );
 

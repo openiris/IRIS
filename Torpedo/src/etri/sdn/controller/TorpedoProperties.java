@@ -86,6 +86,7 @@ public final class TorpedoProperties extends Properties {
 			sysconf_ = new TorpedoProperties();
 	
 			// load some default values
+			sysconf_.setProperty("port-number", "6633");
 			sysconf_.setProperty("watcher-num", "2");
 	
 			File sysconf_file = new File("./torpedo.properties");
