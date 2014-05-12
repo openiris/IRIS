@@ -63,7 +63,10 @@ public class Main {
 		//
 		TcpServer tcp_server;
 		try {
-			tcp_server = new TcpServer(sysconf.getInt("watcher-num"));
+			tcp_server = new TcpServer(
+					sysconf.getInt("port-number"),
+					sysconf.getInt("watcher-num")
+					);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
