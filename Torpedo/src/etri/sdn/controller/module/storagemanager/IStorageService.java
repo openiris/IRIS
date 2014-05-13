@@ -94,7 +94,7 @@ public interface IStorageService extends IService {
 	/**
 	 {@link OFMStorageManager#isConnected()}
 	 */
-	boolean isConnected () throws StorageException;
+	boolean isConnected ();
 	
 	//Data Control Langguage(DCL) APIs
 	// authentication, grand, revoke ...

@@ -56,13 +56,7 @@ import etri.sdn.controller.util.Logger;
  * 
  */
 public class OFMFirewall extends OFModule implements IFirewallService
-{
-	/**
-	 * if this value is false, the firewall module works 
-	 * without persistent database. 
-	 */
-	public boolean dbSupported = true;
-	
+{	
 	private FirewallStorage firewallStorage;
 	private OFMStorageManager storageInstance;
 
@@ -519,17 +513,10 @@ public class OFMFirewall extends OFModule implements IFirewallService
 
 		this.firewallStorage = new FirewallStorage (this, "FirewallStorage");
 
-		if (dbSupported) {
-			TorpedoProperties conf = TorpedoProperties.loadConfiguration();
-			this.storageInstance = (OFMStorageManager) getModule(IStorageService.class);
-			this.dbName = conf.getString("storage-default-db");
-			this.collectionName = firewallStorage.getName();
-			
-			//check the DB connection, and start without DB if connection failed.
-			if (!storageInstance.isConnected()) {
-				dbSupported = false;
-			}
-		}
+		TorpedoProperties conf = TorpedoProperties.loadConfiguration();
+		this.storageInstance = (OFMStorageManager) getModule(IStorageService.class);
+		this.dbName = conf.getString("storage-default-db");
+		this.collectionName = firewallStorage.getName();
 
 		this.protocol = getController().getProtocol();
 
@@ -548,10 +535,8 @@ public class OFMFirewall extends OFModule implements IFirewallService
 				});
 
 		// Read rules
-		if (dbSupported) {
-			synchronized (rules) {
-				this.rules = readRulesFromStorage();
-			}
+		synchronized (rules) {
+			this.rules = readRulesFromStorage();
 		}
 	}
 
@@ -827,9 +812,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
 		entry.put(COLUMN_ACTION, Integer.toString(rule.action.ordinal()));
 
 		firewallStorage.getFirewallEntryTable().insertFirewallEntry(Integer.toString(rule.ruleid), entry);
-		if (dbSupported) {
-			firewallStorage.insertDBEntry(storageInstance, dbName, collectionName, entry);
-		}
+		firewallStorage.insertDBEntry(storageInstance, dbName, collectionName, entry);
 
 		purgeMatchingRulesFromSwitches(rule);
 	}
@@ -837,9 +820,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
 	@Override
 	public void deleteRule(int ruleid) {
 		firewallStorage.getFirewallEntryTable().deleteFirewallEntry(Integer.toString(ruleid));
-		if (dbSupported) {
-			firewallStorage.deleteDBEntry(storageInstance, dbName, collectionName, ruleid);
-		}
+		firewallStorage.deleteDBEntry(storageInstance, dbName, collectionName, ruleid);
 
 		synchronized ( this.rules ) {
 			Iterator<FirewallRule> iter = this.rules.iterator();
@@ -861,9 +842,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
 		synchronized ( this.rules ) {
 			for ( FirewallRule rule : this.rules ) {
 				firewallStorage.getFirewallEntryTable().deleteFirewallEntry(Integer.toString(rule.ruleid));
-				if (dbSupported) {
-					firewallStorage.deleteDBEntry(storageInstance, dbName, collectionName, rule.ruleid);
-				}
+				firewallStorage.deleteDBEntry(storageInstance, dbName, collectionName, rule.ruleid);
 
 				// found the rule, now remove it
 				purgeMatchingRulesFromSwitches(rule);

@@ -69,7 +69,6 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 			}
 			
 		} catch ( UnknownHostException e ) {
-			// TODO Auto-generated catch block
 			System.err.println("unknown DB host. We continue without database.");
 			this.mongoClient = null;
 			
