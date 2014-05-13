@@ -90,6 +90,11 @@ public interface IStorageService extends IService {
 	 {@link OFMStorageManager#retrieveAsStringAll(String, String)}
 	 */
 	List<String> retrieveAsStringAll(String dbName, String collection) throws StorageException;
+
+	/**
+	 {@link OFMStorageManager#isConnected()}
+	 */
+	boolean isConnected () throws StorageException;
 	
 	//Data Control Langguage(DCL) APIs
 	// authentication, grand, revoke ...

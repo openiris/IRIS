@@ -35,7 +35,7 @@ public class OFMStaticFlowEntryManager extends OFModule implements IStaticFlowEn
 	 * if this value is false, the static flow entry manager works 
 	 * without persistent database. 
 	 */
-	public boolean IS_DB_SUPPORT = true;
+	public boolean dbSupported = true;
 
 	private StaticFlowEntryStorage flowEntryStorage;
 	private OFMStorageManager flowEntryDB;
@@ -77,8 +77,6 @@ public class OFMStaticFlowEntryManager extends OFModule implements IStaticFlowEn
 		}
 	}
 
-
-
 	/*
 	 * OFModule methods
 	 */
@@ -91,7 +89,8 @@ public class OFMStaticFlowEntryManager extends OFModule implements IStaticFlowEn
 	}
 	
 	/**
-	 * Initialize this module.
+	 * Initialize this module and check the connection to the persistent database.
+	 * If the connection failed, this module starts without the database.
 	 * This module does not use registerFilter
 	 * because it does not process PACKET_IN messages.
 	 */
@@ -102,12 +101,21 @@ public class OFMStaticFlowEntryManager extends OFModule implements IStaticFlowEn
 
 		flowEntryStorage = new StaticFlowEntryStorage(this, "StaticFlowEntryStorage");
 
-		if (IS_DB_SUPPORT) {
+		if (dbSupported) {
 			TorpedoProperties conf = TorpedoProperties.loadConfiguration();
 			flowEntryDB = (OFMStorageManager) getModule(IStorageService.class);
 			dbName = conf.getString("storage-default-db");
 			collectionName = flowEntryStorage.getName();
+			
+			//check the DB connection, and start without DB if connection failed.
+			if (!getDB().isConnected()) {
+				dbSupported = false;
+			}
+		}
+		
+		if (dbSupported) {
 			flowEntryStorage.loadFlowModsFromDB();
+			
 			if (Main.debug) {
 				flowEntryStorage.printDB();
 			}
@@ -152,8 +160,6 @@ public class OFMStaticFlowEntryManager extends OFModule implements IStaticFlowEn
 		return new OFModel[] { this.flowEntryStorage };
 	}
 
-
-
 	/* 
 	 * IStaticFlowEntryService Methods.
 	 */
@@ -179,7 +185,7 @@ public class OFMStaticFlowEntryManager extends OFModule implements IStaticFlowEn
 			throw new StaticFlowEntryException("Cannot write to switch: " + dpid);
 		}
 
-		if (IS_DB_SUPPORT) {
+		if (dbSupported) {
 			if (!flowEntryStorage.insertDBEntry(flowEntryDB, dbName, collectionName, entry)) {
 				throw new StaticFlowEntryException("Cannot write to DB: " + entry);
 			}
@@ -187,7 +193,7 @@ public class OFMStaticFlowEntryManager extends OFModule implements IStaticFlowEn
 		flowEntryStorage.addEntryToIndices(dpid, name);
 		flowEntryStorage.getFlowModMap().put(name, entry);
 
-		if (IS_DB_SUPPORT) {
+		if (dbSupported) {
 			if (Main.debug) {
 				flowEntryStorage.printDB();
 			}
@@ -216,7 +222,7 @@ public class OFMStaticFlowEntryManager extends OFModule implements IStaticFlowEn
 			throw new StaticFlowEntryException("Cannot write to switch: " + dpid);
 		}
 
-		if (IS_DB_SUPPORT) {
+		if (dbSupported) {
 			if (!flowEntryStorage.deleteDBEntry(flowEntryDB, dbName, collectionName, name)) {
 				throw new StaticFlowEntryException("Cannot write to db: " + name);
 			}
@@ -224,7 +230,7 @@ public class OFMStaticFlowEntryManager extends OFModule implements IStaticFlowEn
 		flowEntryStorage.deleteEntryFromIndices(name);
 		flowEntryStorage.getFlowModMap().remove(name);
 
-		if (IS_DB_SUPPORT) {
+		if (dbSupported) {
 			if (Main.debug) {
 				flowEntryStorage.printDB();
 			}
