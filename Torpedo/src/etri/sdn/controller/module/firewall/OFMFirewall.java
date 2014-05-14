@@ -56,8 +56,7 @@ import etri.sdn.controller.util.Logger;
  * 
  */
 public class OFMFirewall extends OFModule implements IFirewallService
-{
-
+{	
 	private FirewallStorage firewallStorage;
 	private OFMStorageManager storageInstance;
 
@@ -512,9 +511,9 @@ public class OFMFirewall extends OFModule implements IFirewallService
 	@Override
 	protected void initialize() {
 
-		TorpedoProperties conf = TorpedoProperties.loadConfiguration();
-
 		this.firewallStorage = new FirewallStorage (this, "FirewallStorage");
+
+		TorpedoProperties conf = TorpedoProperties.loadConfiguration();
 		this.storageInstance = (OFMStorageManager) getModule(IStorageService.class);
 		this.dbName = conf.getString("storage-default-db");
 		this.collectionName = firewallStorage.getName();

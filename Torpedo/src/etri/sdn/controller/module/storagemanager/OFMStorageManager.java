@@ -61,9 +61,7 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 			
 			this.mongoClient = new MongoClient(ip, port);
 			this.db = this.mongoClient.getDB(db);
-			
 			boolean auth = this.db.authenticate(db, passwd.toCharArray());
-			
 			if(auth) {
 				Logger.stdout("DB login successful..");
 			} else {
@@ -71,7 +69,6 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 			}
 			
 		} catch ( UnknownHostException e ) {
-			// TODO Auto-generated catch block
 			System.err.println("unknown DB host. We continue without database.");
 			this.mongoClient = null;
 			
@@ -736,6 +733,21 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 		}
 		
 		mongoClient.dropDatabase(dbName);
+	}
+	
+	/**
+	 * check the connection to the persistent storage.
+	 * 
+	 * @return false when the connection failed, true otherwise.
+	 */
+	@Override
+	public boolean isConnected () {
+		
+		if ( this.mongoClient == null ) {
+			return false;
+		}
+		
+		return true;
 	}
 
 	/* (non-Javadoc)

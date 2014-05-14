@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -119,9 +120,9 @@ public class StaticFlowEntryStorage extends OFModel{
 	 * all static entries need to be reloaded for consistency.
 	 */
 	public void loadFlowModsFromDB() {
-		List<Map<String, Object>> entries = null;
+		Collection<Map<String, Object>> entries = null;
 
-		entries = (List<Map<String, Object>>) getAllDBEntries (
+		entries = getAllDBEntries (
 				manager.getDB(), 
 				manager.getDbName(), 
 				manager.getCollectionName() );
@@ -259,6 +260,10 @@ public class StaticFlowEntryStorage extends OFModel{
 	 * 
 	 */
 	public void printDB () {
+		if ( !manager.getDB().isConnected()) {
+			return;
+		}
+		
 		List<Map<String, Object>> entry = (List<Map<String, Object>>) getAllDBEntries
 				(manager.getDB(), manager.getDbName(), manager.getCollectionName() );
 
@@ -277,6 +282,10 @@ public class StaticFlowEntryStorage extends OFModel{
 	 * @return true when inserted successfully, false otherwise
 	 */
 	public boolean insertDBEntry (IStorageService db, String dbName, String collectionName, Map<String, Object> entry) {
+		if ( ! db.isConnected() ) {
+			return true;
+		}
+		
 		try {
 			db.insert(dbName, collectionName, entry);
 		} catch (StorageException e) {
@@ -298,6 +307,10 @@ public class StaticFlowEntryStorage extends OFModel{
 	 * @return true when deleted successfully, false otherwise
 	 */
 	public boolean deleteDBEntry (IStorageService db, String dbName, String collectionName, String name) {
+		if ( !db.isConnected() ) {
+			return true;
+		}
+		
 		Map<String, Object> entry = getDBEntry (db, dbName, collectionName, name);
 		if (entry == null) {
 			Logger.debug("No such entry exists. name: " + name);
@@ -350,6 +363,10 @@ public class StaticFlowEntryStorage extends OFModel{
 	 */
 	public Collection<Map<String, Object>> getAllDBEntries (IStorageService db, String dbName, String collectionName) {
 		List<Map<String, Object>> entries = null;
+		
+		if ( ! db.isConnected() ) {
+			return Collections.emptyList();
+		}
 
 		try {
 			entries = db.retrieveAll(dbName, collectionName);

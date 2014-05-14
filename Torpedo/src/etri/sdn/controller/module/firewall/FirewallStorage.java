@@ -3,6 +3,7 @@ package etri.sdn.controller.module.firewall;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -82,6 +83,11 @@ public class FirewallStorage extends OFModel{
 	 * 
 	 */
 	public void printStorage () {
+		
+		if ( !manager.getStorageInstance().isConnected() ) {
+			return;
+		}
+		
 		List<Map<String, Object>> entryList = (List<Map<String, Object>>) getAllDBEntries
 				(manager.getStorageInstance(), manager.getDbName(), manager.getCollectionName() );
 		
@@ -100,6 +106,10 @@ public class FirewallStorage extends OFModel{
 	 * @return true when inserted
 	 */
 	public boolean insertDBEntry (IStorageService firewallDB, String dbName, String collectionName, Map<String, Object> rule) {
+		
+		if ( !firewallDB.isConnected() ) {
+			return true;
+		}
 
 		try {
 			firewallDB.insert(dbName, collectionName, rule);
@@ -126,6 +136,10 @@ public class FirewallStorage extends OFModel{
 	 * @return true when deleted, false when fails to search
 	 */
 	public boolean deleteDBEntry (IStorageService firewallDB, String dbName, String collectionName, int ruleid) {
+		
+		if ( !firewallDB.isConnected() ) {
+			return true;
+		}
 		
 		Map<String, Object> entry = getDBEntry (firewallDB, dbName, collectionName, ruleid);
 		if (entry == null) {
@@ -182,6 +196,10 @@ public class FirewallStorage extends OFModel{
 	 * @return all firewall rules, null when the database is empty
 	 */
 	public Collection<Map<String, Object>> getAllDBEntries (IStorageService firewallDB, String dbName, String collectionName) {
+		
+		if ( !firewallDB.isConnected() ) {
+			return Collections.emptyList();
+		}
 		
 		List<Map<String, Object>> entryList = null;
 		
