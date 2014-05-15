@@ -234,7 +234,11 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 	public OFProtocol getProtocol() {
 		return this.protocol;
 	}
-		
+
+	public IOFProtocolServer getServer() {
+		return this.server;
+	}
+	
 	/**
 	 * Every controller implementation that inherits OFController should implement this function
 	 * to handle all the chores related to the controller initialization. 

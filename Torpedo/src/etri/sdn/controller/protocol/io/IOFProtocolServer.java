@@ -8,6 +8,13 @@ package etri.sdn.controller.protocol.io;
 public interface IOFProtocolServer {
     
 	/**
+	 * return the port number of controller server that is defined through Torpedo.properties file.
+	 * @return
+	 */
+	public int getPortNumber();
+	
+	
+	/**
 	 * register controller to the {@link IOFProtocolServer} instance.
 	 * 
 	 * @param controller

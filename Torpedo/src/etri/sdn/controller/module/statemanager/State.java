@@ -468,7 +468,7 @@ public class State extends OFModel {
 						g.writeFieldName("host");
 						g.writeString("localhost");
 						g.writeFieldName("ofport");
-						g.writeNumber(6633);
+						g.writeNumber(manager.getController().getServer().getPortNumber());
 						g.writeFieldName("uptime");
 						Interval temp = new Interval(timeInitiated, Calendar.getInstance().getTimeInMillis());
 						Period tempPeriod = temp.toPeriod();
