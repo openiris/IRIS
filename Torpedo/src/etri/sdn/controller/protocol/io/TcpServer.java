@@ -27,6 +27,11 @@ public final class TcpServer extends Thread implements IOFProtocolServer {
 			this.watchers[i] = new ClientChannelWatcher();
 		}
 	}
+
+	@Override
+	public int getPortNumber() {
+		return this.port_number;
+	}
 	
 	@Override
 	public void registerController(IOFHandler controller) {
