@@ -33,8 +33,6 @@ public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStre
 	public OFMessageAsyncStream(SocketChannel sock) throws IOException {
 		this.inBuf = ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE);
 		this.outBuf = ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE);
-		this.inBuf.clear();
-		this.outBuf.clear();
 		this.sock = sock;
 		// this.sock.configureBlocking(false);
 	}
@@ -141,10 +139,7 @@ public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStre
 		outBuf.flip();			// swap pointers; lim = pos; pos = 0;
 		do {	
 			sock.write(outBuf); // write data starting at pos up to lim
-			if ( outBuf.remaining() > 0 ) {
-				continue;
-			}
-		} while ( false );
+		} while ( outBuf.remaining() > 0 );
 			
 		outBuf.clear();
 	}
