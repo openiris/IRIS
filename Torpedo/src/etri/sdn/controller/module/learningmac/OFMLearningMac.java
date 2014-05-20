@@ -322,7 +322,7 @@ public final class OFMLearningMac extends OFModule {
 		try { 
 			match = pi.getMatch();
 		} catch ( UnsupportedOperationException u ) {
-			match = this.protocol.loadOFMatchFromPacket(conn.getSwitch(), pi.getData(), pi.getInPort(), true);
+			match = this.protocol.loadOFMatchFromPacket(conn.getSwitch(), pi, pi.getInPort(), true);
 		}
 		
 		OFPort inputPort = match.get(MatchField.IN_PORT);

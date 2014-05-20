@@ -26,6 +26,7 @@ import org.projectfloodlight.openflow.protocol.OFFlowModFlags;
 import org.projectfloodlight.openflow.protocol.OFHello;
 import org.projectfloodlight.openflow.protocol.OFHelloElem;
 import org.projectfloodlight.openflow.protocol.OFMessage;
+import org.projectfloodlight.openflow.protocol.OFPacketIn;
 import org.projectfloodlight.openflow.protocol.OFPortConfig;
 import org.projectfloodlight.openflow.protocol.OFPortDesc;
 import org.projectfloodlight.openflow.protocol.OFPortDescStatsReply;
@@ -650,17 +651,17 @@ public class OFProtocol {
 	 * Create an OFMatch object from the packet-in data. 
 	 * This method is called by doDropFlow and doForwardFlow of Forwarding module, and processPacketInMesssage of LearningMac module.
 	 * @param sw			IOFSwitch object
-	 * @param packetData	packet-in data array
+	 * @param packetIn	packet-in data array
 	 * @param inputPort		input port (short)
 	 * @return				OFMatch object
 	 */
-	public Match loadOFMatchFromPacket(IOFSwitch sw, byte[] packetData, OFPort inputPort, boolean l2only) {
+	public Match loadOFMatchFromPacket(IOFSwitch sw, OFPacketIn packetIn, OFPort inputPort, boolean l2only) {
 
-		Match.Builder ret = OFFactories.getFactory(sw.getVersion()).buildMatch();
+		Match.Builder ret = OFFactories.getFactory(packetIn.getVersion()).buildMatch();
 
 		short scratch = 0;
 		int transportOffset = 34;
-		ByteBuffer packetDataBB = ByteBuffer.wrap(packetData);
+		ByteBuffer packetDataBB = ByteBuffer.wrap(packetIn.getData());
 		int limit = packetDataBB.limit();
 
 		ret.setExact(MatchField.IN_PORT, inputPort);
