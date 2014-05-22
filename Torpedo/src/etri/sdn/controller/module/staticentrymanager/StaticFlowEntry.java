@@ -319,6 +319,10 @@ public class StaticFlowEntry {
 		OFFactory fac = OFFactories.getFactory(sw.getVersion());
 		Match.Builder builder = fac.buildMatch();
 
+		if (keys.contains("eth_type")) {
+			String dtype = ((String) entry.get("eth_type")).replaceAll("0x", "");
+			builder.setExact(MatchField.ETH_TYPE, EthType.of(Integer.valueOf(dtype, 16)));
+		}
 		for (String key : keys) {
 			if (key.toLowerCase().equals("in_port")) {
 				builder.setExact(MatchField.IN_PORT, OFPort.of(Integer.valueOf((String) entry.get("in_port"))));
@@ -336,8 +340,7 @@ public class StaticFlowEntry {
 				builder.setExact(MatchField.VLAN_PCP, VlanPcp.of(Byte.valueOf((String) entry.get("vlan_pcp"))));
 			}
 			else if (key.toLowerCase().equals("eth_type")) {
-				String dtype = ((String) entry.get("eth_type")).replaceAll("0x", "");
-				builder.setExact(MatchField.ETH_TYPE, EthType.of(Integer.valueOf(dtype, 16)));
+				//already handled
 			}
 //			else if (key.toLowerCase().equals("nw_tos")) {
 //				byte b = Byte.valueOf((String) entry.get("nw_tos"));
