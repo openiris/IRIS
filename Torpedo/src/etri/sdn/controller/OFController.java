@@ -121,7 +121,10 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 				} catch (InterruptedException e) {
 					continue;
 				}
-			} while ( false );
+				
+				break;
+				
+			} while ( true );
 
 			return true;
 		}

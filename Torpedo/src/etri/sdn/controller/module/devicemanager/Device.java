@@ -325,6 +325,7 @@ public class Device implements IDevice {
 			if ( index >= 0 ) {
 				try { 
 					AttachmentPoint tmp = this.oldAPs.remove(index);
+					
 					if ( ! tmp.equals(newAP) ) {
 						// this is not what we are looking for.
 						// so, just put it back.
@@ -338,11 +339,15 @@ public class Device implements IDevice {
 					// the element might be already removed.
 					continue;
 				}
+				
 				newAP.setLastSeen(lastSeen);
 				// in the oldAPs, there was newAP.
 				oldAPFlag = true;
 			}
-		} while ( false );
+			
+			break;
+			
+		} while ( true );
 
 		Map<Long, AttachmentPoint> apMap = getAPMap(this.attachmentPoints);
 		if ( apMap.isEmpty() ) {
