@@ -71,12 +71,12 @@ public class RESTApiServer {
 	/**
 	 * Start the RESTApiServer.
 	 */
-	public void start() {
+	public void start(int port) {
 		
 		// Start listening for REST requests
         try {
             final Component component = new Component();
-            component.getServers().add(Protocol.HTTP, 8080);
+            component.getServers().add(Protocol.HTTP, port);
             component.getClients().add(Protocol.FILE);
             component.getDefaultHost().attach(application);
             component.start();
