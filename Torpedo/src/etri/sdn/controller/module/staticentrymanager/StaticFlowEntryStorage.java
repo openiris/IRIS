@@ -395,8 +395,8 @@ public class StaticFlowEntryStorage extends OFModel{
 	private RESTApi[] apis = {
 			/*
 			 * LIST example
-			 * OF1.0,1.3:	curl http://{controller_ip}:8080/wm/staticflowentry/list/all/json
-			 * 				curl http://{controller_ip}:8080/wm/staticflowentry/list/00:00:00:00:00:00:00:01/json
+			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/list/all/json
+			 * 				curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/list/00:00:00:00:00:00:00:01/json
 			 */
 			new RESTApi("/wm/staticflowentry/list/{switch}/json",
 					new Restlet() {
@@ -426,8 +426,8 @@ public class StaticFlowEntryStorage extends OFModel{
 
 			/*
 			 * CLEAR example
-			 * OF1.0,1.3:	curl http://{controller_ip}:8080/wm/staticflowentry/clear/all/json
-			 * 				curl http://{controller_ip}:8080/wm/staticflowentry/clear/00:00:00:00:00:00:00:01/json
+			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/clear/all/json
+			 * 				curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/clear/00:00:00:00:00:00:00:01/json
 			 */
 			new RESTApi("/wm/staticflowentry/clear/{switch}/json",
 					new Restlet() {
@@ -504,7 +504,7 @@ public class StaticFlowEntryStorage extends OFModel{
 			
 			/*
 			 * RELOAD example
-			 * OF1.0,1.3:	curl http://{controller_ip}:8080/wm/staticflowentry/reload/json
+			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/reload/json
 			 */
 			new RESTApi("/wm/staticflowentry/reload/json",
 					new Restlet() {
@@ -578,10 +578,10 @@ public class StaticFlowEntryStorage extends OFModel{
 					 */
 					/*
 					 * ADD example
-					 * OF1.0,1.3:	curl http://{controller_ip}:8080/wm/staticflowentry/list/all/json
-					 * 				curl -d '{"switch":"00:00:00:00:00:00:00:01","name":"s1","priority":"101","eth_type":"0x0800","ipv4_src":"10.0.0.1","ipv4_dst":"10.0.0.2","active":"true","instructions":[{"apply_actions":[{"output":"2"}]}]}' http://{controller_ip}:8080/wm/staticflowentry/json
-					 * 				curl -d '{"switch":"00:00:00:00:00:00:00:02","name":"s20","priority":"1001","eth_type":"0x0806","ipv4_dst":"10.0.0.4","active":"true","instructions":[{"apply_actions":[{"output":"3"}]}]}' http://{controller_ip}:8080/wm/staticflowentry/json
-					 * 				curl -d '{"switch":"00:00:00:00:00:00:00:01","name":"s1","priority":"1001","eth_type":"0x0800","ipv4_dst":"10.0.0.3","active":"true","instructions":[{"apply_actions":[{"set_field":{"ipv4_dst":"10.0.0.2"}},{"output":"2"}]}]}' http://{controller_ip}:8080/wm/staticflowentry/json
+					 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/list/all/json
+					 * 				curl -d '{"switch":"00:00:00:00:00:00:00:01","name":"s1","priority":"101","eth_type":"0x0800","ipv4_src":"10.0.0.1","ipv4_dst":"10.0.0.2","active":"true","instructions":[{"apply_actions":[{"output":"2"}]}]}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/json
+					 * 				curl -d '{"switch":"00:00:00:00:00:00:00:02","name":"s20","priority":"1001","eth_type":"0x0806","ipv4_dst":"10.0.0.4","active":"true","instructions":[{"apply_actions":[{"output":"3"}]}]}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/json
+					 * 				curl -d '{"switch":"00:00:00:00:00:00:00:01","name":"s1","priority":"1001","eth_type":"0x0800","ipv4_dst":"10.0.0.3","active":"true","instructions":[{"apply_actions":[{"set_field":{"ipv4_dst":"10.0.0.2"}},{"output":"2"}]}]}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/json
 					 */
 					if (m == Method.POST) {
 						Map<String, Object> entry;
@@ -630,7 +630,7 @@ public class StaticFlowEntryStorage extends OFModel{
 
 					/*
 					 * DELETE example
-					 * OF1.0,1.3:	curl -X DELETE -d '{"name":"s1"}' http://{controller_ip}:8080/wm/staticflowentry/json
+					 * OF1.0,1.3:	curl -X DELETE -d '{"name":"s1"}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/json
 					 */
 					else if (m == Method.DELETE) {
 						Map<String, Object> entry;

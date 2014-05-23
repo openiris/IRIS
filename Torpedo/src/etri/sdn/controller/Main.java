@@ -79,7 +79,7 @@ public class Main {
 		tcp_server.wakeup();
 		
 		RESTApiServer rest_api_server = new RESTApiServer();
-		rest_api_server.start();
+		rest_api_server.start(sysconf.getInt("web-server-port"));
 
 		// 
 		// do controller registration loop, which search for a new 

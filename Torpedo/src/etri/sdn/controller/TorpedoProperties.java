@@ -88,6 +88,7 @@ public final class TorpedoProperties extends Properties {
 			// load some default values
 			sysconf_.setProperty("port-number", "6633");
 			sysconf_.setProperty("watcher-num", "2");
+			sysconf_.setProperty("web-server-port", "8080");
 	
 			File sysconf_file = new File("./torpedo.properties");
 			if ( sysconf_file.exists() ) {
