@@ -136,16 +136,16 @@ public class StaticFlowEntryStorage extends OFModel{
 	}
 
 	/**
-	 * OFMStaticFlowEntryManager supports the persistent database. Therefore all 
-	 * rules are loaded to the memory when the controller is rebooted. This method
-	 * is called by RESTApi.
+	 * OFMStaticFlowEntryManager supports the persistent database. 
+	 * This reload flows to the particular switch. This method is called by RESTApi.
 	 * 
-	 * @throws StaticFlowEntryException 
+	 * @param dpid the switch dpid in 00:00:00:00:00:00:00:01 notation
+	 * @throws StaticFlowEntryException
 	 */
-	public void reloadFlowModsToSwitch() throws StaticFlowEntryException {
+	public void reloadFlowModsToSwitch(String dpid) throws StaticFlowEntryException {
 		//Avoiding ConcurrentModificationException
 		Map<String, Map<String, Object>> entries = new HashMap<String, Map<String, Object>>();
-		for (String flowName : getFlowModMap().keySet()) {
+		for (String flowName : dpidToFlowModNameIndex.get(dpid)) {
 			entries.put(flowName, getFlowModMap().get(flowName));
 		}
 		
@@ -163,6 +163,18 @@ public class StaticFlowEntryStorage extends OFModel{
 		}
 	}
 
+	/**
+	 * OFMStaticFlowEntryManager supports the persistent database. 
+	 * This reload all flows to proper switches. This method is called by RESTApi.
+	 * 
+	 * @throws StaticFlowEntryException
+	 */
+	public void reloadAllFlowModsToSwitch() throws StaticFlowEntryException {
+		for (String dpid : dpidToFlowModNameIndex.keySet()) {
+			reloadFlowModsToSwitch(dpid);
+		}
+	}
+	
 	/**
 	 * Builds dpidToFlowModNameIndex when the controller is rebooted.
 	 * 
@@ -504,9 +516,10 @@ public class StaticFlowEntryStorage extends OFModel{
 			
 			/*
 			 * RELOAD example
-			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/reload/json
+			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/reload/all/json
+			 * 				curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/reload/00:00:00:00:00:00:00:01/json
 			 */
-			new RESTApi("/wm/staticflowentry/reload/json",
+			new RESTApi("/wm/staticflowentry/reload/{switch}/json",
 					new Restlet() {
 				@Override
 				public void handle(Request request, Response response) {
@@ -515,13 +528,26 @@ public class StaticFlowEntryStorage extends OFModel{
 					JsonGenerator g = null;
 					String status = null;
 
+					String sw = (String) request.getAttributes().get("switch");
+					
 					try {
-						if (!getFlowModNameToDpidIndex().isEmpty()) {
-							getManager().reloadFlowsToSwitch();
-							status = "All entries are reloaded to switches.";
+						if (sw.toLowerCase().equals("all")) {
+							if (!getFlowModNameToDpidIndex().isEmpty()) {
+								getManager().reloadAllFlowsToSwitch();
+								status = "All entries are reloaded to switches.";
+							}
+							else {
+								status = "There is no entry";
+							}
 						}
 						else {
-							status = "There is no entry";
+							if (!getDpidToFlowModNameIndex().isEmpty()) {
+								getManager().reloadFlowsToSwitch(sw);
+								status = "Entries are reloaded to switch: " + sw + ".";
+							}
+							else {
+								status = "There is no entry";
+							}
 						}
 					}
 					catch (UnsupportedOperationException e) {
