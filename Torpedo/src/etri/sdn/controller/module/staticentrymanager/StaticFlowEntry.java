@@ -237,7 +237,13 @@ public class StaticFlowEntry {
 				return fac.oxms().ethType(EthType.of(Integer.valueOf(((String) entry.get("eth_type")).replaceAll("0x", ""), 16)));
 			}
 			else if (fieldstr.toLowerCase().equals("ip_proto")) {
-				return fac.oxms().ipProto(IpProtocol.of(Short.valueOf((String) entry.get("ip_proto"))));
+				if ( (fieldstr.toLowerCase().startsWith("0x")) ) {
+					String value = Integer.valueOf(((String) entry.get("ip_proto")).replaceAll("0x", ""), 16).toString();
+					return fac.oxms().ipProto(IpProtocol.of(Short.valueOf(value)));
+				}
+				else {
+					return fac.oxms().ipProto(IpProtocol.of(Short.valueOf((String) entry.get("ip_proto"))));
+				}
 			}
 			else if (fieldstr.toLowerCase().equals("ipv4_src")) {
 				return fac.oxms().ipv4Src(IPv4Address.of(IPv4.toIPv4AddressBytes((String) entry.get("ipv4_src"))));
@@ -348,7 +354,12 @@ public class StaticFlowEntry {
 //				builder.setExact(MatchField.IP_ECN, IpEcn.of((byte) (0b00000011 & b)));
 //			}
 			else if (key.toLowerCase().equals("ip_proto")) {
-				builder.setExact(MatchField.IP_PROTO, IpProtocol.of(Short.valueOf((String) entry.get("ip_proto"))));
+				if ( ((String) entry.get("ip_proto")).startsWith("0x") ) {
+					String value = Integer.valueOf(((String) entry.get("ip_proto")).replaceAll("0x", ""), 16).toString();
+					builder.setExact(MatchField.IP_PROTO, IpProtocol.of(Short.valueOf(value)));
+				} else {
+					builder.setExact(MatchField.IP_PROTO, IpProtocol.of(Short.valueOf((String) entry.get("ip_proto"))));
+				}
 			}
 			else if (key.toLowerCase().equals("ipv4_src")) {
 				if ( builder.get(MatchField.ETH_TYPE) == EthType.ARP ) {

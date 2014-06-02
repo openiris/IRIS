@@ -118,10 +118,18 @@ public interface IStaticFlowEntryService extends IService {
 	//public Map<String, OFFlowMod> getFlows(String dpid);
 
 	/**
+	 * Reloads static flow entries saved in the memory or DB to a particular switch.
+	 * This is used when the controller is rebooted.
+	 * 
+	 * @throws StaticFlowEntryException 
+	 */
+	public void reloadFlowsToSwitch(String dpid) throws StaticFlowEntryException;
+
+	/**
 	 * Reloads all static flow entries saved in the memory or DB to switches.
 	 * This is used when the controller is rebooted.
 	 * 
 	 * @throws StaticFlowEntryException 
 	 */
-	public void reloadFlowsToSwitch() throws StaticFlowEntryException;
+	public void reloadAllFlowsToSwitch() throws StaticFlowEntryException;
 }
