@@ -21,6 +21,7 @@ import org.projectfloodlight.openflow.protocol.OFMessage;
  * 
  * @author Rob Sherwood (rob.sherwood@stanford.edu)
  * @author David Erickson (daviderickson@cs.stanford.edu)
+ * @author Byungjoon Lee (bjlee@etri.re.kr)
  * 
  */
 public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStream, OFMessageParser {
