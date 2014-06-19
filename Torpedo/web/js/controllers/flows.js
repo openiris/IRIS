@@ -16,7 +16,12 @@ irisApp.controller('CntlFlows',
 						f.matchHTML = '';
 						
 						for ( var k in f.match ) {
-							f.matchHTML += k.replace("_","") + "=" + f.match[k] + ", "
+							var field_name = k.replace("_", "");
+							if ( field_name == 'ipproto' ) {
+								// we need some conversion to display it decimal format.
+								f.match[k] = parseInt(f.match[k], 16);
+							}
+							f.matchHTML += field_name + "=" + f.match[k] + ", "
 						}
 												
 						// remove trailing ", "

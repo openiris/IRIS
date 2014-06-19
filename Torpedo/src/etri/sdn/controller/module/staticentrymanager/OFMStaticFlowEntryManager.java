@@ -252,8 +252,13 @@ public class OFMStaticFlowEntryManager extends OFModule implements IStaticFlowEn
 	}
 
 	@Override
-	public void reloadFlowsToSwitch() throws StaticFlowEntryException {
-		flowEntryStorage.reloadFlowModsToSwitch();
+	public void reloadFlowsToSwitch(String dpid) throws StaticFlowEntryException {
+		flowEntryStorage.reloadFlowModsToSwitch(dpid);
+	}
+
+	@Override
+	public void reloadAllFlowsToSwitch() throws StaticFlowEntryException {
+		flowEntryStorage.reloadAllFlowModsToSwitch();
 	}
 
 }
