@@ -25,6 +25,7 @@ import org.projectfloodlight.openflow.protocol.action.OFActionCopyTtlIn;
 import org.projectfloodlight.openflow.protocol.action.OFActionCopyTtlOut;
 import org.projectfloodlight.openflow.protocol.action.OFActionDecMplsTtl;
 import org.projectfloodlight.openflow.protocol.action.OFActionDecNwTtl;
+import org.projectfloodlight.openflow.protocol.action.OFActionEnqueue;
 import org.projectfloodlight.openflow.protocol.action.OFActionGroup;
 import org.projectfloodlight.openflow.protocol.action.OFActionOutput;
 import org.projectfloodlight.openflow.protocol.action.OFActionPopMpls;
@@ -511,8 +512,14 @@ public class StaticFlowEntry {
 							fac.actions().setTpDst(TransportPort.of(Short.valueOf((String) entry.get("set_tp_dst"))));
 					actions.add(action);
 				}
-				//else if (actionstr.toLowerCase().equals("enqueue")) {
-				//}
+				else if (actionstr.toLowerCase().equals("enqueue")) {
+					String[] portqueue = ((String) entry.get("enqueue")).split(":");
+					OFActionEnqueue action = 
+							fac.actions().enqueue(
+									OFPort.ofShort(Short.valueOf(portqueue[0])), 
+									Long.valueOf(portqueue[1]));
+					actions.add(action);
+				}
 
 				//OF1.3
 				else if (actionstr.toLowerCase().equals("copy_ttl_out")) {
