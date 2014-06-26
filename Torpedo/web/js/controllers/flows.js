@@ -45,6 +45,8 @@ irisApp.controller('CntlFlows',
 							switch (a.type) {
 							case "OUTPUT":
 								return memo + "output " + a.port + ', ';
+							case "ENQUEUE":
+							case "SET_QUEUE":
 							case "OPAQUE_ENQUEUE":
 								return memo + "enqueue " + a.port + ':' + a.queueId +  ', ';
 							case "STRIP_VLAN":
