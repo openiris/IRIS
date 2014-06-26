@@ -19,5 +19,6 @@
 	<classpathentry kind="lib" path="lib/openflowj-0.3.5-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="lib" path="lib/openflowj-0.3.5-SNAPSHOT.jar"/>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="lib/netty-3.9.0.Final.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
