@@ -2,6 +2,7 @@ package org.openflow.protocol.factory;
 
 import java.nio.ByteBuffer;
 
+import org.jboss.netty.buffer.ChannelBuffer;
 import org.projectfloodlight.openflow.types.U16;
 import org.projectfloodlight.openflow.types.U32;
 import org.projectfloodlight.openflow.types.U8;
@@ -45,12 +46,12 @@ public class OFHeader {
 		return U32.f(this.xid);
 	}	
 
-	public void readFrom(ByteBuffer data) {
+	public void readFrom(ChannelBuffer data) {
 
-		this.version = data.get();
-		this.type = data.get();
-		this.length = data.getShort();
-		this.xid = data.getInt();
+		this.version = data.readByte();
+		this.type = data.readByte();
+		this.length = data.readShort();
+		this.xid = data.readInt();
 	}
 
 	public String toString() {

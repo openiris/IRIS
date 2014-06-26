@@ -9,6 +9,7 @@ import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jboss.netty.buffer.ChannelBuffer;
 import org.openflow.protocol.factory.OFHeader;
 import org.openflow.protocol.factory.OFMessageParser;
 import org.projectfloodlight.openflow.exceptions.OFParseError;
@@ -27,13 +28,14 @@ import org.projectfloodlight.openflow.protocol.OFMessage;
 public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStream, OFMessageParser {
 	static public int DEFAULT_BUFFER_SIZE = 65536;
 
-	protected ByteBuffer inBuf, outBuf;
+	protected SocketReadByteChannelBuffer inBuf;
+	protected SocketWriteByteChannelBuffer outBuf;
 	protected SocketChannel sock;
 	protected int partialReadCount = 0;
 
 	public OFMessageAsyncStream(SocketChannel sock) throws IOException {
-		this.inBuf = ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE);
-		this.outBuf = ByteBuffer.allocateDirect(DEFAULT_BUFFER_SIZE);
+		this.inBuf = new SocketReadByteChannelBuffer(DEFAULT_BUFFER_SIZE);
+		this.outBuf = new SocketWriteByteChannelBuffer(DEFAULT_BUFFER_SIZE);
 		this.sock = sock;
 		// this.sock.configureBlocking(false);
 	}
@@ -46,17 +48,18 @@ public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStre
 	@Override
 	public List<OFMessage> read(int limit) throws IOException {
 		List<OFMessage> l;
-		int read = sock.read(inBuf);
+		// int read = sock.read(inBuf);
+		int read = this.inBuf.read(sock);
 		if (read == -1) {
 			if ( sock.isConnectionPending() ) {
 				return null;
 			}
 			throw new IOException("connection closed");
 		}
-		inBuf.flip();
+		
 		l = this.parseMessages(inBuf, limit);
-		if (inBuf.hasRemaining())
-			inBuf.compact();
+		if (inBuf.readable())
+			inBuf.discardReadBytes();
 		else
 			inBuf.clear();
 		return l;
@@ -71,7 +74,7 @@ public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStre
 	 */
 	@Override
 	public void write(OFMessage m) throws IOException {
-		if ( this.outBuf.remaining() < 2048 ) {
+		if ( this.outBuf.writableBytes() < 2048 ) {
 			flush();
 		}
 		appendMessageToOutBuf(m);
@@ -88,42 +91,41 @@ public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStre
 	}
 	
 	@Override
-	public List<OFMessage> parseMessages(ByteBuffer data) {
+	public List<OFMessage> parseMessages(ChannelBuffer data) {
 		return parseMessages(data, 0);
 	}
 
 	@Override
-	public List<OFMessage> parseMessages(ByteBuffer data, int limit) {
-		
+	public List<OFMessage> parseMessages(ChannelBuffer data, int limit) {
 		
 		List<OFMessage> results = new ArrayList<OFMessage>();
 		OFHeader demux = new OFHeader();
 
 		while (limit == 0 || results.size() <= limit) {
-			if (data.remaining() < OFHeader.MINIMUM_LENGTH)
+			if (data.readableBytes() < OFHeader.MINIMUM_LENGTH)
 				break;
 
-			data.mark();
+			data.markReaderIndex();
 			demux.readFrom(data);
-			data.reset();
+			data.resetReaderIndex();
 			
-			if (demux.getLengthU() > data.remaining())
+			if (demux.getLengthU() > data.readableBytes())
 				break;
 			
-			int start = data.position();
+			int start = data.readerIndex();
 			try {
 				OFMessage msg = OFFactories.getGenericReader().readFrom( data );
 				if ( msg != null ) {
 					results.add( msg );
 				} else {
-					data.position( start );
+					data.readerIndex( start );
 				}
 				
 			} catch (OFParseError e) {
 //				e.printStackTrace();
 //				System.err.println(data);
 				// we skip this message: not parse
-				data.position( start + demux.getLengthU() );
+				data.readerIndex( start + demux.getLengthU() );
 				continue;
 			}
 		}
@@ -137,10 +139,16 @@ public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStre
 	 */
 	public void flush() throws IOException {
 		
-		outBuf.flip();			// swap pointers; lim = pos; pos = 0;
+//		outBuf.flip();			// swap pointers; lim = pos; pos = 0;
 		do {	
-			sock.write(outBuf); // write data starting at pos up to lim
-		} while ( outBuf.remaining() > 0 );
+			try { 
+				this.outBuf.write(sock);
+//			sock.write(outBuf); // write data starting at pos up to lim
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw e;
+			}
+		} while ( outBuf.writableBytes() > 0 );
 			
 		outBuf.clear();
 	}
@@ -149,6 +157,7 @@ public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStre
 	 * Is there outgoing buffered data that needs to be flush()'d?
 	 */
 	public boolean needsFlush() {
-		return outBuf.position() > 0;
+		return this.outBuf.writerIndex() > 0;
+//		return outBuf.position() > 0;
 	}
 }
