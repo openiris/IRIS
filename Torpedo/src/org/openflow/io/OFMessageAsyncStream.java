@@ -4,7 +4,6 @@
 package org.openflow.io;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,6 @@ public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStre
 		this.inBuf = new SocketReadByteChannelBuffer(DEFAULT_BUFFER_SIZE);
 		this.outBuf = new SocketWriteByteChannelBuffer(DEFAULT_BUFFER_SIZE);
 		this.sock = sock;
-		// this.sock.configureBlocking(false);
 	}
 
 	@Override
@@ -139,15 +137,8 @@ public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStre
 	 */
 	public void flush() throws IOException {
 		
-//		outBuf.flip();			// swap pointers; lim = pos; pos = 0;
 		do {	
-			try { 
-				this.outBuf.write(sock);
-//			sock.write(outBuf); // write data starting at pos up to lim
-			} catch (IOException e) {
-				e.printStackTrace();
-				throw e;
-			}
+			this.outBuf.write(sock);
 		} while ( outBuf.writableBytes() > 0 );
 			
 		outBuf.clear();
@@ -158,6 +149,5 @@ public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStre
 	 */
 	public boolean needsFlush() {
 		return this.outBuf.writerIndex() > 0;
-//		return outBuf.position() > 0;
 	}
 }
