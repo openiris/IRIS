@@ -1,6 +1,5 @@
 package org.openflow.protocol.factory;
 
-import java.nio.ByteBuffer;
 import java.util.List;
 
 import org.jboss.netty.buffer.ChannelBuffer;

@@ -1,7 +1,5 @@
 package org.openflow.protocol.factory;
 
-import java.nio.ByteBuffer;
-
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.projectfloodlight.openflow.types.U16;
 import org.projectfloodlight.openflow.types.U32;
