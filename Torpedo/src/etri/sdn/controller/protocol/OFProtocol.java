@@ -289,9 +289,6 @@ public class OFProtocol {
 	 * @return		true if correctly handled (always)
 	 */
 	public boolean handleConnectedEvent(Connection conn) {
-		// This is a greeting that says 'Hey. We know up to 1.3.2.' 
-		OFHello hello = OFFactories.getFactory(OFVersion.OF_13).hello(Collections.<OFHelloElem>emptyList());
-		conn.write( hello );
 		return true;
 	}
 
@@ -323,6 +320,9 @@ public class OFProtocol {
 			if ( sw != null ) {
 				sw.setVersion(m.getVersion());
 			}
+			
+			OFHello hello = OFFactories.getFactory(m.getVersion()).hello(Collections.<OFHelloElem>emptyList());
+			conn.write(hello);
 
 			// send feature request message.
 			OFFeaturesRequest freq = OFFactories.getFactory(m.getVersion()).featuresRequest();
