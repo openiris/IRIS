@@ -44,7 +44,14 @@ irisApp.controller('CntlFlows',
 						f.actionText = _.reduce(actions, function (memo, a) {
 							switch (a.type) {
 							case "OUTPUT":
-								return memo + "output " + a.port + ', ';
+								var maps = {"-8":"IN_PORT","-7":"TABLE","-6":"NORMAL","-5":"FLOOD","-4":"ALL","-3":"CONTROLLER","-2":"LOCAL"};
+								var tok = maps[a.port];
+								
+								if ( tok != undefined ) {
+									return memo + "output " + tok + ", ";
+								} else {
+									return memo + "output " + a.port + ", ";
+								}
 							case "ENQUEUE":
 							case "SET_QUEUE":
 							case "OPAQUE_ENQUEUE":

@@ -456,11 +456,19 @@ public class StaticFlowEntry {
 			for (String actionstr : entry.keySet()) {
 				if (actionstr.toLowerCase().equals("output")) {		//OF1.0 & 1.3
 					OFActionOutput.Builder action = fac.actions().buildOutput();
+					Long value  = null;
+					if ( ((String) entry.get("output")).startsWith("0x") ) {
+						value = Long.parseLong(((String) entry.get("output")).substring(2), 16);
+					}
+					else {
+						value = Long.parseLong((String) entry.get("output"));
+					}
 					action
 					.setMaxLen(0xffff)
-					.setPort(OFPort.of(Short.valueOf((String) entry.get("output"))));
+					.setPort(OFPort.of( value.intValue() ));
 					actions.add(action.build());
 				}
+
 				//OF1.0
 				else if (actionstr.toLowerCase().equals("set_vlan_vid")) {
 					OFActionSetVlanVid action = 
