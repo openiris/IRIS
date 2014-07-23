@@ -315,6 +315,8 @@ public class OFProtocol {
 			// I know up to 1.3.2
 			OFHello hello = OFFactories.getFactory(OFVersion.OF_13).hello(Collections.<OFHelloElem>emptyList());
 			conn.write(hello);
+			
+			this.helloFailedSwitches.add( peer );
 		}
 		return true;
 	}
@@ -347,6 +349,14 @@ public class OFProtocol {
 			if ( sw != null ) {
 				sw.setVersion(m.getVersion());
 			}
+			
+			// now the hello is successfully exchanged, so we remove the peer address 
+			// from the helloFailedSwitches set. 
+			try {
+				this.helloFailedSwitches.remove( conn.getClient().getRemoteAddress() );
+			} catch (IOException e1) {
+				// cannot retrieve the remote address. maybe the connection is cut. 
+			}
 
 			// send feature request message.
 			OFFeaturesRequest freq = OFFactories.getFactory(m.getVersion()).featuresRequest();
@@ -354,16 +364,7 @@ public class OFProtocol {
 			break;
 
 		case ERROR:
-			OFErrorMsg err = (OFErrorMsg) m;
-			if ( err.getErrType() == OFErrorType.HELLO_FAILED ) {
-				try {
-					this.helloFailedSwitches.add( conn.getClient().getRemoteAddress() );
-				} catch (IOException e) {
-					// we cannot retrieve the remote address of the peer. 
-					// so. just skip this process.
-				}
-			}
-			
+			OFErrorMsg err = (OFErrorMsg) m;			
 			Logger.stderr("GET ERROR : " + m.toString());
 			return false;
 
