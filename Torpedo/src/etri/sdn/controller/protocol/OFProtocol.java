@@ -2,7 +2,7 @@ package etri.sdn.controller.protocol;
 
 
 import java.io.IOException;
-import java.net.SocketAddress;
+ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,8 +20,6 @@ import org.projectfloodlight.openflow.protocol.OFDescStatsReply;
 import org.projectfloodlight.openflow.protocol.OFDescStatsRequest;
 import org.projectfloodlight.openflow.protocol.OFEchoReply;
 import org.projectfloodlight.openflow.protocol.OFEchoRequest;
-import org.projectfloodlight.openflow.protocol.OFErrorMsg;
-import org.projectfloodlight.openflow.protocol.OFErrorType;
 import org.projectfloodlight.openflow.protocol.OFFactories;
 import org.projectfloodlight.openflow.protocol.OFFeaturesReply;
 import org.projectfloodlight.openflow.protocol.OFFeaturesRequest;
@@ -116,7 +114,7 @@ public class OFProtocol {
 	/**
 	 * This field used to maintain the list of hello-failed switches.
 	 */
-	private Set<SocketAddress> helloFailedSwitches = new ConcurrentSkipListSet<>();
+	private Set<String> helloFailedSwitches = new ConcurrentSkipListSet<>();
 
 	/**
 	 * reference to OFController object.
@@ -298,25 +296,25 @@ public class OFProtocol {
 	 * @return		true if correctly handled (always)
 	 */
 	public boolean handleConnectedEvent(Connection conn) {
-		SocketAddress peer = null;
+		InetSocketAddress peer = null;
 		try {
-			peer = conn.getClient().getRemoteAddress();
+			peer = (InetSocketAddress) conn.getClient().getRemoteAddress();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
 		}
 		
-		if ( this.helloFailedSwitches.contains(peer) ) {
+		if ( this.helloFailedSwitches.contains(peer.getHostString()) ) {
 			OFHello hello = OFFactories.getFactory(OFVersion.OF_10).hello(Collections.<OFHelloElem>emptyList());
 			conn.write(hello);
 			
-			this.helloFailedSwitches.remove( peer );
+			this.helloFailedSwitches.remove( peer.getHostString() );
 		} else {		
 			// I know up to 1.3.2
 			OFHello hello = OFFactories.getFactory(OFVersion.OF_13).hello(Collections.<OFHelloElem>emptyList());
 			conn.write(hello);
 			
-			this.helloFailedSwitches.add( peer );
+			this.helloFailedSwitches.add( peer.getHostString() );
 		}
 		return true;
 	}
@@ -351,11 +349,13 @@ public class OFProtocol {
 			}
 			
 			// now the hello is successfully exchanged, so we remove the peer address 
-			// from the helloFailedSwitches set. 
+						// from the helloFailedSwitches set. 
 			try {
-				this.helloFailedSwitches.remove( conn.getClient().getRemoteAddress() );
-			} catch (IOException e1) {
-				// cannot retrieve the remote address. maybe the connection is cut. 
+				InetSocketAddress peer = (InetSocketAddress) conn.getClient().getRemoteAddress();
+				this.helloFailedSwitches.remove( peer.getHostString() );
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
 			}
 
 			// send feature request message.
@@ -363,13 +363,11 @@ public class OFProtocol {
 			conn.write(freq);
 			break;
 
-		case ERROR:
-			OFErrorMsg err = (OFErrorMsg) m;			
+		case ERROR:		
 			Logger.stderr("GET ERROR : " + m.toString());
 			return false;
 
 		case ECHO_REQUEST:
-			Logger.debug("ECHO_REQUEST is received");
 			OFEchoReply.Builder builder = OFFactories.getFactory(m.getVersion()).buildEchoReply();
 			builder
 			.setXid(m.getXid())
