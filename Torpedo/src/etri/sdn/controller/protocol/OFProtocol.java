@@ -785,13 +785,13 @@ public class OFProtocol {
 			break;
 		case 0x06:
 			// tcp
-			ret.setExact(MatchField.TCP_SRC, TransportPort.of(packetDataBB.getShort()));
-			ret.setExact(MatchField.TCP_DST, TransportPort.of(packetDataBB.getShort()));
+			ret.setExact(MatchField.TCP_SRC, TransportPort.of(0x0000ffff & packetDataBB.getShort()));
+			ret.setExact(MatchField.TCP_DST, TransportPort.of(0x0000ffff & packetDataBB.getShort()));
 			break;
 		case 0x11:
 			// udp
-			ret.setExact(MatchField.UDP_SRC, TransportPort.of(packetDataBB.getShort()));
-			ret.setExact(MatchField.UDP_DST, TransportPort.of(packetDataBB.getShort()));
+			ret.setExact(MatchField.UDP_SRC, TransportPort.of(0x0000ffff & packetDataBB.getShort()));
+			ret.setExact(MatchField.UDP_DST, TransportPort.of(0x0000ffff & packetDataBB.getShort()));
 			break;
 		default:
 			break;
