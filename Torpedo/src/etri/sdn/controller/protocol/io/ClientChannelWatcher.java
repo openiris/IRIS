@@ -12,8 +12,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 import org.projectfloodlight.openflow.protocol.OFMessage;
-
-import etri.sdn.controller.util.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Watcher thread that monitors channels which are able to be read.
@@ -21,6 +21,8 @@ import etri.sdn.controller.util.Logger;
  *
  */
 public final class ClientChannelWatcher extends Thread {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ClientChannelWatcher.class);
 
 	private volatile boolean quit = false;
 	private Object guard = new Object();
@@ -172,7 +174,7 @@ public final class ClientChannelWatcher extends Thread {
 		conn.setSwitch( sw );
 		
 		try {
-			Logger.stderr("connected with " + conn.getClient().getRemoteAddress());
+			logger.info("connected with {}", conn.getClient().getRemoteAddress());
 		} catch (IOException e1) {
 			// does nothing
 		}
@@ -207,9 +209,9 @@ public final class ClientChannelWatcher extends Thread {
 
 	private void handleDisconnectedEvent(Connection conn) {
 		try {
-			Logger.stderr("disconnected with " + conn.getClient().getRemoteAddress());
+			logger.info("disconnected with {}", conn.getClient().getRemoteAddress());
 		} catch (IOException e) {
-			Logger.stderr("disconnected with a switch (reason is unknown)");
+			logger.error("disconnected with a switch: error={}", e.getMessage());
 		}
 
 		Set<IOFHandler> handlers = conn.getHandlers();

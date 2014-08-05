@@ -15,12 +15,13 @@ import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import etri.sdn.controller.Main;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.module.storagemanager.IStorageService;
 import etri.sdn.controller.module.storagemanager.StorageException;
-import etri.sdn.controller.util.Logger;
 
 /**
  * This class is a storage to manage firewall rules.
@@ -30,6 +31,8 @@ import etri.sdn.controller.util.Logger;
  * @author jshin
  */
 public class FirewallStorage extends OFModel{
+	
+	private static final Logger logger = LoggerFactory.getLogger(FirewallStorage.class);
 
 	public OFMFirewall manager;
 
@@ -91,8 +94,8 @@ public class FirewallStorage extends OFModel{
 		List<Map<String, Object>> entryList = (List<Map<String, Object>>) getAllDBEntries
 				(manager.getStorageInstance(), manager.getDbName(), manager.getCollectionName() );
 		
-		System.out.println("Firewall DB : " + entryList.toString());
-		System.out.println("Firewall Mem: " + this.firewallEntryTable.getAllFirewallEntries().toString());
+		logger.debug("Firewall DB : {} ", entryList.toString());
+		logger.debug("Firewall Mem: {} ", this.firewallEntryTable.getAllFirewallEntries().toString());
 	}
 	
 	/**
@@ -143,8 +146,7 @@ public class FirewallStorage extends OFModel{
 		
 		Map<String, Object> entry = getDBEntry (firewallDB, dbName, collectionName, ruleid);
 		if (entry == null) {
-			String status = "No such rule exists. ruleid: " + ruleid;
-			Logger.error(status);
+			logger.error("No such rule exists. ruleid: {}", ruleid);
 			return false;
 		}
 		
@@ -243,7 +245,6 @@ public class FirewallStorage extends OFModel{
 							IFirewallService firewall = getManager();
 
 							String op = (String) request.getAttributes().get("op");
-							//System.out.println("op : " + op);
 
 							String result = null;
 
@@ -290,8 +291,7 @@ public class FirewallStorage extends OFModel{
 									result = "{\"status\" : \"success\", \"details\" : \"subnet-mask is set\"}";
 								}
 								catch (IOException e) {
-									Logger.error("Error parsing subnet-mask: " + entityText, e);
-									e.printStackTrace();
+									logger.error("Error parsing subnet-mask: {}, {}", entityText, e);
 									return;
 								}
 							}
@@ -339,12 +339,11 @@ public class FirewallStorage extends OFModel{
 
 								String entityText = request.getEntityAsText();
 								entityText = entityText.replaceAll("[\']", "");
-								//System.out.println(entityText);
 
 								try {
 									inRule = FirewallRule.jsonToFirewallRule(entityText);
 								} catch (IOException e) {
-									Logger.error("Error parsing firewall rule: " + entityText, e);
+									logger.error("Error parsing firewall rule: {}, {}", entityText, e);
 									e.printStackTrace();
 									return;
 								}
@@ -353,8 +352,7 @@ public class FirewallStorage extends OFModel{
 									FirewallRule r = iter.next();
 									if ( inRule.isSameAs(r) ){
 										exists = true;
-										status = "Error! A similar firewall rule already exists.";
-										Logger.error(status);
+										logger.error("Error! A similar firewall rule already exists.");
 										break;
 									}
 								}
@@ -386,7 +384,7 @@ public class FirewallStorage extends OFModel{
 									try {
 										inRule = FirewallRule.jsonToFirewallRule(entityText);
 									} catch (IOException e) {
-										Logger.error("Error parsing firewall rule: " + entityText, e);
+										logger.error("Error parsing firewall rule: {}, {}", entityText, e);
 										e.printStackTrace();
 										return;
 									}
@@ -400,8 +398,8 @@ public class FirewallStorage extends OFModel{
 									}
 
 									if ( !exists ){
-										status = "Error! Can't delete, a rule with this ID doesn't exist.";
-										Logger.error(status);
+										logger.error("Error! Can't delete, a rule with ID {} doesn't exist.", 
+												inRule.ruleid);
 										return;
 									} else {
 										// delete rule from firewall

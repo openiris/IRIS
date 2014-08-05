@@ -33,6 +33,8 @@ import org.projectfloodlight.openflow.protocol.match.MatchField;
 import org.projectfloodlight.openflow.types.OFBufferId;
 import org.projectfloodlight.openflow.types.OFPort;
 import org.projectfloodlight.openflow.util.HexString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import etri.sdn.controller.IOFTask;
 import etri.sdn.controller.IService;
@@ -52,7 +54,6 @@ import etri.sdn.controller.protocol.packet.Ethernet;
 import etri.sdn.controller.protocol.packet.IPv4;
 import etri.sdn.controller.protocol.packet.LLDP;
 import etri.sdn.controller.protocol.packet.LLDPTLV;
-import etri.sdn.controller.util.Logger;
 
 /**
  * Link Discovery Module.
@@ -64,6 +65,8 @@ import etri.sdn.controller.util.Logger;
  */
 public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService {
 
+	private static final Logger logger = LoggerFactory.getLogger(OFMLinkDiscovery.class);
+	
 	//
 	// LLDP and BDDP fields
 	//
@@ -518,7 +521,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 								}
 							}
 							catch (Exception e) {
-								Logger.stderr("Error in link discovery updates loop: " + e);
+								logger.error("Error in link discovery updates loop: {}", e);
 							}
 
 						} while ( true );
@@ -678,12 +681,12 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		OFPortDesc ofpPort = protocol.getPortInformation(sw, port);
 
 		if (ofpPort == null) {
-			Logger.error("sw: %d,  port: %d is null", sw.getId(), port.getPortNumber());
+			logger.error("sw: {},  port: {} is null", sw.getId(), port.getPortNumber());
 			return true;
 		}
 		
 		if (ofpPort.getHwAddr() == null) {
-			Logger.error("switch %d might be already removed", sw.getId());
+			logger.error("switch {} might be already removed", sw.getId());
 		}
 
 		// using "nearest customer bridge" MAC address for broadest possible propagation
@@ -774,7 +777,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	protected boolean handleHandshakedEvent(Connection conn, MessageContext context) {
 		IOFSwitch sw = conn.getSwitch();
 		if ( sw == null) {
-			Logger.stderr("[Torpedo] CRITICAL: switch is null for connection");
+			logger.error("CRITICAL: switch is null for connection");
 			return false;
 		}
 
@@ -1048,6 +1051,8 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		if (sw == null) {
 			return false;
 		}
+		
+		logger.debug("OFPortStatus received by OFMLinkDiscovery ={}", ps);
 		
 		/*
 		 * following is the original implementation by Floodlight.

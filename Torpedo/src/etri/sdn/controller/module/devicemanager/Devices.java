@@ -22,13 +22,14 @@ import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.module.devicemanager.SwitchPort.ErrorStatus;
 import etri.sdn.controller.module.topologymanager.ITopologyService;
 import etri.sdn.controller.protocol.packet.IPv4;
 import etri.sdn.controller.protocol.rest.serializer.OFTypeSerializerModule;
-import etri.sdn.controller.util.Logger;
 import etri.sdn.controller.util.MultiIterator;
 
 /**
@@ -37,6 +38,8 @@ import etri.sdn.controller.util.MultiIterator;
  * 
  */
 public class Devices extends OFModel implements IDeviceService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(Devices.class);
 
 	public ITopologyService topology;
 	public IEntityClassifierService classifier;
@@ -452,7 +455,7 @@ public class Devices extends OFModel implements IDeviceService {
 				// generate a new device ID. However, we first check if 
 				// the entity is allowed (e.g., for spoofing protection)
 				if (!isEntityAllowed(entity, entityClass)) {
-					Logger.stdout("PacketIn is not allowed {} {} : " + entityClass.getName() + ", " + entity);
+					logger.info("PacketIn is not allowed {} {}",entityClass.getName(), entity);
 					return null;
 				}
 				
@@ -506,8 +509,8 @@ public class Devices extends OFModel implements IDeviceService {
 			}
 
 			if (!isEntityAllowed(entity, device.getEntityClass())) {
-				Logger.stderr("PacketIn is not allowed: " + 
-						device.getEntityClass().getName() + ", " + entity);
+				logger.info("PacketIn is not allowed: {}, {} ", 
+						device.getEntityClass().getName(), entity);
 				return null;
 			}
 
@@ -529,7 +532,7 @@ public class Devices extends OFModel implements IDeviceService {
 					boolean moved = device.updateAttachmentPoint(sw, port, lastSeen.getTime());
 					
 					if (moved) {
-//						Logger.debug("----DeviceChanged:" + device.toString());
+						logger.debug("device changed: {}", device.toString());
 						sendDeviceMovedNotification(device);
 					} 
 				}
@@ -624,13 +627,11 @@ public class Devices extends OFModel implements IDeviceService {
 	 */
 	public void updateAttachmentPoints() {
 		Iterator<Device> diter = deviceIdToDeviceMap.values().iterator();
-		// List<LDUpdate> updateList = topology.getLastLinkUpdates();
-
-//		System.out.println("update notified");
+		
 		while (diter.hasNext()) {
 			Device d = diter.next();
 			if (d.updateAttachmentPoint()) {
-//				Logger.debug("++++ Device changed:" + d.toString());
+				logger.debug("Device changed: {}" + d.toString());
 				sendDeviceMovedNotification(d);
 			}
 			if (d.getAttachmentPoints().length == 0) {
@@ -930,7 +931,7 @@ public class Devices extends OFModel implements IDeviceService {
 					device.getDeviceKey(), emptyToKeep);
 		}
 		if (!deviceIdToDeviceMap.remove(device.getDeviceKey(), device)) {
-			Logger.stderr("device map does not have this device -" + device.toString());
+			logger.info("device map does not have this device: {}", device.toString());
 		}
 	}
 	
@@ -1069,7 +1070,7 @@ public class Devices extends OFModel implements IDeviceService {
 							listener.deviceVlanChanged(update.device);
 							break;
 						default:
-							Logger.stderr("Unknown device field changed {}: " + 
+							logger.error("Unknown device field changed {}: ",
 									update.fieldsChanged.toString());
 							break;
 						}
@@ -1122,6 +1123,7 @@ public class Devices extends OFModel implements IDeviceService {
 			default:
 				// we should never get here. unless somebody extended 
 				// DeviceFields
+				logger.error("DeviceField is unexpectedly changed.");
 				throw new IllegalStateException();
 			}
 		}
@@ -1400,7 +1402,6 @@ public class Devices extends OFModel implements IDeviceService {
 	 */
 	public String getHostDebugInfo() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("\n");
 		for ( Device d : this.deviceIdToDeviceMap.values() ) {
 			if ( d.attachmentPoints.size() > 0 ) {
 				sb.append(d.toString() + "\n");

@@ -75,10 +75,10 @@ import org.projectfloodlight.openflow.types.U64;
 import org.projectfloodlight.openflow.types.U8;
 import org.projectfloodlight.openflow.types.VlanPcp;
 import org.projectfloodlight.openflow.types.VlanVid;
+import org.slf4j.Logger;
 
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.IPv4;
-import etri.sdn.controller.util.Logger;
 
 /**
  * This class implements the functions related to static flow entry itself.
@@ -92,6 +92,8 @@ import etri.sdn.controller.util.Logger;
  *
  */
 public class StaticFlowEntry {
+	
+	private static final Logger logger = OFMStaticFlowEntryManager.logger;
 
 	private static final long STATIC_FLOW_ENTRY_APP_ID = 10;
 
@@ -679,7 +681,7 @@ public class StaticFlowEntry {
 	protected static OFMessage makeFlowMod(IOFSwitch sw, OFFlowModCommand command, Map<String, Object> entry) throws StaticFlowEntryException {
 
 		if ( !entry.containsKey("name") || !entry.containsKey("switch") ) {
-			Logger.debug("Skipping entry with missing required 'name' or 'switch' entry");
+			logger.debug("Skipping entry with missing required 'name' or 'switch' entry: {}", entry);
 			return null;
 		}
 
@@ -718,7 +720,7 @@ public class StaticFlowEntry {
 			}
 			else if (key.toLowerCase().equals("active")) {
 				if (!Boolean.valueOf((String) entry.get("active"))) {
-					Logger.debug("Skipping inactive entry {} for switch {}", entryName, switchName);
+					logger.debug("Skipping inactive entry {} for switch {}", entryName, switchName);
 					return null;
 				}
 			}

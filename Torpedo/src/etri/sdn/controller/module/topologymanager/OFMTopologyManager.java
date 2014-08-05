@@ -24,6 +24,8 @@ import org.projectfloodlight.openflow.protocol.action.OFActionOutput;
 import org.projectfloodlight.openflow.protocol.match.MatchField;
 import org.projectfloodlight.openflow.types.OFBufferId;
 import org.projectfloodlight.openflow.types.OFPort;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import etri.sdn.controller.IOFTask;
 import etri.sdn.controller.IService;
@@ -44,7 +46,6 @@ import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.BSN;
 import etri.sdn.controller.protocol.packet.Ethernet;
 import etri.sdn.controller.protocol.packet.LLDP;
-import etri.sdn.controller.util.Logger;
 
 /**
  * Topology Manager Module.
@@ -55,6 +56,9 @@ import etri.sdn.controller.util.Logger;
  *
  */
 public class OFMTopologyManager extends OFModule implements ITopologyService, ILinkDiscoveryListener, IRoutingService {
+	
+	static final Logger logger = LoggerFactory.getLogger(OFMTopologyManager.class);
+	
 	/** 
 	 * Set of ports for each switch
 	 */
@@ -421,7 +425,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 			try {
 				update = ldUpdates.take();
 			} catch (Exception e) {
-				Logger.stderr("Error reading link discovery update.");
+				logger.error("Error reading link discovery update.");
 			}
 
 			if (update.getOperation() == UpdateOperation.LINK_UPDATED) {
@@ -649,6 +653,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 			scheduleFlag = true;
 
 		ldUpdates.add(update);
+		logger.debug("link discovery update received={}", update);
 
 		if (scheduleFlag) {
 			this.controller.scheduleTask( new IOFTask() {

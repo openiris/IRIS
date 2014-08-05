@@ -40,6 +40,8 @@ import org.projectfloodlight.openflow.types.OFBufferId;
 import org.projectfloodlight.openflow.types.OFPort;
 import org.projectfloodlight.openflow.types.TableId;
 import org.projectfloodlight.openflow.types.U64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import etri.sdn.controller.IService;
 import etri.sdn.controller.MessageContext;
@@ -57,7 +59,6 @@ import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.Ethernet;
 import etri.sdn.controller.util.AppCookie;
-import etri.sdn.controller.util.Logger;
 
 /**
  * This class implements the forwarding module.
@@ -67,6 +68,8 @@ import etri.sdn.controller.util.Logger;
  * @author jshin
  */
 public class Forwarding extends ForwardingBase {
+	
+	private static final Logger logger = LoggerFactory.getLogger(Forwarding.class);
 	
 	OFProtocol protocol;
 	
@@ -124,7 +127,8 @@ public class Forwarding extends ForwardingBase {
 		// If a decision has been made we obey it
 		// otherwise we just forward
 		if (decision != null) {
-			Logger.stdout("Forwaring decision=" + decision.getRoutingAction().toString() + " was made for PacketIn=" + pi);
+//			logger.debug("Forwaring decision={} was made for PacketIn={}", 
+//					decision.getRoutingAction().toString(), pi);
 
 			switch(decision.getRoutingAction()) {
 			case NONE:
@@ -142,12 +146,12 @@ public class Forwarding extends ForwardingBase {
 				doDropFlow(conn.getSwitch(), pi, decision, cntx);
 				return true;
 			default:
-				Logger.error("Unexpected decision made for this packet-in={}",
+				logger.debug("Unexpected decision made for this packet-in={}, routingAction={}",
 						pi, decision.getRoutingAction());
 				return true;
 			}
 		} else {
-//			Logger.stdout("No decision was made for PacketIn=" + pi + " forwarding");
+//			logger.debug("No forwarding decision was made for PacketIn={}", pi);
 
 			if (eth.isBroadcast() || eth.isMulticast()) {
 				// For now we treat multicast as broadcast
@@ -201,11 +205,10 @@ public class Forwarding extends ForwardingBase {
 		}
 		
 		try {
-			Logger.debug("write drop flow-mod sw={} match={} flow-mod={}", 
-					new Object[] { sw, match, fm });
+			logger.debug("write drop flow-mod sw={} match={} flow-mod={}", sw, match, fm);
 			messageDamper.write(sw.getConnection(), fm.build());
 		} catch (IOException e) {
-			Logger.stderr("Failure writing drop flow mod" + e.toString());
+			logger.error("Failure writing drop flow mod: {}", e);
 		}
 	}
 
@@ -236,11 +239,11 @@ public class Forwarding extends ForwardingBase {
 			Long srcIsland = topology.getL2DomainId(sw.getId());
 
 			if (srcDevice == null) {
-				Logger.stderr("No device entry found for source device");
+				logger.debug("No device entry found for source device");
 				return;
 			}
 			if (srcIsland == null) {
-				Logger.stderr("No openflow island found for source {" + sw.getStringId() + "}/{" + inPort + "}");
+				logger.debug("No openflow island found for source {}/{}",sw.getStringId(),inPort);
 				return;
 			}
 			
@@ -261,15 +264,14 @@ public class Forwarding extends ForwardingBase {
 			}
 
 			if (!on_same_island) {
-				Logger.stdout("No first hop island found for destination device " + dstDevice + ", Action = flooding");
+				logger.debug("No first hop island found for destination device={}, action=flooding", dstDevice);
 				// Flood since we don't know the dst device
 				doFlood(sw, pi, cntx);
 				return;
 			}            
 
 			if (on_same_if) {
-				Logger.stdout("Both source and destination are on the same switch/port " + 
-						sw.toString() + "/" + inPort + ", Action = NOP");
+				logger.debug("Both source and destination are on the same switch/port={}/{} action=NOP",sw,inPort);
 				return;
 			}
 			
@@ -363,7 +365,6 @@ public class Forwarding extends ForwardingBase {
 		List<OFAction> actions = new ArrayList<OFAction>();
 		OFActionOutput.Builder action_output = fac.actions().buildOutput();
 		
-//		action_output.setPort(OFPort.FLOOD).setMaxLength((short)0).setLength(action_output.computeLength());
 		if (sw.hasAttribute(IOFSwitch.PROP_SUPPORTS_OFPP_FLOOD)) {
 			action_output.setPort(OFPort.FLOOD);
 		} else {
@@ -388,7 +389,8 @@ public class Forwarding extends ForwardingBase {
 		} catch (IOException e) {
 //			log.error("Failure writing PacketOut switch={} packet-in={} packet-out={}",
 //					new Object[] {sw, pi, po}, e);
-			Logger.stderr("Failure writing PacketOut");
+			logger.error("Failure writing PacketOut switch={} packet-in={} packet-out={}, err={}",
+					sw, pi, po, e);
 		}            
 
 		return;

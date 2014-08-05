@@ -32,6 +32,8 @@ import org.projectfloodlight.openflow.types.TableId;
 import org.projectfloodlight.openflow.types.U64;
 import org.projectfloodlight.openflow.types.VlanVid;
 import org.projectfloodlight.openflow.util.LRULinkedHashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import etri.sdn.controller.IService;
 import etri.sdn.controller.MessageContext;
@@ -41,7 +43,6 @@ import etri.sdn.controller.OFModule;
 import etri.sdn.controller.protocol.OFProtocol;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
-import etri.sdn.controller.util.Logger;
 
 /**
  * MAC Learning Module. 
@@ -51,6 +52,8 @@ import etri.sdn.controller.util.Logger;
  *
  */
 public final class OFMLearningMac extends OFModule {
+	
+	private static final Logger logger = LoggerFactory.getLogger(OFMLearningMac.class);
 
 	/**
 	 * Table to save learning result.
@@ -306,11 +309,12 @@ public final class OFMLearningMac extends OFModule {
 	private boolean processPacketInMessage(Connection conn, MessageContext context, OFMessage msg, List<OFMessage> out) {
 
 		if ( conn.getSwitch() == null ) {
-			Logger.stderr("Connection is not fully handshaked");
+			logger.error("Connection is not fully handshaked");
 			return true;
 		}
 
 		if ( msg == null ) {
+			logger.error("msg is null");
 			// this is critical. 
 			// no further processing of this msg is possible.
 			return false;

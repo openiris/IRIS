@@ -6,7 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
-import etri.sdn.controller.util.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class implements a functionality that reads Torpedo configuration file
@@ -17,6 +18,8 @@ import etri.sdn.controller.util.Logger;
  */
 @SuppressWarnings("serial")
 public final class TorpedoProperties extends Properties {
+	
+	private static final Logger logger = LoggerFactory.getLogger(TorpedoProperties.class);
 	
 	/**
 	 * static member to implement singleton pattern.
@@ -51,7 +54,7 @@ public final class TorpedoProperties extends Properties {
 			prop = super.getProperty(name);
 			return Integer.parseInt( prop );
 		} catch ( NumberFormatException e ) {
-			Logger.stderr( "wrong number format for : " + name + "," + prop );
+			logger.error( "wrong number format for {}, {} ", name, prop );
 			e.printStackTrace();
 			return 0;
 		}

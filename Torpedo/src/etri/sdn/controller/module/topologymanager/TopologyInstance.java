@@ -11,6 +11,7 @@ import java.util.PriorityQueue;
 import java.util.Set;
 
 import org.projectfloodlight.openflow.types.OFPort;
+import org.slf4j.Logger;
 
 import etri.sdn.controller.module.linkdiscovery.Link;
 import etri.sdn.controller.module.linkdiscovery.NodePortTuple;
@@ -26,6 +27,8 @@ import etri.sdn.controller.module.routing.RouteId;
  */
 
 public class TopologyInstance {
+	
+	private static final Logger logger = OFMTopologyManager.logger;
 
 	public static final short LT_SH_LINK = 1;
 	public static final short LT_BD_LINK = 2;
@@ -147,14 +150,14 @@ public class TopologyInstance {
 
 	public void printTopology() {
 		
-		System.out.println("-----------------------------------------------");
-		System.out.println("Links: { " + this.switchPortLinks.toString() + " }");
-		System.out.println("broadcastDomainPorts: {" + broadcastDomainPorts + " }");
-		System.out.println("tunnelPorts: { " + tunnelPorts + "}");
-		System.out.println("clusters: { " + clusters + " }");
-		System.out.println("destinationRootedTrees: {" + destinationRootedTrees + " }");
-		System.out.println("clusterBroadcastNodePorts: {" + clusterBroadcastNodePorts + " }");
-		System.out.println("-----------------------------------------------");
+		logger.debug("-----------------------------------------------");
+		logger.debug("Links: { " + this.switchPortLinks.toString() + " }");
+		logger.debug("broadcastDomainPorts: {" + broadcastDomainPorts + " }");
+		logger.debug("tunnelPorts: { " + tunnelPorts + "}");
+		logger.debug("clusters: { " + clusters + " }");
+		logger.debug("destinationRootedTrees: {" + destinationRootedTrees + " }");
+		logger.debug("clusterBroadcastNodePorts: {" + clusterBroadcastNodePorts + " }");
+		logger.debug("-----------------------------------------------");
 		
 //		Set<NodePortTuple> keys = this.switchPortLinks.keySet();
 //		

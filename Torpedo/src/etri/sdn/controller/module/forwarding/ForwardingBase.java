@@ -50,6 +50,8 @@ import org.projectfloodlight.openflow.types.OFBufferId;
 import org.projectfloodlight.openflow.types.OFPort;
 import org.projectfloodlight.openflow.types.TableId;
 import org.projectfloodlight.openflow.types.U64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFModule;
@@ -68,7 +70,6 @@ import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.Ethernet;
 import etri.sdn.controller.protocol.packet.IPacket;
 import etri.sdn.controller.util.AppCookie;
-import etri.sdn.controller.util.Logger;
 import etri.sdn.controller.util.OFMessageDamper;
 import etri.sdn.controller.util.TimedCache;
 
@@ -80,6 +81,8 @@ import etri.sdn.controller.util.TimedCache;
  *  @author jshin
  */
 public abstract class ForwardingBase extends OFModule implements IDeviceListener {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ForwardingBase.class);
 
 	protected static int OFMESSAGE_DAMPER_CAPACITY = 50000; // TODO: find sweet spot
 	protected static int OFMESSAGE_DAMPER_TIMEOUT = 250; 	// ms 
@@ -151,7 +154,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			try {
 				return pi.getMatch().get(MatchField.IN_PORT);
 			} catch ( NullPointerException nx ) {
-				Logger.debug("Packet-in does not have oxm object for OFB_IN_PORT");
+				logger.error("Packet-in does not have oxm object for OFB_IN_PORT: pi={}", pi);
 				throw new AssertionError("pi cannot refer null");
 			}
 		}
@@ -359,7 +362,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 				}
 				
 			} catch (IOException e) {
-				Logger.stderr("Failure writing flow mod" + e.toString());
+				logger.error("Failure writing flow mod: err={}", e);
 			}
 		}
 
@@ -387,7 +390,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 		OFPort inPort = getInputPort(pi);
 		
 		if ( outPort.equals(inPort) ){
-			Logger.stdout("Packet out not sent as the outport matches inport. " + pi.toString());
+			logger.debug("Packet out not sent as the outport matches inport: pi={} outPort={}", pi, outPort);
 			return;
 		}
 
@@ -425,7 +428,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 //			counterStore.updatePktOutFMCounterStore(sw, po);
 			messageDamper.write(conn, po.build());
 		} catch (IOException e) {
-			Logger.stderr("Failure writing packet out" + e.toString());
+			logger.error("Failure writing packet out: err={}", e);
 		}
 	}
 
@@ -487,7 +490,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 //			counterStore.updatePktOutFMCounterStore(sw, po);
 			messageDamper.write(conn, po.build());
 		} catch (IOException e) {
-			Logger.stderr("Failure writing packet out" + e.toString());
+			logger.error("Failure writing packet out: err={}", e);
 		}
 	}
 
@@ -546,7 +549,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			messageDamper.write(conn, po.build());
 
 		} catch (IOException e) {
-			Logger.stderr("Failure writing packet out" + e.toString());
+			logger.error("Failure writing packet out: err={}", e);
 		}
 	}
 
@@ -705,7 +708,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			messageDamper.write(sw.getConnection(), fm.build());
 
 		} catch (IOException e) {
-			Logger.stderr("Failure writing drop flow mod " + e.toString());
+			logger.error("Failure writing drop flow mod: err={}", e);
 		}
 		return true;
 

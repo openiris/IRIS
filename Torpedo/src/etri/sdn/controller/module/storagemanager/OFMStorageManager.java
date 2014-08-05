@@ -12,6 +12,8 @@ import java.util.Map;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.projectfloodlight.openflow.protocol.OFMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -26,7 +28,6 @@ import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
 import etri.sdn.controller.TorpedoProperties;
 import etri.sdn.controller.protocol.io.Connection;
-import etri.sdn.controller.util.Logger;
 
 /**
  * This class enables a persistent storage for the controller.
@@ -37,6 +38,8 @@ import etri.sdn.controller.util.Logger;
  * 
  */
 public class OFMStorageManager extends OFModule implements IStorageService {
+	
+	static final Logger logger = LoggerFactory.getLogger(OFMStorageManager.class);
 
 	private MongoClient mongoClient;
 	private DB db;
@@ -63,17 +66,17 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 			this.db = this.mongoClient.getDB(db);
 			boolean auth = this.db.authenticate(db, passwd.toCharArray());
 			if(auth) {
-				Logger.stdout("DB login successful..");
+				logger.info("DB login successful..");
 			} else {
-				Logger.stdout("DB login failed.");
+				logger.error("DB login failed.");
 			}
 			
 		} catch ( UnknownHostException e ) {
-			System.err.println("unknown DB host. We continue without database.");
+			logger.info("unknown DB host. We continue without database.");
 			this.mongoClient = null;
 			
 		} catch ( Exception e ) {
-			System.err.println("cannot log in the database. We continue without database.");
+			logger.info("cannot log in the database. We continue without database.");
 			this.mongoClient = null;
 		}
 		
@@ -89,7 +92,7 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 
 	@Override
 	protected void initialize() {
-		Logger.stderr("OFMStorageManager initialize");
+		logger.debug("OFMStorageManager initialize");
 	}
 
 	/**
@@ -122,14 +125,14 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 			try {
 				mResult = db.getCollection(collection).insert(dbObject);
 			} catch(Exception e) {
-				System.out.println("mResult is " + e);
+				logger.error("mResult is {}" + e);
 				return false;
 			}
 			Object isInserted = mResult.getField("err");
 			if(isInserted == null) {
-				Logger.stderr("inserted successful.");
+				logger.debug("inserted successfully.");
 			} else {
-				Logger.stderr("error occur during inserting procedure.");
+				logger.info("error occur during inserting procedure.");
 				return isInserted == null;
 			}
 		}
@@ -156,13 +159,15 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 
 		this.db = this.mongoClient.getDB(dbName);
 		String s = StorageConverter.replaceDotToDotUtf(r);
-		System.out.println(r); //for debugging use;
+		
+		logger.debug(r); //for debugging use;
+		
 		TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>(){}; 
 		Map<String, Object> o;
 		try {
 			o = om.readValue(s, typeRef);
 		} catch (IOException e) {
-			Logger.stderr("parsing error!");
+			logger.info("parsing error: {}", r);
 			return false;
 		} 
 
@@ -172,21 +177,21 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 		DBCursor cursor = db.getCollection(collection).find(query);
 
 		if(cursor.count() == 0) {
-			System.out.println("inserting..");
+			logger.debug("inserting..");
 
 			try {
 				WriteResult mResult = db.getCollection(collection).insert(query);
-				System.out.println("result " + mResult);
+				logger.debug("result " + mResult);
 				isInserted = mResult.getField("err");
 			} catch(Exception e) {
-				System.out.println("mResult is " + e);
+				logger.debug("mResult is {}", e);
 			}
 
 			if(isInserted == null) {
-				Logger.stderr("inserted successful.");
+				logger.debug("inserted successfully.");
 				inserted = true;
 			} else {
-				Logger.stderr("error occur during inserting procedure.");
+				logger.info("error occur during inserting procedure.");
 			}
 			return inserted;
 		} else {
@@ -249,7 +254,9 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 		try {
 			this.db = this.mongoClient.getDB(dbName);
 			String s = StorageConverter.replaceDotToDotUtf(r);
-			System.out.println(r); 
+			
+			logger.debug(r); 
+			
 			TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>(){}; 
 			Map<String,Object> o = om.readValue(s, typeRef); 
 
@@ -292,7 +299,6 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 			return false;
 		}
 		
-
 		this.db = this.mongoClient.getDB(dbName);
 
 		BasicDBObject dbKey = StorageConverter.MapToDBObject(key); 
@@ -300,14 +306,14 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 
 		WriteResult result = db.getCollection(collection).update(dbKey, dbQuery, false, false);
 
-		System.out.println("M " + result);
+		logger.debug("M : {}", result);
 		Boolean isInserted = (Boolean)result.getField("updatedExisting");
 		if(isInserted == Boolean.TRUE) { 
-			Logger.stderr("update successful.");
+			logger.debug("update successful.");
 			return true;
 		} 
 
-		Logger.stderr("noting to be updated or updating error.");
+		logger.debug("noting to be updated or updating error.");
 		return false;
 	}
 
@@ -342,8 +348,8 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 		String s1 = StorageConverter.replaceDotToDotUtf(key);
 		String s2 = StorageConverter.replaceDotToDotUtf(query);
 
-		System.out.println(s1); //for debugging use;
-		System.out.println(s2); //for debugging use;
+		logger.debug(s1); //for debugging use;
+		logger.debug(s2); //for debugging use;
 
 		TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>(){}; 
 		Map<String,Object> o1; 
@@ -362,10 +368,10 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 		Object isInserted = mResult.getField("err");
 
 		if(isInserted == null) { 
-			Logger.stderr("update successful.");
+			logger.debug("update successful.");
 			return true;
 		}
-		Logger.stderr("error occur during updating procedure.");
+		logger.debug("error occur during updating procedure: {}", query);
 		return false;
 	}
 	
@@ -405,15 +411,15 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 		try {
 			result = db.getCollection(collection).update(dbKey, dbQuery, true, false);
 		} catch(Exception e) {
-			System.out.println("upsertion erorr " + e);
+			logger.error("upsertion erorr ={} ", e);
 		}
 		Object isInserted = result.getField("err");
 		if(isInserted == null) { 
-			Logger.stderr("upserted successful.");
+			logger.debug("upserted successful.");
 			return true;
 		} 
 
-		Logger.stderr("error occur during upserting procedure.");
+		logger.debug("error occur during upserting procedure: {}", dbQuery);
 		return false;
 	}
 
@@ -449,8 +455,8 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 		String s1 = StorageConverter.replaceDotToDotUtf(key);
 		String s2 = StorageConverter.replaceDotToDotUtf(query);
 
-		System.out.println(s1); //for debugging use;
-		System.out.println(s2); //for debugging use;
+		logger.debug(s1); //for debugging use;
+		logger.debug(s2); //for debugging use;
 
 		TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>(){}; 
 		Map<String,Object> o1; 
@@ -469,10 +475,10 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 		Object isInserted = mResult.getField("err");
 
 		if(isInserted == null) { 
-			Logger.stderr("upserted successful.");
+			logger.debug("upserted successful.");
 			return true;
 		}
-		Logger.stderr("error occur during upserting procedure.");
+		logger.debug("error occur during upserting procedure: {}", query);
 		return false;
 	}
 	
@@ -536,13 +542,16 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 		BasicDBObject dbObject = null;
 		this.db = this.mongoClient.getDB(dbName);
 		String s = StorageConverter.replaceDotToDotUtf(query);
-		System.out.println(s); //for debugging use;
+		
+		logger.debug(s); //for debugging use;
+		
 		TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>(){}; 
 		try {
 			Map<String,Object> o = om.readValue(s, typeRef); 
 			dbObject = new BasicDBObject(o);
 
 		} catch (IOException e) {
+			logger.error("DB object creation failed: {}" + e.getMessage());
 			throw new StorageException(e);
 		}
 		List<String> resultList = new ArrayList<String>();

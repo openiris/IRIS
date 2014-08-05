@@ -16,6 +16,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TransferQueue;
 
 import org.projectfloodlight.openflow.protocol.OFMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import etri.sdn.controller.protocol.OFProtocol;
 import etri.sdn.controller.protocol.io.Connection;
@@ -23,7 +25,6 @@ import etri.sdn.controller.protocol.io.IOFHandler;
 import etri.sdn.controller.protocol.io.IOFProtocolServer;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.io.TcpServer;
-import etri.sdn.controller.util.Logger;
 
 /**
  * Mother of all OpenFlow controller implementations. 
@@ -32,6 +33,8 @@ import etri.sdn.controller.util.Logger;
  *
  */
 public abstract class OFController implements IOFHandler, Comparable<IOFHandler> {
+	
+	private static final Logger logger = LoggerFactory.getLogger(OFController.class);
 
 	/**
 	 * Timer for scheduling asynchronous jobs.
@@ -156,18 +159,15 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 						}
 
 					} catch (InterruptedException e) {
+						logger.debug(e.getMessage());
 						continue;
 					}
 				}
-			} catch ( Exception e ) {
-				e.printStackTrace();
+			} catch ( Exception | Error e ) {
+				logger.error(e.getMessage());
 				this.controller.removeSelf();
 				return;					// end this controller thread.
-			} catch ( Error e ) {
-				e.printStackTrace();
-				this.controller.removeSelf();
-				return;					// end this controller thread.
-			}
+			} 
 		}
 		
 		/**
@@ -183,7 +183,6 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 			OFProtocol protocol = this.controller.getProtocol();
 			
 			for (OFMessage m : msgs) {
-//				System.out.println(m.toString());
 				context.getStorage().clear();
 
 				if ( !protocol.process(conn, context, m) ) {
@@ -300,11 +299,11 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 	 * from receiving other Openflow messages from the protocol server.
 	 */
 	public void removeSelf() {
-		Logger.stderr("We're now removing this controller from the protocol server.");
-		Logger.stderr("If you want to, please fix the controller error by following procedure.");
-		Logger.stderr("First, remove the controller jar file from the controllers directory.");
-		Logger.stderr("Second, fix the bug and put the fixed jar file under controllers directory.");
-		Logger.stderr("That's it. For more information, plz contact bjlee@etri.re.kr");
+		logger.info("We're now removing this controller from the protocol server.");
+		logger.info("If you want to, please fix the controller error by following procedure.");
+		logger.info("First, remove the controller jar file from the controllers directory.");
+		logger.info("Second, fix the bug and put the fixed jar file under controllers directory.");
+		logger.info("That's it. For more information, plz contact bjlee@etri.re.kr");
 
 		if ( this.server != null ) {
 			this.server.deregisterConroller( this );
@@ -424,7 +423,6 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 	 */
 	@Override
 	public final boolean handleDisconnectEvent(Connection conn) {
-		System.out.println("disconnected");
 		
 		assert( conn.getSwitch() != null );
 		

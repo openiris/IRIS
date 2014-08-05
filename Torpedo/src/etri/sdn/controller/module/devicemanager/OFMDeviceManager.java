@@ -17,6 +17,8 @@ import org.projectfloodlight.openflow.protocol.OFPacketIn;
 import org.projectfloodlight.openflow.protocol.OFType;
 import org.projectfloodlight.openflow.protocol.match.MatchField;
 import org.projectfloodlight.openflow.types.OFPort;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import etri.sdn.controller.IInfoProvider;
 import etri.sdn.controller.IOFTask;
@@ -35,7 +37,6 @@ import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.ARP;
 import etri.sdn.controller.protocol.packet.Ethernet;
 import etri.sdn.controller.protocol.packet.IPv4;
-import etri.sdn.controller.util.Logger;
 
 /**
  * This class implements the device manager module.
@@ -49,6 +50,8 @@ public class OFMDeviceManager
 extends OFModule 
 implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvider, IFlowReconcileListener
 {
+	private static final Logger logger = LoggerFactory.getLogger(OFMDeviceManager.class);
+	
 	/**
 	 * Time in milliseconds before entities will expire
 	 */
@@ -189,7 +192,7 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 					new IOFTask() {
 						@Override
 						public boolean execute() {
-							Logger.debug(devices.getHostDebugInfo());
+							logger.debug("printing host debug info={}", devices.getHostDebugInfo());
 							return true;
 						}
 

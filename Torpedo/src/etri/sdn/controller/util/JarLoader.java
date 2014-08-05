@@ -7,9 +7,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import etri.sdn.controller.OFController;
 
 public class JarLoader {
+	
+	private static final Logger logger = LoggerFactory.getLogger(JarLoader.class);
 
 	@SuppressWarnings("unchecked")
 	private static Class<OFController> loadJar(String path) {
@@ -32,7 +37,7 @@ public class JarLoader {
 			} catch (MalformedURLException e1) {
 				return null;
 			} catch (ClassNotFoundException e) {
-				Logger.stderr("basename " + basename + " is not found");
+				logger.error("basename '{}' is not found", basename);
 				e.printStackTrace();
 				return null;
 			}
@@ -51,23 +56,23 @@ public class JarLoader {
 				ctrl.getConstructor(new Class[]{ int.class, String.class });
 			return constructor.newInstance( num_of_instances, role );
 		} catch (NoSuchMethodException e) {
-			Logger.stderr("Cannot find constructor for " + path);
+			logger.error("Cannot find constructor for " + path);
 			return null;
 		} catch (SecurityException e) {
-			Logger.stderr("You are not authorized to open " + path);
+			logger.error("You are not authorized to open " + path);
 			return null;
 		} catch (InstantiationException e) {
-			Logger.stderr("Cannot instantiate controller from the given jar " + path);
+			logger.error("Cannot instantiate controller from the given jar " + path);
 			return null;
 		} catch (IllegalAccessException e) {
-			Logger.stderr("You are not authorized to access constructor for " + path);
+			logger.error("You are not authorized to access constructor for " + path);
 			return null;
 		} catch (IllegalArgumentException e) {
-			Logger.stderr("You have passed wrong argument to " + path);
+			logger.error("You have passed wrong argument to " + path);
 			return null;
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
-			Logger.stderr("Wrong invocation target for " + path);
+			logger.error("Wrong invocation target for " + path);
 			return null;
 		}
 	}

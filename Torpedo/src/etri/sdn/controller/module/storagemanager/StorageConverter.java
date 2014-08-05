@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.slf4j.Logger;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
@@ -22,6 +24,8 @@ import com.mongodb.DBObject;
  * 
  */
 public class StorageConverter {
+	
+	private static final Logger logger = OFMStorageManager.logger;
 
 	private final static String DOT_STRING = "U+FF04";
 
@@ -99,7 +103,7 @@ public class StorageConverter {
 
 			return map;
 		} else {
-			System.out.println("Unknown type: " + obj + ":" + obj.getClass());
+			logger.error("Unknown type: {}:{}", obj, obj.getClass());
 			return obj;
 		}
 	}

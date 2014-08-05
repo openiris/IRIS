@@ -11,10 +11,12 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import etri.sdn.controller.protocol.io.TcpServer;
 import etri.sdn.controller.util.Basename;
 import etri.sdn.controller.util.JarLoader;
-import etri.sdn.controller.util.Logger;
 
 /**
  * This is a entry-point class of the whole Torpedo system.
@@ -29,19 +31,10 @@ public class Main {
 	 */
 	public static boolean debug = true;
 	
-	/**
-	 * This is a function to parse command line options. 
-	 * -d option is specially handled to enable debug.
-	 * @param args command-line parameters.
-	 */
+	private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
 	public static void parseCommandLine(String[] args) {
-		for ( int i = 0; i < args.length; ++i ) {
-			if ( args[i].equals("-d") ) {
-				debug = true;
-			}
-		}
-		
-		Logger.setDebug(debug);
+		// currently, does nothing.
 	}
 
 	/**
@@ -50,6 +43,11 @@ public class Main {
 	 * @param args command-line parameters.
 	 */
 	public static void main(String[] args) {
+		 
+		// suppress all the other debug messages from other components such as restlet.
+		// but if you modify the jdklog.properties, you can make the log messages 
+		// re-appear on the screen again.
+		System.setProperty("java.util.logging.config.file", "./conf/jdklog.properties");
 		
 		Main.parseCommandLine(args);
 		
@@ -74,7 +72,7 @@ public class Main {
 
 		tcp_server.start();
 
-		Logger.stdout("started...");
+		logger.info("starting torpedo...");
 
 		tcp_server.wakeup();
 		
@@ -118,12 +116,12 @@ public class Main {
 					Files.createDirectory( ctrl_dir_path );
 				}
 			} catch (IOException e) {
-				Logger.stderr("cannot create directory: " + ctrl_dir_path.toString());
+				logger.error("cannot create directory '{}'", ctrl_dir_path.toString());
 				e.printStackTrace();
 			}
 		}
 		else if ( ! Files.isDirectory( ctrl_dir_path ) ) {
-			Logger.stderr("Given path '" + ctrl_dir_path.toString() + "' is not a valid directory");
+			logger.error("Given path '{}' is not a valid directory", ctrl_dir_path.toString());
 			System.exit(-1);
 		}
 
@@ -147,7 +145,7 @@ public class Main {
 				}
 				);
 			} catch (IOException e) {
-				Logger.stderr("cannot walk the controller directory");
+				logger.error("cannot walk the controller directory.");
 				e.printStackTrace();
 				System.exit(-1);
 			}
@@ -171,7 +169,7 @@ public class Main {
 						continue;
 					}
 					
-					Logger.stdout("loading " + ctrl_name);
+					logger.info("loading controller instance '{}'", ctrl_name);
 					
 					OFController to_load = JarLoader.getController(
 							ctrl_name,

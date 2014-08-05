@@ -2,7 +2,7 @@ package etri.sdn.controller.protocol;
 
 
 import java.io.IOException;
- import java.net.InetSocketAddress;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,12 +66,13 @@ import org.projectfloodlight.openflow.types.OFVlanVidMatch;
 import org.projectfloodlight.openflow.types.TableId;
 import org.projectfloodlight.openflow.types.TransportPort;
 import org.projectfloodlight.openflow.types.VlanPcp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFController;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
-import etri.sdn.controller.util.Logger;
 
 /**
  * This class is for handling Openflow protocol handshaking.
@@ -79,6 +80,8 @@ import etri.sdn.controller.util.Logger;
  *
  */
 public class OFProtocol {
+	
+	private static final Logger logger = LoggerFactory.getLogger(OFProtocol.class);
 
 	public static final String STR_IN_PORT = "in_port";
 	public static final String STR_DL_DST = "dl_dst";
@@ -338,7 +341,7 @@ public class OFProtocol {
 		case HELLO:
 			// if HELLO received, we send features request.
 			try {
-				Logger.stderr("GOT HELLO from " + conn.getClient().getRemoteAddress().toString());
+				logger.debug("GOT HELLO from {}", conn.getClient().getRemoteAddress().toString());
 			} catch (IOException e1) {
 				return false;
 			}
@@ -349,11 +352,12 @@ public class OFProtocol {
 			}
 			
 			// now the hello is successfully exchanged, so we remove the peer address 
-						// from the helloFailedSwitches set. 
+			// from the helloFailedSwitches set. 
 			try {
 				InetSocketAddress peer = (InetSocketAddress) conn.getClient().getRemoteAddress();
 				this.helloFailedSwitches.remove( peer.getHostString() );
 			} catch (IOException e) {
+				logger.debug("conn.getClient().getRemoteAddress() failed");
 				e.printStackTrace();
 				return false;
 			}
@@ -364,7 +368,7 @@ public class OFProtocol {
 			break;
 
 		case ERROR:		
-			Logger.stderr("GET ERROR : " + m.toString());
+			logger.error("GET ERROR : {}", m.toString());
 			return false;
 
 		case ECHO_REQUEST:
@@ -376,7 +380,7 @@ public class OFProtocol {
 			break;
 
 		case FEATURES_REPLY:
-			//Logger.debug("FEATURES_REPLY is received.");
+			logger.debug("FEATURES_REPLY is recceived: {}", m.toString());
 			
 			if ( sw == null ) return false;
 

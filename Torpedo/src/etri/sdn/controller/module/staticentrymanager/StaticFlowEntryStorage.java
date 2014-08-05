@@ -21,12 +21,11 @@ import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
+import org.slf4j.Logger;
 
-import etri.sdn.controller.Main;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.module.storagemanager.IStorageService;
 import etri.sdn.controller.module.storagemanager.StorageException;
-import etri.sdn.controller.util.Logger;
 
 /**
  * This class implements the storage-related functions to manage static flow entries.
@@ -42,6 +41,8 @@ import etri.sdn.controller.util.Logger;
  *
  */
 public class StaticFlowEntryStorage extends OFModel{
+	
+	private final static Logger logger = OFMStaticFlowEntryManager.logger;
 
 	public OFMStaticFlowEntryManager manager;
 
@@ -158,7 +159,7 @@ public class StaticFlowEntryStorage extends OFModel{
 						entries.get(flowName), 
 						(String) entries.get(flowName).get("switch"));
 	
-				Logger.stdout("Entry loaded to switch: " + getFlowModMap().get(flowName));
+				logger.debug("Entry loaded to switch: {}", getFlowModMap().get(flowName));
 			}
 		}
 	}
@@ -233,10 +234,8 @@ public class StaticFlowEntryStorage extends OFModel{
 
 		getFlowModNameToDpidIndex().remove(name);
 
-		if (Main.debug) {
-			System.out.println("dpid to flowname: " + getDpidToFlowModNameIndex().toString());
-			System.out.println("flowname to dpid: " + getFlowModNameToDpidIndex().toString());
-		}
+		logger.debug("dpid to flowname: {}", getDpidToFlowModNameIndex().toString());
+		logger.debug("flowname to dpid: {}", getFlowModNameToDpidIndex().toString());
 	}
 
 
@@ -260,10 +259,8 @@ public class StaticFlowEntryStorage extends OFModel{
 
 		getFlowModNameToDpidIndex().put(name, dpid);
 
-		if (Main.debug) {
-			System.out.println("dpid to flowname: " + getDpidToFlowModNameIndex().toString());
-			System.out.println("flowname to dpid: " + getFlowModNameToDpidIndex().toString());
-		}
+		logger.debug("dpid to flowname: {}", getDpidToFlowModNameIndex().toString());
+		logger.debug("flowname to dpid: {}", getFlowModNameToDpidIndex().toString());
 	}
 
 	/**
@@ -279,8 +276,8 @@ public class StaticFlowEntryStorage extends OFModel{
 		List<Map<String, Object>> entry = (List<Map<String, Object>>) getAllDBEntries
 				(manager.getDB(), manager.getDbName(), manager.getCollectionName() );
 
-		System.out.println("StaticEntry DB : " + entry.toString());
-		System.out.println("StaticEntry Mem: " + getFlowModMap());
+		logger.debug("StaticEntry DB : {}", entry.toString());
+		logger.debug("StaticEntry Mem: {}", getFlowModMap());
 	}
 
 	/**
@@ -325,7 +322,7 @@ public class StaticFlowEntryStorage extends OFModel{
 		
 		Map<String, Object> entry = getDBEntry (db, dbName, collectionName, name);
 		if (entry == null) {
-			Logger.debug("No such entry exists. name: " + name);
+			logger.debug("No such entry exists: name={} ", name);
 			return false;
 		}
 

@@ -11,9 +11,9 @@ import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
+import org.slf4j.Logger;
 
 import etri.sdn.controller.OFModel;
-import etri.sdn.controller.util.Logger;
 
 
 /**
@@ -25,6 +25,8 @@ import etri.sdn.controller.util.Logger;
  * 
  */
 public class Storage extends OFModel {
+	
+	private static final Logger logger = OFMStorageManager.logger;
 
 	private final String TYPE_ERROR_MESSAGE = "Wrong Input Type Error!";
 	private final String INSERTING_ERROR_MESSAGE = "Inserting Error!";
@@ -59,7 +61,7 @@ public class Storage extends OFModel {
 								String r = null;
 								try {
 									listDBs = storageInstance.retrieveDBs();//
-									Logger.stderr(listDBs.toString());
+									logger.debug(listDBs.toString());
 								} catch (StorageException e) {
 									e.printStackTrace();
 								}
@@ -70,7 +72,7 @@ public class Storage extends OFModel {
 									r = om.writeValueAsString(listDBs);
 									response.setEntity(r, MediaType.APPLICATION_JSON);
 								} catch (Exception e) {
-									Logger.stderr(OBJECT_MAPPING_ERROR_MESSAGE + e);
+									logger.error(OBJECT_MAPPING_ERROR_MESSAGE + e);
 									return;
 								}
 								
@@ -93,7 +95,7 @@ public class Storage extends OFModel {
 										String dbName = (String) request.getAttributes().get("dbname");
 										try {
 											storageInstance.dropDB(dbName); //
-											Logger.stderr(dbName + " db dropped.");
+											logger.debug(dbName + " db dropped.");
 										} catch (StorageException e) {
 											e.printStackTrace();
 										}
@@ -121,13 +123,12 @@ public class Storage extends OFModel {
 											if(request.getMethod() == Method.POST) {
 												try {
 													String query = request.getEntityAsText();
-													System.out.println(query);
 													TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>(){}; 
 													Map<String, Object> map = null;
 													try {
 														map = om.readValue(query, typeRef);
 													} catch (Exception e) {
-														Logger.stderr(OBJECT_MAPPING_ERROR_MESSAGE + e);
+														logger.error("error={}, query={}, reason={}", OBJECT_MAPPING_ERROR_MESSAGE, query, e);
 														return;
 													} 
 													
@@ -142,7 +143,7 @@ public class Storage extends OFModel {
 													storageInstance.insert(dbName, collection, (Map<String, Object>)map);
 													response.setEntity(r, MediaType.APPLICATION_JSON);
 												} catch (StorageException e) {
-													Logger.stderr(INSERTING_ERROR_MESSAGE + e);
+													logger.error(INSERTING_ERROR_MESSAGE + e);
 												}
 											} 
 										}
@@ -165,7 +166,6 @@ public class Storage extends OFModel {
 													if(request.getMethod() == Method.POST) {
 														try {
 															String text = request.getEntityAsText();
-															System.out.println(text);
 															TypeReference<List<Map<String, Object>>> typeRef = new TypeReference<List<Map<String, Object>>>(){}; 
 															List<Map<String, Object>> list = null;
 															Map<String, Object> key = null;
@@ -174,13 +174,13 @@ public class Storage extends OFModel {
 															try {
 																list = om.readValue(text, typeRef);
 																if(list.size() != 2) {
-																	Logger.stderr(TYPE_ERROR_MESSAGE);
+																	logger.error("error={}, text={}", TYPE_ERROR_MESSAGE, text);
 																	return;
 																}
 																key = list.get(0);
 																query = list.get(1);
 															} catch (Exception e) {
-																Logger.stderr(OBJECT_MAPPING_ERROR_MESSAGE + e);
+																logger.error("error={}, text={}, reason={}", OBJECT_MAPPING_ERROR_MESSAGE, text, e);
 																return;
 															} 
 
@@ -210,7 +210,6 @@ public class Storage extends OFModel {
 															if(request.getMethod() == Method.POST) {
 																try {
 																	String text = request.getEntityAsText();
-																	System.out.println(text);
 																	TypeReference<List<Map<String, Object>>> typeRef = new TypeReference<List<Map<String, Object>>>(){}; 
 																	List<Map<String, Object>> list = null;
 																	Map<String, Object> key = null;
@@ -219,20 +218,20 @@ public class Storage extends OFModel {
 																	try {
 																		list = om.readValue(text, typeRef);
 																		if(list.size() != 2) {
-																			Logger.stderr(TYPE_ERROR_MESSAGE);
+																			logger.error("error={}, text={}", TYPE_ERROR_MESSAGE, text);
 																			return;
 																		}
 																		key = list.get(0);
 																		query = list.get(1);
 																	} catch (Exception e) {
-																		Logger.stderr(OBJECT_MAPPING_ERROR_MESSAGE + e);
+																		logger.error(OBJECT_MAPPING_ERROR_MESSAGE + e);
 																		return;
 																	} 
 
 																	storageInstance.update(dbName, collection, key, query);
 																	response.setEntity(text, MediaType.APPLICATION_JSON);
 																} catch (StorageException e) {
-																	e.printStackTrace();
+																	logger.error("error={}", e);
 																}
 															} 
 														}
@@ -253,20 +252,19 @@ public class Storage extends OFModel {
 																	if(request.getMethod() == Method.POST) {
 																		try {
 																			String query = request.getEntityAsText();
-																			System.out.println(query);
 																			TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>(){}; 
 																			Map<String, Object> map = null;
 																			try {
 																				map = om.readValue(query, typeRef);
 																			} catch (Exception e) {
-																				Logger.stderr(OBJECT_MAPPING_ERROR_MESSAGE + e);
+																				logger.error("error={}, query={}, reason={}", OBJECT_MAPPING_ERROR_MESSAGE, query, e);
 																				return;
 																			} 
 
 																			storageInstance.delete(dbName, collection, (Map<String, Object>)map);
 																			response.setEntity(query, MediaType.APPLICATION_JSON);
 																		} catch (StorageException e) {
-																			Logger.stderr(DELETING_ERROR_MESSAGE + e);;
+																			logger.error(DELETING_ERROR_MESSAGE + e);;
 																		}
 																	}
 																}
@@ -298,7 +296,7 @@ public class Storage extends OFModel {
 																					}
 																					response.setEntity(r, MediaType.APPLICATION_JSON);
 																				} catch (StorageException e) {
-																					Logger.stderr(RETRIEVING_ALL_ERROR_MESSAGE + e);
+																					logger.error(RETRIEVING_ALL_ERROR_MESSAGE + e);
 																				}
 																			} 
 																		}
@@ -320,13 +318,13 @@ public class Storage extends OFModel {
 																					if(request.getMethod() == Method.POST) {
 																						try {
 																							String query = request.getEntityAsText();
-																							System.out.println(query);
 																							TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>(){}; 
 																							Map<String, Object> map = null;
 																							try {
 																								map = om.readValue(query, typeRef);
 																							} catch (Exception e) {
-																								Logger.stderr(OBJECT_MAPPING_ERROR_MESSAGE + e);
+																								logger.error("error={}, query={}, reason={}",
+																										OBJECT_MAPPING_ERROR_MESSAGE, query, e);
 																								return;
 																							} 
 
@@ -340,7 +338,7 @@ public class Storage extends OFModel {
 																							}
 																							response.setEntity(r, MediaType.APPLICATION_JSON);
 																						} catch (StorageException e) {
-																							Logger.stderr(RETRIEVING_ERROR_MESSAGE + e);
+																							logger.error(RETRIEVING_ERROR_MESSAGE + e);
 																							//e.printStackTrace();
 																						}
 																					} 
@@ -363,19 +361,19 @@ public class Storage extends OFModel {
 																							if(request.getMethod() == Method.POST) {
 																								try {
 																									String query = request.getEntityAsText();
-																									System.out.println(query);
 																									TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>(){}; 
 																									Map<String, Object> map = null;
 																									try {
 																										map = om.readValue(query, typeRef);
 																									} catch (Exception e) {
-																										Logger.stderr(OBJECT_MAPPING_ERROR_MESSAGE + e);
+																										logger.error("error={}, query={}, reason={}",
+																												OBJECT_MAPPING_ERROR_MESSAGE, query, e);
 																										return;
 																									} 
 																									storageInstance.ensureIndex(dbName, collection, map);
 																									response.setEntity(query, MediaType.APPLICATION_JSON);
 																								} catch (StorageException e) {
-																									Logger.stderr(ENSURE_INDEX_ERROR_MESSAGE + e);
+																									logger.error(ENSURE_INDEX_ERROR_MESSAGE + e);
 																								}
 																							} 																							
 																						}
@@ -397,19 +395,19 @@ public class Storage extends OFModel {
 																									if(request.getMethod() == Method.POST) {
 																										try {
 																											String query = request.getEntityAsText();
-																											System.out.println(query);
 																											TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>(){}; 
 																											Map<String, Object> map = null;
 																											try {
 																												map = om.readValue(query, typeRef);
 																											} catch (Exception e) {
-																												Logger.stderr(OBJECT_MAPPING_ERROR_MESSAGE + e);
+																												logger.error("error={}, query={}, reason={}",
+																														OBJECT_MAPPING_ERROR_MESSAGE, query, e);
 																												return;
 																											} 
 																											storageInstance.dropIndex(dbName, collection, map);
 																											response.setEntity(query, MediaType.APPLICATION_JSON);
 																										} catch (StorageException e) {
-																											Logger.stderr(DROP_INDEX_ERROR_MESSAGE + e);
+																											logger.error(DROP_INDEX_ERROR_MESSAGE + e);
 																										}
 																									} 																										
 																								}
@@ -440,7 +438,7 @@ public class Storage extends OFModel {
 																													}
 																													response.setEntity(r, MediaType.APPLICATION_JSON);
 																												} catch (StorageException e) {
-																													Logger.stderr(GET_INDEX_ERROR_MESSAGE + e);
+																													logger.error(GET_INDEX_ERROR_MESSAGE + e);
 																												}
 																											} 
 																										}
