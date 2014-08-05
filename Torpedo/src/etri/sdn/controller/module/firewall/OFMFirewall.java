@@ -26,6 +26,8 @@ import org.projectfloodlight.openflow.types.OFPort;
 import org.projectfloodlight.openflow.types.TableId;
 import org.projectfloodlight.openflow.types.TransportPort;
 import org.projectfloodlight.openflow.types.U64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import etri.sdn.controller.IService;
 import etri.sdn.controller.MessageContext;
@@ -39,24 +41,25 @@ import etri.sdn.controller.module.routing.IRoutingDecision;
 import etri.sdn.controller.module.routing.RoutingDecision;
 import etri.sdn.controller.module.storagemanager.IStorageService;
 import etri.sdn.controller.module.storagemanager.OFMStorageManager;
-import etri.sdn.controller.protocol.OFProtocol;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.Ethernet;
 import etri.sdn.controller.protocol.packet.IPv4;
 import etri.sdn.controller.util.AppCookie;
-import etri.sdn.controller.util.Logger;
 
 /**
  * This class implements the firewall module.
  * 
- * <p>Modified the original Firewall class of Floodlight.
+ * Modified the original Firewall class of Floodlight.
  * 
- * @author jshin
+ * @author jshin, bjlee
  * 
  */
 public class OFMFirewall extends OFModule implements IFirewallService
 {	
+	// create logger ..
+	private static final Logger logger = LoggerFactory.getLogger(OFMFirewall.class);
+	
 	private FirewallStorage firewallStorage;
 	private OFMStorageManager storageInstance;
 
@@ -67,9 +70,6 @@ public class OFMFirewall extends OFModule implements IFirewallService
 	protected int subnet_mask = IPv4.toIPv4Address("255.255.255.0");
 
 	private long cookie = AppCookie.makeCookie(Forwarding.FORWARDING_APP_ID, 0);
-
-	@SuppressWarnings("unused")
-	private OFProtocol protocol;
 
 	// constant strings for storage/parsing
 	public static final String TABLE_NAME = "controller_firewallrules";
@@ -164,7 +164,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
 				allowBroadcast = false;
 			}
 			if (allowBroadcast == true) {
-				Logger.debug("Allowing broadcast traffic for PacketIn={}", pi);
+				logger.debug("Allowing broadcast traffic for PacketIn={}", pi);
 
 				decision = new RoutingDecision(
 						sw.getId(),
@@ -173,7 +173,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
 						IRoutingDecision.RoutingAction.MULTICAST);
 				decision.addToContext(cntx);
 			} else {
-				Logger.debug("Blocking malformed broadcast traffic for PacketIn={}", pi);
+				logger.debug("Blocking malformed broadcast traffic for PacketIn={}", pi);
 
 				decision = new RoutingDecision(
 						sw.getId(),
@@ -212,10 +212,10 @@ public class OFMFirewall extends OFModule implements IFirewallService
 				decision.addToContext(cntx);
 
 				if (rule == null){
-					Logger.debug("No firewall rule found for PacketIn={}, blocking flow", pi);
+					logger.debug("No firewall rule found for PacketIn={}, blocking flow", pi);
 				}
 				else if (rule.action == FirewallRule.FirewallAction.DENY) {
-					Logger.debug("Deny rule={} match for PacketIn={}", rule, pi);
+					logger.debug("Deny rule={} match for PacketIn={}", rule, pi);
 				}
 
 			} else {
@@ -227,7 +227,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
 				decision.setWildcards(match_ret.wildcards);
 				decision.addToContext(cntx);
 
-				Logger.debug("Allow rule={} match for PacketIn={}", rule, pi);
+				logger.debug("Allow rule={} match for PacketIn={}", rule, pi);
 			}
 		}
 
@@ -339,7 +339,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
 				// now, parse row
 				FirewallRule r = new FirewallRule();
 				if (!row.containsKey(COLUMN_RULEID) || !row.containsKey(COLUMN_DPID)) {
-					Logger.stderr("skipping entry with missing required 'ruleid' or 'switchid' entry: " + row);
+					logger.error("skipping entry with missing required 'ruleid' or 'switchid' entry: {}", row);
 					return l;
 				}
 				try {
@@ -471,18 +471,18 @@ public class OFMFirewall extends OFModule implements IFirewallService
 								r.action = FirewallRule.FirewallAction.ALLOW;
 							else {
 								r.action = null;
-								Logger.stderr("action not recognized");
+								logger.error("action not recognized");
 							}
 						}
 					}
 				} catch (ClassCastException e) {
-					Logger.stderr("skipping rule " + r.ruleid + " with bad data : " + e.getMessage());
+					logger.error("skipping rule {} with bad data {} ", r.ruleid, e.getMessage());
 				}
 				if (r.action != null)
 					l.add(r);
 			}
 		} catch (Exception e) {
-			Logger.stderr("failed to access storage: " + e.getMessage());
+			logger.error("failed to access storage: {} ", e.getMessage());
 			// if the table doesn't exist, then wait to populate later via setStorageSource()
 		}
 
@@ -517,8 +517,6 @@ public class OFMFirewall extends OFModule implements IFirewallService
 		this.storageInstance = (OFMStorageManager) getModule(IStorageService.class);
 		this.dbName = conf.getString("storage-default-db");
 		this.collectionName = firewallStorage.getName();
-
-		this.protocol = getController().getProtocol();
 
 		rules = new ArrayList<FirewallRule>();
 
@@ -608,7 +606,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
 	 */
 	@Override
 	public void enableFirewall(boolean enabled) {
-		Logger.debug("Setting firewall to {}", enabled);
+		logger.info("Setting firewall to {}", enabled);
 		this.enabled = enabled;
 
 		Collection<IOFSwitch> switches = getController().getSwitches();
@@ -653,7 +651,7 @@ public class OFMFirewall extends OFModule implements IFirewallService
 				l.add(it.next());
 			}
 		} catch (Exception e) {
-			Logger.stderr("failed to access storage: " + e.getMessage());
+			logger.error("failed to access storage: {}", e.getMessage());
 			// if the table doesn't exist, then wait to populate later via setStorageSource()
 		}
 		return l;

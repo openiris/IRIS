@@ -32,6 +32,7 @@ import etri.sdn.controller.module.storagemanager.StorageException;
  */
 public class FirewallStorage extends OFModel{
 	
+	// create logger
 	private static final Logger logger = LoggerFactory.getLogger(FirewallStorage.class);
 
 	public OFMFirewall manager;
