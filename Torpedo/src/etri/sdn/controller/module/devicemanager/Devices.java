@@ -455,7 +455,7 @@ public class Devices extends OFModel implements IDeviceService {
 				// generate a new device ID. However, we first check if 
 				// the entity is allowed (e.g., for spoofing protection)
 				if (!isEntityAllowed(entity, entityClass)) {
-					logger.info("PacketIn is not allowed {} {}",entityClass.getName(), entity);
+					logger.info("PacketIn is not allowed {} {}", entityClass.getName(), entity);
 					return null;
 				}
 				
@@ -631,7 +631,7 @@ public class Devices extends OFModel implements IDeviceService {
 		while (diter.hasNext()) {
 			Device d = diter.next();
 			if (d.updateAttachmentPoint()) {
-				logger.debug("Device changed: {}" + d.toString());
+				logger.debug("Device changed: {}", d.toString());
 				sendDeviceMovedNotification(d);
 			}
 			if (d.getAttachmentPoints().length == 0) {
