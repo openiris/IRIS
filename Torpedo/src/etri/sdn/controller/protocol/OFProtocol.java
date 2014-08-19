@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -21,12 +22,14 @@ import org.projectfloodlight.openflow.protocol.OFDescStatsRequest;
 import org.projectfloodlight.openflow.protocol.OFEchoReply;
 import org.projectfloodlight.openflow.protocol.OFEchoRequest;
 import org.projectfloodlight.openflow.protocol.OFFactories;
+import org.projectfloodlight.openflow.protocol.OFFactory;
 import org.projectfloodlight.openflow.protocol.OFFeaturesReply;
 import org.projectfloodlight.openflow.protocol.OFFeaturesRequest;
 import org.projectfloodlight.openflow.protocol.OFFlowAdd;
 import org.projectfloodlight.openflow.protocol.OFFlowModFlags;
 import org.projectfloodlight.openflow.protocol.OFHello;
 import org.projectfloodlight.openflow.protocol.OFHelloElem;
+import org.projectfloodlight.openflow.protocol.OFHelloElemVersionbitmap;
 import org.projectfloodlight.openflow.protocol.OFMessage;
 import org.projectfloodlight.openflow.protocol.OFPacketIn;
 import org.projectfloodlight.openflow.protocol.OFPortConfig;
@@ -65,6 +68,7 @@ import org.projectfloodlight.openflow.types.OFPort;
 import org.projectfloodlight.openflow.types.OFVlanVidMatch;
 import org.projectfloodlight.openflow.types.TableId;
 import org.projectfloodlight.openflow.types.TransportPort;
+import org.projectfloodlight.openflow.types.U32;
 import org.projectfloodlight.openflow.types.VlanPcp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -313,9 +317,10 @@ public class OFProtocol {
 			
 			this.helloFailedSwitches.remove( peer.getHostString() );
 		} else {		
-			// I know up to 1.3.2
 			OFHello hello = OFFactories.getFactory(OFVersion.OF_13).hello(Collections.<OFHelloElem>emptyList());
 			conn.write(hello);
+			
+			logger.debug("hello={}", hello);
 			
 			this.helloFailedSwitches.add( peer.getHostString() );
 		}
@@ -341,7 +346,7 @@ public class OFProtocol {
 		case HELLO:
 			// if HELLO received, we send features request.
 			try {
-				logger.debug("GOT HELLO from {}", conn.getClient().getRemoteAddress().toString());
+				logger.debug("GOT HELLO({}) from {}", m, conn.getClient().getRemoteAddress().toString());
 			} catch (IOException e1) {
 				return false;
 			}

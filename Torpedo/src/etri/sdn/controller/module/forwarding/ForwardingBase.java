@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -350,16 +351,39 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 //							fm.getMatch().getInputPort(), outPort });
 //				}
 				
+				// special care for the source switch.
+				if ( sw.getId() == pinSwitch ) {
+					if ( pi.getBufferId() != OFBufferId.NO_BUFFER ) {
+						fm.setBufferId( pi.getBufferId() );
+					} else {
+						
+						// Push the packet out the source switch
+						OFPacketOut.Builder po = fac.buildPacketOut();
+						try {
+							po
+							.setBufferId( OFBufferId.NO_BUFFER )
+							.setData( pi.getData() )
+							.setInPort( pi.getInPort() );
+						} catch (UnsupportedOperationException e) {
+							// this exception might be because of setInPort (1.3 does not support it.)
+							// just ignore.
+						}
+						
+						List<OFAction> os = new LinkedList<>();
+						os.add( fac.actions().output(outPort, 0xffff) );
+						
+						po.setActions( os );
+						
+						messageDamper.write(sw.getConnection(), po.build());
+						
+					}
+					
+					srcSwitchIncluded = true;
+				}
+				
 				// write flow-mod object to switch.
 				messageDamper.write(sw.getConnection(), fm.build());
 
-				// Push the packet out the source switch
-				if (sw.getId() == pinSwitch) {
-					// TODO: Instead of doing a packetOut here we could also 
-					// send a flowMod with bufferId set.... 
-					pushPacket(conn, match, pi, outPort, cntx);
-					srcSwitchIncluded = true;
-				}
 				
 			} catch (IOException e) {
 				logger.error("Failure writing flow mod: err={}", e);
@@ -414,7 +438,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 
 		// If the switch doens't support buffering set the buffer id to be none
 		// otherwise it'll be the the buffer id of the PacketIn
-		if ( protocol.getSwitchInformation(conn.getSwitch()).getBuffers() == 0 ) {
+		if ( pi.getBufferId() == OFBufferId.NO_BUFFER ) {
 			po
 			.setBufferId( OFBufferId.NO_BUFFER )
 			.setData( pi.getData() );
