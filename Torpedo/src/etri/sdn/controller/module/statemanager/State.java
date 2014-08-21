@@ -266,6 +266,7 @@ public class State extends OFModel {
 						for ( OFStatsReply s : reply ) {
 							if ( s instanceof OFPortStatsReply ) {
 								resultValues.addAll( ((OFPortStatsReply)s).getEntries() );
+								OFMStateManager.logger.debug("OFPortStatsReply Entries={}", resultValues);
 							}
 						}
 						
