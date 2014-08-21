@@ -42,16 +42,23 @@ irisApp.controller('CntlPorts',
 						}
 						_.each(feature_ports, function(p)  {
 							var px = $scope.portsMap[p.portNumber];
-							if ( px ) {
-								px.status = 'UP'
-								if ( p.config.indexOf("DOWN") >= 0 || p.state.indexOf("DOWN") >=0 )
-									px.status = 'DOWN';
-								px.status += ' ';
-								px.status += p.currentFeatures.replace(/(PF_|\s+)/gi, "")
-								                              .replace(/_/," ")
-								                              .replace(/\[\]/,"");
-								px.name = p.name;
+							if ( ! px ){
+								$scope.ports.push( port );
+								
+								// build map for later feature request operation.
+								$scope.portsMap[port.portNumber] = port;
+								
+								px = port;
 							}
+							
+							px.status = 'UP'
+							if ( p.config.indexOf("DOWN") >= 0 || p.state.indexOf("DOWN") >=0 )
+								px.status = 'DOWN';
+							px.status += ' ';
+							px.status += p.currentFeatures.replace(/(PF_|\s+)/gi, "")
+							                              .replace(/_/," ")
+							                              .replace(/\[\]/,"");
+							px.name = p.name;
 						});
 					});
 				})
