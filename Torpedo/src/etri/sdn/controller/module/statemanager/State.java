@@ -255,14 +255,7 @@ public class State extends OFModel {
 							return;		// switch is not completely set up.
 						}
 
-						HashMap<String, List<OFPortStatsEntry>> result = 
-								new HashMap<String, List<OFPortStatsEntry>>();
-
-						List<OFPortStatsEntry> resultValues;
-						result.put( 
-								switchIdStr, 
-								resultValues = new java.util.LinkedList<OFPortStatsEntry>() 
-								);
+						List<OFPortStatsEntry> resultValues = new java.util.LinkedList<OFPortStatsEntry>();
 
 						OFPortStatsRequest.Builder req = OFFactories.getFactory(sw.getVersion()).buildPortStatsRequest();
 						req.setPortNo(OFPort.ANY /* NONE for 1.0 */);

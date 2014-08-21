@@ -38,6 +38,7 @@ import org.projectfloodlight.openflow.protocol.OFPortState;
 import org.projectfloodlight.openflow.protocol.OFPortStatus;
 import org.projectfloodlight.openflow.protocol.OFSetConfig;
 import org.projectfloodlight.openflow.protocol.OFStatsReply;
+import org.projectfloodlight.openflow.protocol.OFStatsReplyFlags;
 import org.projectfloodlight.openflow.protocol.OFStatsRequest;
 import org.projectfloodlight.openflow.protocol.OFStatsRequestFlags;
 import org.projectfloodlight.openflow.protocol.OFStatsType;
@@ -569,8 +570,13 @@ public class OFProtocol {
 			List<OFStatsReply> rl = (List<OFStatsReply>) response;
 			synchronized ( response ) {
 				rl.add( m );
-				response.notifyAll();
+				if ( !m.getFlags().contains(OFStatsReplyFlags.REPLY_MORE) ) {
+					response.notifyAll();
+				}
 			}
+		} 
+		else {
+			logger.error("cannot deliver statistics={}", m);
 		}
 	}
 
