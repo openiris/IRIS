@@ -38,6 +38,7 @@ import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 
 import etri.sdn.controller.OFModel;
+import etri.sdn.controller.util.StackTrace;
 import etri.sdn.controller.protocol.OFProtocol;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.rest.serializer.ModuleListSerializerModule;
@@ -125,7 +126,7 @@ public class State extends OFModel {
 							g.close();
 
 						} catch (IOException e) {
-							e.printStackTrace();
+							OFMStateManager.logger.error("error={}", StackTrace.of(e));
 						}
 
 						String r = sWriter.toString();
@@ -180,7 +181,7 @@ public class State extends OFModel {
 							String r = om/*.writerWithDefaultPrettyPrinter()*/.writeValueAsString(output);
 							response.setEntity(r, MediaType.APPLICATION_JSON);
 						} catch (Exception e) {
-							e.printStackTrace();
+							OFMStateManager.logger.error("error={}", StackTrace.of(e));
 							return;
 						}
 					}
@@ -229,7 +230,7 @@ public class State extends OFModel {
 							g.writeEndObject();
 							g.close();
 						} catch (IOException e) {
-							e.printStackTrace();
+							OFMStateManager.logger.error("error={}", StackTrace.of(e));
 						}
 
 						String r = sWriter.toString();
@@ -306,7 +307,7 @@ public class State extends OFModel {
 							g.writeEndObject();
 							g.close();
 						} catch (IOException e) {
-							e.printStackTrace();
+							OFMStateManager.logger.error("error={}", StackTrace.of(e));
 							return;
 						}
 						
@@ -351,7 +352,7 @@ public class State extends OFModel {
 								String r = om./*writerWithDefaultPrettyPrinter().*/writeValueAsString(result);
 								response.setEntity(r, MediaType.APPLICATION_JSON);
 							} catch (Exception e) {
-								e.printStackTrace();
+								OFMStateManager.logger.error("error={}", StackTrace.of(e));
 								return;
 							}
 						}
@@ -371,7 +372,7 @@ public class State extends OFModel {
 							String r = om./*writerWithDefaultPrettyPrinter().*/writeValueAsString(result);
 							response.setEntity(r, MediaType.APPLICATION_JSON);
 						} catch (Exception e) {
-							e.printStackTrace();
+							OFMStateManager.logger.error("error={}", StackTrace.of(e));
 							return;
 						}
 					}
@@ -422,7 +423,7 @@ public class State extends OFModel {
 							}
 						}
 					} catch ( Exception e ) {
-						e.printStackTrace();
+						OFMStateManager.logger.error("error={}", StackTrace.of(e));
 						return;
 					}
 					
@@ -435,7 +436,7 @@ public class State extends OFModel {
 						String r = om/*.writerWithDefaultPrettyPrinter()*/.writeValueAsString(result);
 						response.setEntity(r, MediaType.APPLICATION_JSON);
 					} catch (Exception e) {
-						e.printStackTrace();
+						OFMStateManager.logger.error("error={}", StackTrace.of(e));
 						return;
 					}
 				}
@@ -494,7 +495,7 @@ public class State extends OFModel {
 						g.writeEndObject();
 						g.close();
 					} catch (IOException e) {
-						e.printStackTrace();
+						OFMStateManager.logger.error("error={}", StackTrace.of(e));
 					}
 
 					String r = sWriter.toString();
@@ -524,7 +525,7 @@ public class State extends OFModel {
 							String r = om.writerWithDefaultPrettyPrinter().writeValueAsString( manager.getController() );
 							response.setEntity(r, MediaType.APPLICATION_JSON);
 						} catch (Exception e) {
-							e.printStackTrace();
+							OFMStateManager.logger.error("error={}", StackTrace.of(e));
 							return;
 						}
 					}
@@ -554,7 +555,7 @@ public class State extends OFModel {
 						g.writeEndObject();
 						g.close();
 					} catch (IOException e) {
-						e.printStackTrace();
+						OFMStateManager.logger.error("error={}", StackTrace.of(e));
 					}
 
 					String r = sWriter.toString();

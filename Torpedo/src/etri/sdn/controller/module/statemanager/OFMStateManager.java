@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.projectfloodlight.openflow.protocol.OFMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import etri.sdn.controller.IService;
 import etri.sdn.controller.MessageContext;
@@ -25,6 +27,8 @@ import etri.sdn.controller.protocol.io.Connection;
  *
  */
 public class OFMStateManager extends OFModule {
+	
+	static final Logger logger = LoggerFactory.getLogger(OFMStateManager.class);
 	
 	/**
 	 * Model of this module. initialized by {@link #initialize()}.
