@@ -363,7 +363,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 							po
 							.setBufferId( OFBufferId.NO_BUFFER )
 							.setData( pi.getData() )
-							.setInPort( pi.getInPort() );
+							.setInPort( getInputPort(pi) );
 						} catch (UnsupportedOperationException e) {
 							// this exception might be because of setInPort (1.3 does not support it.)
 							// just ignore.
@@ -413,14 +413,10 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 		}
 		OFPort inPort = getInputPort(pi);
 		
-		if ( outPort.equals(inPort) ){
-			logger.debug("Packet out not sent as the outport matches inport: pi={} outPort={}", pi, outPort);
-			return;
-		}
-
 		// The assumption here is (sw) is the switch that generated the packet-in. 
 		// If the input port is the same as output port, then the packet-out should be ignored.
-		if ( inPort.equals(outPort) ) {
+		if ( outPort.equals(inPort) ){
+			logger.debug("Packet out not sent as the outport matches inport: pi={} outPort={}", pi, outPort);
 			return;
 		}
 		
