@@ -20,6 +20,8 @@ import org.projectfloodlight.openflow.protocol.OFDescStatsReply;
 import org.projectfloodlight.openflow.protocol.OFDescStatsRequest;
 import org.projectfloodlight.openflow.protocol.OFEchoReply;
 import org.projectfloodlight.openflow.protocol.OFEchoRequest;
+import org.projectfloodlight.openflow.protocol.OFErrorMsg;
+import org.projectfloodlight.openflow.protocol.OFErrorType;
 import org.projectfloodlight.openflow.protocol.OFFactories;
 import org.projectfloodlight.openflow.protocol.OFFeaturesReply;
 import org.projectfloodlight.openflow.protocol.OFFeaturesRequest;
@@ -46,6 +48,7 @@ import org.projectfloodlight.openflow.protocol.OFType;
 import org.projectfloodlight.openflow.protocol.OFVersion;
 import org.projectfloodlight.openflow.protocol.action.OFAction;
 import org.projectfloodlight.openflow.protocol.action.OFActionOutput;
+import org.projectfloodlight.openflow.protocol.errormsg.OFBadActionErrorMsg;
 import org.projectfloodlight.openflow.protocol.instruction.OFInstruction;
 import org.projectfloodlight.openflow.protocol.instruction.OFInstructionApplyActions;
 import org.projectfloodlight.openflow.protocol.match.Match;
@@ -370,7 +373,12 @@ public class OFProtocol {
 			break;
 
 		case ERROR:		
-			logger.error("GET ERROR : {}", m.toString());
+			OFErrorMsg err = (OFErrorMsg) m;
+			if ( err.getErrType() == OFErrorType.BAD_ACTION ) {
+				OFBadActionErrorMsg ba = (OFBadActionErrorMsg) err;
+				logger.error("bad action={}", ba.getData().getParsedMessage() );
+			}
+			logger.error("GET ERROR : {}", err);
 			return false;
 
 		case ECHO_REQUEST:

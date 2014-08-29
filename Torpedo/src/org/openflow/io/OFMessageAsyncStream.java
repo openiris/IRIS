@@ -145,11 +145,7 @@ public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStre
 	 * designed for one flush() per select() event
 	 */
 	public void flush() throws IOException {
-		
-		do {	
-			this.outBuf.write(sock);
-		} while ( outBuf.writableBytes() > 0 );
-			
+		this.outBuf.write(sock);
 		outBuf.clear();
 	}
 

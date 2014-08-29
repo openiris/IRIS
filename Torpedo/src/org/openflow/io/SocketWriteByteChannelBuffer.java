@@ -26,7 +26,11 @@ public class SocketWriteByteChannelBuffer implements ChannelBuffer {
 	
 	public int write(SocketChannel sock) throws IOException {
 		this.outBuf.flip();					// swap pointers; lim = pos; pos = 0;
-		return sock.write(this.outBuf);
+		int ret = this.outBuf.remaining();
+		do {
+			sock.write(this.outBuf);
+		} while ( this.outBuf.remaining() > 0 );
+		return ret;
 	}
 
 	@Override
