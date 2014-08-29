@@ -64,7 +64,16 @@ public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStre
 	}
 
 	protected void appendMessageToOutBuf(OFMessage m) throws IOException {
-		m.writeTo(outBuf);
+		int writerIndex = outBuf.writerIndex();
+		do { 
+			try { 
+				m.writeTo(outBuf);
+				break;
+			} catch ( IndexOutOfBoundsException e ) {
+				outBuf.writerIndex( writerIndex );
+				flush();
+			}
+		} while ( true );
 	}
 
 	/**
