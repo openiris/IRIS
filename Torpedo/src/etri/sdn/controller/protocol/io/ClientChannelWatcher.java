@@ -154,14 +154,13 @@ public final class ClientChannelWatcher extends Thread {
 								}
 							}							
 						} catch ( CancelledKeyException e ) {
-							e.printStackTrace();
+							logger.debug("canced={}", e);
 							continue;
 						}
 					}
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
-				// just break this watcher.
+				logger.error("connection cut={}", e);
 				return;
 			}
 		}

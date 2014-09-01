@@ -421,7 +421,7 @@ public class SocketWriteByteChannelBuffer implements ChannelBuffer {
 
 	@Override
 	public void setByte(int index, int value) {
-		if ( index < 0 || index >= this.outBuf.limit() || index + 1 > this.outBuf.capacity() ) {
+		if ( index < 0 || index + 1 > this.outBuf.limit() ) {
 			throw new IndexOutOfBoundsException();
 		}
 
@@ -513,16 +513,16 @@ public class SocketWriteByteChannelBuffer implements ChannelBuffer {
 
 	@Override
 	public void setChar(int index, int value) {
-		if ( index < 0 || index >= this.outBuf.limit() ) {
+		if ( index < 0 || index + 2 > this.outBuf.limit() ) {
 			throw new IndexOutOfBoundsException();
 		}
 
-		this.outBuf.putChar(index, (char) value);
+		this.outBuf.putChar(index, (char) (0x0000ffff & value));
 	}
 
 	@Override
 	public void setDouble(int index, double value) {
-		if ( index < 0 || index >= this.outBuf.limit() ) {
+		if ( index < 0 || index + 8 > this.outBuf.limit() ) {
 			throw new IndexOutOfBoundsException();
 		}
 
@@ -531,7 +531,7 @@ public class SocketWriteByteChannelBuffer implements ChannelBuffer {
 
 	@Override
 	public void setFloat(int index, float value) {
-		if ( index < 0 || index >= this.outBuf.limit() ) {
+		if ( index < 0 || index + 4 > this.outBuf.limit() ) {
 			throw new IndexOutOfBoundsException();
 		}
 
@@ -545,7 +545,7 @@ public class SocketWriteByteChannelBuffer implements ChannelBuffer {
 
 	@Override
 	public void setInt(int index, int value) {
-		if ( index < 0 || index >= this.outBuf.limit() ) {
+		if ( index < 0 || index + 4 > this.outBuf.limit() ) {
 			throw new IndexOutOfBoundsException();
 		}
 
@@ -554,7 +554,7 @@ public class SocketWriteByteChannelBuffer implements ChannelBuffer {
 
 	@Override
 	public void setLong(int index, long value) {
-		if ( index < 0 || index >= this.outBuf.limit() ) {
+		if ( index < 0 || index + 8 > this.outBuf.limit() ) {
 			throw new IndexOutOfBoundsException();
 		}
 
@@ -568,7 +568,7 @@ public class SocketWriteByteChannelBuffer implements ChannelBuffer {
 
 	@Override
 	public void setShort(int index, int value) {
-		if ( index < 0 || index >= this.outBuf.limit() ) {
+		if ( index < 0 || index + 2 > this.outBuf.limit() ) {
 			throw new IndexOutOfBoundsException();
 		}
 
@@ -581,7 +581,9 @@ public class SocketWriteByteChannelBuffer implements ChannelBuffer {
 			throw new IndexOutOfBoundsException();
 		}
 		
-		this.outBuf.put(index, (byte)0x00);
+		for ( int i = 0; i < length; ++i ) {
+			this.outBuf.put(index + i, (byte)0x00);
+		}
 	}
 
 	@Override
@@ -742,7 +744,7 @@ public class SocketWriteByteChannelBuffer implements ChannelBuffer {
 
 	@Override
 	public void writeBytes(ChannelBuffer src, int srcIndex, int length) {
-		if ( srcIndex < 0 || length > this.writableBytes() || srcIndex + length > this.outBuf.limit() ) {
+		if ( srcIndex < 0 || length > this.writableBytes() ) {
 			throw new IndexOutOfBoundsException();
 		}
 
@@ -753,7 +755,7 @@ public class SocketWriteByteChannelBuffer implements ChannelBuffer {
 
 	@Override
 	public void writeBytes(byte[] src, int srcIndex, int length) {
-		if ( srcIndex < 0 || length > this.writableBytes() || srcIndex + length > this.outBuf.limit() ) {
+		if ( srcIndex < 0 || length > this.writableBytes() ) {
 			throw new IndexOutOfBoundsException();
 		}
 
@@ -825,6 +827,10 @@ public class SocketWriteByteChannelBuffer implements ChannelBuffer {
 
 	@Override
 	public void writeZero(int length) {
+		if ( this.writableBytes() < length ) {
+			throw new IndexOutOfBoundsException();
+		}
+		
 		for ( int i = 0; i < length; ++i ) {
 			this.writeByte((byte)0x00);
 		}

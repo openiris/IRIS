@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import etri.sdn.controller.IInfoProvider;
 import etri.sdn.controller.IOFTask;
 import etri.sdn.controller.IService;
-import etri.sdn.controller.Main;
 import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
 import etri.sdn.controller.OFModel;
@@ -50,6 +49,7 @@ public class OFMDeviceManager
 extends OFModule 
 implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvider, IFlowReconcileListener
 {
+	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory.getLogger(OFMDeviceManager.class);
 	
 	/**
@@ -187,6 +187,7 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 				ENTITY_CLEANUP_INTERVAL * 1000 /* milliseconds */
 				);
 
+		/*
 		if ( Main.debug ) {
 			this.controller.scheduleTask(
 					new IOFTask() {
@@ -201,6 +202,7 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 					1000
 					);
 		}
+		*/
 	}
 
 	/**

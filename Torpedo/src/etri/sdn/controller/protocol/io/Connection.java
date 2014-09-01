@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -118,14 +119,6 @@ public final class Connection {
 	}
 
 	/**
-	 * Return the underlying message stream
-	 * @return	OFMessageAsyncStream object
-	 */
-	private OFMessageAsyncStream getStream() {
-		return stream;
-	}
-
-	/**
 	 * Close this connection
 	 */
 	public synchronized void close() {
@@ -159,7 +152,10 @@ public final class Connection {
 	 * @throws 	IOException
 	 */
 	synchronized List<OFMessage> read() throws IOException {
-		return getStream().read();
+		if ( this.stream == null ) {
+			return Collections.emptyList();
+		}
+		return this.stream.read();
 	}
 
 	/**
@@ -169,13 +165,13 @@ public final class Connection {
 	 */
 	public synchronized boolean write(OFMessage fm) {
 		if ( fm == null ) return true;
-		if ( getStream() == null ) return false;
+		if ( this.stream == null ) return false;
 
 		// watch the channel 'client' for write!
 		this.markToWrite();
 
 		try {
-			getStream().write( fm );	
+			this.stream.write( fm );	
 		} catch (IOException e) {
 			return false;
 		}
@@ -187,10 +183,10 @@ public final class Connection {
 	 * @return true if successful, false otherwise
 	 */
 	synchronized boolean flush() {
-		if ( getStream() == null ) return false;
+		if ( this.stream == null ) return false;
 		
 		try {
-			getStream().flush();
+			this.stream.flush();
 		} catch (IOException e) {
 			return false;
 		} finally {
@@ -206,13 +202,14 @@ public final class Connection {
 	 */
 	public synchronized boolean write(List<OFMessage> out) {
 
+		if ( this.stream == null ) return false;
+		
 		// watch the channel 'client' for write!
 		this.markToWrite();
-		if ( getStream() == null ) return false;
-		
+
 		for ( OFMessage m : out ) {
 			try { 
-				getStream().write( m );
+				this.stream.write( m );
 			} catch ( IOException e ) {
 				return false;
 			}
