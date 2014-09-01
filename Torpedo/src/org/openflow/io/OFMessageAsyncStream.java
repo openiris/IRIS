@@ -90,12 +90,12 @@ public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStre
 	}
 	
 	@Override
-	public List<OFMessage> parseMessages(ChannelBuffer data) {
+	public List<OFMessage> parseMessages(ChannelBuffer data) throws IOException {
 		return parseMessages(data, 0);
 	}
 
 	@Override
-	public List<OFMessage> parseMessages(ChannelBuffer data, int limit) {
+	public List<OFMessage> parseMessages(ChannelBuffer data, int limit) throws IOException {
 		
 		List<OFMessage> results = new ArrayList<OFMessage>();
 		OFHeader demux = new OFHeader();
@@ -121,10 +121,13 @@ public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStre
 				}
 			} catch (OFParseError e) {
 				logger.error("switch is sending wrong OF messages of size={}, e={}", demux.getLengthU(), e);
+				throw new IOException(e);
 			} catch (IllegalArgumentException e) {
 				logger.error("switch is sending wrong version of OF messages={}, e={}", demux.getVersion(), e);
+				throw new IOException(e);
 			} catch ( Exception e ) {
 				logger.error("exception during parsing: e={}", e);
+				throw new IOException(e);
 			} finally { 
 				data.readerIndex( start + demux.getLengthU() );
 			}
