@@ -365,17 +365,43 @@ public class StaticFlowEntry {
 				}
 			}
 			else if (key.toLowerCase().equals("ipv4_src")) {
+				String value = entry.get("ipv4_src").toString();
 				if ( builder.get(MatchField.ETH_TYPE) == EthType.ARP ) {
-					builder.setExact(MatchField.ARP_SPA, IPv4Address.of((String) entry.get("ipv4_src")));
+					if ( value.contains("/") ) {
+						String[] arrayValue = value.split("/");
+						builder.setMasked(MatchField.ARP_SPA, IPv4Address.of(arrayValue[0]), 
+								IPv4Address.ofCidrMaskLength( Integer.valueOf(arrayValue[1]) ));
+					} else {
+						builder.setExact(MatchField.ARP_SPA, IPv4Address.of(value));
+					}
 				} else {
-					builder.setExact(MatchField.IPV4_SRC, IPv4Address.of((String) entry.get("ipv4_src")));
+					if ( value.contains("/") ) {
+						String[] arrayValue = value.split("/");
+						builder.setMasked(MatchField.IPV4_SRC, IPv4Address.of(arrayValue[0]), 
+								IPv4Address.ofCidrMaskLength( Integer.valueOf(arrayValue[1]) ));
+					} else {
+						builder.setExact(MatchField.IPV4_SRC, IPv4Address.of(value));
+					}
 				}
 			}
 			else if (key.toLowerCase().equals("ipv4_dst")) {
+				String value = entry.get("ipv4_dst").toString();
 				if ( builder.get(MatchField.ETH_TYPE) == EthType.ARP ) {
-					builder.setExact(MatchField.ARP_TPA, IPv4Address.of((String) entry.get("ipv4_dst")));
+					if ( value.contains("/") ) {
+						String[] arrayValue = value.split("/");
+						builder.setMasked(MatchField.ARP_TPA, IPv4Address.of(arrayValue[0]), 
+								IPv4Address.ofCidrMaskLength( Integer.valueOf(arrayValue[1]) ));
+					} else {
+						builder.setExact(MatchField.ARP_TPA, IPv4Address.of(value));
+					}
 				} else {
-					builder.setExact(MatchField.IPV4_DST, IPv4Address.of((String) entry.get("ipv4_dst")));
+					if ( value.contains("/") ) {
+						String[] arrayValue = value.split("/");
+						builder.setMasked(MatchField.IPV4_DST, IPv4Address.of(arrayValue[0]), 
+								IPv4Address.ofCidrMaskLength( Integer.valueOf(arrayValue[1]) ));
+					} else {
+						builder.setExact(MatchField.IPV4_DST, IPv4Address.of(value));
+					}
 				}
 			}
 			else if (key.toLowerCase().equals("ip_dscp")) {
@@ -412,10 +438,24 @@ public class StaticFlowEntry {
 				builder.setExact(MatchField.ARP_OP, ArpOpcode.of(Integer.valueOf((String) entry.get("arp_op"))));
 			}
 			else if (key.toLowerCase().equals("arp_spa")) {
-				builder.setExact(MatchField.ARP_SPA, IPv4Address.of((String) entry.get("arp_spa")));
+				String value = entry.get("arp_spa").toString();
+				if ( value.contains("/") ) {
+					String[] arrayValue = value.split("/");
+					builder.setMasked(MatchField.ARP_SPA, IPv4Address.of(arrayValue[0]), 
+							IPv4Address.ofCidrMaskLength( Integer.valueOf(arrayValue[1]) ));
+				} else {
+					builder.setExact(MatchField.ARP_SPA, IPv4Address.of(value));
+				}
 			}
 			else if (key.toLowerCase().equals("arp_tpa")) {
-				builder.setExact(MatchField.ARP_TPA, IPv4Address.of((String) entry.get("arp_tpa")));
+				String value = entry.get("arp_tpa").toString();
+				if ( value.contains("/") ) {
+					String[] arrayValue = value.split("/");
+					builder.setMasked(MatchField.ARP_TPA, IPv4Address.of(arrayValue[0]), 
+							IPv4Address.ofCidrMaskLength( Integer.valueOf(arrayValue[1]) ));
+				} else {
+					builder.setExact(MatchField.ARP_TPA, IPv4Address.of(value));
+				}
 			}
 			else if (key.toLowerCase().equals("arp_sha")) {
 				builder.setExact(MatchField.ARP_SHA, MacAddress.of((String) entry.get("arp_sha")));
