@@ -85,7 +85,7 @@ import etri.sdn.controller.protocol.io.IOFSwitch;
  */
 public class OFProtocol {
 	
-	private static final Logger logger = LoggerFactory.getLogger(OFProtocol.class);
+	static final Logger logger = LoggerFactory.getLogger(OFProtocol.class);
 
 	public static final String STR_IN_PORT = "in_port";
 	public static final String STR_DL_DST = "dl_dst";

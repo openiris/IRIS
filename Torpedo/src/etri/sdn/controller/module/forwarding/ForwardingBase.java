@@ -20,12 +20,12 @@ package etri.sdn.controller.module.forwarding;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -42,7 +42,6 @@ import org.projectfloodlight.openflow.protocol.OFType;
 import org.projectfloodlight.openflow.protocol.action.OFAction;
 import org.projectfloodlight.openflow.protocol.action.OFActionOutput;
 import org.projectfloodlight.openflow.protocol.instruction.OFInstruction;
-import org.projectfloodlight.openflow.protocol.instruction.OFInstructionApplyActions;
 import org.projectfloodlight.openflow.protocol.match.Match;
 import org.projectfloodlight.openflow.protocol.match.MatchField;
 import org.projectfloodlight.openflow.types.EthType;
@@ -266,8 +265,6 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 
 		fm.setIdleTimeout(FLOWMOD_DEFAULT_IDLE_TIMEOUT)
 		.setHardTimeout(FLOWMOD_DEFAULT_HARD_TIMEOUT)
-//		.setBufferId(OFBufferId.NO_BUFFER)
-		.setBufferId(pi.getBufferId())
 		.setCookie(U64.of(cookie))
 		.setMatch(match)
 		.setPriority(FLOWMOD_DEFAULT_PRIORITY)
@@ -296,8 +293,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 				return srcSwitchIncluded;
 			}
 
-			// set buffer id if it is the source switch
-			if (1 == indx) {
+			if (switchDPID == pinSwitch) {
 				// Set the flag to request flow-mod removal notifications only for the
 				// source switch. The removal message is used to maintain the flow cache.
 				// Don't set the flag for ARP messages - TODO generalize check
@@ -309,7 +305,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			OFPort outPort = switchPortList.get(indx).getPortId();
 			OFPort inPort = switchPortList.get(indx-1).getPortId();
 			
-			Match.Builder fm_match = match.createBuilder();
+			Match.Builder fm_match = fac.buildMatch();
 			
 			// copy construct the original match object.
 			for ( @SuppressWarnings("rawtypes") MatchField mf : match.getMatchFields() ) {
@@ -322,25 +318,18 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 			
 			fm_match.setExact(MatchField.IN_PORT, inPort);
 			
-			List<OFAction> actions = new ArrayList<OFAction>();
-			OFActionOutput.Builder action_output = fac.actions().buildOutput(); 
-			action_output.setMaxLen((short)0xffff).setPort(outPort);
-			actions.add(action_output.build());
+			List<OFAction> actions = Arrays.<OFAction>asList( fac.actions().output(outPort, 0) );
 			
 			try {	
 				fm.setActions( actions );
 			} catch ( UnsupportedOperationException u ) {
-				List<OFInstruction> instructions = new ArrayList<OFInstruction>();
-				OFInstructionApplyActions.Builder instruction = fac.instructions().buildApplyActions();
-				instruction.setActions(actions);
-				instructions.add(instruction.build());
-
+				List<OFInstruction> instructions = 
+						Arrays.<OFInstruction>asList( fac.instructions().applyActions( actions ) );
 				fm.setInstructions( instructions );
 			}
 			
 			fm.setMatch(fm_match.build());
-			
-			fm.setBufferId(OFBufferId.NO_BUFFER); //?
+			fm.setBufferId(OFBufferId.NO_BUFFER); 
 
 			try {
 //				counterStore.updatePktOutFMCounterStore(sw, fm);
@@ -352,7 +341,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 //				}
 				
 				// special care for the source switch.
-				if ( sw.getId() == pinSwitch ) {
+				if ( switchDPID == pinSwitch ) {
 					if ( pi.getBufferId() != OFBufferId.NO_BUFFER ) {
 						fm.setBufferId( pi.getBufferId() );
 					} else {
@@ -361,7 +350,6 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 						OFPacketOut.Builder po = fac.buildPacketOut();
 						try {
 							po
-							.setBufferId( OFBufferId.NO_BUFFER )
 							.setData( pi.getData() )
 							.setInPort( getInputPort(pi) );
 						} catch (UnsupportedOperationException e) {
@@ -369,13 +357,9 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 							// just ignore.
 						}
 						
-						List<OFAction> os = new LinkedList<>();
-						os.add( fac.actions().output(outPort, 0xffff) );
-						
-						po.setActions( os );
+						po.setActions( Arrays.<OFAction>asList( fac.actions().output(outPort, 0) ) );
 						
 						messageDamper.write(sw.getConnection(), po.build());
-						
 					}
 					
 					srcSwitchIncluded = true;
