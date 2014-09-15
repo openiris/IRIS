@@ -118,6 +118,7 @@ public class OFMessageAsyncStream implements OFMessageInStream, OFMessageOutStre
 					results.add( msg );
 				} else {
 					logger.error("malformed msg. cannot parse. v={}:t={}:l={}", demux.getVersion(), demux.getType(), demux.getLengthU());
+					throw new IOException("cannot parse malformed msg. we manually disconnect from this switch.");
 				}
 			} catch (OFParseError e) {
 				logger.error("switch is sending wrong OF messages of size={}, e={}", demux.getLengthU(), e);
