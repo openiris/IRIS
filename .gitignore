@@ -10,5 +10,7 @@
 *.pyc
 **/.gitignore
 .gitignore
+log
+bin
 **/*.log
 .log
