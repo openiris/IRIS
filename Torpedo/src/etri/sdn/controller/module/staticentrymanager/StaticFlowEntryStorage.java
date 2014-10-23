@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -146,7 +147,7 @@ public class StaticFlowEntryStorage extends OFModel{
 	public void reloadFlowModsToSwitch(String dpid) throws StaticFlowEntryException {
 		//Avoiding ConcurrentModificationException
 		Map<String, Map<String, Object>> entries = new HashMap<String, Map<String, Object>>();
-		for (String flowName : dpidToFlowModNameIndex.get(dpid)) {
+		for ( String flowName : this.dpidToFlowModNameIndex.get(dpid) ) {
 			entries.put(flowName, getFlowModMap().get(flowName));
 		}
 		
@@ -171,7 +172,9 @@ public class StaticFlowEntryStorage extends OFModel{
 	 * @throws StaticFlowEntryException
 	 */
 	public void reloadAllFlowModsToSwitch() throws StaticFlowEntryException {
-		for (String dpid : dpidToFlowModNameIndex.keySet()) {
+		//Avoiding ConcurrentModificationException
+		List<String> dpidList = new LinkedList<>( dpidToFlowModNameIndex.keySet() );
+		for (String dpid : dpidList) {
 			reloadFlowModsToSwitch(dpid);
 		}
 	}
@@ -224,18 +227,20 @@ public class StaticFlowEntryStorage extends OFModel{
 	public void deleteEntryFromIndices(String name) {
 		String dpid = getFlowModNameToDpidIndex().get(name);
 		Set<String> nameset = getDpidToFlowModNameIndex().get(dpid);
-		nameset.remove(name);
-		if ( nameset.isEmpty() ) {
-			getDpidToFlowModNameIndex().remove(dpid);
+		if ( nameset != null ) {
+			nameset.remove(name);
+			if ( nameset.isEmpty() ) {
+				getDpidToFlowModNameIndex().remove(dpid);
+			}
+			else {
+				getDpidToFlowModNameIndex().put(dpid, nameset);
+			}
+	
+			getFlowModNameToDpidIndex().remove(name);
+	
+			logger.debug("dpid to flowname: {}", getDpidToFlowModNameIndex().toString());
+			logger.debug("flowname to dpid: {}", getFlowModNameToDpidIndex().toString());
 		}
-		else {
-			getDpidToFlowModNameIndex().put(dpid, nameset);
-		}
-
-		getFlowModNameToDpidIndex().remove(name);
-
-		logger.debug("dpid to flowname: {}", getDpidToFlowModNameIndex().toString());
-		logger.debug("flowname to dpid: {}", getFlowModNameToDpidIndex().toString());
 	}
 
 
