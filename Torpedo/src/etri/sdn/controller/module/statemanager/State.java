@@ -2,31 +2,28 @@ package etri.sdn.controller.module.statemanager;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.Calendar;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.module.SimpleModule;
 import org.joda.time.Interval;
 import org.joda.time.Period;
 import org.projectfloodlight.openflow.protocol.OFAggregateStatsRequest;
 import org.projectfloodlight.openflow.protocol.OFDescStatsReply;
 import org.projectfloodlight.openflow.protocol.OFFactories;
 import org.projectfloodlight.openflow.protocol.OFFactory;
-import org.projectfloodlight.openflow.protocol.OFFeaturesReply;
 import org.projectfloodlight.openflow.protocol.OFFlowStatsEntry;
 import org.projectfloodlight.openflow.protocol.OFFlowStatsReply;
 import org.projectfloodlight.openflow.protocol.OFFlowStatsRequest;
-import org.projectfloodlight.openflow.protocol.OFPortDescStatsReply;
-import org.projectfloodlight.openflow.protocol.OFPortDescStatsRequest;
 import org.projectfloodlight.openflow.protocol.OFPortStatsEntry;
 import org.projectfloodlight.openflow.protocol.OFPortStatsReply;
 import org.projectfloodlight.openflow.protocol.OFPortStatsRequest;
 import org.projectfloodlight.openflow.protocol.OFStatsReply;
-import org.projectfloodlight.openflow.protocol.OFStatsRequestFlags;
 import org.projectfloodlight.openflow.protocol.match.Match;
 import org.projectfloodlight.openflow.types.OFGroup;
 import org.projectfloodlight.openflow.types.OFPort;
@@ -38,13 +35,13 @@ import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 
 import etri.sdn.controller.OFModel;
-import etri.sdn.controller.util.StackTrace;
 import etri.sdn.controller.protocol.OFProtocol;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.rest.serializer.ModuleListSerializerModule;
 import etri.sdn.controller.protocol.rest.serializer.OFFeaturesReplySerializerModule;
 import etri.sdn.controller.protocol.rest.serializer.OFFlowStatisticsReplySerializerModule;
 import etri.sdn.controller.protocol.rest.serializer.OFTypeSerializerModule;
+import etri.sdn.controller.util.StackTrace;
 
 /**
  * Model that represents the internal data of {@link OFMStateManager}. 
@@ -324,62 +321,10 @@ public class State extends OFModel {
 		 */
 		new RESTApi(
 			"/wm/core/switch/{switchid}/features/json",
-			new Restlet() {
-				@Override
-				public void handle(Request request, Response response) {
-					
-					String switchIdStr = (String) request.getAttributes().get("switchid");
-					Long switchId = HexString.toLong(switchIdStr);
-					IOFSwitch sw = manager.getController().getSwitch(switchId);
-					if ( sw == null ) {
-						return;		// switch is not completely set up.
-					}
-					
-					try { 
-						OFPortDescStatsRequest pdreq = OFFactories.getFactory(sw.getVersion()).portDescStatsRequest(EnumSet.noneOf(OFStatsRequestFlags.class));
-						
-						// the switch supports version 1.3
-						List<OFStatsReply> reply = protocol.getSwitchStatistics( sw, pdreq );
-						
-						if ( reply != null && ! reply.isEmpty() ) {
-							HashMap<String, OFPortDescStatsReply> result = new HashMap<String, OFPortDescStatsReply>();
-							result.put( switchIdStr, (OFPortDescStatsReply) reply.remove(0) );
-							
-							// create an object mapper.
-							ObjectMapper om = new ObjectMapper();
-							om.registerModule(features_reply_module);
-							
-							try {
-								String r = om./*writerWithDefaultPrettyPrinter().*/writeValueAsString(result);
-								response.setEntity(r, MediaType.APPLICATION_JSON);
-							} catch (Exception e) {
-								OFMStateManager.logger.error("error={}", StackTrace.of(e));
-								return;
-							}
-						}
-						
-					} catch ( UnsupportedOperationException u ) {
-						// this switch version is lower than 1.3. It does not support OFStatisticsPortDescRequest
-						OFFeaturesReply reply = protocol.getFeaturesReply(sw);
-						
-						HashMap<String, OFFeaturesReply> result = new HashMap<String, OFFeaturesReply>();
-						result.put( switchIdStr, reply );
-						
-						// create an object mapper.
-						ObjectMapper om = new ObjectMapper();
-						om.registerModule(features_reply_module);
-						
-						try {
-							String r = om./*writerWithDefaultPrettyPrinter().*/writeValueAsString(result);
-							response.setEntity(r, MediaType.APPLICATION_JSON);
-						} catch (Exception e) {
-							OFMStateManager.logger.error("error={}", StackTrace.of(e));
-							return;
-						}
-					}
-				}
-			}
+			// this API implementation is refactored into a separate class.
+			new RESTFeaturesApi( protocol, manager, Arrays.<SimpleModule>asList(features_reply_module) )
 		),
+
 		
 		/**
 		 * This object is to implement a REST handler 

@@ -168,6 +168,9 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		newInstanceFlag = createNewInstance();
 		lastUpdateTime = new Date();
 		informListeners();
+		
+		topologyModel.topologyUpdated();
+		
 		return newInstanceFlag;
 	}
 
