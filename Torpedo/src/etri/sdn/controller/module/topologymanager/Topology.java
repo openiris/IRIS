@@ -4,16 +4,23 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonProcessingException;
+import org.codehaus.jackson.map.MappingJsonFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.projectfloodlight.openflow.util.HexString;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.MediaType;
+import org.restlet.data.Method;
+import org.restlet.data.Form;
+import org.restlet.data.Parameter;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
@@ -37,13 +44,12 @@ public class Topology extends OFModel {
 			
 		new RESTApi(
 			/*
-			 * op = add | del
-			 * url = <String that starts with http:
+			 * op = add | del | list
 			 */
-			"/wm/topology/callback/{op}/{url}",
+			"/wm/topology/callback/{op}/json",
 			new Restlet() {
 				
-				private void reply(String code, Response response) {
+				private void reply(Object code, Response response) {
 					// create an object mapper.
 					ObjectMapper om = new ObjectMapper();
 					
@@ -56,40 +62,84 @@ public class Topology extends OFModel {
 					}
 				}
 				
+				private String parseJsonAndGet(String name, String text) {
+					MappingJsonFactory f = new MappingJsonFactory();		
+					ObjectMapper mapper = new ObjectMapper(f);
+					try {
+						JsonNode rootNode = mapper.readTree(text);
+						Iterator<Map.Entry<String, JsonNode>> fields = rootNode.getFields();
+
+						while (fields.hasNext()) {
+							Map.Entry<String, JsonNode> field = fields.next();
+
+							if ( field.getKey().equals(name) ) {
+								return field.getValue().toString().replaceAll("^\"|\"$", "");
+							}
+						}
+					} catch (JsonProcessingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					return null;
+				}
+				
 				@Override
 				public void handle(Request request, Response response) {
 					String op = (String) request.getAttributes().get("op");
-					String url = (String) request.getAttributes().get("url");
-					if ( op == null || url == null ) {
+					if ( op == null ) {
 						reply("failed", response);
 						return;
 					}
 					op = op.trim();
-					url = url.trim();
 					
 					if ( op.equals("add") ) {
+						
+						if ( request.getMethod() != Method.POST ) {
+							return;
+						}
+						
+						String url = parseJsonAndGet("url", request.getEntityAsText());
+						
+						if ( url == null ) {
+							return;
+						}
+						
+						System.out.println(url);
+						
 						/*
 						 * Add operation
 						 */
-					
-						// url should start by http:
-						int httpIdx = url.indexOf("http:");
-						if ( httpIdx < 0 || httpIdx > 0 ) {
-							reply("url format is not right. should start with http:", response);
-							return;
-						}
 						
 						topologyUpdateCallbacks.add( url );
 						
 						reply("ok", response);
 					
 					} else if ( op.equals("del") ) {
+						
+						if ( request.getMethod() != Method.POST ) {
+							return;
+						}
+						
+						String url = parseJsonAndGet("url", request.getEntityAsText());
+						
+						if ( url == null ) {
+							return;
+						}
+						
 						/*
 						 * Del operation
 						 */
 						
 						topologyUpdateCallbacks.remove( url );
+						
 						reply("ok", response);
+						
+					} else if ( op.equals("list") ) {
+						
+						reply(topologyUpdateCallbacks, response);
 						
 					} else {
 						/*
