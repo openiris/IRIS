@@ -1,0 +1,21 @@
+	<div ng-controller="CntlVSubnetDetail">
+		<table class="vertical_table box center mark_2th_row">
+			<caption><span>vSubnet Detail Info:</span></caption>
+			<tbody template="vSubnet_desc">
+				<tr><td>name : </td><td><pre>{{vSubnetDetail['name'] | json}}</pre></td></tr>
+				<tr><td>enable_dhcp : </td><td><pre>{{vSubnetDetail['enable_dhcp'] | json}}</pre></td></tr>
+				<tr><td>network_id : </td><td><pre>{{vSubnetDetail['network_id'] | json}}</pre></td></tr>
+				<tr><td>tenant_id : </td><td><pre>{{vSubnetDetail['tenant_id'] | json}}</pre></td></tr>
+				<tr><td>dns_nameservers : </td><td><pre>{{vSubnetDetail['dns_nameservers'] | json}}</pre></td></tr>
+				<tr><td>allocation_pools : </td><td><pre>{{vSubnetDetail['allocation_pools'] | json}}</pre></td></tr>
+				<tr><td>host_routes : </td><td><pre>{{vSubnetDetail['host_routes'] | json}}</pre></td></tr>
+				<tr><td>ip_version : </td><td><pre>{{vSubnetDetail['ip_version'] | json}}</pre></td></tr>
+				<tr><td>gateway_ip : </td><td><pre>{{vSubnetDetail['gateway_ip'] | json}}</pre></td></tr>
+				<tr><td>cidr : </td><td><pre>{{vSubnetDetail['cidr'] | json}}</pre></td></tr>
+				<tr><td>id : </td><td><pre>{{vSubnetDetail['id'] | json}}</pre></td></tr>
+				<tr><td>ipv6_ra_mode : </td><td><pre>{{vSubnetDetail['ipv6_ra_mode'] | json}}</pre></td></tr>
+				<tr><td>ipv6_address_mode : </td><td><pre>{{vSubnetDetail['ipv6_address_mode'] | json}}</pre></td></tr>
+				<tr><td>shared : </td><td><pre>{{vSubnetDetail['shared'] | json}}</pre></td></tr>
+			</tbody>
+		</table>
+	</div>

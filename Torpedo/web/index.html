@@ -36,6 +36,12 @@
 	<script src="js/controllers/switches.js"></script>
 	<script src="js/controllers/devices.js"></script>
 	<script src="js/controllers/topology.js"></script>
+	<script src="js/controllers/vnetworks.js"></script>
+	<script src="js/controllers/vnetwork_detail.js"></script>
+	<script src="js/controllers/vsubnets.js"></script>
+	<script src="js/controllers/vsubnet_detail.js"></script>
+	<script src="js/controllers/vports.js"></script>
+	<script src="js/controllers/vport_detail.js"></script>
 
   	
     <!-- Le fav and touch icons -->
@@ -59,6 +65,7 @@
 		<li><a class="switches">Switches</a></li>
 		<li><a class="devices">Devices</a></li>
 		<li><a class="topology">Topology</a></li>
+		<li><a class="vNetworks">vNetworks</a></li>
 		</ul>
 	</div> <!-- /nav -->
 </div>
@@ -102,7 +109,7 @@
 				<td><a ng-click="showSwitchDescPopup(switch.id)">{{switch.vendor}}</a></td>
 				<td>{{switch.packets}}</td>
 				<td>{{switch.bytes}}</td>
-				<td <a ng-click="showFlowsPopup(switch.id)">{{switch.flows}}</td>
+				<td> <a ng-click="showFlowsPopup(switch.id)">{{switch.flows}}</td>
 				<td>{{switch.connectedSince}}</td>
 			</tr>
 		</tbody>
@@ -137,6 +144,88 @@
 		</div>
 	</div>
 	
+	<!-- vNetworks Strart -->
+	<div class="home vNetworks vNetworks" ng-controller="CntlVNetworks">
+		<h1>vNetworks(<span>{{vNetworks.length}}</span>)</h1><a ng-click="getData()"></a>
+		<div>
+			<table class="horizontal_table mark_2th_row">
+				<thead>
+				<tr>
+					<th>Network ID</th><th>Network Name</th><th>Tenant ID</th><th>Network Type</th><th>Segmentation ID</th>
+				</tr>
+				</thead>
+				<tbody template="vNetworks">
+				<tr ng-if="vNetworks.length==0">
+						<td colspan="5">No vNetworks</td>
+					</tr>
+					<tr ng-if="vNetworks.length>0" ng-repeat="vNetwork in vNetworks">
+						<td><a ng-click="showVNetworkDetailPopup(vNetwork.id)">{{vNetwork.id}}</a></td>
+						<td>{{vNetwork.name}}</td>
+						<td>{{vNetwork.tenant_id}}</td>
+						<td>{{vNetwork.network_type}}</td>
+						<td>{{vNetwork.segmentation_id}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- vNetworks End -->
+	
+	<!-- vSubnets Strart -->
+	<div class="vNetworks vNetworks" ng-controller="CntlVSubnets">
+		<h1>vSubnets(<span>{{vSubnets.length}}</span>)</h1><a ng-click="getData()"></a>
+		<div>
+			<table class="horizontal_table mark_2th_row">
+				<thead>
+				<tr>
+					<th>Subnet ID</th><th>Subnet Name</th><th>Tenant ID</th><th>Network Id</th><th>Gateway IP</th>
+				</tr>
+				</thead>
+				<tbody template="vSubnets">
+				<tr ng-if="vSubnets.length==0">
+						<td colspan="5">No vSubnets</td>
+					</tr>
+					<tr ng-if="vSubnets.length>0" ng-repeat="vSubnet in vSubnets">
+						<td><a ng-click="showVSubnetDetailPopup(vSubnet.id)">{{vSubnet.id}}</a></td>
+						<td>{{vSubnet.name}}</td>
+						<td>{{vSubnet.tenant_id}}</td>
+						<td>{{vSubnet.network_id}}</td>
+						<td>{{vSubnet.gateway_ip}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- vSubnets End -->
+	
+	<!-- vPorts Strart -->
+	<div class="vNetworks vNetworks" ng-controller="CntlVPorts">
+		<h1>vPorts(<span>{{vPorts.length}}</span>)</h1><a ng-click="getData()"></a>
+		<div>
+			<table class="horizontal_table mark_2th_row">
+				<thead>
+				<tr>
+					<th>Port ID</th><th>Port Name</th><th>Tenant ID</th><th>Network Id</th><th>Mac Address</th>
+				</tr>
+				</thead>
+				<tbody template="vPorts">
+				<tr ng-if="vPorts.length==0">
+						<td colspan="5">No vPorts</td>
+					</tr>
+					<tr ng-if="vPorts.length>0" ng-repeat="vPort in vPorts">
+						<td><a ng-click="showVPortDetailPopup(vPort.id)">{{vPort.id}}</a></td>
+						<td>{{vPort.name}}</td>
+						<td>{{vPort.tenant_id}}</td>
+						<td>{{vPort.network_id}}</td>
+						<td>{{vPort.mac_address}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- vPorts End -->
+	
+	
 </div> <!-- /content -->
 <div id="hiddens" style="display: none;">
 	<div class="home switches flows" style="display: none;">
@@ -145,6 +234,9 @@
 	</div>
 	<div class="home switches switch_desc" style="display: none;" title="Switch Description">
 	</div>
+	<div class="home vNetworks vNetwork_detail" style="display: none;" title="vNetwork Description"></div>
+	<div class="home vNetworks vSubnet_detail" style="display: none;" title="vSubnet Description"></div>
+	<div class="home vNetworks vPort_detail" style="display: none;" title="vPort Description"></div>
 </div> <!-- /hiddens -->
 <footer class="footer">
 Copyright (C) ETRI. 
