@@ -184,8 +184,9 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 			
 			for (OFMessage m : msgs) {
 				context.getStorage().clear();
-
+				
 				if ( !protocol.process(conn, context, m) ) {
+					// I/O related error is detected. 
 					return false;
 				}
 

@@ -95,7 +95,7 @@ public class BasicOFController extends OFController {
 			m_link_discovery.processMessage( conn, context, m, out );
 			if ( !conn.write(out) ) {
 				// no further processing is possible.
-				return true;
+				return false;
 			}
 		}
 		else if ( t == OFType.FEATURES_REPLY ) {
