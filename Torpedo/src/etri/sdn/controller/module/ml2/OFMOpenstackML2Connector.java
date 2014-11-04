@@ -10,12 +10,18 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
+import org.projectfloodlight.openflow.protocol.OFActionType;
 import org.projectfloodlight.openflow.protocol.OFMessage;
 import org.projectfloodlight.openflow.protocol.OFPacketIn;
 import org.projectfloodlight.openflow.protocol.OFType;
+import org.projectfloodlight.openflow.protocol.OFVersion;
 import org.projectfloodlight.openflow.protocol.match.MatchField;
 import org.projectfloodlight.openflow.types.OFPort;
 import org.projectfloodlight.openflow.util.HexString;
+
+import com.google.common.hash.PrimitiveSink;
 
 import etri.sdn.controller.IService;
 import etri.sdn.controller.Main;
@@ -23,12 +29,10 @@ import etri.sdn.controller.MessageContext;
 import etri.sdn.controller.OFMFilter;
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.OFModule;
-import etri.sdn.controller.module.devicemanager.IDevice;
 import etri.sdn.controller.module.ml2.RestNetwork.NetworkDefinition;
 import etri.sdn.controller.module.ml2.RestPort.PortDefinition;
 import etri.sdn.controller.module.ml2.RestSubnet.SubnetDefinition;
 import etri.sdn.controller.module.routing.IRoutingDecision;
-import etri.sdn.controller.module.routing.RoutingDecision;
 import etri.sdn.controller.protocol.OFProtocol;
 import etri.sdn.controller.protocol.io.Connection;
 import etri.sdn.controller.protocol.io.IOFSwitch;
@@ -38,8 +42,11 @@ import etri.sdn.controller.protocol.packet.IPacket;
 import etri.sdn.controller.util.Logger;
 import etri.sdn.controller.util.MACAddress;
 
-public class OFMOpenstackML2Connector extends OFModule implements IOpenstackML2ConnectorService {
+// TEST
+import org.projectfloodlight.openflow.protocol.action.OFActionNiciraResubmit;
 
+public class OFMOpenstackML2Connector extends OFModule implements IOpenstackML2ConnectorService {
+	
 	private NetworkConfiguration netConf = null;
 	@SuppressWarnings("unused")
 	private OFProtocol protocol;
@@ -204,12 +211,95 @@ public class OFMOpenstackML2Connector extends OFModule implements IOpenstackML2C
 		return false;
 	}
 	
+	/*
+	 * OpenIRIS Nicira Action TEST - resubmit
+	 */
+	public void niciraAction() {
+		
+		ChannelBuffer buffer = ChannelBuffers.buffer(32);
+		
+		
+		OFActionNiciraResubmit act = new OFActionNiciraResubmit() {
+			
+			@Override
+			public void putTo(PrimitiveSink arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void writeTo(ChannelBuffer arg0) {
+				// TODO Auto-generated method stub
+			}
+			
+			@Override
+			public OFVersion getVersion() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public OFActionType getType() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public short getTable() {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+			
+			@Override
+			public int getSubtype() {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+			
+			@Override
+			public int getInPort() {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+			
+			@Override
+			public long getExperimenter() {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+			
+			@Override
+			public Builder createBuilder() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		};
+
+		System.out.println("################ Nicra Extension => Resubmit START");
+		
+		act.writeTo(buffer);
+		
+		System.out.println("Nicra getVersion = "+act.getVersion());
+		System.out.println("Nicra getExperimenter = "+act.getExperimenter());
+		System.out.println("Nicra getInPort = "+act.getInPort());
+		System.out.println("Nicra getSubtype = "+act.getSubtype());
+		System.out.println("Nicra getTable = "+act.getTable());
+		System.out.println("Nicra getType = "+act.getType());
+		System.out.println("################ Nicra Extension => Resubmit END");
+	}
+	
+	
 	private boolean processPacketIn(IOFSwitch sw, OFPacketIn pi, IRoutingDecision decision, MessageContext cntx) {
 		
 		Ethernet eth = (Ethernet) cntx.get(MessageContext.ETHER_PAYLOAD);
 
 		String srcNetwork = eth.getSourceMAC().toString();
 
+		// Nicira Extention TEST START
+		niciraAction();
+		// Nicira Extention TEST END
+		
+		
 		// If the host is on an unknown network we deny it.
 		// We make exceptions for ARP and DHCP.
 		if (eth.isBroadcast() || eth.isMulticast() || isDefaultGateway(eth) || isDhcpPacket(eth)) {
