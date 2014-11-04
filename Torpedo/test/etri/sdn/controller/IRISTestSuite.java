@@ -21,7 +21,9 @@ import org.junit.runners.Suite.SuiteClasses;
 	 * http://johanneslink.net/projects/cpsuite.jsp
 	 */
 	etri.sdn.controller.util.BasenameTest.class,
-	etri.sdn.controller.util.StackTraceTest.class
+	etri.sdn.controller.util.StackTraceTest.class,
+	etri.sdn.controller.util.TimedCacheTest.class,
+	etri.sdn.controller.util.MACAddressTest.class
 })
 public final class IRISTestSuite {
 	
