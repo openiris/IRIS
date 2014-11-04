@@ -20,7 +20,7 @@ public class Logger {
 	}
 
 	public static void stdout(String string) {
-		System.out.println("[Torpedo] (" + getTime().toString()+ ") " + string);
+//		System.out.println("[Torpedo] (" + getTime().toString()+ ") " + string);
 	}
 	
 	public static void debug(String string) {

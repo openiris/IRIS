@@ -42,8 +42,6 @@ import etri.sdn.controller.protocol.packet.IPacket;
 import etri.sdn.controller.util.Logger;
 import etri.sdn.controller.util.MACAddress;
 
-// TEST
-import org.projectfloodlight.openflow.protocol.action.OFActionNiciraResubmit;
 
 public class OFMOpenstackML2Connector extends OFModule implements IOpenstackML2ConnectorService {
 	
@@ -210,100 +208,17 @@ public class OFMOpenstackML2Connector extends OFModule implements IOpenstackML2C
 		
 		return false;
 	}
-	
-	/*
-	 * OpenIRIS Nicira Action TEST - resubmit
-	 */
-	public void niciraAction() {
-		
-		ChannelBuffer buffer = ChannelBuffers.buffer(32);
-		
-		
-		OFActionNiciraResubmit act = new OFActionNiciraResubmit() {
-			
-			@Override
-			public void putTo(PrimitiveSink arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void writeTo(ChannelBuffer arg0) {
-				// TODO Auto-generated method stub
-			}
-			
-			@Override
-			public OFVersion getVersion() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public OFActionType getType() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public short getTable() {
-				// TODO Auto-generated method stub
-				return 0;
-			}
-			
-			@Override
-			public int getSubtype() {
-				// TODO Auto-generated method stub
-				return 0;
-			}
-			
-			@Override
-			public int getInPort() {
-				// TODO Auto-generated method stub
-				return 0;
-			}
-			
-			@Override
-			public long getExperimenter() {
-				// TODO Auto-generated method stub
-				return 0;
-			}
-			
-			@Override
-			public Builder createBuilder() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-		};
 
-		System.out.println("################ Nicra Extension => Resubmit START");
-		
-		act.writeTo(buffer);
-		
-		System.out.println("Nicra getVersion = "+act.getVersion());
-		System.out.println("Nicra getExperimenter = "+act.getExperimenter());
-		System.out.println("Nicra getInPort = "+act.getInPort());
-		System.out.println("Nicra getSubtype = "+act.getSubtype());
-		System.out.println("Nicra getTable = "+act.getTable());
-		System.out.println("Nicra getType = "+act.getType());
-		System.out.println("################ Nicra Extension => Resubmit END");
-	}
-	
 	
 	private boolean processPacketIn(IOFSwitch sw, OFPacketIn pi, IRoutingDecision decision, MessageContext cntx) {
 		
 		Ethernet eth = (Ethernet) cntx.get(MessageContext.ETHER_PAYLOAD);
 
-		String srcNetwork = eth.getSourceMAC().toString();
-
-		// Nicira Extention TEST START
-		niciraAction();
-		// Nicira Extention TEST END
-		
+		String srcNetwork = eth.getSourceMAC().toString();		
 		
 		// If the host is on an unknown network we deny it.
 		// We make exceptions for ARP and DHCP.
 		if (eth.isBroadcast() || eth.isMulticast() || isDefaultGateway(eth) || isDhcpPacket(eth)) {
-//		if (eth.isBroadcast() || eth.isMulticast() || isDhcpPacket(eth)) {
 			return true;
 		} else if (srcNetwork == null) {
 			Logger.error("Blocking traffic from host {} because it is not attached to any network.", HexString.toHexString(eth.getSourceMACAddress()));
