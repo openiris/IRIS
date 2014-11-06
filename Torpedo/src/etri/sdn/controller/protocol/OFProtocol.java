@@ -329,10 +329,14 @@ public class OFProtocol {
 
 	/**
 	 * Callback called by underlying platform when a new OFMessage is received for a connection
+	 * 
 	 * @param conn		Connection object
 	 * @param context	MessageContext object created for the message
 	 * @param m			OFMessage object to handle
-	 * @return			true of correctly handled, false otherwise
+	 * @return			true of correctly handled, false otherwise. This is an indication
+	 * 					that I/O error occurred from underlying socket layer,
+	 * 					or there is an unrecoverable error. 
+	 * 					(for example, ERROR is received.) 
 	 */
 	public boolean process(Connection conn, MessageContext context, OFMessage m) {
 		if ( !conn.isConnected() ) {

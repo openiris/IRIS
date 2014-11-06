@@ -21,5 +21,7 @@
 	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.7.7.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="conf"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -127,7 +127,7 @@ public class SimpleOFController extends OFController {
 			m_link_discovery.processMessage( conn, context, m, out );
 			if ( !conn.write(out) ) {
 				// no further processing is possible.
-				return true;
+				return false;
 			}
 		}
 		else if ( msgType == OFType.FEATURES_REPLY ) {
