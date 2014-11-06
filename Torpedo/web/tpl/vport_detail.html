@@ -1,0 +1,24 @@
+	<div ng-controller="CntlVPortDetail">
+		<table class="vertical_table box center mark_2th_row">
+			<caption><span>vPort Detail Info:</span></caption>
+			<tbody template="vPort_desc">
+				<tr><td>binding:host_id : </td><td><pre>{{vPortDetail['binding:host_id'] | json}}</pre></td></tr>
+				<tr><td>allowed_address_pairs : </td><td><pre>{{vPortDetail['allowed_address_pairs'] | json}}</pre></td></tr>
+				<tr><td>extra_dhcp_opts : </td><td><pre>{{vPortDetail['extra_dhcp_opts'] | json}}</pre></td></tr>
+				<tr><td>device_owner : </td><td><pre>{{vPortDetail['device_owner'] | json}}</pre></td></tr>
+				<tr><td>binding_profile : </td><td><pre>{{vPortDetail['binding_profile'] | json}}</pre></td></tr>
+				<tr><td>fixed_ips : </td><td><pre>{{vPortDetail['fixed_ips'] | json}}</pre></td></tr>
+				<tr><td>id : </td><td><pre>{{vPortDetail['id'] | json}}</pre></td></tr>
+				<tr><td>security_groups : </td><td><pre>{{vPortDetail['security_groups'] | json}}</pre></td></tr>
+				<tr><td>device_id : </td><td><pre>{{vPortDetail['device_id'] | json}}</pre></td></tr>
+				<tr><td>name : </td><td><pre>{{vPortDetail['name'] | json}}</pre></td></tr>
+				<tr><td>admin_state_up : </td><td><pre>{{vPortDetail['admin_state_up'] | json}}</pre></td></tr>
+				<tr><td>network_id : </td><td><pre>{{vPortDetail['network_id'] | json}}</pre></td></tr>
+				<tr><td>tenant_id : </td><td><pre>{{vPortDetail['tenant_id'] | json}}</pre></td></tr>
+				<tr><td>binding_vif_details : </td><td><pre>{{vPortDetail['binding_vif_details'] | json}}</pre></td></tr>
+				<tr><td>binding_vnic_type : </td><td><pre>{{vPortDetail['binding_vnic_type'] | json}}</pre></td></tr>
+				<tr><td>binding_vif_type : </td><td><pre>{{vPortDetail['binding_vif_type'] | json}}</pre></td></tr>
+				<tr><td>mac_address : </td><td><pre>{{vPortDetail['mac_address'] | json}}</pre></td></tr>
+			</tbody>
+		</table>
+	</div>

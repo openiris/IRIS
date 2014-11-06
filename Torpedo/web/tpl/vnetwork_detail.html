@@ -1,0 +1,18 @@
+	<div ng-controller="CntlVNetworkDetail">
+		<table class="vertical_table box center mark_2th_row">
+			<caption><span>vNetwork Detail Info:</span></caption>
+			<tbody template="vNetwork_desc">
+				<tr><td style="width:250px;">status : </td><td><pre>{{vNetworkDetail['status'] | json}}</pre></td></tr>
+				<tr><td>subnets : </td><td><pre>{{vNetworkDetail['subnets'] | json}}</pre></td></tr>
+				<tr><td>name : </td><td><pre>{{vNetworkDetail['name'] | json}}</pre></td></tr>
+				<tr><td>provider:physical_network : </td><td><pre>{{vNetworkDetail['provider:physical_network'] | json}}</pre></td></tr>
+				<tr><td>admin_state_up : </td><td><pre>{{vNetworkDetail['admin_state_up'] | json}}</pre></td></tr>
+				<tr><td>tenant_id : </td><td><pre>{{vNetworkDetail['tenant_id'] | json}}</pre></td></tr>
+				<tr><td>provider:network_type : </td><td><pre>{{vNetworkDetail['provider:network_type'] | json}}</pre></td></tr>
+				<tr><td>router:external : </td><td><pre>{{vNetworkDetail['router:external'] | json}}</pre></td></tr>
+				<tr><td>shared : </td><td><pre>{{vNetworkDetail['shared'] | json}}</pre></td></tr>
+				<tr><td>id : </td><td><pre>{{vNetworkDetail['id'] | json}}</pre></td></tr>
+				<tr><td>segmentation_id : </td><td><pre>{{vNetworkDetail['provider:segmentation_id'] | json}}</pre></td></tr>
+			</tbody>
+		</table>
+	</div>

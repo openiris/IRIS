@@ -55,7 +55,19 @@ irisApp.factory('$iris', function() {
 		//
 		devices: [],
 		getDevices: function() { return self.devices; },
-		setDevices: function(arr) { self.devices = arr; }
+		setDevices: function(arr) { self.devices = arr; },
+		//
+		// vNetwork-related service
+		//
+		vNetworks: [],
+		getVNetworks: function() { return self.vNetworks; },
+		setVNetworks: function(arr) { self.vNetworks = arr; },
+		//
+		// vSubnet-related service
+		//
+		vSubnets: [],
+		getVSubnets: function() { return self.vSubnets; },
+		setVSubnets: function(arr) { self.vSubnets = arr; }
 	};
 	return irisServiceInstance;
 });

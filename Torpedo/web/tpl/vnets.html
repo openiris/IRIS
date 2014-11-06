@@ -1,0 +1,22 @@
+	<div ng-controller="CntlVnet">
+		<table class="horizontal_table center mark_2th_row" width="100%">
+			<caption><span>Flow Records:</span><span type="links"></span></caption>
+			<thead>
+			<tr>
+				<th>Cookie</th><th>Status</th><th>Subnets</th><th>Name</th><th>Tenant</th><th>Id</th>
+			</tr>
+			</thead>
+		    <tbody template="vnets_net">
+		    	<tr ng-if="vnets.length==0"><td colspan="8">No virtualnetworks</td></tr>
+		    	<tr ng-if="vnets.length>0" ng-repeat="flow in flows">
+					<td width="10%">{{vnet.cookie}}</td>
+					<td width="5%">{{vnet.status}}</td>
+					<td width="55%">{{vnet.subents}}</td>
+					<td width="10%">{{vnet.name}}</td>
+					<td width="5%">{{vnet.tenant_id}}</td>
+					<td width="5%">{{vnet.id}}</td>
+				</tr>
+		    </tbody>
+	    </table>
+	</div>
+

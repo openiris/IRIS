@@ -81,7 +81,10 @@ a:hover {
 .home .nav ul li a.home,
 .switches .nav ul li a.switches,
 .devices .nav ul li a.devices,
-.topology .nav ul li a.topology
+.topology .nav ul li a.topology,
+.vNetworks .nav ul li a.vNetworks,
+.vSubnets .nav ul li a.vSubnets,
+.vPorts .nav ul li a.vPorts
 {
 	margin-top: 0;
 	background-color: white;
