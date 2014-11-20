@@ -771,7 +771,7 @@ public class OFProtocol {
 
 			// nw protocol
 			packetDataBB.position(packetDataBB.position() + 7);
-			ret.setExact(MatchField.IP_PROTO, IpProtocol.of(packetDataBB.get()));
+			ret.setExact(MatchField.IP_PROTO, IpProtocol.of(network_protocol = packetDataBB.get()));
 
 			// nw src & dst
 			packetDataBB.position(packetDataBB.position() + 2);
