@@ -2,15 +2,19 @@ package etri.sdn.controller.module.statemanager;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.map.MappingJsonFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.module.SimpleModule;
+import org.codehaus.jackson.type.TypeReference;
 import org.joda.time.Interval;
 import org.joda.time.Period;
 import org.projectfloodlight.openflow.protocol.OFAggregateStatsRequest;
@@ -35,6 +39,8 @@ import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 
 import etri.sdn.controller.OFModel;
+import etri.sdn.controller.module.staticentrymanager.StaticFlowEntry;
+import etri.sdn.controller.module.staticentrymanager.StaticFlowEntryException;
 import etri.sdn.controller.protocol.OFProtocol;
 import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.rest.serializer.ModuleListSerializerModule;
@@ -352,9 +358,45 @@ public class State extends OFModel {
 					result.put(switchIdStr, resultValues);
 										
 					OFFlowStatsRequest.Builder req = fac.buildFlowStatsRequest();
-					req
-					.setMatch( fac.matchWildcardAll() )
-					.setOutPort( OFPort.ANY /* NONE for 1.0*/ );
+					
+					String matchListStr = request.getEntityAsText();
+					Match match = null;
+					if (matchListStr != null) {		// if the request has match fields
+						matchListStr = matchListStr.replaceAll("[\']", "");
+						Map<String, Object> matchListMap;
+						try {
+							MappingJsonFactory f = new MappingJsonFactory();		
+							ObjectMapper m = new ObjectMapper(f);
+
+							TypeReference<Map<String,Object>> typeref = new TypeReference<Map<String,Object>>() {};
+							matchListMap = m.readValue(matchListStr, typeref);
+						} catch ( IOException e ) {
+							OFMStateManager.logger.error("error={}", StackTrace.of(e));
+							return;
+						}
+
+						List<String> matchList = new ArrayList<String>();
+						matchList.addAll(matchListMap.keySet());
+						
+						try {
+							//TODO: If method calls of utility level (like makeMatch) frequently occur,
+							//      it is better to consider to create an interface.
+							match = StaticFlowEntry.makeMatch(sw, matchList, matchListMap);
+						} catch (StaticFlowEntryException e) {
+							OFMStateManager.logger.error("error={}", StackTrace.of(e));
+						}
+					}
+					
+					if (match != null) {
+						req
+						.setMatch( match )
+						.setOutPort( OFPort.ANY /* NONE for 1.0*/ );
+					} else {
+						req
+						.setMatch( fac.matchWildcardAll() )
+						.setOutPort( OFPort.ANY /* NONE for 1.0*/ );
+					}
+
 					try {
 						req
 						.setOutGroup(OFGroup.ANY)

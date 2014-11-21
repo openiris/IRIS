@@ -324,7 +324,7 @@ public class StaticFlowEntry {
 	 * 
 	 * @throws StaticFlowEntryException
 	 */
-	private static Match makeMatch(IOFSwitch sw, List<String> keys, Map<String, Object> entry) throws StaticFlowEntryException {
+	public static Match makeMatch(IOFSwitch sw, List<String> keys, Map<String, Object> entry) throws StaticFlowEntryException {
 		OFFactory fac = OFFactories.getFactory(sw.getVersion());
 		Match.Builder builder = fac.buildMatch();
 
