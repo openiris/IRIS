@@ -35,6 +35,8 @@ public class RESTFeaturesApi extends Restlet {
 		this.protocol = protocol;
 		this.manager = manager;
 		this.modules = modules;
+		
+		System.out.println(protocol + " " + manager + " " + modules);
 	}
 	
 	private HashMap<String, OFPortDescStatsReply> get13features(IOFSwitch sw) {
