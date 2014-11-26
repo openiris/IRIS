@@ -61,7 +61,6 @@ public class State extends OFModel {
 	private long timeInitiated;
 	private long totalMemory;
 	private OFProtocol protocol;
-	private RESTApi[] apis = null;
 	/**
 	 * Custom Serializer for FEATURES_REPLY message. 
 	 * This is used to handle the REST URI /wm/core/switch/{switchid}/features/json.
@@ -69,18 +68,37 @@ public class State extends OFModel {
 	private OFFeaturesReplySerializerModule features_reply_module;
 	
 	/**
+	 * list of REST APIs
+	 */
+	private RESTApi[] apis;
+	
+	/**
 	 * Create the State instance.
 	 * 
 	 * @param manager	reference to the OFMStateManager module.
 	 */
-	public State(final OFMStateManager manager) {
+	public State(OFMStateManager manager) {
 		this.manager = manager;
 		this.timeInitiated = Calendar.getInstance().getTimeInMillis();
 		this.totalMemory = Runtime.getRuntime().totalMemory();
 		
 		this.protocol = (OFProtocol) manager.getController().getProtocol();
 		this.features_reply_module = new OFFeaturesReplySerializerModule(this.protocol);
-		this.apis = new RESTApi []{
+		
+		initRestApis();
+	}
+	
+	/**
+	 * Initialize REST API list.
+	 */
+	private void initRestApis() {
+		
+		/**  
+		 * Array of RESTApi objects. 
+		 * Each objects represent a REST call handler routine bound to a specific URI.
+		 */
+		RESTApi[] tmp = {
+				
 				/**
 				 * This object is to implement a REST handler routine for retrieving 
 				 * all switch information
@@ -536,6 +554,7 @@ public class State extends OFModel {
 				)
 			};
 		
+		this.apis = tmp;
 	}
 	
 	/**
@@ -549,11 +568,6 @@ public class State extends OFModel {
 	 */
 	private OFFlowStatisticsReplySerializerModule flow_statistics_reply_module 
 		= new OFFlowStatisticsReplySerializerModule();
-	
-	/**  
-	 * Array of RESTApi objects. 
-	 * Each objects represent a REST call handler routine bound to a specific URI.
-	 */
 	
 	/**
 	 * Returns the list of all RESTApi objects
