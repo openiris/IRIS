@@ -46,6 +46,10 @@ public class OFMStaticFlowEntryManager extends OFModule implements IStaticFlowEn
 		return protocol;
 	}
 
+	protected StaticFlowEntryStorage getStaticFlowEntryStorage() {
+		return flowEntryStorage;
+	}
+	
 	protected OFMStorageManager getDB(){
 		return flowEntryDB;
 	}

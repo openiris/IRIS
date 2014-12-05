@@ -1,7 +1,5 @@
 package etri.sdn.controller.module.staticentrymanager;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,14 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.restlet.Request;
-import org.restlet.Response;
-import org.restlet.Restlet;
-import org.restlet.data.MediaType;
-import org.restlet.data.Method;
 import org.slf4j.Logger;
 
 import etri.sdn.controller.OFModel;
@@ -42,7 +32,7 @@ import etri.sdn.controller.module.storagemanager.StorageException;
  *
  */
 public class StaticFlowEntryStorage extends OFModel{
-	
+
 	private final static Logger logger = OFMStaticFlowEntryManager.logger;
 
 	public OFMStaticFlowEntryManager manager;
@@ -64,7 +54,7 @@ public class StaticFlowEntryStorage extends OFModel{
 	 */
 	private Map<String, String> flowModNameToDpidIndex;
 
-
+	private RESTApi[] apis;
 
 	StaticFlowEntryStorage(OFMStaticFlowEntryManager manager, String name) {
 		this.manager = manager;
@@ -72,6 +62,79 @@ public class StaticFlowEntryStorage extends OFModel{
 		flowModMap = new HashMap<String, Map<String, Object>>();
 		dpidToFlowModNameIndex = new HashMap<String, Set<String>>();
 		flowModNameToDpidIndex = new HashMap<String, String>();
+
+		initRestApis();
+	}
+
+	/**
+	 * Initialize REST API list.
+	 */
+	private void initRestApis() {
+
+		/**  
+		 * Array of RESTApi objects. 
+		 * Each objects represent a REST call handler routine bound to a specific URI.
+		 */
+		RESTApi[] tmp = {
+			/*
+			 * LIST example
+			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/list/all/json
+			 * 				curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/list/00:00:00:00:00:00:00:01/json
+			 */
+			new RESTApi(
+				"/wm/staticflowentry/list/{switch}/json",
+				new RESTListApi(manager)
+			),
+
+			/*
+			 * CLEAR example
+			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/clear/all/json
+			 * 				curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/clear/00:00:00:00:00:00:00:01/json
+			 */
+			new RESTApi(
+				"/wm/staticflowentry/clear/{switch}/json",
+				new RESTClearApi(manager) 
+			),
+
+			/*
+			 * RELOAD example
+			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/reload/all/json
+			 * 				curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/reload/00:00:00:00:00:00:00:01/json
+			 */
+			new RESTApi(
+				"/wm/staticflowentry/reload/{switch}/json",
+				new RESTReloadApi(manager)
+			),
+
+			/*
+			 * ADD example
+			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/list/all/json
+			 * 				curl -d '{"switch":"00:00:00:00:00:00:00:01","name":"s1","priority":"101","eth_type":"0x0800","ipv4_src":"10.0.0.1","ipv4_dst":"10.0.0.2","active":"true","instructions":[{"apply_actions":[{"output":"2"}]}]}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/json
+			 * 				curl -d '{"switch":"00:00:00:00:00:00:00:02","name":"s20","priority":"1001","eth_type":"0x0806","ipv4_dst":"10.0.0.4","active":"true","instructions":[{"apply_actions":[{"output":"3"}]}]}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/json
+			 * 				curl -d '{"switch":"00:00:00:00:00:00:00:01","name":"s1","priority":"1001","eth_type":"0x0800","ipv4_dst":"10.0.0.3","active":"true","instructions":[{"apply_actions":[{"set_field":{"ipv4_dst":"10.0.0.2"}},{"output":"2"}]}]}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/json
+			 * 
+			 * DELETE example
+			 * OF1.0,1.3:	curl -X DELETE -d '{"name":"s1"}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/json
+			 */
+			new RESTApi(
+				"/wm/staticflowentry/json",
+				new RESTPostDeleteApi(manager)
+			),
+			
+			/*
+			 * DELETE by name example
+			 * OF1.0,1.3:	curl -X DELETE -d '{"name":"s1"}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/json
+			 * 
+			 * This object is an additional implements REST handler routines (i.e. RFC2616).
+			 * According to RFC2616, DELETE method cannot have data fields.
+			 */
+			new RESTApi(
+				"/wm/staticflowentry/delete/{name}/json",
+				new RESTDeleteByNameApi(manager)
+			)
+		};
+
+		this.apis = tmp;
 	}
 
 	public OFMStaticFlowEntryManager getManager() {
@@ -89,7 +152,7 @@ public class StaticFlowEntryStorage extends OFModel{
 	public Map<String, Map<String, Object>> getFlowModMap() {
 		return flowModMap;
 	}
-	
+
 	public Map<String, Map<String, Object>> getFlowModMap(String dpid) {
 		Set<String> names = null;
 		if ( !dpid.equals("all") ) {
@@ -97,14 +160,14 @@ public class StaticFlowEntryStorage extends OFModel{
 		} else {
 			names = this.getFlowModMap().keySet();
 		}
-		
+
 		Map<String, Map<String, Object>> flowmods = new HashMap<String, Map<String, Object>>();
 		if ( names != null ) { 
 			for ( String name : names ) {
 				flowmods.put(name, this.getFlowModMap().get(name));
 			}
 		}
-	
+
 		return flowmods;
 	}
 
@@ -150,7 +213,7 @@ public class StaticFlowEntryStorage extends OFModel{
 		for ( String flowName : this.dpidToFlowModNameIndex.get(dpid) ) {
 			entries.put(flowName, getFlowModMap().get(flowName));
 		}
-		
+
 		for (String flowName : entries.keySet()) {
 			BigInteger bi = new BigInteger(((String) entries.get(flowName).get("switch")).replaceAll(":", ""), 16);
 			if (getManager().getController().getSwitch(bi.longValue()) != null) {
@@ -159,7 +222,7 @@ public class StaticFlowEntryStorage extends OFModel{
 						flowName, 
 						entries.get(flowName), 
 						(String) entries.get(flowName).get("switch"));
-	
+
 				logger.debug("Entry loaded to switch: {}", getFlowModMap().get(flowName));
 			}
 		}
@@ -178,7 +241,7 @@ public class StaticFlowEntryStorage extends OFModel{
 			reloadFlowModsToSwitch(dpid);
 		}
 	}
-	
+
 	/**
 	 * Builds dpidToFlowModNameIndex when the controller is rebooted.
 	 * 
@@ -235,14 +298,13 @@ public class StaticFlowEntryStorage extends OFModel{
 			else {
 				getDpidToFlowModNameIndex().put(dpid, nameset);
 			}
-	
+
 			getFlowModNameToDpidIndex().remove(name);
-	
+
 			logger.debug("dpid to flowname: {}", getDpidToFlowModNameIndex().toString());
 			logger.debug("flowname to dpid: {}", getFlowModNameToDpidIndex().toString());
 		}
 	}
-
 
 	/**
 	 * Inserts flow entry to dpidToFlowModNameIndex and flowModNameToDpidIndex.
@@ -277,7 +339,7 @@ public class StaticFlowEntryStorage extends OFModel{
 		if ( !manager.getDB().isConnected()) {
 			return;
 		}
-		
+
 		List<Map<String, Object>> entry = (List<Map<String, Object>>) getAllDBEntries
 				(manager.getDB(), manager.getDbName(), manager.getCollectionName() );
 
@@ -299,7 +361,7 @@ public class StaticFlowEntryStorage extends OFModel{
 		if ( ! db.isConnected() ) {
 			return true;
 		}
-		
+
 		try {
 			db.insert(dbName, collectionName, entry);
 		} catch (StorageException e) {
@@ -324,7 +386,7 @@ public class StaticFlowEntryStorage extends OFModel{
 		if ( !db.isConnected() ) {
 			return true;
 		}
-		
+
 		Map<String, Object> entry = getDBEntry (db, dbName, collectionName, name);
 		if (entry == null) {
 			logger.debug("No such entry exists: name={} ", name);
@@ -377,7 +439,7 @@ public class StaticFlowEntryStorage extends OFModel{
 	 */
 	public Collection<Map<String, Object>> getAllDBEntries (IStorageService db, String dbName, String collectionName) {
 		List<Map<String, Object>> entries = null;
-		
+
 		if ( ! db.isConnected() ) {
 			return Collections.emptyList();
 		}
@@ -400,310 +462,6 @@ public class StaticFlowEntryStorage extends OFModel{
 
 		return results;
 	}
-
-	
-	/**
-	 * OFModel methods. Array of RESTApi objects.
-	 * Each objects represent a REST call handler routine bound to a specific URI.
-	 */
-	private RESTApi[] apis = {
-			/*
-			 * LIST example
-			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/list/all/json
-			 * 				curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/list/00:00:00:00:00:00:00:01/json
-			 */
-			new RESTApi("/wm/staticflowentry/list/{switch}/json",
-					new Restlet() {
-				@Override
-				public void handle(Request request, Response response) {
-					String sw = (String) request.getAttributes().get("switch");
-					Set<String> flows = new HashSet<String>();
-					if (sw.toLowerCase().equals("all")) {
-						flows = getFlowModMap().keySet();
-						if (flows.isEmpty()) {
-							flows = null;
-						}
-					} else {
-						flows = getDpidToFlowModNameIndex().get(sw);
-					}
-					
-					ObjectMapper om = new ObjectMapper();
-					try {
-						String r = om.writeValueAsString(getFlowModMap(sw));
-						response.setEntity(r, MediaType.APPLICATION_JSON);
-					} catch ( Exception e ) {
-						e.printStackTrace();
-						return;
-					}
-				}
-			}),
-
-			/*
-			 * CLEAR example
-			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/clear/all/json
-			 * 				curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/clear/00:00:00:00:00:00:00:01/json
-			 */
-			new RESTApi("/wm/staticflowentry/clear/{switch}/json",
-					new Restlet() {
-				@Override
-				public void handle(Request request, Response response) {
-					StringWriter sWriter = new StringWriter();
-					JsonFactory f = new JsonFactory();
-					JsonGenerator g = null;
-					StringBuilder status = new StringBuilder();
-
-					String sw = (String) request.getAttributes().get("switch");
-					Set<String> flows = new HashSet<String>();
-					if (sw.toLowerCase().equals("all")) {
-						flows = getFlowModMap().keySet();
-						if (flows.isEmpty())	flows = null;
-					} else {
-						flows = getDpidToFlowModNameIndex().get(sw);
-					}
-
-					if (flows != null) {
-						boolean ret = true;
-						StringBuilder exceptionlist = new StringBuilder();
-						
-						//Avoiding ConcurrentModificationException
-						Set<String> flowsToDel = new HashSet<String>();
-						flowsToDel.addAll(flows);
-
-						for (String flow : flowsToDel) {
-							try {
-								getManager().deleteFlow( flow );
-							}
-							catch (UnsupportedOperationException e) {
-								ret = false;
-								exceptionlist.append("Wrong version for the switch. ");
-							}
-							catch (StaticFlowEntryException e) {
-								ret = false;
-								exceptionlist.append(e.getReason());
-								exceptionlist.append(". ");
-							}
-							catch (Exception e) {
-								ret = false;
-								e.printStackTrace();
-							}
-						}
-						
-						if (ret) {
-							status.append("All entries are cleared.");
-						}
-						else {
-							status.append("Failure clearing entries: ");
-							status.append(exceptionlist);
-						}
-					}
-					else {
-						status.append("There is no entry.");
-					}
-
-					try {
-						g = f.createJsonGenerator(sWriter);
-						g.writeStartObject();
-						g.writeFieldName("result");
-						g.writeString(status.toString());
-						g.writeEndObject();
-						g.close();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					
-					String r = sWriter.toString();
-					response.setEntity(r, MediaType.APPLICATION_JSON);
-				}
-			}),
-			
-			/*
-			 * RELOAD example
-			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/reload/all/json
-			 * 				curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/reload/00:00:00:00:00:00:00:01/json
-			 */
-			new RESTApi("/wm/staticflowentry/reload/{switch}/json",
-					new Restlet() {
-				@Override
-				public void handle(Request request, Response response) {
-					StringWriter sWriter = new StringWriter();
-					JsonFactory f = new JsonFactory();
-					JsonGenerator g = null;
-					String status = null;
-
-					String sw = (String) request.getAttributes().get("switch");
-					
-					try {
-						if (sw.toLowerCase().equals("all")) {
-							if (!getFlowModNameToDpidIndex().isEmpty()) {
-								getManager().reloadAllFlowsToSwitch();
-								status = "All entries are reloaded to switches.";
-							}
-							else {
-								status = "There is no entry";
-							}
-						}
-						else {
-							if (!getDpidToFlowModNameIndex().isEmpty()) {
-								getManager().reloadFlowsToSwitch(sw);
-								status = "Entries are reloaded to switch: " + sw + ".";
-							}
-							else {
-								status = "There is no entry";
-							}
-						}
-					}
-					catch (UnsupportedOperationException e) {
-						status = "Fail to reload entry: Wrong version for the switch";
-					}
-					catch (Exception e) {
-						e.printStackTrace();
-						status = "Fail to reload entries to switches.";
-					}
-
-					try {
-						g = f.createJsonGenerator(sWriter);
-						g.writeStartObject();
-						g.writeFieldName("result");
-						g.writeString(status);
-						g.writeEndObject();
-						g.close();
-					}
-					catch (Exception e) {
-						e.printStackTrace();
-					}
-					
-					String r = sWriter.toString();
-					response.setEntity(r, MediaType.APPLICATION_JSON);
-				}
-			}),
-			
-			new RESTApi("/wm/staticflowentry/json",
-					new Restlet() {
-				@Override
-				public void handle(Request request, Response response) {
-					StringWriter sWriter = new StringWriter();
-					JsonFactory f = new JsonFactory();
-					JsonGenerator g = null;
-					String status = null;
-
-					Method m = request.getMethod();
-					String entityText = request.getEntityAsText();
-					entityText = entityText.replaceAll("[\']", "");
-
-					/*
-					 * OFMStaticFlowEntryManager does NOT check every exception for user input 
-					 * except for name field (key of StaticFlowEntry). Therefore, the field check 
-					 * is user's portion.
-					 * For example, let us consider the most simple experiment. When user want to
-					 * do drop for all flows and allow ping between two end hosts, switches need
-					 * the rules of ARP and ICMP both. But, the ping may be succeed with ICMP rule
-					 * only if the ARP entries exist in the ARP table until the entries timed out.
-					 * 
-					 * OFMStaticFlowEntryManager supports the unified input format. e.g. the user
-					 * input have to contain 'instructions' entry although switches support OF1.0
-					 * only. In this case, OFMStaticFlowEntryManager sets not OFInstruction but
-					 * OFAction directly when it builds OFFlowMod.
-					 */
-					/*
-					 * ADD example
-					 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/list/all/json
-					 * 				curl -d '{"switch":"00:00:00:00:00:00:00:01","name":"s1","priority":"101","eth_type":"0x0800","ipv4_src":"10.0.0.1","ipv4_dst":"10.0.0.2","active":"true","instructions":[{"apply_actions":[{"output":"2"}]}]}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/json
-					 * 				curl -d '{"switch":"00:00:00:00:00:00:00:02","name":"s20","priority":"1001","eth_type":"0x0806","ipv4_dst":"10.0.0.4","active":"true","instructions":[{"apply_actions":[{"output":"3"}]}]}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/json
-					 * 				curl -d '{"switch":"00:00:00:00:00:00:00:01","name":"s1","priority":"1001","eth_type":"0x0800","ipv4_dst":"10.0.0.3","active":"true","instructions":[{"apply_actions":[{"set_field":{"ipv4_dst":"10.0.0.2"}},{"output":"2"}]}]}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/json
-					 */
-					if (m == Method.POST) {
-						Map<String, Object> entry;
-						Object flowName;
-						
-						try {
-							entry = StaticFlowEntry.jsonToStaticFlowEntry(entityText);
-
-							flowName = entry.get("name");
-							if (flowName != null) {
-								StaticFlowEntry.checkInputField(entry.keySet());
-								StaticFlowEntry.checkMatchPrerequisite(entry);
-								getManager().addFlow((String) flowName, entry, (String) entry.get("switch"));
-								status = "Entry pushed: " + flowName;
-							}
-							else {
-								status = "The name field is indispensable";
-							}
-						}
-						catch (UnsupportedOperationException e) {
-							status = "Fail to push entry: Wrong version for the switch";
-						}
-						catch (StaticFlowEntryException e) {
-							status = e.getReason();
-						}
-						catch (IOException e) {
-							status = "Fail to parse JSON format";
-							e.printStackTrace();
-						}
-						catch (Exception e) {
-							e.printStackTrace();
-							status = "Fail to insert entry";
-						}
-						
-						try {
-							g = f.createJsonGenerator(sWriter);
-							g.writeStartObject();
-							g.writeFieldName("result");
-							g.writeString(status);
-							g.writeEndObject();
-							g.close();
-						} catch (Exception e){
-							e.printStackTrace();
-						}
-					} 
-
-					/*
-					 * DELETE example
-					 * OF1.0,1.3:	curl -X DELETE -d '{"name":"s1"}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/json
-					 */
-					else if (m == Method.DELETE) {
-						Map<String, Object> entry;
-						Object flowName;
-
-						try {
-							entry = StaticFlowEntry.jsonToStaticFlowEntry(entityText);
-							
-							flowName = entry.get("name");
-							if (flowName != null) {
-								getManager().deleteFlow((String)flowName);
-								status = "Entry deleted: " + flowName;
-							}
-							else {
-								status = "The name field is indispensable.";
-							}
-						}
-						catch (UnsupportedOperationException e) {
-							status = "Fail to delete entry: Wrong version for the switch";
-						}
-						catch (StaticFlowEntryException e) {
-							status = e.getReason();
-						}
-						catch (Exception e) {
-							e.printStackTrace();
-							status = "Fail to delete entry";
-						}
-						
-						try {
-							g = f.createJsonGenerator(sWriter);
-							g.writeStartObject();
-							g.writeFieldName("result");
-							g.writeString(status);
-							g.writeEndObject();
-							g.close();
-						} catch (Exception e){
-							e.printStackTrace();
-						}
-					}
-
-					String r = sWriter.toString();
-					response.setEntity(r, MediaType.APPLICATION_JSON);
-				}
-			})
-	};
 
 	/**
 	 * Returns the list of RESTApi objects
