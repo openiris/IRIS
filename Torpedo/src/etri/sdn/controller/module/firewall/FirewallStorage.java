@@ -1,6 +1,5 @@
 package etri.sdn.controller.module.firewall;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -9,12 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.restlet.Request;
-import org.restlet.Response;
-import org.restlet.Restlet;
-import org.restlet.data.MediaType;
-import org.restlet.data.Method;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,12 +34,56 @@ public class FirewallStorage extends OFModel{
 
 	private FirewallEntryTable firewallEntryTable;
 
+	private RESTApi[] apis;
+	
 	FirewallStorage (OFMFirewall manager, String name){
 		this.manager = manager;
 		this.name = name;
 		firewallEntryTable = new FirewallEntryTable();
+
+		initRestApis();
 	}
 
+	/**
+	 * Initialize REST API list.
+	 */
+	private void initRestApis() {
+
+		/**  
+		 * Array of RESTApi objects. 
+		 * Each objects represent a REST call handler routine bound to a specific URI.
+		 */
+		RESTApi[] tmp = {
+			/**
+			 * This object implements a REST handler routine for operations of firewall.
+			 */
+			new RESTApi(
+				"/wm/firewall/module/{op}/json",
+				new RESTOperationApi(manager)
+			),
+			
+			/**
+			 * This object implements REST handler routines for 
+			 * retrieving, inserting and deleting firewall rule(s).
+			 */
+			new RESTApi(
+				"/wm/firewall/rules/json",
+				new RESTPostDeleteApi(manager)
+			),
+			
+			/**
+			 * This object is an additional implements REST handler routines (i.e. RFC2616).
+			 * According to RFC2616, DELETE method cannot have data fields.
+			 */
+			new RESTApi(
+				"/wm/firewall/rules/delete/{ruleid}/json",
+				new RESTDeleteByIDApi(manager)
+			)
+		};
+
+		this.apis = tmp;
+	}
+	
 	public  OFMFirewall getManager() {
 		return this.manager;
 	}
@@ -227,197 +264,6 @@ public class FirewallStorage extends OFModel{
 		
 		return resultList;
 	}
-	
-	/**
-	 * Array of RESTApi objects. 
-	 * Each objects represent a REST call handler routine bound to a specific URI.
-	 */
-	private RESTApi[] apis = {
-			
-			/**
-			 * This object implements a REST handler routine for operations of firewall.
-			 */
-			new RESTApi(
-					"/wm/firewall/module/{op}/json",
-					new Restlet() {
-						@Override
-						public void handle(Request request, Response response) {
-							
-							IFirewallService firewall = getManager();
-
-							String op = (String) request.getAttributes().get("op");
-
-							String result = null;
-
-							if (op.toLowerCase().equals("storagerules")){
-								// create an object mapper.
-								ObjectMapper om = new ObjectMapper();
-								om.registerModule( new OFFirewallRuleReplySerializerModule() );
-								
-								try {
-									result = om./*writerWithDefaultPrettyPrinter().*/writeValueAsString( firewallEntryTable.values() );
-								} catch (Exception e) {
-									e.printStackTrace();
-									return;
-								}
-							}
-
-							else if (op.toLowerCase().equals("status")){
-								if (firewall.isEnabled())
-									result = "{\"result\" : \"firewall enabled\"}";
-								else
-									result = "{\"result\" : \"firewall disabled\"}";
-							} 
-
-							else if (op.toLowerCase().equals("enable")){
-								firewall.enableFirewall(true);
-								result = "{\"status\" : \"success\", \"details\" : \"firewall running\"}";
-							}
-
-							else if (op.toLowerCase().equals("disable")){
-								firewall.enableFirewall(false);
-								result = "{\"status\" : \"success\", \"details\" : \"firewall stopped\"}";
-							}
-
-							else if (op.toLowerCase().equals("get-subnet-mask")){
-								result = "{\"subnet-mask\" : \"" + firewall.getSubnetMask() + "\"}"; 
-							}
-
-							else if (op.toLowerCase().equals("set-subnet-mask")){
-								String entityText = request.getEntityAsText();
-								entityText = entityText.replaceAll("[\']", "");
-								
-								try {
-									firewall.setSubnetMask(FirewallRule.jsonToSubnetMask(entityText));
-									result = "{\"status\" : \"success\", \"details\" : \"subnet-mask is set\"}";
-								}
-								catch (IOException e) {
-									logger.error("Error parsing subnet-mask: {}, {}", entityText, e);
-									return;
-								}
-							}
-
-							else {
-								result = "{\"status\" : \"failure\", \"details\" : \"invalid operation\"}";
-							}
-
-							response.setEntity(result, MediaType.APPLICATION_JSON);
-						}
-					}
-					),
-
-			/**
-			 * This object implements REST handler routines for 
-			 * retrieving, inserting and deleting firewall rule(s).
-			 */
-			new RESTApi(
-					"/wm/firewall/rules/json",
-					new Restlet() {
-						@Override
-						public void handle(Request request, Response response) {
-							IFirewallService firewall = getManager(); 
-
-							Method m = request.getMethod();
-							String result = null;
-							String status = null;
-							boolean exists = false;
-							FirewallRule inRule;
-
-							if (m == Method.GET){		
-								// create an object mapper.
-								ObjectMapper om = new ObjectMapper();
-								
-								try {
-									result = om./*writerWithDefaultPrettyPrinter().*/writeValueAsString( manager.getRules() );
-								} catch ( IOException e ) {
-									e.printStackTrace();
-									return;
-								}
-							}
-							
-							else if (m == Method.POST){
-								Iterator<FirewallRule> iter = firewall.getRules().iterator();
-
-								String entityText = request.getEntityAsText();
-								entityText = entityText.replaceAll("[\']", "");
-
-								try {
-									inRule = FirewallRule.jsonToFirewallRule(entityText);
-								} catch (IOException e) {
-									logger.error("Error parsing firewall rule: {}, {}", entityText, e);
-									e.printStackTrace();
-									return;
-								}
-
-								while (iter.hasNext()) {
-									FirewallRule r = iter.next();
-									if ( inRule.isSameAs(r) ){
-										exists = true;
-										logger.error("Error! A similar firewall rule already exists.");
-										break;
-									}
-								}
-									
-								if ( exists == false ){
-									// add rule to firewall
-									firewall.addRule(inRule);
-									status = "Rule added";
-								}
-								
-								result = "{\"status\" : \"" + status + "\"}";
-							}
-
-							else if (m == Method.DELETE){
-								Iterator<FirewallRule> iter = firewall.getRules().iterator();
-
-								String entityText = request.getEntityAsText();
-								
-								// Clear all rules.
-								if (entityText == null) {
-									firewall.clearRules();
-									status = "All rules are deleted.";
-								}
-								// Delete one rule based on input rule id.
-								else {
-									entityText = entityText.replaceAll("[\']", "");
-									//System.out.println(entityText);
-
-									try {
-										inRule = FirewallRule.jsonToFirewallRule(entityText);
-									} catch (IOException e) {
-										logger.error("Error parsing firewall rule: {}, {}", entityText, e);
-										e.printStackTrace();
-										return;
-									}
-
-									while (iter.hasNext()) {
-										FirewallRule r = iter.next();
-										if ( r.ruleid == inRule.ruleid){
-											exists = true;
-											break;
-										}
-									}
-
-									if ( !exists ){
-										logger.error("Error! Can't delete, a rule with ID {} doesn't exist.", 
-												inRule.ruleid);
-										return;
-									} else {
-										// delete rule from firewall
-										firewall.deleteRule( inRule.ruleid );
-										status = "Rule deleted";
-									}
-								}
-
-								result = "{\"status\" : \"" + status + "\"}";
-							}
-							
-							response.setEntity(result, MediaType.APPLICATION_JSON);
-						}
-					}
-					)
-
-	};
 
 	/**
 	 * Returns the list of RESTApi objects

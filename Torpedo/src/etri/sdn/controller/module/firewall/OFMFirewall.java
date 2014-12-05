@@ -113,6 +113,10 @@ public class OFMFirewall extends OFModule implements IFirewallService
 		return storageInstance;
 	}
 
+	public FirewallStorage getFirewallStorage(){
+		return firewallStorage;
+	}
+	
 	public String getDbName(){
 		return dbName;
 	}
