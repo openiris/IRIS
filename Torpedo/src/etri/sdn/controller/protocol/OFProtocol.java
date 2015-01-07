@@ -363,8 +363,13 @@ public class OFProtocol {
 			// now the hello is successfully exchanged, so we remove the peer address 
 			// from the helloFailedSwitches set. 
 			try {
-				InetSocketAddress peer = (InetSocketAddress) conn.getClient().getRemoteAddress();
-				this.helloFailedSwitches.remove( peer.getHostString() );
+				if ( conn.getClient() != null ) {
+					InetSocketAddress peer = (InetSocketAddress) conn.getClient().getRemoteAddress();
+					this.helloFailedSwitches.remove( peer.getHostString() );
+				}
+				else {
+					break;
+				}
 			} catch (IOException e) {
 				logger.debug("conn.getClient().getRemoteAddress() failed");
 				e.printStackTrace();
