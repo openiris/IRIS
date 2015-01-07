@@ -770,7 +770,12 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 		.setData(data)
 		.setActions(actions);
 
-		return sw.getConnection().write(po.build());
+		if (sw.getConnection() != null) {
+			return sw.getConnection().write(po.build());
+		}
+		else {
+			return false;
+		}
 	}
 
 	@Override
