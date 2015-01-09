@@ -384,7 +384,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 	 * packet-in and the outport are the same, the function will not push the packet-out.
 	 * 
 	 * @param conn the connection to the switch that generated the packet-in, and from which packet-out is sent
-	 * @param match the {@link OFMatch}
+	 * @param match the {@link Match}
 	 * @param pi packetin
 	 * @param outPort the output port
 	 * @param cntx the {@link MessageContext}
