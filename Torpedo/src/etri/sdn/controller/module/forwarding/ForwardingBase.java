@@ -416,7 +416,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 		
 		OFPacketOut.Builder po = fac.buildPacketOut().setActions(actions);
 
-		// If the switch doens't support buffering set the buffer id to be none
+		// If the switch doesn't support buffering set the buffer id to be none
 		// otherwise it'll be the the buffer id of the PacketIn
 		if ( pi.getBufferId() == OFBufferId.NO_BUFFER ) {
 			po
