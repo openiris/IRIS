@@ -118,38 +118,60 @@
 		</div>
 	</div>
 
-	<div class="home staticFlowEntries" ng-controller="CntlStaticFlowEntries">
-		<h1>staticflowentries(<span>{{staticflowentries.length}}</span>)</h1><a ng-click="getData()"></a>
+	<div class="home switches staticFlowEntryManager" ng-controller="CntlStaticFlowEntryManager">
+		<h1>staticflowentries(<span>{{rules.length}}</span>)</h1><a ng-click="getData()"></a>
 		<div>
 			<table class="horizontal_table mark_2th_row">
 				<thead>
-				<tr>
-					<th>name</th>
-					<th>active</th>
-					<th>switch</th>
-					<th>priority</th>
-					<th>eth_type</th>
-					<th>ipv4_src</th>
-					<th>ipv4_dst</th>
-				</tr>
+					<tr>
+						<th>name</th>
+						<th>active</th>
+						<th>switch</th>
+						<th>priority</th>
+						<th>eth_type</th>
+						<th>ipv4_src</th>
+						<th>ipv4_dst</th>
+					</tr>
 				</thead>
 				<tbody template="staticFlowEntries">
-				<tr ng-if="staticflowentries.length==0">
-					<td colspan="7">No entries</td>
-				</tr>
-				<tr ng-if="staticflowentries.length>0" ng-repeat="entry in staticflowentries">
-					<td>{{entry.name}}</td>
-					<td>{{entry.active}}</td>
-					<td>{{entry.switch}}</td>
-					<td>{{entry.priority}}</td>
-					<td>{{entry.eth_type}}</td>
-					<td>{{entry.ipv4_src}}</td>
-					<td>{{entry.ipv4_dst}}</td>
-				</tr>
+					<tr ng-if="rules.length==0">
+						<td colspan="7">No entries</td>
+					</tr>
+					<tr ng-if="rules.length>0" ng-repeat="entry in rules">
+						<td>{{entry.name}}</td>
+						<td>{{entry.active}}</td>
+						<td>{{entry.switch}}</td>
+						<td>{{entry.priority}}</td>
+						<td>{{entry.eth_type}}</td>
+						<td>{{entry.ipv4_src}}</td>
+						<td>{{entry.ipv4_dst}}</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
 	</div>
+
+	<div class="switches staticFlowEntryManager" ng-controller="CntlStaticFlowEntryManager">
+		<h1>Static flow entry manager</h1>
+		<div>
+			<h2>Add entry</h2>
+			<form>
+				<label>Name</label>
+				<input type="text" ng-model="form.name" />
+
+				<label>Priority</label>
+				<input type="number" ng-model="form.priority" />
+
+				<label>Switch</label>
+				<select ng-model="form.switch">
+					<option ng-repeat="sw in switch_dpids" value="{{sw}}">{{sw}}</option>
+				</select>
+
+				<button ng-click="addEntry()">Add/Modify</button>
+				<button ng-click="deleteEntry()">Delete</button>
+			</form>
+        </div>
+    </div>
 
 	<div class="home devices devices" ng-controller="CntlDevices">
 		<h1>Devices(<span>{{devices.length}}</span>)</h1><a ng-click="getData()"></a>
