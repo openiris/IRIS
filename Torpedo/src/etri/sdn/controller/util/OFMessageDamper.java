@@ -99,7 +99,7 @@ public final class OFMessageDamper {
     }        
     
     /**
-     * write the messag to the switch according to our dampening settings
+     * write the message to the switch according to our dampening settings
      * @param conn		connection to write 
      * @param msg		message to write
      * @return 			true if the message was written to the switch, false if the message was dampened. 

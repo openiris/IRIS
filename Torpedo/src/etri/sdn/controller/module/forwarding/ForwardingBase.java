@@ -384,7 +384,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 	 * packet-in and the outport are the same, the function will not push the packet-out.
 	 * 
 	 * @param conn the connection to the switch that generated the packet-in, and from which packet-out is sent
-	 * @param match the {@link OFMatch}
+	 * @param match the {@link Match}
 	 * @param pi packetin
 	 * @param outPort the output port
 	 * @param cntx the {@link MessageContext}
@@ -416,7 +416,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 		
 		OFPacketOut.Builder po = fac.buildPacketOut().setActions(actions);
 
-		// If the switch doens't support buffering set the buffer id to be none
+		// If the switch doesn't support buffering set the buffer id to be none
 		// otherwise it'll be the the buffer id of the PacketIn
 		if ( pi.getBufferId() == OFBufferId.NO_BUFFER ) {
 			po
