@@ -42,6 +42,7 @@
 	<script src="js/controllers/vsubnet_detail.js"></script>
 	<script src="js/controllers/vports.js"></script>
 	<script src="js/controllers/vport_detail.js"></script>
+	<script src="js/controllers/staticflowentries.js"></script>
 
   	
     <!-- Le fav and touch icons -->
@@ -116,7 +117,40 @@
 		</table>
 		</div>
 	</div>
-	
+
+	<div class="home staticFlowEntries" ng-controller="CntlStaticFlowEntries">
+		<h1>staticflowentries(<span>{{staticflowentries.length}}</span>)</h1><a ng-click="getData()"></a>
+		<div>
+			<table class="horizontal_table mark_2th_row">
+				<thead>
+				<tr>
+					<th>name</th>
+					<th>active</th>
+					<th>switch</th>
+					<th>priority</th>
+					<th>eth_type</th>
+					<th>ipv4_src</th>
+					<th>ipv4_dst</th>
+				</tr>
+				</thead>
+				<tbody template="staticFlowEntries">
+				<tr ng-if="staticflowentries.length==0">
+					<td colspan="7">No entries</td>
+				</tr>
+				<tr ng-if="staticflowentries.length>0" ng-repeat="entry in staticflowentries">
+					<td>{{entry.name}}</td>
+					<td>{{entry.active}}</td>
+					<td>{{entry.switch}}</td>
+					<td>{{entry.priority}}</td>
+					<td>{{entry.eth_type}}</td>
+					<td>{{entry.ipv4_src}}</td>
+					<td>{{entry.ipv4_dst}}</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
 	<div class="home devices devices" ng-controller="CntlDevices">
 		<h1>Devices(<span>{{devices.length}}</span>)</h1><a ng-click="getData()"></a>
 		<div>
@@ -224,8 +258,7 @@
 		</div>
 	</div>
 	<!-- vPorts End -->
-	
-	
+
 </div> <!-- /content -->
 <div id="hiddens" style="display: none;">
 	<div class="home switches flows" style="display: none;">
