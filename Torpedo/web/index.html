@@ -138,7 +138,7 @@
 						<td colspan="7">No entries</td>
 					</tr>
 					<tr ng-if="rules.length>0" ng-repeat="entry in rules">
-						<td>{{entry.name}}</td>
+						<td><a ng-click="autofill(entry)">{{entry.name}}</a></td>
 						<td>{{entry.active}}</td>
 						<td>{{entry.switch}}</td>
 						<td>{{entry.priority}}</td>
@@ -149,29 +149,30 @@
 				</tbody>
 			</table>
 		</div>
+
+		<div class="switches staticFlowEntryManager">
+			<h1>Static flow entry manager</h1>
+			<div>
+				<h2>Add entry</h2>
+				<form>
+					<label>Name</label>
+					<input type="text" ng-model="form.name" />
+
+					<label>Priority</label>
+					<input type="number" ng-model="form.priority" />
+
+					<label>Switch</label>
+					<select ng-model="form.switch">
+						<option ng-repeat="sw in switch_dpids" value="{{sw}}">{{sw}}</option>
+					</select>
+
+					<button ng-click="addEntry()">Add/Modify</button>
+					<button ng-click="deleteEntry()">Delete</button>
+				</form>
+			</div>
+		</div>
 	</div>
 
-	<div class="switches staticFlowEntryManager" ng-controller="CntlStaticFlowEntryManager">
-		<h1>Static flow entry manager</h1>
-		<div>
-			<h2>Add entry</h2>
-			<form>
-				<label>Name</label>
-				<input type="text" ng-model="form.name" />
-
-				<label>Priority</label>
-				<input type="number" ng-model="form.priority" />
-
-				<label>Switch</label>
-				<select ng-model="form.switch">
-					<option ng-repeat="sw in switch_dpids" value="{{sw}}">{{sw}}</option>
-				</select>
-
-				<button ng-click="addEntry()">Add/Modify</button>
-				<button ng-click="deleteEntry()">Delete</button>
-			</form>
-        </div>
-    </div>
 
 	<div class="home devices devices" ng-controller="CntlDevices">
 		<h1>Devices(<span>{{devices.length}}</span>)</h1><a ng-click="getData()"></a>

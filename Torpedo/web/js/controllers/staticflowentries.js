@@ -18,6 +18,10 @@ irisApp.controller(
         // TODO
       };
 
+      $scope.autofill = function(entry) {
+        $scope.form = angular.copy(entry);
+      };
+
       $scope.getData = function() {
         // Get static flow entries.
         $http.get('/wm/staticflowentry/list/all/json')
