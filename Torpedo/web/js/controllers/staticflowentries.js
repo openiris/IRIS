@@ -18,6 +18,16 @@ irisApp.controller(
         // TODO
       };
 
+      $scope.clearEntry = function() {
+        var switch_ = $scope.form['switch'];
+        $http.get('/wm/staticflowentry/clear/' + switch_ + '/json');
+      };
+
+      $scope.clearAll = function() {
+        $http.get('/wm/staticflowentry/clear/all/json')
+        .success(function(data) { console.log(data); });
+      };
+
       $scope.autofill = function(entry) {
         $scope.form = angular.copy(entry);
       };
