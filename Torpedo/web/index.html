@@ -137,7 +137,7 @@
 					</tr>
 					<tr ng-if="rules.length>0" ng-repeat="entry in rules">
 						<td><a ng-click="autofill(entry)">{{entry.name}}</a></td>
-						<td>{{entry.active}}</td>
+						<td><a ng-click="toggleActive(entry)">{{entry.active}}</a></td>
 						<td>{{entry.switch}}</td>
 						<td>{{entry.priority}}</td>
 						<td>{{entry.eth_type}}</td>

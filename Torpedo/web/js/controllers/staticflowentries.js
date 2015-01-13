@@ -72,6 +72,11 @@ irisApp.controller(
         $scope.form.priority = parseInt(entry.priority);
       };
 
+      $scope.toggleActive = function(entry) {
+        entry.active = entry.active.toLowerCase() == "true" ? "false" : "true";
+        $http.post('/wm/staticflowentry/json', entry);
+      }
+
       $scope.addField = function() {
         if (! $scope.entry.field || ! $scope.entry.value) {
           return;
