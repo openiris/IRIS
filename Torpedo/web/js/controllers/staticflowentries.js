@@ -92,7 +92,7 @@ irisApp.controller(
         var result = {};
 
         angular.forEach($scope.form, function(value, key) {
-          if (! _.contains(['name', 'priority', 'switch', 'eth_type'], key)) {
+          if (_.contains($scope.entryFields, key)) {
             result[key] = value;
           }
         });
