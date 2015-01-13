@@ -49,9 +49,8 @@ irisApp.controller(
         }
         $http.post('/wm/staticflowentry/json', form)
         .success(function(data) {
-          console.log(data);
+          $scope.form = {};
         });
-        // TODO
       };
 
       $scope.deleteEntry = function() {
