@@ -168,7 +168,7 @@
 					<table class="vertical_table">
 						<tr ng-repeat="(field, value) in additionalFields()">
 							<td>
-								{{ field }}
+								<a ng-click="editField(field)">{{ field }}</a>
 							</td>
 							<td>
 								{{ value }} <a ng-click="removeField(field)">remove</a>

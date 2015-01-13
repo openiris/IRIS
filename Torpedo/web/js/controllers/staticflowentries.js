@@ -6,6 +6,7 @@ irisApp.controller(
       $scope.rules = [];
 
       $scope.form = {};
+      $scope.entry = {};
 
       $scope.entryFields = [
         "table_id",
@@ -88,6 +89,15 @@ irisApp.controller(
 
       $scope.removeField = function(field) {
         delete $scope.form[field];
+      };
+
+      $scope.editField = function(field) {
+        $scope.entry.field = field;
+        if (typeof($scope.form[field]) == 'object') {
+          $scope.entry.value = JSON.stringify($scope.form[field]);
+        } else {
+          $scope.entry.value = $scope.form[field];
+        }
       };
 
       $scope.additionalFields = function() {
