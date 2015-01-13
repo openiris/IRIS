@@ -118,7 +118,7 @@
 		</div>
 	</div>
 
-	<div class="home switches staticFlowEntryManager" ng-controller="CntlStaticFlowEntryManager">
+	<div class="switches staticFlowEntryManager" ng-controller="CntlStaticFlowEntryManager">
 		<h1>staticflowentries(<span>{{rules.length}}</span>)</h1><a ng-click="getData()"></a>
 		<div>
 			<table class="horizontal_table mark_2th_row">
@@ -146,10 +146,9 @@
 			</table>
 		</div>
 
-		<div class="switches staticFlowEntryManager">
-			<h1>Static flow entry manager</h1>
-			<div>
-				<form>
+		<div>
+			<form name="entryForm">
+				<section>
 					<label>Name</label>
 					<input type="text" ng-model="form.name" />
 
@@ -161,13 +160,37 @@
 						<option ng-repeat="sw in switch_dpids" value="{{sw}}">{{sw}}</option>
 					</select>
 
+					<label>eth_type</label>
+					<input type="text" pattern="0x[0-9a-fA-F]{4}" ng-model="form.eth_type" />
+				</section>
+
+				<section>
+					<table class="vertical_table">
+						<tr ng-repeat="(field, value) in additionalFields()">
+							<td>
+								{{ field }}
+							</td>
+							<td>
+								{{ value }} <a ng-click="removeField(field)">remove</a>
+							</td>
+						</tr>
+					</table>
+					<select ng-model="entry.field">
+						<option ng-repeat="field in entryFields" value="{{field}}">{{field}}</option>
+					</select>
+					<input type="text" ng-model="entry.value" />
+					<button ng-click="addField()">Add</button>
+				</section>
+
+				<section>
 					<button ng-click="addEntry()">Add/Modify</button>
 					<button ng-click="deleteEntry()">Delete</button>
 					<button ng-click="clearEntry()">Clear rules by this switch</button>
 					<button ng-click="clearAll()">Clear all</button>
-				</form>
-			</div>
-		</div>
+				</section>
+
+            </form>
+        </div>
 	</div>
 
 
