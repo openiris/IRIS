@@ -72,9 +72,14 @@ irisApp.controller(
 
       $scope.addEntry = function() {
         var form = $scope.form;
+
         if (form.active === undefined) {
           form.active = true;
         }
+        if (form.priority === undefined) {
+          form.priority = 100;
+        }
+
         $http.post('/wm/staticflowentry/json', form)
         .success(function(data) {
           console.log(data);
