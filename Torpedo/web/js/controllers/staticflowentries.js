@@ -112,6 +112,53 @@ irisApp.controller(
         return result;
       };
 
+      $scope.getInstruction = function(index) {
+        return $scope.form.instructions[parseInt(index)];
+      };
+
+      $scope.addInstruction = function() {
+        $scope.form.instructions.push({});
+      };
+
+      $scope.removeInstruction = function(index) {
+        $scope.form.instructions.splice(index, 1);
+      };
+
+      $scope.getActions = function(index) {
+        var instruction = $scope.getInstruction(index);
+        $scope.actions = {};
+
+        for (var table in instruction) {
+          if (_.contains(['apply_actions', 'write_actions'], table)) {
+            for (var index in instruction[table]) {
+              var entry = instruction[table][index];
+              for (var actionName in entry) {
+                $scope.actions[table + "|" + index] = table + ' - ' + actionName + ': ' + entry[actionName];
+              }
+            }
+          } else if (table == 'clear_actions') {
+            $scope.actions['clear_actions'] = 'clear_actions';
+          } else if (table == 'goto_table') {
+            // TODO
+          }
+        }
+
+        return $scope.actions;
+      };
+
+      $scope.removeAction = function(instIndex, actionKey) {
+        var instuction = $scope.getInstruction(instIndex);
+        var _params = actionKey.split('|');
+        var table = _params[0];
+        var index = _params[1];
+
+        if (_.contains(['apply_actions', 'write_actions'], table)) {
+          instuction[table].splice(index, 1);
+        } else {
+          delete instuction[table];
+        }
+      };
+
       $scope.getData = function() {
         // Get static flow entries.
         $http.get('/wm/staticflowentry/list/all/json')

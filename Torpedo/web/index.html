@@ -183,6 +183,21 @@
 				</section>
 
 				<section>
+					<h2>Instructions</h2>
+					<select size="10" ng-model="instructionIndex">
+						<option ng-repeat="_ in form.instructions" ng-if="form.instructions.length>0" value="{{$index}}">{{$index}}</option>
+					</select>
+					<button ng-click="addInstruction()">add</button>
+					<button ng-click="removeInstruction(instructionIndex)">remove</button>
+
+					<select size="10" ng-model="actionKey">
+						<option ng-repeat="(key, text) in getActions(instructionIndex)" value="{{ key }}">{{ text }}</option>
+					</select>
+
+					<button ng-click="removeAction(instructionIndex, actionKey)">Remove</button>
+				</section>
+
+				<section>
 					<button ng-click="addEntry()">Add/Modify</button>
 					<button ng-click="deleteEntry()">Delete</button>
 					<button ng-click="clearEntry()">Clear rules by this switch</button>
