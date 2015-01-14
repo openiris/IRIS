@@ -42,6 +42,36 @@ irisApp.controller(
         "mpls_tc",
       ];
 
+      $scope.instructionActions = [
+        "output",
+        "set_vlan_vid",
+        "set_vlan_pcp",
+        "strip_vlan",
+        "set_dl_src",
+        "set_dl_dst",
+        "set_nw_src",
+        "set_nw_dst",
+        "set_nw_tos",
+        "set_tp_src",
+        "set_tp_dst",
+        "enqueue",
+        "copy_ttl_out",
+        "copy_ttl_in",
+        "set_mpls_ttl",
+        "dec_mpls_ttl",
+        "push_vlan",
+        "pop_vlan",
+        "push_mpls",
+        "pop_mpls",
+        "set_queue",
+        "group",
+        "set_nw_ttl",
+        "dec_nw_ttl",
+        "set_field",
+        "push_pbb",
+        "pop_pbb",
+      ];
+
       $scope.addEntry = function() {
         var form = $scope.form;
         form.active = true;
@@ -50,6 +80,7 @@ irisApp.controller(
         }
         $http.post('/wm/staticflowentry/json', form)
         .success(function(data) {
+          console.log(data);
           $scope.form = {};
         });
       };
@@ -117,6 +148,9 @@ irisApp.controller(
       };
 
       $scope.addInstruction = function() {
+        if ($scope.form.instructions == undefined) {
+          $scope.form.instructions = [];
+        }
         $scope.form.instructions.push({});
       };
 
@@ -144,6 +178,26 @@ irisApp.controller(
         }
 
         return $scope.actions;
+      };
+
+      $scope.addAction = function(instIndex) {
+        var instruction = $scope.getInstruction(instIndex);
+        var table = $scope.newActionTable;
+        var actionKey = $scope.newActionKey;
+        var actionValue = $scope.newActionValue;
+
+        if (instruction[table] == undefined) {
+          instruction[table] = [];
+        }
+
+        if (_.contains(['apply_actions', 'write_actions'], table)) {
+          if (! actionKey || ! actionValue) {
+            return;
+          }
+          var newObj = {};
+          newObj[actionKey] = actionValue;
+          instruction[table].push(newObj);
+        }
       };
 
       $scope.removeAction = function(instIndex, actionKey) {

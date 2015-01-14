@@ -195,17 +195,33 @@
 					</select>
 
 					<button ng-click="removeAction(instructionIndex, actionKey)">Remove</button>
+
+					<select ng-model="newActionTable">
+						<option value="apply_actions">apply_actions</option>
+						<option value="write_actions">write_actions</option>
+						<option value="clear_actions">clear_actions</option>
+						<option value="goto_table" disabled>goto_table</option>
+					</select>
+
+					<span ng-show="newActionTable == 'write_actions' || newActionTable == 'apply_actions'">
+						<select ng-model="newActionKey">
+							<option ng-repeat="item in instructionActions" value="{{ item }}">{{ item }}</option>
+						</select>
+						<input type="text" ng-model="newActionValue" />
+					</span>
+
+					<button ng-click="addAction(instructionIndex)">Add</button>
+
+					<section>
+						<button ng-click="addEntry()">Add/Modify</button>
+						<button ng-click="deleteEntry()">Delete</button>
+						<button ng-click="clearEntry()">Clear rules by this switch</button>
+						<button ng-click="clearAll()">Clear all</button>
+					</section>
 				</section>
 
-				<section>
-					<button ng-click="addEntry()">Add/Modify</button>
-					<button ng-click="deleteEntry()">Delete</button>
-					<button ng-click="clearEntry()">Clear rules by this switch</button>
-					<button ng-click="clearAll()">Clear all</button>
-				</section>
-
-            </form>
-        </div>
+			</form>
+		</div>
 	</div>
 
 
