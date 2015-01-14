@@ -18,7 +18,6 @@ irisApp.controller(
         "eth_src",
         "vlan_vid",
         "vlan_pcp",
-        "eth_type",
         "ip_proto",
         "ipv4_src",
         "ipv4_dst",
