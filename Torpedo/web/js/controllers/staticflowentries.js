@@ -78,14 +78,15 @@ irisApp.controller(
         $http.post('/wm/staticflowentry/json', form)
         .success(function(data) {
           console.log(data);
-          $scope.form = {};
         });
       };
 
       $scope.deleteEntry = function() {
         var name = $scope.form.name;
-        $http.delete('/wm/staticflowentry/delete/' + name + '/json');
-        // TODO
+        $http.delete('/wm/staticflowentry/delete/' + name + '/json')
+        .success(function(data) {
+          $scope.form = {};
+        });
       };
 
       $scope.clearEntry = function() {
