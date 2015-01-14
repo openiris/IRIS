@@ -73,7 +73,9 @@ irisApp.controller(
 
       $scope.addEntry = function() {
         var form = $scope.form;
-        form.active = true;
+        if (form.active == undefined) {
+          form.active = true;
+        }
         $http.post('/wm/staticflowentry/json', form)
         .success(function(data) {
           console.log(data);
