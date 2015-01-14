@@ -103,7 +103,9 @@ irisApp.controller(
 
       $scope.autofill = function(entry) {
         $scope.form = angular.copy(entry);
-        $scope.form.priority = parseInt(entry.priority);
+        if (entry.priority) {
+          $scope.form.priority = parseInt(entry.priority);
+        }
       };
 
       $scope.toggleActive = function(entry) {
@@ -144,7 +146,11 @@ irisApp.controller(
       };
 
       $scope.getInstruction = function(index) {
-        return $scope.form.instructions[parseInt(index)];
+        try {
+          return $scope.form.instructions[parseInt(index)];
+        } catch(error) {
+          return;
+        }
       };
 
       $scope.addInstruction = function() {
