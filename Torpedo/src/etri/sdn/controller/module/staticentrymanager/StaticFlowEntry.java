@@ -411,22 +411,22 @@ public class StaticFlowEntry {
 				builder.setExact(MatchField.IP_ECN, IpEcn.of(Byte.valueOf((String) entry.get("ip_ecn"))));
 			}
 			else if (key.toLowerCase().equals("tcp_src")) {
-				builder.setExact(MatchField.TCP_SRC, TransportPort.of(Short.valueOf((String) entry.get("tcp_src"))));
+				builder.setExact(MatchField.TCP_SRC, TransportPort.of(Integer.valueOf((String) entry.get("tcp_src"))));
 			}
 			else if (key.toLowerCase().equals("tcp_dst")) {
-				builder.setExact(MatchField.TCP_DST, TransportPort.of(Short.valueOf((String) entry.get("tcp_dst"))));
+				builder.setExact(MatchField.TCP_DST, TransportPort.of(Integer.valueOf((String) entry.get("tcp_dst"))));
 			}
 			else if (key.toLowerCase().equals("udp_src")) {
-				builder.setExact(MatchField.UDP_SRC, TransportPort.of(Short.valueOf((String) entry.get("udp_src"))));
+				builder.setExact(MatchField.UDP_SRC, TransportPort.of(Integer.valueOf((String) entry.get("udp_src"))));
 			}
 			else if (key.toLowerCase().equals("udp_dst")) {
-				builder.setExact(MatchField.UDP_DST, TransportPort.of(Short.valueOf((String) entry.get("udp_dst"))));
+				builder.setExact(MatchField.UDP_DST, TransportPort.of(Integer.valueOf((String) entry.get("udp_dst"))));
 			}
 			else if (key.toLowerCase().equals("sctp_src")) {
-				builder.setExact(MatchField.SCTP_SRC, TransportPort.of(Short.valueOf((String) entry.get("sctp_src"))));
+				builder.setExact(MatchField.SCTP_SRC, TransportPort.of(Integer.valueOf((String) entry.get("sctp_src"))));
 			}
 			else if (key.toLowerCase().equals("sctp_dst")) {
-				builder.setExact(MatchField.SCTP_DST, TransportPort.of(Short.valueOf((String) entry.get("sctp_dst"))));
+				builder.setExact(MatchField.SCTP_DST, TransportPort.of(Integer.valueOf((String) entry.get("sctp_dst"))));
 			}
 			else if (key.toLowerCase().equals("icmpv4_type")) {
 				builder.setExact(MatchField.ICMPV4_TYPE, ICMPv4Type.of(Short.valueOf((String) entry.get("icmpv4_type"))));
