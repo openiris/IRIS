@@ -13,7 +13,6 @@ irisApp.controller(
         "idle_timeout",
         "hard_timeout",
         "actions",
-        "instructions",
         "in_port",
         "eth_dst",
         "eth_src",
@@ -75,9 +74,6 @@ irisApp.controller(
       $scope.addEntry = function() {
         var form = $scope.form;
         form.active = true;
-        if (typeof(form.instructions) == 'string') {
-          form.instructions = JSON.parse(form.instructions);
-        }
         $http.post('/wm/staticflowentry/json', form)
         .success(function(data) {
           console.log(data);
