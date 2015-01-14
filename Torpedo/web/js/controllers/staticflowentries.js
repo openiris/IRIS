@@ -73,7 +73,7 @@ irisApp.controller(
 
       $scope.addEntry = function() {
         var form = $scope.form;
-        if (form.active == undefined) {
+        if (form.active === undefined) {
           form.active = true;
         }
         $http.post('/wm/staticflowentry/json', form)
@@ -109,7 +109,7 @@ irisApp.controller(
       $scope.toggleActive = function(entry) {
         entry.active = entry.active.toLowerCase() == "true" ? "false" : "true";
         $http.post('/wm/staticflowentry/json', entry);
-      }
+      };
 
       $scope.addField = function() {
         if (! $scope.entry.field || ! $scope.entry.value) {
@@ -152,7 +152,7 @@ irisApp.controller(
       };
 
       $scope.addInstruction = function() {
-        if ($scope.form.instructions == undefined) {
+        if ($scope.form.instructions === undefined) {
           $scope.form.instructions = [];
         }
         $scope.form.instructions.push({});
@@ -162,8 +162,8 @@ irisApp.controller(
         $scope.form.instructions.splice(index, 1);
       };
 
-      $scope.getActions = function(index) {
-        var instruction = $scope.getInstruction(index);
+      $scope.getActions = function(instIndex) {
+        var instruction = $scope.getInstruction(instIndex);
         $scope.actions = {};
 
         for (var table in instruction) {
@@ -175,7 +175,7 @@ irisApp.controller(
               }
             }
           } else if (table == 'clear_actions') {
-            $scope.actions['clear_actions'] = 'clear_actions';
+            $scope.actions.clear_actions = 'clear_actions';
           } else if (table == 'goto_table') {
             // TODO
           }
@@ -190,7 +190,7 @@ irisApp.controller(
         var actionKey = $scope.newActionKey;
         var actionValue = $scope.newActionValue;
 
-        if (instruction[table] == undefined) {
+        if (instruction[table] === undefined) {
           instruction[table] = [];
         }
 
@@ -243,7 +243,7 @@ irisApp.controller(
         });
 
         // Loop.
-        if ($scope.goon != false) {
+        if ($scope.goon !== false) {
           $timeout($scope.getData, 1000);
         }
       };
