@@ -85,7 +85,7 @@ var nDistance = function(node) {
 
 var distance = function(link) {
 	var x = d3.min( [link.source.value, link.target.value] );
-	return 250 / x;
+	return 150 / x;
 };
 
 iris.sortNodesByValue = function(nodes) {
@@ -348,11 +348,11 @@ iris.topology = function(nodes, hosts, links) {
 	})
 	.charge(function(node, index) {
 		// charge negatively increases when its far from network center.
-		return -100 * node.value;
+		return -150 * node.value;
 	}) 
-	.friction(0.3)
+	.friction(0.9)
 	.theta(0.1)
-	.gravity(0)
+	.gravity(0.1)
 	.size([iris.topologyWidth, iris.topologyHeight])
 	.nodes(nodes).links(links)
 	.start();
