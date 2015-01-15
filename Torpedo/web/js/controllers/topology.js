@@ -3,6 +3,103 @@
 iris.topologyWidth = 1160;
 iris.topologyHeight = 700;
 
+var switchStats = {};
+
+iris.getSwitches = function() {
+  $.get("/wm/core/controller/switches/json")
+  .success(function(data) {
+    _.each(data, function(obj) {
+      var dpid = obj.dpid;
+      switchStats[dpid] = {};
+      iris.getStatistics(dpid);
+    });
+
+    iris.getLinks();
+    iris.getDevices();
+  });
+}
+
+iris.getLinks = function() {
+  $.get("/wm/topology/links/json")
+  .success(function(data) {
+    _.each(data, function(link) {
+      var srcDpid = link['src-switch'];
+      var port = link['src-port'];
+      var dstDpid = link['dst-switch'];
+
+      var sw = switchStats[srcDpid];
+
+      if (sw[port] == undefined) {
+        sw[port] = {};
+      }
+      sw[port].id = dstDpid;
+    });
+  });
+}
+
+iris.getDevices = function() {
+  $.get("/wm/device/all/json")
+  .success(function(data) {
+    _.each(data, function(host) {
+      var id = host.mac[0];
+      _.each(host.attachmentPoint, function(point) {
+        var dpid = point.switchDPID;
+        var port = point.port;
+
+        var sw = switchStats[dpid];
+
+        if (sw[port] == undefined) {
+          sw[port] = {};
+        }
+        sw[port].id = id;
+      });
+    });
+  });
+}
+
+iris.getStatistics = function(dpid) {
+  $.get("/wm/core/switch/" + dpid + "/port/json")
+  .success(function(data) {
+    var stats = data[dpid];
+    var sw = switchStats[dpid];
+
+    _.each(stats, function(stat) {
+      var port = stat.portNumber;
+      var tx = stat.transmitBytes;
+      var rx = stat.receiveBytes;
+
+      if (sw[port] == undefined) {
+        sw[port] = {};
+      }
+
+      sw[port].tx = tx;
+      sw[port].rx = rx;
+    });
+  });
+}
+
+iris.getLinkLoad = function(src, dst) {
+  var sw;
+  var target;
+
+  if (src.id in switchStats) {
+    sw = switchStats[src.id];
+    target = dst;
+  } else {
+    sw = switchStats[dst.id];
+    target = src;
+  }
+
+  for (var port in sw) {
+    if (sw[port].id == target.id) {
+      return sw[port].tx + sw[port].rx;
+    }
+  }
+
+  return 0;
+}
+
+
 iris.minimumDistances = function(nodes, links) {
 	var arr = [];
 
@@ -357,6 +454,7 @@ iris.topology = function(nodes, hosts, links) {
 	.nodes(nodes).links(links)
 	.start();
 
+
 	var node = iris.topologyNode.data(nodes).enter().append("g").attr('class', 'node');
 	node.append("text")
 //	.attr("transform", function(d) {return "translate(" + d + ")"; })
@@ -385,7 +483,7 @@ iris.topology = function(nodes, hosts, links) {
 	.attr("y2", function(d) { return d.target.y; });
 
 	node.on("mousedown", function(d) {
-		force.stop();
+		//force.stop();
 		if (!d.selected) { // Don't deselect on shift-drag.
 			if (!shiftKey) 
 				node.classed("selected", function(p) { 
@@ -430,7 +528,15 @@ iris.topology = function(nodes, hosts, links) {
 		link.attr("x1", function(d) { return d.source.x; })
 		.attr("y1", function(d) { return d.source.y; })
 		.attr("x2", function(d) { return d.target.x; })
-		.attr("y2", function(d) { return d.target.y; });
+		.attr("y2", function(d) { return d.target.y; })
+		.style('stroke-width', function(l) {
+			var load = iris.getLinkLoad(l.source, l.target);
+			if (load != 0) {
+				return Math.log10(load);
+			} else {
+				return 1;
+			}
+		});
 //		node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 		node.selectAll('ellipse')
 		.attr('cx', function(d) { return d.x; })
@@ -527,6 +633,10 @@ irisApp.controller('CntlTopology',
 					iris.topology([], [], []);
 				});
 			};
+
+			// Get statistics
+			iris.getSwitches();
+			setInterval(iris.getStatistics, 1000);
 			
 			angular.element('div.content > div.topology').bind('displayed', function() {
 				$scope.render();
