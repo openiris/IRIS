@@ -348,6 +348,7 @@ iris.topology = function(nodes, hosts, links) {
 	var circleSizeScale = d3.scale.linear().domain([0, 32]).range([10, 42]);
 
 	var shiftKey;
+	var ctrlKey;
 
 	nodes.forEach(function (d) {
 		// random enables the fast loading of the topology graph because
@@ -494,15 +495,20 @@ iris.topology = function(nodes, hosts, links) {
 	.attr("y2", function(d) { return d.target.y; });
 
 	node.on("mousedown", function(d) {
-		//force.stop();
-		if (!d.selected) { // Don't deselect on shift-drag.
-			if (!shiftKey) 
-				node.classed("selected", function(p) { 
-					return p.selected = d === p; 
-				});
-			else {
-				console.log("shift click");
-				d3.select(this).classed("selected", d.selected = true);
+		if (ctrlKey) {
+			d.selected = false;
+			d.fixed = false;
+		} else {
+			d.fixed = true;
+			if (!d.selected) { // Don't deselect on shift-drag.
+				if (!shiftKey) {
+					node.classed("selected", function(p) { 
+						return p.selected = d === p; 
+					});
+				} else {
+					console.log("shift click");
+					d3.select(this).classed("selected", d.selected = true);
+				}
 			}
 		}
 	})
@@ -514,6 +520,8 @@ iris.topology = function(nodes, hosts, links) {
 	.call(d3.behavior.drag().on("drag", function(d) { 
 		nudge(d3.event.dx, d3.event.dy); 
 	}));
+
+	d3.selectAll('[template=topology] .node .node').call(force.drag);
 
 	iris.topologyBrush.call(d3.svg.brush()
 			.x(d3.scale.identity().domain([0, iris.topologyWidth]))
@@ -588,19 +596,22 @@ iris.topology = function(nodes, hosts, links) {
 	}
 
 	var keydown = function() {
-		if (!d3.event.metaKey) 
+		if (!d3.event.metaKey) {
 			switch (d3.event.keyCode) {
 			case 38: nudge( 0, -1); break; // UP
 			case 40: nudge( 0, +1); break; // DOWN
 			case 37: nudge(-1,  0); break; // LEFT
 			case 39: nudge(+1,  0); break; // RIGHT
 			}
+		}
 		shiftKey = d3.event.shiftKey || d3.event.metaKey;
-//		d3.event.preventDefault();
+		ctrlKey = d3.event.ctrlKey;
+		//		d3.event.preventDefault();
 	}
 
 	var keyup = function() {
 		shiftKey = d3.event.shiftKey || d3.event.metaKey;
+		ctrlKey = d3.event.ctrlKey;
 	}
 
 	// 'body' is important to make these handers called correctly.
