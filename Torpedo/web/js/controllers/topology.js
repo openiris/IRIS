@@ -72,11 +72,18 @@ iris.getStatistics = function(dpid) {
 				sw[port] = {};
 			}
 
-			sw[port].tx = tx;
-			sw[port].rx = rx;
+			sw[port].lastLoad = sw[port].load;
+			sw[port].load = rx + tx;
 		});
 	});
 }
+
+iris.refreshStatistics = function() {
+	_.each(switches, function(sw) {
+		var dpid = sw.id;
+		iris.getStatistics(dpid);
+	});
+};
 
 iris.getLinkLoad = function(src, dst) {
 	var sw;
@@ -92,7 +99,11 @@ iris.getLinkLoad = function(src, dst) {
 
 	for (var port in sw) {
 		if (sw[port].id == target.id) {
-			return sw[port].tx + sw[port].rx;
+			if (sw[port].lastLoad != undefined) {
+				return sw[port].load - sw[port].lastLoad;
+			} else {
+				return sw[port].load;
+			}
 		}
 	}
 
@@ -533,6 +544,7 @@ iris.topology = function(nodes, hosts, links) {
 			var load = iris.getLinkLoad(l.source, l.target);
 			if (load != 0) {
 				return Math.log10(load);
+				console.log(load);
 			} else {
 				return 1;
 			}
@@ -636,8 +648,8 @@ irisApp.controller('CntlTopology',
 
 			// Get statistics
 			iris.getSwitches();
-			setInterval(iris.getStatistics, 1000);
-			
+			setInterval(iris.refreshStatistics, 1000);
+
 			angular.element('div.content > div.topology').bind('displayed', function() {
 				$scope.render();
 			});
