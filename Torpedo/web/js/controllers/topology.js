@@ -6,97 +6,97 @@ iris.topologyHeight = 700;
 var switchStats = {};
 
 iris.getSwitches = function() {
-  $.get("/wm/core/controller/switches/json")
-  .success(function(data) {
-    _.each(data, function(obj) {
-      var dpid = obj.dpid;
-      switchStats[dpid] = {};
-      iris.getStatistics(dpid);
-    });
+	$.get("/wm/core/controller/switches/json")
+	.success(function(data) {
+		_.each(data, function(obj) {
+			var dpid = obj.dpid;
+			switchStats[dpid] = {};
+			iris.getStatistics(dpid);
+		});
 
-    iris.getLinks();
-    iris.getDevices();
-  });
+		iris.getLinks();
+		iris.getDevices();
+	});
 }
 
 iris.getLinks = function() {
-  $.get("/wm/topology/links/json")
-  .success(function(data) {
-    _.each(data, function(link) {
-      var srcDpid = link['src-switch'];
-      var port = link['src-port'];
-      var dstDpid = link['dst-switch'];
+	$.get("/wm/topology/links/json")
+	.success(function(data) {
+		_.each(data, function(link) {
+			var srcDpid = link['src-switch'];
+			var port = link['src-port'];
+			var dstDpid = link['dst-switch'];
 
-      var sw = switchStats[srcDpid];
+			var sw = switchStats[srcDpid];
 
-      if (sw[port] == undefined) {
-        sw[port] = {};
-      }
-      sw[port].id = dstDpid;
-    });
-  });
+			if (sw[port] == undefined) {
+				sw[port] = {};
+			}
+			sw[port].id = dstDpid;
+		});
+	});
 }
 
 iris.getDevices = function() {
-  $.get("/wm/device/all/json")
-  .success(function(data) {
-    _.each(data, function(host) {
-      var id = host.mac[0];
-      _.each(host.attachmentPoint, function(point) {
-        var dpid = point.switchDPID;
-        var port = point.port;
+	$.get("/wm/device/all/json")
+	.success(function(data) {
+		_.each(data, function(host) {
+			var id = host.mac[0];
+			_.each(host.attachmentPoint, function(point) {
+				var dpid = point.switchDPID;
+				var port = point.port;
 
-        var sw = switchStats[dpid];
+				var sw = switchStats[dpid];
 
-        if (sw[port] == undefined) {
-          sw[port] = {};
-        }
-        sw[port].id = id;
-      });
-    });
-  });
+				if (sw[port] == undefined) {
+					sw[port] = {};
+				}
+				sw[port].id = id;
+			});
+		});
+	});
 }
 
 iris.getStatistics = function(dpid) {
-  $.get("/wm/core/switch/" + dpid + "/port/json")
-  .success(function(data) {
-    var stats = data[dpid];
-    var sw = switchStats[dpid];
+	$.get("/wm/core/switch/" + dpid + "/port/json")
+	.success(function(data) {
+		var stats = data[dpid];
+		var sw = switchStats[dpid];
 
-    _.each(stats, function(stat) {
-      var port = stat.portNumber;
-      var tx = stat.transmitBytes;
-      var rx = stat.receiveBytes;
+		_.each(stats, function(stat) {
+			var port = stat.portNumber;
+			var tx = stat.transmitBytes;
+			var rx = stat.receiveBytes;
 
-      if (sw[port] == undefined) {
-        sw[port] = {};
-      }
+			if (sw[port] == undefined) {
+				sw[port] = {};
+			}
 
-      sw[port].tx = tx;
-      sw[port].rx = rx;
-    });
-  });
+			sw[port].tx = tx;
+			sw[port].rx = rx;
+		});
+	});
 }
 
 iris.getLinkLoad = function(src, dst) {
-  var sw;
-  var target;
+	var sw;
+	var target;
 
-  if (src.id in switchStats) {
-    sw = switchStats[src.id];
-    target = dst;
-  } else {
-    sw = switchStats[dst.id];
-    target = src;
-  }
+	if (src.id in switchStats) {
+		sw = switchStats[src.id];
+		target = dst;
+	} else {
+		sw = switchStats[dst.id];
+		target = src;
+	}
 
-  for (var port in sw) {
-    if (sw[port].id == target.id) {
-      return sw[port].tx + sw[port].rx;
-    }
-  }
+	for (var port in sw) {
+		if (sw[port].id == target.id) {
+			return sw[port].tx + sw[port].rx;
+		}
+	}
 
-  return 0;
+	return 0;
 }
 
 
