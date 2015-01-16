@@ -68,12 +68,14 @@ iris.getStatistics = function(dpid) {
 			var tx = stat.transmitBytes;
 			var rx = stat.receiveBytes;
 
-			if (sw[port] == undefined) {
-				sw[port] = {};
-			}
+			try {
+			  if (sw[port] == undefined) {
+			    sw[port] = {};
+			  }
 
-			sw[port].lastLoad = sw[port].load;
-			sw[port].load = rx + tx;
+			  sw[port].lastLoad = sw[port].load;
+			  sw[port].load = rx + tx;
+			} catch(e) {}
 		});
 	});
 }
