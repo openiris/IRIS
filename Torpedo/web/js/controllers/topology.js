@@ -102,7 +102,7 @@ iris.getLinkLoad = function(src, dst) {
 			if (sw[port].lastLoad != undefined) {
 				return sw[port].load - sw[port].lastLoad;
 			} else {
-				return sw[port].load;
+				return 0;
 			}
 		}
 	}
@@ -494,6 +494,17 @@ iris.topology = function(nodes, hosts, links) {
 	.attr("x2", function(d) { return d.target.x; })
 	.attr("y2", function(d) { return d.target.y; });
 
+	setInterval(function() {
+		link.style('stroke-width', function(l) {
+			var load = iris.getLinkLoad(l.source, l.target);
+			if (load != 0) {
+				return Math.log10(load);
+			} else {
+				return 1;
+			}
+		});
+	}, 1000);
+
 	node.on("mousedown", function(d) {
 		if (ctrlKey) {
 			d.selected = false;
@@ -547,16 +558,7 @@ iris.topology = function(nodes, hosts, links) {
 		link.attr("x1", function(d) { return d.source.x; })
 		.attr("y1", function(d) { return d.source.y; })
 		.attr("x2", function(d) { return d.target.x; })
-		.attr("y2", function(d) { return d.target.y; })
-		.style('stroke-width', function(l) {
-			var load = iris.getLinkLoad(l.source, l.target);
-			if (load != 0) {
-				return Math.log10(load);
-				console.log(load);
-			} else {
-				return 1;
-			}
-		});
+		.attr("y2", function(d) { return d.target.y; });
 //		node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 		node.selectAll('ellipse')
 		.attr('cx', function(d) { return d.x; })
