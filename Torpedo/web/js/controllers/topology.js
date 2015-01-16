@@ -498,9 +498,10 @@ iris.topology = function(nodes, hosts, links) {
 
 	setInterval(function() {
 		link.style('stroke-width', function(l) {
+			var MIN_THRESHOLD = 200; // Byte per second
 			var load = iris.getLinkLoad(l.source, l.target);
 			if (load != 0) {
-				return Math.log10(load);
+				return Math.max(Math.log10(load - MIN_THRESHOLD), 1);
 			} else {
 				return 1;
 			}
