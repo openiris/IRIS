@@ -167,7 +167,7 @@
 
 					<section>
 						<label>Active</label>
-						<input type="checkbox" ng-model="form.active" checked="" />
+						<input type="checkbox" ng-model="form.active" />
 					</section>
 
 					<section>
@@ -187,6 +187,15 @@
 						</select>
 						<input type="text" ng-model="entry.value" />
 						<button ng-click="addField()">Add</button>
+					</section>
+
+					<!-- Instructions -->
+					<section ng-repeat="inst in form.instructions">
+						<header>instruction {{ $index }}</header>
+						<section>
+							<label>clear_actions</label>
+							<input type="checkbox" ng-model="inst.clear_actions" />
+						</section>
 					</section>
 
 				</section>

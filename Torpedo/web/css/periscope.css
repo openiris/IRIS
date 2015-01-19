@@ -162,11 +162,11 @@ footer a {
 	font-weight: bold;
 }
 
-.content section.form-fields > section {
+.content section.form-fields section {
 	margin: 10px;
 }
 
-.content section.form-fields > section > label {
+.content section.form-fields section > label {
 	display: inline-block;
 	width: 15ex;
 }
