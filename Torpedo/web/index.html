@@ -156,6 +156,7 @@
 					<section>
 						<label>Name</label>
 						<input type="text" ng-model="form.name" />
+						<button ng-click="deleteEntry()">Delete</button>
 					</section>
 
 					<section>
@@ -163,6 +164,7 @@
 						<select ng-model="form.switch">
 							<option ng-repeat="sw in switch_dpids" value="{{sw}}">{{sw}}</option>
 						</select>
+						<button ng-click="clearEntry()">Clear rules by this switch</button>
 					</section>
 
 					<section>
@@ -182,6 +184,7 @@
 					</section>
 
 					<section>
+						<label>Optional fields</label>
 						<select ng-model="entry.field">
 							<option ng-repeat="field in entryFields" value="{{field}}">{{field}}</option>
 						</select>
@@ -196,6 +199,11 @@
 							<label>clear_actions</label>
 							<input type="checkbox" ng-model="inst.clear_actions" />
 						</section>
+					</section>
+
+					<section>
+						<button ng-click="addEntry()">Add/Modify</button>
+						<button ng-click="clearAll()">Clear all</button>
 					</section>
 
 				</section>
@@ -223,19 +231,13 @@
 
 					<span ng-show="newActionTable == 'write_actions' || newActionTable == 'apply_actions'">
 						<select ng-model="newActionKey">
-							<option ng-repeat="item in instructionActions" value="{{ item }}">{{ item }}</option>
+							<option ng-repeat="item in INST_ACTIONS" value="{{ item }}">{{ item }}</option>
 						</select>
 						<input type="text" ng-model="newActionValue" />
 					</span>
 
 					<button ng-click="addAction(instructionIndex)">Add</button>
 
-					<section>
-						<button ng-click="addEntry()">Add/Modify</button>
-						<button ng-click="deleteEntry()">Delete</button>
-						<button ng-click="clearEntry()">Clear rules by this switch</button>
-						<button ng-click="clearAll()">Clear all</button>
-					</section>
 				</section>
 
 				<textarea class="large">{{ form | prettyJson }}</textarea>
