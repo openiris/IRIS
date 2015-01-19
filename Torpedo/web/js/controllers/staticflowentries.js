@@ -224,10 +224,20 @@ irisApp.controller(
     }]
 );
 
-irisApp.filter('prettyJson', function() {
-  function syntaxHighlight(json) {
-    return angular.toJson(json, 2);
-  }
+irisApp.directive('rawJson', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, element, attrs, ngModelController) {
+      ngModelController.$parsers.push(function(data) {
+        try {
+          return JSON.parse(data);
+        } catch(e) {
+        }
+      });
 
-  return syntaxHighlight;
+      ngModelController.$formatters.push(function(data) {
+        return angular.toJson(data, 2);
+      });
+    },
+  };
 });
