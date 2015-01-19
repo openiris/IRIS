@@ -149,7 +149,7 @@ irisApp.controller(
       $scope.editField = function(field) {
         $scope.entry.field = field;
         if (typeof($scope.form[field]) == 'object') {
-          $scope.entry.value = JSON.stringify($scope.form[field]);
+          $scope.entry.value = angular.toJson($scope.form[field]);
         } else {
           $scope.entry.value = $scope.form[field];
         }
@@ -195,6 +195,9 @@ irisApp.controller(
             for (var index in instruction[table]) {
               var entry = instruction[table][index];
               for (var actionName in entry) {
+                if (actionName == '$$hashKey') {
+                  continue;
+                }
                 $scope.actions[table + "|" + index] = table + ' - ' + actionName + ': ' + entry[actionName];
               }
             }
