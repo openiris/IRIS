@@ -91,7 +91,8 @@ a:hover {
 .topology .nav ul li a.topology,
 .vNetworks .nav ul li a.vNetworks,
 .vSubnets .nav ul li a.vSubnets,
-.vPorts .nav ul li a.vPorts
+.vPorts .nav ul li a.vPorts,
+.staticFlows .nav ul li a.staticFlows
 {
 	margin-top: 0;
 	background-color: white;
