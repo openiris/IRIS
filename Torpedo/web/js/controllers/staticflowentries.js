@@ -139,6 +139,7 @@ irisApp.controller(
           return;
         }
         $scope.form[$scope.entry.field] = $scope.entry.value;
+        $scope.entry.value = "";
       };
 
       $scope.removeField = function(field) {
