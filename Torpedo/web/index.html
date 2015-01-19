@@ -206,41 +206,13 @@
 						<button ng-click="clearAll()">Clear all</button>
 					</section>
 
-				</section>
-
-				<section>
-					<h2>Instructions</h2>
-					<select size="10" ng-model="instructionIndex">
-						<option ng-repeat="_ in form.instructions" ng-if="form.instructions.length>0" value="{{$index}}">{{$index}}</option>
-					</select>
-					<button ng-click="addInstruction()">add</button>
-					<button ng-click="removeInstruction(instructionIndex)">remove</button>
-
-					<select size="10" ng-model="actionKey">
-						<option ng-repeat="(key, text) in getActionsFromInst(instructionIndex)" value="{{ key }}">{{ text }}</option>
-					</select>
-
-					<button ng-click="removeAction(instructionIndex, actionKey)">Remove</button>
-
-					<select ng-model="newActionTable">
-						<option value="apply_actions">apply_actions</option>
-						<option value="write_actions">write_actions</option>
-						<option value="clear_actions">clear_actions</option>
-						<option value="goto_table" disabled>goto_table</option>
-					</select>
-
-					<span ng-show="newActionTable == 'write_actions' || newActionTable == 'apply_actions'">
-						<select ng-model="newActionKey">
-							<option ng-repeat="item in INST_ACTIONS" value="{{ item }}">{{ item }}</option>
-						</select>
-						<input type="text" ng-model="newActionValue" />
-					</span>
-
-					<button ng-click="addAction(instructionIndex)">Add</button>
+					<section>
+						<header>result</header>
+						<pre>{{ result }}</pre>
+					</section>
 
 				</section>
 
-				<textarea class="large">{{ form | prettyJson }}</textarea>
 			</form>
 		</div>
 	</div>

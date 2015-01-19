@@ -162,6 +162,13 @@ footer a {
 	font-weight: bold;
 }
 
+.content header {
+	font-size: 1.2em;
+	font-weight: bold;
+	margin: 10px 0 20px;
+	border-bottom: 1px solid black;
+}
+
 .content section.form-fields section {
 	margin: 10px;
 }

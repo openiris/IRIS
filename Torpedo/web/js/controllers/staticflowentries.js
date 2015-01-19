@@ -80,7 +80,7 @@ irisApp.controller(
 
         $http.post('/wm/staticflowentry/json', form)
         .success(function(data) {
-          console.log(data);
+          $scope.result = data.result;
         });
       };
 
@@ -88,6 +88,7 @@ irisApp.controller(
         var name = $scope.form.name;
         $http.delete('/wm/staticflowentry/delete/' + name + '/json')
         .success(function(data) {
+          $scope.result = data.result;
           $scope.form = {};
         });
       };
@@ -99,7 +100,9 @@ irisApp.controller(
 
       $scope.clearAll = function() {
         $http.get('/wm/staticflowentry/clear/all/json')
-        .success(function(data) { console.log(data); });
+        .success(function(data) {
+          $scope.result = data.result;
+        });
       };
 
       $scope.autofill = function(entry) {
@@ -168,64 +171,6 @@ irisApp.controller(
 
       $scope.removeInstruction = function(index) {
         $scope.form.instructions.splice(index, 1);
-      };
-
-      $scope.getActionsFromInst = function(instIndex) {
-        var instruction = $scope.getInstruction(instIndex);
-        $scope.actions = {};
-
-        for (var table in instruction) {
-          if (_.contains(['apply_actions', 'write_actions'], table)) {
-            for (var index in instruction[table]) {
-              var entry = instruction[table][index];
-              for (var actionName in entry) {
-                if (actionName == '$$hashKey') {
-                  continue;
-                }
-                $scope.actions[table + "|" + index] = table + ' - ' + actionName + ': ' + entry[actionName];
-              }
-            }
-          } else if (table == 'clear_actions') {
-            $scope.actions.clear_actions = 'clear_actions';
-          } else if (table == 'goto_table') {
-            // TODO
-          }
-        }
-
-        return $scope.actions;
-      };
-
-      $scope.addAction = function(instIndex) {
-        var instruction = $scope.getInstruction(instIndex);
-        var table = $scope.newActionTable;
-        var actionKey = $scope.newActionKey;
-        var actionValue = $scope.newActionValue;
-
-        if (instruction[table] === undefined) {
-          instruction[table] = [];
-        }
-
-        if (_.contains(['apply_actions', 'write_actions'], table)) {
-          if (! actionKey || ! actionValue) {
-            return;
-          }
-          var newObj = {};
-          newObj[actionKey] = actionValue;
-          instruction[table].push(newObj);
-        }
-      };
-
-      $scope.removeAction = function(instIndex, actionKey) {
-        var instuction = $scope.getInstruction(instIndex);
-        var _params = actionKey.split('|');
-        var table = _params[0];
-        var index = _params[1];
-
-        if (_.contains(['apply_actions', 'write_actions'], table)) {
-          instuction[table].splice(index, 1);
-        } else {
-          delete instuction[table];
-        }
       };
 
       $scope.getData = function() {
