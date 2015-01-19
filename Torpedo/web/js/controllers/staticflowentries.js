@@ -9,9 +9,7 @@ irisApp.controller(
       $scope.entry = {};
 
       $scope.entryFields = [
-        "table_id",
-        "idle_timeout",
-        "hard_timeout",
+        "eth_type",
         "actions",
         "in_port",
         "eth_dst",
@@ -39,33 +37,6 @@ irisApp.controller(
         "mpls_label",
         "mpls_tc",
       ];
-
-      var MATCH_FIELDS = [
-        "eth_type",
-        "in_port",
-        "eth_dst",
-        "eth_src",
-        "vlan_vid",
-        "vlan_pcp",
-        "ip_proto",
-        "ipv4_src",
-        "ipv4_dst",
-        "ip_dscp",
-        "ip_ecn",
-        "tcp_src",
-        "tcp_dst",
-        "udp_src",
-        "udp_dst",
-        "sctp_src",
-        "sctp_dst",
-        "icmpv4_type",
-        "icmpv4_code",
-        "arp_op",
-        "arp_spa",
-        "arp_tpa",
-        "arp_sha",
-        "arp_tha",
-        ];
 
       $scope.instructionActions = [
         "output",
@@ -135,6 +106,10 @@ irisApp.controller(
         $scope.form = angular.copy(entry);
         if (entry.priority) {
           $scope.form.priority = parseInt(entry.priority);
+        }
+
+        if (entry.active !== undefined) {
+          $scope.form.active = JSON.parse(entry.active);
         }
       };
 
@@ -282,7 +257,7 @@ irisApp.controller(
 
       $scope.getMatches = function(rule) {
         var matches = [];
-        _.each(MATCH_FIELDS, function(key) {
+        _.each($scope.entryFields, function(key) {
           if (rule[key] !== undefined) {
             matches.push(key + ": " + rule[key]);
           }
@@ -299,3 +274,11 @@ irisApp.controller(
       $scope.getData();
     }]
 );
+
+irisApp.filter('prettyJson', function() {
+  function syntaxHighlight(json) {
+    return angular.toJson(json, 2);
+  }
+
+  return syntaxHighlight;
+});

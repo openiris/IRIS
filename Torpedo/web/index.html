@@ -150,39 +150,45 @@
 		</div>
 
 		<div>
+			<h2>Flow entry</h2>
 			<form name="entryForm">
-				<section>
-					<label>Name</label>
-					<input type="text" ng-model="form.name" />
+				<section class="form-fields">
+					<section>
+						<label>Name</label>
+						<input type="text" ng-model="form.name" />
+					</section>
 
-					<label>Priority</label>
-					<input type="number" ng-model="form.priority" />
+					<section>
+						<label>DPID</label>
+						<select ng-model="form.switch">
+							<option ng-repeat="sw in switch_dpids" value="{{sw}}">{{sw}}</option>
+						</select>
+					</section>
 
-					<label>Switch</label>
-					<select ng-model="form.switch">
-						<option ng-repeat="sw in switch_dpids" value="{{sw}}">{{sw}}</option>
-					</select>
+					<section>
+						<label>Active</label>
+						<input type="checkbox" ng-model="form.active" checked="" />
+					</section>
 
-					<label>eth_type</label>
-					<input type="text" pattern="0x[0-9a-fA-F]{4}" ng-model="form.eth_type" />
-				</section>
+					<section>
+						<label>Priority</label>
+						<input type="number" ng-model="form.priority" />
+					</section>
 
-				<section>
-					<table class="vertical_table">
-						<tr ng-repeat="(field, value) in additionalFields()">
-							<td>
-								<a ng-click="editField(field)">{{ field }}</a>
-							</td>
-							<td>
-								{{ value }} <a ng-click="removeField(field)">remove</a>
-							</td>
-						</tr>
-					</table>
-					<select ng-model="entry.field">
-						<option ng-repeat="field in entryFields" value="{{field}}">{{field}}</option>
-					</select>
-					<input type="text" ng-model="entry.value" />
-					<button ng-click="addField()">Add</button>
+					<!-- Additional fields -->
+					<section ng-repeat="(field, value) in additionalFields()">
+						<label>{{ field }}</label>
+						<input type="text" ng-model="form[field]" />
+					</section>
+
+					<section>
+						<select ng-model="entry.field">
+							<option ng-repeat="field in entryFields" value="{{field}}">{{field}}</option>
+						</select>
+						<input type="text" ng-model="entry.value" />
+						<button ng-click="addField()">Add</button>
+					</section>
+
 				</section>
 
 				<section>
@@ -223,6 +229,7 @@
 					</section>
 				</section>
 
+				<textarea class="large">{{ form | prettyJson }}</textarea>
 			</form>
 		</div>
 	</div>

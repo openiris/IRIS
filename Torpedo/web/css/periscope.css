@@ -153,6 +153,28 @@ footer a {
 	background-size: 20px 20px;
 }
 
+.content h2 {
+	background: grey;
+	padding: 10px 20px;
+	margin: 20px 0 10px;
+	border-radius: 10px;
+	font-weight: bold;
+}
+
+.content section.form-fields > section {
+	margin: 10px;
+}
+
+.content section.form-fields > section > label {
+	display: inline-block;
+	width: 15ex;
+}
+
+.content textarea.large { 
+	width: 100%;
+	height: 200px;
+}
+
 .content table {
 	width: 100%;
 	font-size: 12px;
