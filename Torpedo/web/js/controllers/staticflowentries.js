@@ -40,6 +40,33 @@ irisApp.controller(
         "mpls_tc",
       ];
 
+      var MATCH_FIELDS = [
+        "eth_type",
+        "in_port",
+        "eth_dst",
+        "eth_src",
+        "vlan_vid",
+        "vlan_pcp",
+        "ip_proto",
+        "ipv4_src",
+        "ipv4_dst",
+        "ip_dscp",
+        "ip_ecn",
+        "tcp_src",
+        "tcp_dst",
+        "udp_src",
+        "udp_dst",
+        "sctp_src",
+        "sctp_dst",
+        "icmpv4_type",
+        "icmpv4_code",
+        "arp_op",
+        "arp_spa",
+        "arp_tpa",
+        "arp_sha",
+        "arp_tha",
+        ];
+
       $scope.instructionActions = [
         "output",
         "set_vlan_vid",
@@ -167,7 +194,7 @@ irisApp.controller(
         $scope.form.instructions.splice(index, 1);
       };
 
-      $scope.getActions = function(instIndex) {
+      $scope.getActionsFromInst = function(instIndex) {
         var instruction = $scope.getInstruction(instIndex);
         $scope.actions = {};
 
@@ -251,6 +278,22 @@ irisApp.controller(
         if ($scope.goon !== false) {
           $timeout($scope.getData, 1000);
         }
+      };
+
+      $scope.getMatches = function(rule) {
+        var matches = [];
+        _.each(MATCH_FIELDS, function(key) {
+          if (rule[key] !== undefined) {
+            matches.push(key + ": " + rule[key]);
+          }
+        });
+
+        return matches.join(', ')
+      };
+
+      $scope.getActions = function(rule) {
+        // TODO: Implement.
+        return rule.instructions;
       };
 
       $scope.getData();

@@ -126,10 +126,11 @@
 				<thead>
 					<tr>
 						<th>name</th>
+						<th>DPID</th>
 						<th>active</th>
-						<th>switch</th>
 						<th>priority</th>
-						<th>eth_type</th>
+						<th>match</th>
+						<th>actions</th>
 					</tr>
 				</thead>
 				<tbody template="staticFlowEntries">
@@ -138,10 +139,11 @@
 					</tr>
 					<tr ng-if="rules.length>0" ng-repeat="entry in rules">
 						<td><a ng-click="autofill(entry)">{{entry.name}}</a></td>
-						<td><a ng-click="toggleActive(entry)">{{entry.active}}</a></td>
 						<td>{{entry.switch}}</td>
+						<td><a ng-click="toggleActive(entry)">{{entry.active}}</a></td>
 						<td>{{entry.priority}}</td>
-						<td>{{entry.eth_type}}</td>
+						<td>{{getMatches(entry)}}</td>
+						<td>{{getActions(entry)}}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -192,7 +194,7 @@
 					<button ng-click="removeInstruction(instructionIndex)">remove</button>
 
 					<select size="10" ng-model="actionKey">
-						<option ng-repeat="(key, text) in getActions(instructionIndex)" value="{{ key }}">{{ text }}</option>
+						<option ng-repeat="(key, text) in getActionsFromInst(instructionIndex)" value="{{ key }}">{{ text }}</option>
 					</select>
 
 					<button ng-click="removeAction(instructionIndex, actionKey)">Remove</button>
