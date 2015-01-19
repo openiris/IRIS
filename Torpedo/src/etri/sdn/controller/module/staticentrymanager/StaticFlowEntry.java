@@ -693,9 +693,12 @@ public class StaticFlowEntry {
 					instructions.add(inst);
 				}
 				else if (inststr.toLowerCase().equals("clear_actions")) {
-					OFInstructionClearActions inst = 
-							fac.instructions().clearActions();
-					instructions.add(inst);
+					String value = (String) entry.get("clear_actions");
+					if (value.toLowerCase().equals("true")) {
+						OFInstructionClearActions inst = 
+								fac.instructions().clearActions();
+						instructions.add(inst);
+					}
 				}
 				else {
 					throw new StaticFlowEntryException("Unexpected instruction " + inststr);
