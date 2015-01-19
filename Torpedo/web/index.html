@@ -67,6 +67,7 @@
 		<li><a class="devices">Devices</a></li>
 		<li><a class="topology">Topology</a></li>
 		<li><a class="vNetworks">vNetworks</a></li>
+		<li><a class="staticFlows">StaticFlows</a></li>
 		</ul>
 	</div> <!-- /nav -->
 </div>
@@ -118,7 +119,7 @@
 		</div>
 	</div>
 
-	<div class="switches staticFlowEntryManager" ng-controller="CntlStaticFlowEntryManager">
+	<div class="staticFlows" ng-controller="CntlStaticFlowEntryManager">
 		<h1>staticflowentries(<span>{{rules.length}}</span>)</h1><a ng-click="getData()"></a>
 		<div>
 			<table class="horizontal_table mark_2th_row">
