@@ -78,14 +78,6 @@ irisApp.controller(
           form.priority = 100;
         }
 
-        for (var index in form.instructions) {
-          if (form.instructions[index].clear_actions) {
-            form.instructions[index].clear_actions = [];
-          } else {
-            delete form.instructions[index].clear_actions;
-          }
-        }
-
         $http.post('/wm/staticflowentry/json', form)
         .success(function(data) {
           console.log(data);
@@ -118,14 +110,6 @@ irisApp.controller(
 
         if (entry.active !== undefined) {
           $scope.form.active = JSON.parse(entry.active);
-        }
-
-        for (var index in $scope.form.instructions) {
-          if ($scope.form.instructions[index].clear_actions !== undefined) {
-            $scope.form.instructions[index].clear_actions = true;
-          } else {
-            $scope.form.instructions[index].clear_actions = false;
-          }
         }
       };
 
