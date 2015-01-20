@@ -72,7 +72,7 @@ irisApp.controller(
         var form = $scope.form;
 
         if (form.active === undefined) {
-          form.active = true;
+          form.active = false;
         }
         if (form.priority === undefined) {
           form.priority = 100;
