@@ -166,7 +166,11 @@ irisApp.controller(
         if ($scope.form.instructions === undefined) {
           $scope.form.instructions = [];
         }
-        $scope.form.instructions.push({});
+        var inst = {
+          apply_actions: [],
+          write_actions: [],
+        };
+        $scope.form.instructions.push(inst);
       };
 
       $scope.removeInstruction = function(index) {
