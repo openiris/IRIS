@@ -177,6 +177,14 @@ irisApp.controller(
         $scope.form.instructions.splice(index, 1);
       };
 
+      $scope.addAction = function(table, action, param) {
+        table.push({"action": action, "param": param});
+      };
+
+      $scope.removeAction = function(table, index) {
+        table.splice(index, 1);
+      };
+
       $scope.getData = function() {
         // Get static flow entries.
         $http.get('/wm/staticflowentry/list/all/json')

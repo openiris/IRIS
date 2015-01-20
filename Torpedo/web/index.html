@@ -195,8 +195,38 @@
 					<!-- Instructions -->
 					<section ng-repeat="inst in form.instructions">
 						<header>instruction {{ $index }} <a ng-click="removeInstruction($index)">[x]</a></header>
+
 						<section>
-							<label>clear_actions</label>
+							<header>apply_actions</header>
+							<section ng-repeat="action in inst.apply_actions">
+								<label>{{ action.action }} <a ng-click="removeAction(inst.apply_actions, $index)">[x]</a></label>
+								<input type="text" ng-model="action.param" />
+							</section>
+
+							<select ng-model="apply.action">
+								<option ng-repeat="action in instructionActions" value="{{action}}">{{action}}</option>
+							</select>
+							<input type="text" ng-model="apply.param" />
+							<button ng-click="addAction(inst.apply_actions, apply.action, apply.param)">Add action</button>
+						</section>
+
+						<section>
+							<header>write_actions</header>
+							<section ng-repeat="action in inst.write_actions">
+								<label>{{ action.action }} <a ng-click="removeAction(inst.write_actions, $index)">[x]</a></label>
+								<input type="text" ng-model="action.param" />
+							</section>
+
+							<select ng-model="write.action">
+								<option ng-repeat="action in instructionActions" value="{{action}}">{{action}}</option>
+							</select>
+							<input type="text" ng-model="write.param" />
+							<button ng-click="addAction(inst.write_actions, write.action, write.param)">Add action</button>
+						</section>
+
+						<section>
+							<header>clear_actions</header>
+							<label>Enable</label>
 							<input type="checkbox" ng-model="inst.clear_actions" />
 						</section>
 					</section>
