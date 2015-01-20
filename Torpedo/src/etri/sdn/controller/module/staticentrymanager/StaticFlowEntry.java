@@ -495,163 +495,164 @@ public class StaticFlowEntry {
 		OFFactory fac = OFFactories.getFactory(sw.getVersion());
 
 		for (Map<String, Object> entry : entries) {
-			for (String actionstr : entry.keySet()) {
-				if (actionstr.toLowerCase().equals("output")) {		//OF1.0 & 1.3
-					OFActionOutput.Builder action = fac.actions().buildOutput();
-					Long value  = null;
-					if ( ((String) entry.get("output")).startsWith("0x") ) {
-						value = Long.parseLong(((String) entry.get("output")).substring(2), 16);
-					}
-					else {
-						value = Long.parseLong((String) entry.get("output"));
-					}
-					action
-					.setMaxLen(0xffff)
-					.setPort(OFPort.of( value.intValue() ));
-					actions.add(action.build());
-				}
+			String actionstr = (String) entry.get("action");
+			Object param = entry.get("param");
 
-				//OF1.0
-				else if (actionstr.toLowerCase().equals("set_vlan_vid")) {
-					OFActionSetVlanVid action = 
-							fac.actions().setVlanVid(VlanVid.ofVlan(Short.valueOf((String) entry.get("set_vlan_vid"))));
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("set_vlan_pcp")) {
-					OFActionSetVlanPcp action = 
-							fac.actions().setVlanPcp(VlanPcp.of(Byte.valueOf((String) entry.get("set_vlan_pcp"))));
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("strip_vlan")) {
-					OFActionPopVlan action = 
-							fac.actions().popVlan();
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("set_dl_src")) {
-					OFActionSetDlSrc action = 
-							fac.actions().setDlSrc(MacAddress.of((String) entry.get("set_dl_src")));
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("set_dl_dst")) {
-					OFActionSetDlDst action = 
-							fac.actions().setDlDst(MacAddress.of((String) entry.get("set_dl_dst")));
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("set_nw_src")) {
-					OFActionSetNwSrc action = 
-							fac.actions().setNwSrc(IPv4Address.of((String) entry.get("set_nw_src")));
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("set_nw_dst")) {
-					OFActionSetNwDst action = 
-							fac.actions().setNwDst(IPv4Address.of((String) entry.get("set_nw_dst")));
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("set_nw_tos")) {
-					OFActionSetNwTos action = 
-							fac.actions().setNwTos(Short.valueOf((String) entry.get("set_nw_tos")));
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("set_tp_src")) {
-					OFActionSetTpSrc action = 
-							fac.actions().setTpSrc(TransportPort.of(Short.valueOf((String) entry.get("set_tp_src"))));
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("set_tp_dst")) {
-					OFActionSetTpDst action = 
-							fac.actions().setTpDst(TransportPort.of(Short.valueOf((String) entry.get("set_tp_dst"))));
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("enqueue")) {
-					String[] portqueue = ((String) entry.get("enqueue")).split(":");
-					OFActionEnqueue action = 
-							fac.actions().enqueue(
-									OFPort.ofShort(Short.valueOf(portqueue[0])), 
-									Long.valueOf(portqueue[1]));
-					actions.add(action);
-				}
+            if (actionstr.toLowerCase().equals("output")) {		//OF1.0 & 1.3
+                OFActionOutput.Builder action = fac.actions().buildOutput();
+                Long value  = null;
+                if ( ((String) param).startsWith("0x") ) {
+                    value = Long.parseLong(((String) param).substring(2), 16);
+                }
+                else {
+                    value = Long.parseLong((String) param);
+                }
+                action
+                .setMaxLen(0xffff)
+                .setPort(OFPort.of( value.intValue() ));
+                actions.add(action.build());
+            }
 
-				//OF1.3
-				else if (actionstr.toLowerCase().equals("copy_ttl_out")) {
-					OFActionCopyTtlOut action = 
-							fac.actions().copyTtlOut();
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("copy_ttl_in")) {
-					OFActionCopyTtlIn action = 
-							fac.actions().copyTtlIn();
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("set_mpls_ttl")) {
-					OFActionSetMplsTtl action = 
-							fac.actions().setMplsTtl(Byte.valueOf((String) entry.get("set_mpls_ttl")));
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("dec_mpls_ttl")) {
-					OFActionDecMplsTtl action = 
-							fac.actions().decMplsTtl();
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("push_vlan")) {
-					OFActionPushVlan action = 
-							fac.actions().pushVlan(EthType.of(Short.valueOf((String) entry.get("push_vlan"))));
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("pop_vlan")) {
-					OFActionPopVlan action = 
-							fac.actions().popVlan();
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("push_mpls")) {
-					OFActionPushMpls action = 
-							fac.actions().pushMpls(EthType.of(Short.valueOf((String) entry.get("push_mpls"))));
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("pop_mpls")) {
-					OFActionPopMpls action = 
-							fac.actions().popMpls(EthType.of(Short.valueOf((String) entry.get("pop_mpls"))));
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("set_queue")) {
-					OFActionSetQueue action = 
-							fac.actions().setQueue(Integer.valueOf((String) entry.get("set_queue")));
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("group")) {
-					OFActionGroup action = 
-							fac.actions().group(OFGroup.of(Integer.valueOf((String) entry.get("group"))));
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("set_nw_ttl")) {
-					OFActionSetNwTtl action = 
-							fac.actions().setNwTtl(Byte.valueOf((String) entry.get("set_nw_ttl")));
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("dec_nw_ttl")) {
-					OFActionDecNwTtl action = 
-							fac.actions().decNwTtl();
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("set_field")) {
-					@SuppressWarnings("unchecked")
-					OFActionSetField action = 
-					fac.actions().setField(makeOxm(sw, actionstr, (Map<String, Object>) entry.get("set_field")));
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("push_pbb")) {
-					OFActionPushPbb action = 
-							fac.actions().pushPbb(EthType.of(Short.valueOf((String) entry.get("push_pbb"))));
-					actions.add(action);
-				}
-				else if (actionstr.toLowerCase().equals("pop_pbb")) {
-					OFActionPopPbb action = 
-							fac.actions().popPbb();
-					actions.add(action);
-				}
-				else {
-					throw new StaticFlowEntryException("Unexpected action " + actionstr);
-				}
-			}
+            //OF1.0
+            else if (actionstr.toLowerCase().equals("set_vlan_vid")) {
+                OFActionSetVlanVid action =
+                        fac.actions().setVlanVid(VlanVid.ofVlan(Short.valueOf((String) param)));
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("set_vlan_pcp")) {
+                OFActionSetVlanPcp action =
+                        fac.actions().setVlanPcp(VlanPcp.of(Byte.valueOf((String) param)));
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("strip_vlan")) {
+                OFActionPopVlan action =
+                        fac.actions().popVlan();
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("set_dl_src")) {
+                OFActionSetDlSrc action =
+                        fac.actions().setDlSrc(MacAddress.of((String) param));
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("set_dl_dst")) {
+                OFActionSetDlDst action =
+                        fac.actions().setDlDst(MacAddress.of((String) param));
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("set_nw_src")) {
+                OFActionSetNwSrc action =
+                        fac.actions().setNwSrc(IPv4Address.of((String) param));
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("set_nw_dst")) {
+                OFActionSetNwDst action =
+                        fac.actions().setNwDst(IPv4Address.of((String) param));
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("set_nw_tos")) {
+                OFActionSetNwTos action =
+                        fac.actions().setNwTos(Short.valueOf((String) param));
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("set_tp_src")) {
+                OFActionSetTpSrc action =
+                        fac.actions().setTpSrc(TransportPort.of(Short.valueOf((String) param)));
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("set_tp_dst")) {
+                OFActionSetTpDst action =
+                        fac.actions().setTpDst(TransportPort.of(Short.valueOf((String) param)));
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("enqueue")) {
+                String[] portqueue = ((String) param).split(":");
+                OFActionEnqueue action =
+                        fac.actions().enqueue(
+                                OFPort.ofShort(Short.valueOf(portqueue[0])),
+                                Long.valueOf(portqueue[1]));
+                actions.add(action);
+            }
+
+            //OF1.3
+            else if (actionstr.toLowerCase().equals("copy_ttl_out")) {
+                OFActionCopyTtlOut action =
+                        fac.actions().copyTtlOut();
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("copy_ttl_in")) {
+                OFActionCopyTtlIn action =
+                        fac.actions().copyTtlIn();
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("set_mpls_ttl")) {
+                OFActionSetMplsTtl action =
+                        fac.actions().setMplsTtl(Byte.valueOf((String) param));
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("dec_mpls_ttl")) {
+                OFActionDecMplsTtl action =
+                        fac.actions().decMplsTtl();
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("push_vlan")) {
+                OFActionPushVlan action =
+                        fac.actions().pushVlan(EthType.of(Short.valueOf((String) param)));
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("pop_vlan")) {
+                OFActionPopVlan action =
+                        fac.actions().popVlan();
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("push_mpls")) {
+                OFActionPushMpls action =
+                        fac.actions().pushMpls(EthType.of(Short.valueOf((String) param)));
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("pop_mpls")) {
+                OFActionPopMpls action =
+                        fac.actions().popMpls(EthType.of(Short.valueOf((String) param)));
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("set_queue")) {
+                OFActionSetQueue action =
+                        fac.actions().setQueue(Integer.valueOf((String) param));
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("group")) {
+                OFActionGroup action =
+                        fac.actions().group(OFGroup.of(Integer.valueOf((String) param)));
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("set_nw_ttl")) {
+                OFActionSetNwTtl action =
+                        fac.actions().setNwTtl(Byte.valueOf((String) param));
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("dec_nw_ttl")) {
+                OFActionDecNwTtl action =
+                        fac.actions().decNwTtl();
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("set_field")) {
+                @SuppressWarnings("unchecked")
+                OFActionSetField action =
+                fac.actions().setField(makeOxm(sw, actionstr, (Map<String, Object>) param));
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("push_pbb")) {
+                OFActionPushPbb action =
+                        fac.actions().pushPbb(EthType.of(Short.valueOf((String) param)));
+                actions.add(action);
+            }
+            else if (actionstr.toLowerCase().equals("pop_pbb")) {
+                OFActionPopPbb action =
+                        fac.actions().popPbb();
+                actions.add(action);
+            }
+            else {
+                throw new StaticFlowEntryException("Unexpected action " + actionstr);
+            }
 		}
 
 		return actions;
