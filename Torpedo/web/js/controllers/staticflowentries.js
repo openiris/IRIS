@@ -267,16 +267,31 @@ irisApp.directive('rawJson', function() {
   return {
     require: 'ngModel',
     link: function(scope, element, attrs, ngModelController) {
-      ngModelController.$parsers.push(function(data) {
+      var lastValid;
+
+      var fromUser = function(data) {
         try {
-          return JSON.parse(data);
+          lastValid = JSON.parse(data);
+          return lastValid;
         } catch(e) {
+          return lastValid;
         }
+      };
+
+      var toUser = function(data) {
+        return angular.toJson(data, 2);
+      };
+
+      element.bind('focus', function() {
+        element.val(toUser(scope.$eval(attrs.ngModel)));
       });
 
-      ngModelController.$formatters.push(function(data) {
-        return angular.toJson(data, 2);
+      element.bind('blur', function() {
+        element.val(toUser(scope.$eval(attrs.ngModel)));
       });
+
+      ngModelController.$parsers.push(fromUser);
+      ngModelController.$formatters.push(toUser);
     },
   };
 });
