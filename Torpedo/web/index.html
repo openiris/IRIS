@@ -194,12 +194,13 @@
 
 					<!-- Instructions -->
 					<section ng-repeat="inst in form.instructions">
-						<header>instruction {{ $index }}</header>
+						<header>instruction {{ $index }} <a ng-click="removeInstruction($index)">[x]</a></header>
 						<section>
 							<label>clear_actions</label>
 							<input type="checkbox" ng-model="inst.clear_actions" />
 						</section>
 					</section>
+					<button ng-click="addInstruction()">Add instruction</button>
 
 					<section>
 						<button ng-click="addEntry()">Add/Modify</button>
