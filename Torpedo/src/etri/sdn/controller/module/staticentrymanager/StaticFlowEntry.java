@@ -693,9 +693,9 @@ public class StaticFlowEntry {
 					instructions.add(inst);
 				}
 				else if (inststr.toLowerCase().equals("clear_actions")) {
-					String value = (String) entry.get("clear_actions");
-					if (value.toLowerCase().equals("true")) {
-						OFInstructionClearActions inst = 
+					boolean clearActions = (boolean) entry.get("clear_actions");
+					if (clearActions) {
+						OFInstructionClearActions inst =
 								fac.instructions().clearActions();
 						instructions.add(inst);
 					}
