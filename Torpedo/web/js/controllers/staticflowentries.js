@@ -227,9 +227,36 @@ irisApp.controller(
         return matches.join(', ')
       };
 
-      $scope.getActions = function(rule) {
-        // TODO: Implement.
-        return rule.instructions;
+      $scope.getActionsFromInsts = function(instructions) {
+        var insts = [];
+
+        _.each(instructions, function(inst) {
+          insts.push($scope.getActions(inst).join(', '));
+        });
+
+        return insts.join('\n');
+      };
+
+      $scope.getActions = function(instruction) {
+        var actions = [];
+
+        if (instruction.apply_actions) {
+          _.each(instruction.apply_actions, function(act) {
+            actions.push(act.action + ": " + act.param);
+          });
+        }
+
+        if (instruction.write_actions) {
+          _.each(instruction.write_actions, function(act) {
+            actions.push(act.action + ": " + act.param);
+          });
+        }
+
+        if (instruction.clear_actions) {
+          actions.push("clear_actions");
+        }
+
+        return actions;
       };
 
       $scope.getData();

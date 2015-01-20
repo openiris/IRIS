@@ -143,7 +143,7 @@
 						<td><a ng-click="toggleActive(entry)">{{entry.active}}</a></td>
 						<td>{{entry.priority}}</td>
 						<td>{{getMatches(entry)}}</td>
-						<td>{{getActions(entry)}}</td>
+						<td>{{getActionsFromInsts(entry.instructions)}}</td>
 					</tr>
 				</tbody>
 			</table>
