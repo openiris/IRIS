@@ -482,9 +482,9 @@ public class OFProtocol {
 			// into the switches map. This map is used heavily by
 			// link discovery module.
 			//			Logger.stdout("adding a switch with id = " + conn.getSwitch().getId());
-			this.getController().addSwitch( conn.getSwitch().getId(), conn.getSwitch() );
+			this.getController().addSwitch(sw.getId(), sw);
 
-			this.deliverFeaturesReply( conn.getSwitch(), m.getXid(), (OFFeaturesReply) m );
+			this.deliverFeaturesReply(sw, m.getXid(), (OFFeaturesReply) m);
 
 			if ( !getController().handleGeneric(conn, context, m) ) {
 				return false;
