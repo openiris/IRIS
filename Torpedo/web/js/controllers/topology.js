@@ -660,10 +660,10 @@ irisApp.controller('CntlTopology',
 					$scope.hosts = [];
 					iris.topology([], [], []);
 				});
+				iris.getSwitches();
 			};
 
 			// Get statistics
-			iris.getSwitches();
 			setInterval(iris.refreshStatistics, 1000);
 
 			angular.element('div.content > div.topology').bind('displayed', function() {
