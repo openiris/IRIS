@@ -11,6 +11,7 @@ import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
+import org.restlet.data.Status;
 
 public class RESTPostApi extends Restlet {
 	private OFMStaticFlowEntryManager manager;
@@ -66,16 +67,20 @@ public class RESTPostApi extends Restlet {
 				}
 			}
 			catch (UnsupportedOperationException e) {
+				response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				status = "Fail to push entry: Wrong version for the switch";
 			}
 			catch (StaticFlowEntryException e) {
+				response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				status = e.getReason();
 			}
 			catch (IOException e) {
+				response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				status = "Fail to parse JSON format";
 				e.printStackTrace();
 			}
 			catch (Exception e) {
+				response.setStatus(Status.SERVER_ERROR_INTERNAL);
 				e.printStackTrace();
 				status = "Fail to insert entry";
 			}
