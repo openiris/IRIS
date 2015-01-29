@@ -217,6 +217,75 @@ public class RestSwitchApi extends Restlet {
      * @param response
      */
     private void handleDelete(Request request, Response response) {
+        String dpid = (String) request.getAttributes().get("dpid");
 
+        StringWriter sWriter = new StringWriter();
+        JsonFactory jsonFactory = new JsonFactory();
+        JsonGenerator jsonGenerator;
+        StringBuilder status = new StringBuilder();
+
+        if (!(dpid.toLowerCase().equals("all") || manager.isSwitchExists(dpid))) {
+            response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+            return;
+            // FIXME: give reason why.
+        }
+
+        Set<String> flows;
+        if (dpid.toLowerCase().equals("all")) {
+            flows = manager.getStaticFlowEntryStorage().getFlowModMap().keySet();
+            if (flows.isEmpty()) {
+                flows = null;
+            }
+        } else {
+            flows = manager.getStaticFlowEntryStorage().getDpidToFlowModNameIndex().get(dpid);
+        }
+
+        if (flows != null) {
+            boolean ret = true;
+            StringBuilder exceptionlist = new StringBuilder();
+
+            //Avoiding ConcurrentModificationException
+            Set<String> flowsToDel = new HashSet<String>();
+            flowsToDel.addAll(flows);
+
+            for (String flow : flowsToDel) {
+                try {
+                    manager.deleteFlow(flow);
+                } catch (UnsupportedOperationException e) {
+                    ret = false;
+                    exceptionlist.append("Wrong version for the switch. ");
+                } catch (StaticFlowEntryException e) {
+                    ret = false;
+                    exceptionlist.append(e.getReason());
+                    exceptionlist.append(". ");
+                } catch (Exception e) {
+                    ret = false;
+                    e.printStackTrace();
+                }
+            }
+
+            if (ret) {
+                status.append("All entries are cleared.");
+            } else {
+                status.append("Failure clearing entries: ");
+                status.append(exceptionlist);
+            }
+        } else {
+            status.append("There is no entry.");
+        }
+
+        try {
+            jsonGenerator = jsonFactory.createJsonGenerator(sWriter);
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeFieldName("result");
+            jsonGenerator.writeString(status.toString());
+            jsonGenerator.writeEndObject();
+            jsonGenerator.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String r = sWriter.toString();
+        response.setEntity(r, MediaType.APPLICATION_JSON);
     }
 }
