@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.projectfloodlight.openflow.protocol.OFFlowModCommand;
 import org.projectfloodlight.openflow.protocol.OFMessage;
+import org.projectfloodlight.openflow.util.HexString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -267,6 +268,16 @@ public class OFMStaticFlowEntryManager extends OFModule implements IStaticFlowEn
 	@Override
 	public void reloadAllFlowsToSwitch() throws StaticFlowEntryException {
 		flowEntryStorage.reloadAllFlowModsToSwitch();
+	}
+
+	/**
+	 * Check switch exists.
+	 * @param dpidStr DPID to check existing.
+	 * @return
+	 */
+	public boolean isSwitchExists(String dpidStr) {
+		long dpid = HexString.toLong(dpidStr);
+		return getController().getSwitch(dpid) != null;
 	}
 
 }
