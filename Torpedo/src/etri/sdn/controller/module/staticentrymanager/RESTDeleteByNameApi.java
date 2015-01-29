@@ -21,7 +21,7 @@ public class RESTDeleteByNameApi extends Restlet {
 	public void handle(Request request, Response response) {
 		StringWriter sWriter = new StringWriter();
 		JsonFactory f = new JsonFactory();
-		JsonGenerator g = null;
+		JsonGenerator g;
 		String status = null;
 
 		String flowName = (String) request.getAttributes().get("name");

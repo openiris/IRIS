@@ -1,22 +1,12 @@
 package etri.sdn.controller.module.staticentrymanager;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.slf4j.Logger;
-
 import etri.sdn.controller.OFModel;
 import etri.sdn.controller.module.storagemanager.IStorageService;
 import etri.sdn.controller.module.storagemanager.StorageException;
+import org.slf4j.Logger;
+
+import java.math.BigInteger;
+import java.util.*;
 
 /**
  * This class implements the storage-related functions to manage static flow entries.
@@ -76,52 +66,30 @@ public class StaticFlowEntryStorage extends OFModel{
 		 * Each objects represent a REST call handler routine bound to a specific URI.
 		 */
 		RESTApi[] tmp = {
-			/*
+				/*
 			 * LIST example
-			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/list/all/json
-			 * 				curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/list/00:00:00:00:00:00:00:01/json
-			 */
-			new RESTApi(
-				"/wm/staticflowentry/list/{switch}/json",
-				new RESTListApi(manager)
-			),
-
-			/*
-			 * CLEAR example
-			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/clear/all/json
-			 * 				curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/clear/00:00:00:00:00:00:00:01/json
-			 */
-			new RESTApi(
-				"/wm/staticflowentry/clear/{switch}/json",
-				new RESTClearApi(manager) 
-			),
-
-			/*
-			 * RELOAD example
-			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/reload/all/json
-			 * 				curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/reload/00:00:00:00:00:00:00:01/json
-			 */
-			new RESTApi(
-				"/wm/staticflowentry/reload/{switch}/json",
-				new RESTReloadApi(manager)
-			),
-
-			/*
+			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/all/json
+			 * 				curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/00:00:00:00:00:00:00:01/json
+			 *
 			 * ADD example
-			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/list/all/json
-			 * 				curl -d '{"switch":"00:00:00:00:00:00:00:01","name":"s1","priority":"101","eth_type":"0x0800","ipv4_src":"10.0.0.1","ipv4_dst":"10.0.0.2","active":"true","instructions":[{"apply_actions":[{"output":"2"}]}]}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/json
-			 * 				curl -d '{"switch":"00:00:00:00:00:00:00:02","name":"s20","priority":"1001","eth_type":"0x0806","ipv4_dst":"10.0.0.4","active":"true","instructions":[{"apply_actions":[{"output":"3"}]}]}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/json
-			 * 				curl -d '{"switch":"00:00:00:00:00:00:00:01","name":"s1","priority":"1001","eth_type":"0x0800","ipv4_dst":"10.0.0.3","active":"true","instructions":[{"apply_actions":[{"set_field":{"ipv4_dst":"10.0.0.2"}},{"output":"2"}]}]}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/json
-			 * 
-			 * DELETE example
-			 * OF1.0,1.3:	curl -X DELETE -d '{"name":"s1"}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/json
+			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/all/json
+			 * 				curl -d '{"name":"s1","priority":"101","eth_type":"0x0800","ipv4_src":"10.0.0.1","ipv4_dst":"10.0.0.2","active":"true","instructions":[{"apply_actions":[{"output":"2"}]}]}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/00:00:00:00:00:00:00:01/json
+			 * 				curl -d '{"name":"s20","priority":"1001","eth_type":"0x0806","ipv4_dst":"10.0.0.4","active":"true","instructions":[{"apply_actions":[{"output":"3"}]}]}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/00:00:00:00:00:00:00:02/json
+			 * 				curl -d '{"name":"s1","priority":"1001","eth_type":"0x0800","ipv4_dst":"10.0.0.3","active":"true","instructions":[{"apply_actions":[{"set_field":{"ipv4_dst":"10.0.0.2"}},{"output":"2"}]}]}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/00:00:00:00:00:00:00:01/json
+			 *
+			 * CLEAR example
+			 * OF1.0,1.3:	curl -X DELETE http://{controller_ip}:{rest_api_port}/wm/staticflowentry/all/json
+			 * 				curl -X DELETE http://{controller_ip}:{rest_api_port}/wm/staticflowentry/00:00:00:00:00:00:00:01/json
+			 *
+			 * RELOAD example
+			 * OF1.0,1.3:	curl -X PUT http://{controller_ip}:{rest_api_port}/wm/staticflowentry/all/json
+			 * 				curl -X PUT http://{controller_ip}:{rest_api_port}/wm/staticflowentry/00:00:00:00:00:00:00:01/json
+			 *
 			 */
-			new RESTApi(
-				"/wm/staticflowentry/json",
-				new RESTPostDeleteApi(manager)
-			),
-			
-			/*
+				new RESTApi("/wm/staticflowentry/{dpid}/json",
+						new RestSwitchApi(manager)),
+
+            /*
 			 * DELETE by name example
 			 * OF1.0,1.3:	curl -X DELETE -d '{"name":"s1"}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/json
 			 * 
@@ -129,7 +97,7 @@ public class StaticFlowEntryStorage extends OFModel{
 			 * According to RFC2616, DELETE method cannot have data fields.
 			 */
 			new RESTApi(
-				"/wm/staticflowentry/delete/{name}/json",
+				"/wm/staticflowentry/{dpid}/{name}/json",
 				new RESTDeleteByNameApi(manager)
 			)
 		};
