@@ -12,10 +12,10 @@ import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 
-public class RESTPostDeleteApi extends Restlet {
+public class RESTPostApi extends Restlet {
 	private OFMStaticFlowEntryManager manager;
 	
-	public RESTPostDeleteApi(OFMStaticFlowEntryManager manager) {
+	public RESTPostApi(OFMStaticFlowEntryManager manager) {
 		this.manager = manager;
 	}
 	
@@ -91,48 +91,6 @@ public class RESTPostDeleteApi extends Restlet {
 				e.printStackTrace();
 			}
 		} 
-		
-		else if (m == Method.DELETE) {
-			Map<String, Object> entry;
-			Object flowName;
-
-			try {
-				entry = StaticFlowEntry.jsonToStaticFlowEntry(entityText);
-				if (entry == null) {
-					throw new Exception ("The input is null");
-				}
-				
-				flowName = entry.get("name");
-				if (flowName != null) {
-					manager.deleteFlow((String)flowName);
-					status = "Entry deleted: " + flowName;
-				}
-				else {
-					status = "The name field is indispensable.";
-				}
-			}
-			catch (UnsupportedOperationException e) {
-				status = "Fail to delete entry: Wrong version for the switch";
-			}
-			catch (StaticFlowEntryException e) {
-				status = e.getReason();
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-				status = "Fail to delete entry";
-			}
-			
-			try {
-				g = f.createJsonGenerator(sWriter);
-				g.writeStartObject();
-				g.writeFieldName("result");
-				g.writeString(status);
-				g.writeEndObject();
-				g.close();
-			} catch (Exception e){
-				e.printStackTrace();
-			}
-		}
 
 		String r = sWriter.toString();
 		response.setEntity(r, MediaType.APPLICATION_JSON);
