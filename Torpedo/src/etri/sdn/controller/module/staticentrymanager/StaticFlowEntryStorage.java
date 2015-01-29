@@ -83,10 +83,6 @@ public class StaticFlowEntryStorage extends OFModel{
 			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/list/all/json
 			 * 				curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/list/00:00:00:00:00:00:00:01/json
 			 */
-			new RESTApi(
-				"/wm/staticflowentry/list/{switch}/json",
-				new RESTListApi(manager)
-			),
 
 			/*
 			 * CLEAR example
