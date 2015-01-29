@@ -46,6 +46,28 @@ public class RestSwitchApi extends Restlet {
         }
     }
 
+    private void makeResult(Response response, Status status, String message) {
+        StringWriter sWriter = new StringWriter();
+        JsonFactory jsonFactory = new JsonFactory();
+        JsonGenerator jsonGenerator;
+
+        try {
+            jsonGenerator = jsonFactory.createJsonGenerator(sWriter);
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeFieldName("result");
+            jsonGenerator.writeString(message);
+            jsonGenerator.writeEndObject();
+            jsonGenerator.close();
+
+            String r = sWriter.toString();
+            response.setEntity(r, MediaType.APPLICATION_JSON);
+            response.setStatus(status);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     /**
      * List entries.
      *
@@ -54,12 +76,12 @@ public class RestSwitchApi extends Restlet {
      */
     private void handleGet(Request request, Response response) {
         String dpid = (String) request.getAttributes().get("dpid");
-        Set<String> flows = new HashSet<String>();
 
         if (! (dpid.toLowerCase().equals("all") || manager.isSwitchExists(dpid))) {
-            response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+            makeResult(response,
+                    Status.CLIENT_ERROR_NOT_FOUND,
+                    "That switch is not exists.");
             return;
-            // FIXME: give reason why.
         }
 
         ObjectMapper om = new ObjectMapper();
@@ -85,16 +107,13 @@ public class RestSwitchApi extends Restlet {
         String dpid = (String) request.getAttributes().get("dpid");
 
         if (!manager.isSwitchExists(dpid)) {
-            response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+            makeResult(response,
+                    Status.CLIENT_ERROR_NOT_FOUND,
+                    "That switch is not exists.");
             return;
-            // FIXME: give reason why.
         }
 
         String jsonString = request.getEntityAsText();
-        StringWriter sWriter = new StringWriter();
-        JsonFactory jsonFactory = new JsonFactory();
-        JsonGenerator jsonGenerator;
-        String status;
 
         Map<String, Object> entry;
         Object flowName;
@@ -102,7 +121,8 @@ public class RestSwitchApi extends Restlet {
         try {
             entry = StaticFlowEntry.jsonToStaticFlowEntry(jsonString);
             if (entry == null) {
-                throw new Exception("The input is null");
+                makeResult(response, Status.CLIENT_ERROR_BAD_REQUEST, "The input was null");
+                return;
             }
 
             flowName = entry.get("name");
@@ -110,40 +130,36 @@ public class RestSwitchApi extends Restlet {
                 StaticFlowEntry.checkInputField(entry.keySet());
                 StaticFlowEntry.checkMatchPrerequisite(entry);
                 manager.addFlow((String) flowName, entry, dpid);
-                status = "Entry pushed: " + flowName;
+
+                String message = "Entry pushed: " + flowName;
+                makeResult(response, Status.SUCCESS_CREATED, message);
             } else {
-                status = "The name field is indispensable";
+                makeResult(response,
+                        Status.CLIENT_ERROR_BAD_REQUEST,
+                        "The name field is indispensable");
             }
             response.setStatus(Status.SUCCESS_CREATED);
         } catch (UnsupportedOperationException e) {
-            response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-            status = "Fail to push entry: Wrong version for the switch";
+            makeResult(response,
+                    Status.CLIENT_ERROR_BAD_REQUEST,
+                    "Fail to push entry: Wrong version for the switch");
         } catch (StaticFlowEntryException e) {
-            response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-            status = e.getReason();
+            makeResult(response,
+                    Status.CLIENT_ERROR_BAD_REQUEST,
+                    e.getReason());
         } catch (IOException e) {
-            response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-            status = "Fail to parse JSON format";
+            makeResult(response,
+                    Status.CLIENT_ERROR_BAD_REQUEST,
+                    "Fail to parse JSON format");
             e.printStackTrace();
         } catch (Exception e) {
-            response.setStatus(Status.SERVER_ERROR_INTERNAL);
-            e.printStackTrace();
-            status = "Fail to insert entry";
-        }
-
-        try {
-            jsonGenerator = jsonFactory.createJsonGenerator(sWriter);
-            jsonGenerator.writeStartObject();
-            jsonGenerator.writeFieldName("result");
-            jsonGenerator.writeString(status);
-            jsonGenerator.writeEndObject();
-            jsonGenerator.close();
-        } catch (Exception e) {
+            makeResult(response,
+                    Status.SERVER_ERROR_INTERNAL,
+                    "Fail to insert entry");
             e.printStackTrace();
         }
 
-        String r = sWriter.toString();
-        response.setEntity(r, MediaType.APPLICATION_JSON);
+
     }
 
     /**
@@ -153,11 +169,6 @@ public class RestSwitchApi extends Restlet {
      */
     private void handlePut(Request request, Response response) {
         String dpid = (String) request.getAttributes().get("dpid");
-
-        StringWriter sWriter = new StringWriter();
-        JsonFactory jsonFactory = new JsonFactory();
-        JsonGenerator jsonGenerator;
-        String status;
 
         if (!(dpid.toLowerCase().equals("all") || manager.isSwitchExists(dpid))) {
             response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
@@ -169,46 +180,41 @@ public class RestSwitchApi extends Restlet {
             if (dpid.toLowerCase().equals("all")) {
                 if (!manager.getStaticFlowEntryStorage().getFlowModNameToDpidIndex().isEmpty()) {
                     manager.reloadAllFlowsToSwitch();
-                    status = "All entries are reloaded to switches.";
+                    makeResult(response,
+                            Status.SUCCESS_OK,
+                            "All entries are reloaded to switches.");
                 }
                 else {
-                    status = "There is no entry";
+                    makeResult(response,
+                            Status.CLIENT_ERROR_NOT_FOUND,
+                            "There is no entry");
                 }
             }
             else {
                 if (!manager.getStaticFlowEntryStorage().getDpidToFlowModNameIndex().isEmpty()) {
                     manager.reloadFlowsToSwitch(dpid);
-                    status = "Entries are reloaded to switch: " + dpid + ".";
+                    makeResult(response,
+                            Status.SUCCESS_OK,
+                            "Entries are reloaded to switch: " + dpid + ".");
                 }
                 else {
-                    status = "There is no entry";
+                    makeResult(response,
+                            Status.CLIENT_ERROR_NOT_FOUND,
+                            "There is no entry");
                 }
             }
         }
         catch (UnsupportedOperationException e) {
-            response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-            status = "Fail to reload entry: Wrong version for the switch";
+            makeResult(response,
+                    Status.CLIENT_ERROR_BAD_REQUEST,
+                    "Fail to reload entry: Wrong version for the switch");
         }
         catch (Exception e) {
             e.printStackTrace();
-            response.setStatus(Status.SERVER_ERROR_INTERNAL);
-            status = "Fail to reload entries to switches.";
+            makeResult(response,
+                    Status.SERVER_ERROR_INTERNAL,
+                    "Fail to reload entries to switches.");
         }
-
-        try {
-            jsonGenerator = jsonFactory.createJsonGenerator(sWriter);
-            jsonGenerator.writeStartObject();
-            jsonGenerator.writeFieldName("result");
-            jsonGenerator.writeString(status);
-            jsonGenerator.writeEndObject();
-            jsonGenerator.close();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        String r = sWriter.toString();
-        response.setEntity(r, MediaType.APPLICATION_JSON);
     }
 
     /**
@@ -218,11 +224,6 @@ public class RestSwitchApi extends Restlet {
      */
     private void handleDelete(Request request, Response response) {
         String dpid = (String) request.getAttributes().get("dpid");
-
-        StringWriter sWriter = new StringWriter();
-        JsonFactory jsonFactory = new JsonFactory();
-        JsonGenerator jsonGenerator;
-        StringBuilder status = new StringBuilder();
 
         if (!(dpid.toLowerCase().equals("all") || manager.isSwitchExists(dpid))) {
             response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
@@ -265,27 +266,15 @@ public class RestSwitchApi extends Restlet {
             }
 
             if (ret) {
-                status.append("All entries are cleared.");
+                makeResult(response, Status.SUCCESS_OK, "All entries are cleared.");
             } else {
-                status.append("Failure clearing entries: ");
-                status.append(exceptionlist);
+                makeResult(response,
+                        Status.SERVER_ERROR_INTERNAL,
+                        "Failure clearing entries: " +  exceptionlist );
             }
         } else {
-            status.append("There is no entry.");
+            makeResult(response, Status.CLIENT_ERROR_BAD_REQUEST, "There is no entry.");
         }
 
-        try {
-            jsonGenerator = jsonFactory.createJsonGenerator(sWriter);
-            jsonGenerator.writeStartObject();
-            jsonGenerator.writeFieldName("result");
-            jsonGenerator.writeString(status.toString());
-            jsonGenerator.writeEndObject();
-            jsonGenerator.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        String r = sWriter.toString();
-        response.setEntity(r, MediaType.APPLICATION_JSON);
     }
 }
