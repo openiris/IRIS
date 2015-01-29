@@ -152,7 +152,63 @@ public class RestSwitchApi extends Restlet {
      * @param response
      */
     private void handlePut(Request request, Response response) {
+        String dpid = (String) request.getAttributes().get("dpid");
 
+        StringWriter sWriter = new StringWriter();
+        JsonFactory jsonFactory = new JsonFactory();
+        JsonGenerator jsonGenerator;
+        String status;
+
+        if (!(dpid.toLowerCase().equals("all") || manager.isSwitchExists(dpid))) {
+            response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+            return;
+            // FIXME: give reason why.
+        }
+
+        try {
+            if (dpid.toLowerCase().equals("all")) {
+                if (!manager.getStaticFlowEntryStorage().getFlowModNameToDpidIndex().isEmpty()) {
+                    manager.reloadAllFlowsToSwitch();
+                    status = "All entries are reloaded to switches.";
+                }
+                else {
+                    status = "There is no entry";
+                }
+            }
+            else {
+                if (!manager.getStaticFlowEntryStorage().getDpidToFlowModNameIndex().isEmpty()) {
+                    manager.reloadFlowsToSwitch(dpid);
+                    status = "Entries are reloaded to switch: " + dpid + ".";
+                }
+                else {
+                    status = "There is no entry";
+                }
+            }
+        }
+        catch (UnsupportedOperationException e) {
+            response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+            status = "Fail to reload entry: Wrong version for the switch";
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            response.setStatus(Status.SERVER_ERROR_INTERNAL);
+            status = "Fail to reload entries to switches.";
+        }
+
+        try {
+            jsonGenerator = jsonFactory.createJsonGenerator(sWriter);
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeFieldName("result");
+            jsonGenerator.writeString(status);
+            jsonGenerator.writeEndObject();
+            jsonGenerator.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String r = sWriter.toString();
+        response.setEntity(r, MediaType.APPLICATION_JSON);
     }
 
     /**
