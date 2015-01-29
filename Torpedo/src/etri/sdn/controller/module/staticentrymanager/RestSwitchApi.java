@@ -53,6 +53,12 @@ public class RestSwitchApi extends Restlet {
         String dpid = (String) request.getAttributes().get("dpid");
         Set<String> flows = new HashSet<String>();
 
+        if (! (dpid.toLowerCase().equals("all") || manager.isSwitchExists(dpid))) {
+            response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+            return;
+            // FIXME: give reason why.
+        }
+
         ObjectMapper om = new ObjectMapper();
         try {
             StaticFlowEntryStorage storage = manager.getStaticFlowEntryStorage();
