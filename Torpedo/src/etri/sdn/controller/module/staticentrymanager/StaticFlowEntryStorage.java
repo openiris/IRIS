@@ -97,7 +97,7 @@ public class StaticFlowEntryStorage extends OFModel{
 			 * According to RFC2616, DELETE method cannot have data fields.
 			 */
 			new RESTApi(
-				"/wm/staticflowentry/delete/{name}/json",
+				"/wm/staticflowentry/{dpid}/{name}/json",
 				new RESTDeleteByNameApi(manager)
 			)
 		};
