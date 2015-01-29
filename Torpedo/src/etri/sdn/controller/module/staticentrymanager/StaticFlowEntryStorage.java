@@ -76,6 +76,8 @@ public class StaticFlowEntryStorage extends OFModel{
 		 * Each objects represent a REST call handler routine bound to a specific URI.
 		 */
 		RESTApi[] tmp = {
+				new RESTApi("/wm/staticflowentry/{dpid}/json",
+						new RestSwitchApi(manager)),
 			/*
 			 * LIST example
 			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/list/all/json
