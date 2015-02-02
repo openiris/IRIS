@@ -32,7 +32,7 @@ public class RestSwitchApi extends Restlet {
     public void handle(Request request, Response response) {
         Method method = request.getMethod();
 
-        if(method == Method.GET) {
+        if (method == Method.GET) {
             handleGet(request, response);
         } else if (method == Method.POST) {
             handlePost(request, response);
@@ -46,6 +46,14 @@ public class RestSwitchApi extends Restlet {
         }
     }
 
+
+    /**
+     * Make json result for response.
+     *
+     * @param response {@link Response} to write status code.
+     * @param status   {@link Status} Status code.
+     * @param message  Message for this response.
+     */
     private void makeResult(Response response, Status status, String message) {
         StringWriter sWriter = new StringWriter();
         JsonFactory jsonFactory = new JsonFactory();
@@ -77,7 +85,7 @@ public class RestSwitchApi extends Restlet {
     private void handleGet(Request request, Response response) {
         String dpid = (String) request.getAttributes().get("dpid");
 
-        if (! (dpid.toLowerCase().equals("all") || manager.isSwitchExists(dpid))) {
+        if (!(dpid.toLowerCase().equals("all") || manager.isSwitchExists(dpid))) {
             makeResult(response,
                     Status.CLIENT_ERROR_NOT_FOUND,
                     "That switch is not exists.");
@@ -164,6 +172,7 @@ public class RestSwitchApi extends Restlet {
 
     /**
      * Reload entries.
+     *
      * @param request
      * @param response
      */
@@ -183,33 +192,28 @@ public class RestSwitchApi extends Restlet {
                     makeResult(response,
                             Status.SUCCESS_OK,
                             "All entries are reloaded to switches.");
-                }
-                else {
+                } else {
                     makeResult(response,
                             Status.CLIENT_ERROR_NOT_FOUND,
                             "There is no entry");
                 }
-            }
-            else {
+            } else {
                 if (!manager.getStaticFlowEntryStorage().getDpidToFlowModNameIndex().isEmpty()) {
                     manager.reloadFlowsToSwitch(dpid);
                     makeResult(response,
                             Status.SUCCESS_OK,
                             "Entries are reloaded to switch: " + dpid + ".");
-                }
-                else {
+                } else {
                     makeResult(response,
                             Status.CLIENT_ERROR_NOT_FOUND,
                             "There is no entry");
                 }
             }
-        }
-        catch (UnsupportedOperationException e) {
+        } catch (UnsupportedOperationException e) {
             makeResult(response,
                     Status.CLIENT_ERROR_BAD_REQUEST,
                     "Fail to reload entry: Wrong version for the switch");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             makeResult(response,
                     Status.SERVER_ERROR_INTERNAL,
@@ -219,6 +223,7 @@ public class RestSwitchApi extends Restlet {
 
     /**
      * Clear switch.
+     *
      * @param request
      * @param response
      */
@@ -270,7 +275,7 @@ public class RestSwitchApi extends Restlet {
             } else {
                 makeResult(response,
                         Status.SERVER_ERROR_INTERNAL,
-                        "Failure clearing entries: " +  exceptionlist );
+                        "Failure clearing entries: " + exceptionlist);
             }
         } else {
             makeResult(response, Status.CLIENT_ERROR_BAD_REQUEST, "There is no entry.");
