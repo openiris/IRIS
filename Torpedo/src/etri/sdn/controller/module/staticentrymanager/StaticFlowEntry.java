@@ -949,7 +949,7 @@ public class StaticFlowEntry {
 	 * 
 	 * @throws IOException
 	 */
-	public static Map<String, Object> jsonToStaticFlowEntry(String jsontext) throws IOException {
+	public static Map<String, Object> jsonToStaticFlowEntry(String sw, String name, String jsontext) throws IOException {
 		Map<String, Object> entry = new LinkedHashMap<String, Object>();
 		MappingJsonFactory f = new MappingJsonFactory();		
 		ObjectMapper mapper = new ObjectMapper(f);
@@ -969,6 +969,9 @@ public class StaticFlowEntry {
 				entry.put(field.getKey().toString(), field.getValue().toString().replaceAll("\"", ""));
 			}
 		}
+
+        entry.put("switch", sw);
+        entry.put("name", name);
 
 //		if (Main.debug){
 //			System.out.println("input entry    : " + jsontext);

@@ -113,6 +113,13 @@ public class RestSwitchApi extends Restlet {
      */
     private void handlePost(Request request, Response response) {
         String dpid = (String) request.getAttributes().get("dpid");
+        String name = (String) request.getAttributes().get("name");
+
+        if (name == null) {
+            // Post to /wm/staticflowentry/00:00~~00:00/json is not allowed.
+            makeResult(response, Status.CLIENT_ERROR_METHOD_NOT_ALLOWED, "");
+            return;
+        }
 
         if (!manager.isSwitchExists(dpid)) {
             makeResult(response,
@@ -127,7 +134,7 @@ public class RestSwitchApi extends Restlet {
         Object flowName;
 
         try {
-            entry = StaticFlowEntry.jsonToStaticFlowEntry(jsonString);
+            entry = StaticFlowEntry.jsonToStaticFlowEntry(dpid, name, jsonString);
             if (entry == null) {
                 makeResult(response, Status.CLIENT_ERROR_BAD_REQUEST, "The input was null");
                 return;
