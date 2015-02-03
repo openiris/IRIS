@@ -75,10 +75,9 @@ public class StaticFlowEntryStorage extends OFModel{
 			 * 				curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/00:00:00:00:00:00:00:01/json
 			 *
 			 * ADD example
-			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/all/json
-			 * 				curl -d '{"name":"s1","priority":"101","eth_type":"0x0800","ipv4_src":"10.0.0.1","ipv4_dst":"10.0.0.2","active":"true","instructions":[{"apply_actions":[{"output":"2"}]}]}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/00:00:00:00:00:00:00:01/json
-			 * 				curl -d '{"name":"s20","priority":"1001","eth_type":"0x0806","ipv4_dst":"10.0.0.4","active":"true","instructions":[{"apply_actions":[{"output":"3"}]}]}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/00:00:00:00:00:00:00:02/json
-			 * 				curl -d '{"name":"s1","priority":"1001","eth_type":"0x0800","ipv4_dst":"10.0.0.3","active":"true","instructions":[{"apply_actions":[{"set_field":{"ipv4_dst":"10.0.0.2"}},{"output":"2"}]}]}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/00:00:00:00:00:00:00:01/json
+			 * OF1.0,1.3:   curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/00:00:00:00:00:00:00:01/s1/json -d '{"priority":"101","eth_type":"0x0800","ipv4_src":"10.0.0.1","ipv4_dst":"10.0.0.2","active":"true","instructions":[{"apply_actions":[{"output":"2"}]}]}'
+			 * 				curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/00:00:00:00:00:00:00:02/s20/json -d '{"priority":"1001","eth_type":"0x0806","ipv4_dst":"10.0.0.4","active":"true","instructions":[{"apply_actions":[{"output":"3"}]}]}'
+			 * 				curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/00:00:00:00:00:00:00:01/s1/json -d '{"priority":"1001","eth_type":"0x0800","ipv4_dst":"10.0.0.3","active":"true","instructions":[{"apply_actions":[{"set_field":{"ipv4_dst":"10.0.0.2"}},{"output":"2"}]}]}'
 			 *
 			 * CLEAR example
 			 * OF1.0,1.3:	curl -X DELETE http://{controller_ip}:{rest_api_port}/wm/staticflowentry/all/json
