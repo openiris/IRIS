@@ -88,7 +88,7 @@ public class RestSwitchApi extends Restlet {
         if (!(dpid.toLowerCase().equals("all") || manager.isSwitchExists(dpid))) {
             makeResult(response,
                     Status.CLIENT_ERROR_NOT_FOUND,
-                    "That switch is not exists.");
+                    "That switch doesn't exists.");
             return;
         }
 
@@ -117,7 +117,7 @@ public class RestSwitchApi extends Restlet {
         if (!manager.isSwitchExists(dpid)) {
             makeResult(response,
                     Status.CLIENT_ERROR_NOT_FOUND,
-                    "That switch is not exists.");
+                    "That switch doesn't exists.");
             return;
         }
 
