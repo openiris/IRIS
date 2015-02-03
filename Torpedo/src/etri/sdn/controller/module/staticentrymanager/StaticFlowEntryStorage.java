@@ -65,9 +65,12 @@ public class StaticFlowEntryStorage extends OFModel{
 		 * Array of RESTApi objects. 
 		 * Each objects represent a REST call handler routine bound to a specific URI.
 		 */
+
+        RestSwitchApi restSwitchApi = new RestSwitchApi(manager);
+
 		RESTApi[] tmp = {
 				/*
-			 * LIST example
+             * LIST example
 			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/all/json
 			 * 				curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/00:00:00:00:00:00:00:01/json
 			 *
@@ -85,21 +88,17 @@ public class StaticFlowEntryStorage extends OFModel{
 			 * OF1.0,1.3:	curl -X PUT http://{controller_ip}:{rest_api_port}/wm/staticflowentry/all/json
 			 * 				curl -X PUT http://{controller_ip}:{rest_api_port}/wm/staticflowentry/00:00:00:00:00:00:00:01/json
 			 *
-			 */
-				new RESTApi("/wm/staticflowentry/{dpid}/json",
-						new RestSwitchApi(manager)),
-
-            /*
 			 * DELETE by name example
-			 * OF1.0,1.3:	curl -X DELETE -d '{"name":"s1"}' http://{controller_ip}:{rest_api_port}/wm/staticflowentry/json
-			 * 
+			 * OF1.0,1.3:	curl -X DELETE http://{controller_ip}:{rest_api_port}/wm/staticflowentry/00:00:00:00:00:00:00:01/s1/json
+			 *
 			 * This object is an additional implements REST handler routines (i.e. RFC2616).
 			 * According to RFC2616, DELETE method cannot have data fields.
 			 */
-			new RESTApi(
-				"/wm/staticflowentry/{dpid}/{name}/json",
-				new RESTDeleteByNameApi(manager)
-			)
+				new RESTApi("/wm/staticflowentry/{dpid}/json",
+                        restSwitchApi),
+                new RESTApi("/wm/staticflowentry/{dpid}/{name}/json",
+                        restSwitchApi),
+
 		};
 
 		this.apis = tmp;

@@ -229,7 +229,17 @@ public class RestSwitchApi extends Restlet {
      */
     private void handleDelete(Request request, Response response) {
         String dpid = (String) request.getAttributes().get("dpid");
+        String name = (String) request.getAttributes().get("name");
 
+        if (name != null) {
+            clearRules(response, dpid);
+        } else {
+            deleteRule(response, dpid, name);
+        }
+
+    }
+
+    private void clearRules(Response response, String dpid) {
         if (!(dpid.toLowerCase().equals("all") || manager.isSwitchExists(dpid))) {
             response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
             return;
@@ -280,6 +290,20 @@ public class RestSwitchApi extends Restlet {
         } else {
             makeResult(response, Status.CLIENT_ERROR_BAD_REQUEST, "There is no entry.");
         }
+    }
 
+    private void deleteRule(Response response, String dpid, String name) {
+        if (!manager.getAllFlows().keySet().contains(name)) {
+            makeResult(response, Status.CLIENT_ERROR_NOT_FOUND, "There is no entry");
+            return;
+        }
+
+        try {
+            manager.deleteFlow(name);
+            makeResult(response, Status.SUCCESS_OK, "Entry deleted: " + name);
+        } catch (StaticFlowEntryException e) {
+            makeResult(response, Status.SERVER_ERROR_INTERNAL, e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
