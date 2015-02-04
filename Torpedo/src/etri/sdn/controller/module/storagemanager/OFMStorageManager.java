@@ -413,7 +413,8 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 		} catch(Exception e) {
 			logger.error("upsertion erorr ={} ", e);
 		}
-		Object isInserted = result.getField("err");
+        assert result != null;
+        Object isInserted = result.getField("err");
 		if(isInserted == null) { 
 			logger.debug("upserted successful.");
 			return true;

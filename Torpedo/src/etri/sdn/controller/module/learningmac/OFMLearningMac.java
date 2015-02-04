@@ -414,8 +414,9 @@ public final class OFMLearningMac extends OFModule {
 				if ( reverse != null ) {
 					target.setExact(MatchField.ETH_SRC, destMac);
 				}
-				
-				this.writeFlowMod(conn.getSwitch(), OFFlowModCommand.ADD, OFBufferId.NO_BUFFER,
+
+                assert reverse != null;
+                this.writeFlowMod(conn.getSwitch(), OFFlowModCommand.ADD, OFBufferId.NO_BUFFER,
 						reverse.build(), inputPort, out );
 			}
 		}
