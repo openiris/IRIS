@@ -92,8 +92,8 @@ public interface IDeviceService extends IService {
      * 
      * @return an {@link IDevice} or null if no device is found.
      * 
-     * @see IDeviceService#findDevice(long, Short, Integer, Long, Integer)
-     * 
+     * @see {@link #findDevice(long, Short, Integer, Long, OFPort)}
+     *
      * @throws IllegalArgumentException if not all key fields of the
      *         source's {@link IEntityClass} are specified.
      */

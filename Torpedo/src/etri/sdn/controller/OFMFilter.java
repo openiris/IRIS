@@ -9,7 +9,7 @@ import org.projectfloodlight.openflow.protocol.OFMessage;
  * you can find the example usage of this class 
  * in {@link etri.sdn.controller.module.linkdiscovery.OFMLinkDiscovery#initialize()} method. 
  * This class is normally used as a second parameter to 
- * {@link OFModule#registerFilter(org.openflow.protocol.interfaces.OFMessageType, OFMFilter)}.
+ * {@link OFModule#registerFilter(org.projectfloodlight.openflow.protocol.OFType, OFMFilter)}.
  * 
  * @author bjlee
  *

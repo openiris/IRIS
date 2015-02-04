@@ -28,7 +28,7 @@ public class VirtualSubnet {
 
 	/**
 	* Constructor requires network info
-	* @param network : NetworkDefinition - network info
+	* @param subnet : NetworkDefinition - network info
 	*/
 	public VirtualSubnet(SubnetDefinition subnet) {
 		this.subName = subnet.subName;
@@ -51,7 +51,7 @@ public class VirtualSubnet {
 
 	/**
 	* Sets subnet name
-	* @param name : subnet name
+	* @param subName : subnet name
 	*/
 	public void setSubName(String subName){
 		this.subName = subName;

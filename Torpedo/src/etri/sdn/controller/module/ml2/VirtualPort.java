@@ -32,7 +32,7 @@ public class VirtualPort {
 
 	/**
 	* Constructor requires network info
-	* @param network : NetworkDefinition - network info
+	* @param port : NetworkDefinition - network info
 	*/
 	public VirtualPort(PortDefinition port) {
 		this.binding_host_id = port.binding_host_id;
@@ -149,7 +149,7 @@ public class VirtualPort {
 	
 	/**
 	* Sets port binding_vif_details
-	* @param binding_vif_details : port binding_vif_details
+	* @param binding_vif_detail : port binding_vif_details
 	*/
 	public void setBindingVifDetails(String binding_vif_detail) {
 		this.binding_vif_detail = binding_vif_detail;

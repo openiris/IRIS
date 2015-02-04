@@ -55,8 +55,8 @@ public class Link {
 
     /**
      * Convenience constructor.
-     * The only difference from the {@link #Link(long, short, long, short)} 
-     * is the type of second and fourth parameter (int)
+     * The only difference from the {@link #Link(long, OFPort, long, OFPort)}
+     * is the type of second and fourth parameter.
      * 
      * @param srcId
      * @param srcPort
