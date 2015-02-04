@@ -31,7 +31,7 @@ public class VirtualPortSerializer extends JsonSerializer<VirtualPort> {
 		jGen.writeObjectFieldStart("binding_profile");
 			if(vPor.binding_profile != null) {
 				for (Entry<String, String> entry : vPor.binding_profile.entrySet()) {
-					jGen.writeStringField(entry.getKey().toString().toLowerCase(), entry.getValue().toString());
+					jGen.writeStringField(entry.getKey().toLowerCase(), entry.getValue());
 				}
 			}
 		jGen.writeEndObject();
@@ -39,7 +39,7 @@ public class VirtualPortSerializer extends JsonSerializer<VirtualPort> {
 			for (Map<String, String> fiMap : vPor.fixed_ips) {
 				jGen.writeStartObject();
 				for (Entry<String, String> entry : fiMap.entrySet()) {
-					jGen.writeStringField(entry.getKey().toString().toLowerCase(), entry.getValue().toString());
+					jGen.writeStringField(entry.getKey().toLowerCase(), entry.getValue());
 				}
 				jGen.writeEndObject();
 			}
@@ -48,7 +48,7 @@ public class VirtualPortSerializer extends JsonSerializer<VirtualPort> {
 		jGen.writeArrayFieldStart("security_groups");
 			for (Map<String, Object> sgMap : vPor.security_groups) {
 				for (Entry<String, Object> entry : sgMap.entrySet()) {
-					if("id".equals(entry.getKey().toString().toLowerCase())) {
+					if("id".equals(entry.getKey().toLowerCase())) {
 						jGen.writeString(entry.getValue().toString());
 					}
 				}
@@ -65,7 +65,7 @@ public class VirtualPortSerializer extends JsonSerializer<VirtualPort> {
 			jGen.writeObjectFieldStart("binding_vif_details");
 			if(vPor.binding_vif_details != null) {
 				for (Entry<String, String> entry : vPor.binding_vif_details.entrySet()) {
-					jGen.writeStringField(entry.getKey().toString().toLowerCase(), entry.getValue().toString());
+					jGen.writeStringField(entry.getKey().toLowerCase(), entry.getValue());
 				}
 			}
 		jGen.writeEndObject(); }

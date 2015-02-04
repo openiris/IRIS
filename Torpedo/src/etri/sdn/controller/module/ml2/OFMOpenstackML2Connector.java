@@ -261,7 +261,7 @@ public class OFMOpenstackML2Connector extends OFModule implements IOpenstackML2C
 						Map<String, Object> vInfo = omm.readValue(jsonStr, new TypeReference<Map<String, Object>>(){});
 						
 						for(Entry<String, Object> vEntry : vInfo.entrySet()) {
-							String vEntryKey = vEntry.getKey() == null ? "null" : vEntry.getKey().toString();
+							String vEntryKey = vEntry.getKey() == null ? "null" : vEntry.getKey();
 							String vEntryValue = vEntry.getValue() == null ? "null" : vEntry.getValue().toString();
 							
 							if(netKey.equals(vEntryKey) && netValue.equals(vEntryValue)) {
@@ -383,7 +383,7 @@ public class OFMOpenstackML2Connector extends OFModule implements IOpenstackML2C
 						Map<String, Object> vInfo = omm.readValue(jsonStr, new TypeReference<Map<String, Object>>(){});
 						
 						for(Entry<String, Object> vEntry : vInfo.entrySet()) {
-							String vEntryKey = vEntry.getKey() == null ? "null" : vEntry.getKey().toString();
+							String vEntryKey = vEntry.getKey() == null ? "null" : vEntry.getKey();
 							String vEntryValue = vEntry.getValue() == null ? "null" : vEntry.getValue().toString();
 							
 							if(subKey.equals(vEntryKey) && subValue.equals(vEntryValue)) {
@@ -513,7 +513,7 @@ public class OFMOpenstackML2Connector extends OFModule implements IOpenstackML2C
 						Map<String, Object> vInfo = omm.readValue(jsonStr, new TypeReference<Map<String, Object>>(){});
 						
 						for(Entry<String, Object> vEntry : vInfo.entrySet()) {
-							String vEntryKey = vEntry.getKey() == null ? "null" : vEntry.getKey().toString();
+							String vEntryKey = vEntry.getKey() == null ? "null" : vEntry.getKey();
 							String vEntryValue = vEntry.getValue() == null ? "null" : vEntry.getValue().toString();
 							
 							if(porKey.equals(vEntryKey) && porValue.equals(vEntryValue)) {

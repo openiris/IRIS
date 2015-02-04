@@ -960,13 +960,13 @@ public class StaticFlowEntry {
 			Map.Entry<String, JsonNode> field = fields.next();
 
 			if (field.getKey() == "instructions") {
-				entry.put(field.getKey().toString(), jsonToInstructions(field.getValue().toString()));
+				entry.put(field.getKey(), jsonToInstructions(field.getValue().toString()));
 			}
 			else if (field.getKey() == "actions") {
-				entry.put(field.getKey().toString(), jsonToActions(field.getValue().toString()));
+				entry.put(field.getKey(), jsonToActions(field.getValue().toString()));
 			}
 			else {
-				entry.put(field.getKey().toString(), field.getValue().toString().replaceAll("\"", ""));
+				entry.put(field.getKey(), field.getValue().toString().replaceAll("\"", ""));
 			}
 		}
 

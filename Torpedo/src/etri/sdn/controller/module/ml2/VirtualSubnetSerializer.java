@@ -29,7 +29,7 @@ public class VirtualSubnetSerializer extends JsonSerializer<VirtualSubnet> {
 			for (Map<String, String> apMap : vSub.allocation_pools) {
 				jGen.writeStartObject();
 				for (Entry<String, String> entry : apMap.entrySet()) {
-					jGen.writeStringField(entry.getKey().toString().toLowerCase(), entry.getValue().toString());
+					jGen.writeStringField(entry.getKey().toLowerCase(), entry.getValue());
 				}
 				jGen.writeEndObject();
 			}

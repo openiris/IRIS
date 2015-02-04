@@ -17,7 +17,7 @@ public class VirtualNetworkSerializer extends JsonSerializer<VirtualNetwork> {
 		
 		jGen.writeArrayFieldStart("subnets");
 			for (Entry<String, String> entry : vNet.subNameToGuid.entrySet()) {
-				jGen.writeString(entry.getKey().toString());
+				jGen.writeString(entry.getKey());
 			}
 		jGen.writeEndArray();
 		

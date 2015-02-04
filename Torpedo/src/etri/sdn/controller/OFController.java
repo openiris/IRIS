@@ -488,9 +488,7 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 			if ( models == null ) {
 				continue;
 			}
-			for ( int i = 0; i < models.length; ++i ) {
-				l.add( models[i] );
-			}
+            Collections.addAll(l, models);
 		}
 		
 		return l.toArray(new OFModel[l.size()]);
