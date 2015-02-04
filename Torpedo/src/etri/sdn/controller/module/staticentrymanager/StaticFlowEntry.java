@@ -805,7 +805,7 @@ public class StaticFlowEntry {
 				throw new StaticFlowEntryException("skipping entry " + entryName + " on switch " + switchName + " with bad data: " + e.getMessage());
 			}
 			else {
-				throw new StaticFlowEntryException("skipping entry with bad data: " + e.getMessage() + " :: " + e.getStackTrace());
+				throw new StaticFlowEntryException(String.format("skipping entry with bad data: %s :: %s", e.getMessage(), e.getStackTrace()));
 			}
 		}
 

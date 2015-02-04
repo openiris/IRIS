@@ -133,7 +133,7 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 				logger.debug("inserted successfully.");
 			} else {
 				logger.info("error occur during inserting procedure.");
-				return isInserted == null;
+				return false;
 			}
 		}
 		return true;
