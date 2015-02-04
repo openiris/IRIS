@@ -1,32 +1,6 @@
 package etri.sdn.controller.module.devicemanager;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.projectfloodlight.openflow.protocol.OFMessage;
-import org.projectfloodlight.openflow.protocol.OFPacketIn;
-import org.projectfloodlight.openflow.protocol.OFType;
-import org.projectfloodlight.openflow.protocol.match.MatchField;
-import org.projectfloodlight.openflow.types.OFPort;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import etri.sdn.controller.IInfoProvider;
-import etri.sdn.controller.IOFTask;
-import etri.sdn.controller.IService;
-import etri.sdn.controller.MessageContext;
-import etri.sdn.controller.OFMFilter;
-import etri.sdn.controller.OFModel;
-import etri.sdn.controller.OFModule;
+import etri.sdn.controller.*;
 import etri.sdn.controller.module.flowcache.IFlowReconcileListener;
 import etri.sdn.controller.module.flowcache.OFMatchReconcile;
 import etri.sdn.controller.module.topologymanager.ITopologyListener;
@@ -36,6 +10,15 @@ import etri.sdn.controller.protocol.io.IOFSwitch;
 import etri.sdn.controller.protocol.packet.ARP;
 import etri.sdn.controller.protocol.packet.Ethernet;
 import etri.sdn.controller.protocol.packet.IPv4;
+import org.projectfloodlight.openflow.protocol.OFMessage;
+import org.projectfloodlight.openflow.protocol.OFPacketIn;
+import org.projectfloodlight.openflow.protocol.OFType;
+import org.projectfloodlight.openflow.protocol.match.MatchField;
+import org.projectfloodlight.openflow.types.OFPort;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * This class implements the device manager module.
@@ -72,6 +55,8 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 	 * @see Devices
 	 */
 	private Devices devices;
+
+    private Set<IDeviceListener> listenersQueue = new HashSet<>();
 
 	/*
 	 * Static member functions to reduce unnecessary references to OFMDeviceManager
@@ -137,6 +122,11 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 		this.topology = getTopologyServiceRef();		
 		this.entityClassifier = getEntityClassifierServiceRef();
 		this.devices = Devices.getInstance(topology, entityClassifier);
+
+        for (IDeviceListener listener : listenersQueue) {
+            devices.addListener(listener);
+            listenersQueue.remove(listener);
+        }
 
 		// 'classes' now has an entry for the class IPv4,
 		// and this will create an entry within 'secondaryIndexMap' of ClassIndices object.
@@ -450,8 +440,12 @@ implements IDeviceService, ITopologyListener, IEntityClassListener, IInfoProvide
 
 	@Override
 	public void addListener(IDeviceListener listener) {
-		devices.addListener(listener);
-	}
+        if (devices != null) {
+            devices.addListener(listener);
+        } else {
+            listenersQueue.add(listener);
+        }
+    }
 
 	@Override
 	public void addSuppressAPs(long swId, OFPort port) {
