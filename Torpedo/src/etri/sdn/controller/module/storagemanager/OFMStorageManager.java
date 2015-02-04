@@ -663,7 +663,7 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 		this.db = this.mongoClient.getDB(dbName);
 
 		Map<String, Object> unique = new HashMap<String, Object>();
-		unique.put("unique", (boolean)true);
+		unique.put("unique", true);
 
 		BasicDBObject dbObject1 = new BasicDBObject(key);
 		BasicDBObject dbObject2 = new BasicDBObject(unique);

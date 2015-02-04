@@ -146,7 +146,7 @@ public class OFMTopologyManager extends OFModule implements ITopologyService, IL
 		linkDiscovery = (ILinkDiscoveryService) getModule(ILinkDiscoveryService.class);
 		linkDiscovery.addListener(this);
 
-		protocol = (OFProtocol) getController().getProtocol();
+		protocol = getController().getProtocol();
 
 		// I will receive all PACKET_IN messages.
 		registerFilter(

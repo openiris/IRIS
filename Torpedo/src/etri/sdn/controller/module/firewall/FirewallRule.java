@@ -495,7 +495,7 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 				continue;
 			
 			if (n == "subnet-mask") {
-				result = (String)jp.getText();
+				result = jp.getText();
 			}
 		}
 		
@@ -541,7 +541,7 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 
 			// This is currently only applicable for remove().  In store(), ruleid takes a random number
 			if (n == "ruleid") {
-				rule.ruleid = Integer.parseInt((String)jp.getText());
+				rule.ruleid = Integer.parseInt(jp.getText());
 			}
 
 			// This assumes user having dpid info for involved switches
