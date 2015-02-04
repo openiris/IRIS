@@ -115,7 +115,7 @@ public class RestPort extends Restlet {
 		if(pInfo.get("binding:vif_details") != null) {
 			
 			//binding:vif_details = false =====> Neutron update
-			if (pInfo.get("binding:vif_details").toString() == "false") {			
+			if (pInfo.get("binding:vif_details").toString().equals("false")) {
 				port.binding_vif_detail = pInfo.get("binding:vif_details").toString();
 			} else {			
 				ObjectMapper ombp = new ObjectMapper();

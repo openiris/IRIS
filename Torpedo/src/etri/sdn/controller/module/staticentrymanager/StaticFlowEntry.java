@@ -959,10 +959,10 @@ public class StaticFlowEntry {
 		while (fields.hasNext()) {
 			Map.Entry<String, JsonNode> field = fields.next();
 
-			if (field.getKey() == "instructions") {
+			if (field.getKey().equals("instructions")) {
 				entry.put(field.getKey().toString(), jsonToInstructions(field.getValue().toString()));
 			}
-			else if (field.getKey() == "actions") {
+			else if (field.getKey().equals("actions")) {
 				entry.put(field.getKey().toString(), jsonToActions(field.getValue().toString()));
 			}
 			else {

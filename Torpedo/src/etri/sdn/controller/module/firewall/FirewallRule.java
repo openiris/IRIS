@@ -494,7 +494,7 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 			if (jp.getText().equals("")) 
 				continue;
 			
-			if (n == "subnet-mask") {
+			if (n.equals("subnet-mask")) {
 				result = (String)jp.getText();
 			}
 		}
@@ -540,12 +540,12 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 			String tmp;
 
 			// This is currently only applicable for remove().  In store(), ruleid takes a random number
-			if (n == "ruleid") {
+			if (n.equals("ruleid")) {
 				rule.ruleid = Integer.parseInt((String)jp.getText());
 			}
 
 			// This assumes user having dpid info for involved switches
-			else if (n == "switchid") {
+			else if (n.equals("switchid")) {
 				tmp = jp.getText();
 				if (tmp.equalsIgnoreCase("-1") == false) {
 					// user inputs hex format dpid 
@@ -554,12 +554,12 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 				}
 			} 
 
-			else if (n == "src-inport") {
+			else if (n.equals("src-inport")) {
 				rule.in_port = Short.parseShort(jp.getText());
 				rule.wildcard_in_port = false;
 			} 
 
-			else if (n == "src-mac") {
+			else if (n.equals("src-mac")) {
 				tmp = jp.getText();
 				if (tmp.equalsIgnoreCase("ANY") == false) {
 					rule.wildcard_dl_src = false;
@@ -567,7 +567,7 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 				}
 			} 
 
-			else if (n == "dst-mac") {
+			else if (n.equals("dst-mac")) {
 				tmp = jp.getText();
 				if (tmp.equalsIgnoreCase("ANY") == false) {
 					rule.wildcard_dl_dst = false;
@@ -575,7 +575,7 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 				}
 			} 
 
-			else if (n == "dl-type") {
+			else if (n.equals("dl-type")) {
 				tmp = jp.getText();
 				if (tmp.equalsIgnoreCase("ARP")) {
 					rule.wildcard_dl_type = false;
@@ -583,7 +583,7 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 				}
 			} 
 
-			else if (n == "src-ip") {
+			else if (n.equals("src-ip")) {
 				tmp = jp.getText();
 				if (tmp.equalsIgnoreCase("ANY") == false) {
 					rule.wildcard_nw_src = false;
@@ -595,7 +595,7 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 				}
 			} 
 
-			else if (n == "dst-ip") {
+			else if (n.equals("dst-ip")) {
 				tmp = jp.getText();
 				if (tmp.equalsIgnoreCase("ANY") == false) {
 					rule.wildcard_nw_dst = false;
@@ -607,7 +607,7 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 				}
 			} 
 
-			else if (n == "nw-proto") {
+			else if (n.equals("nw-proto")) {
 				tmp = jp.getText();
 				if (tmp.equalsIgnoreCase("TCP")) {
 					rule.wildcard_nw_proto = false;
@@ -627,21 +627,21 @@ public class FirewallRule implements Comparable<FirewallRule>, Serializable {
 				} 
 			} 
 
-			else if (n == "tp-src") {
+			else if (n.equals("tp-src")) {
 				rule.wildcard_tp_src = false;
 				rule.tp_src = Short.parseShort(jp.getText());
 			} 
 
-			else if (n == "tp-dst") {
+			else if (n.equals("tp-dst")) {
 				rule.wildcard_tp_dst = false;
 				rule.tp_dst = Short.parseShort(jp.getText());
 			} 
 
-			else if (n == "priority") {
+			else if (n.equals("priority")) {
 				rule.priority = Integer.parseInt(jp.getText());
 			} 
 
-			else if (n == "action") {
+			else if (n.equals("action")) {
 				if (jp.getText().equalsIgnoreCase("allow") == true) {
 					rule.action = FirewallRule.FirewallAction.ALLOW;
 				} else if (jp.getText().equalsIgnoreCase("deny") == true) {
