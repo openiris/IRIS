@@ -1127,7 +1127,11 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	}
 
 	public String toString() {
-		return this.links.getStringRepresentation();
+        if (this.links != null) {
+            return this.links.getStringRepresentation();
+        }
+
+        return super.toString();
 	}
 
 	@Override
