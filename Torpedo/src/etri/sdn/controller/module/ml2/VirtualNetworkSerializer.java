@@ -11,13 +11,13 @@ import org.codehaus.jackson.map.SerializerProvider;
 public class VirtualNetworkSerializer extends JsonSerializer<VirtualNetwork> {
 
 	@Override
-	public void serialize(VirtualNetwork vNet, JsonGenerator jGen, SerializerProvider serializer) throws IOException, JsonProcessingException {
+	public void serialize(VirtualNetwork vNet, JsonGenerator jGen, SerializerProvider serializer) throws IOException {
 		jGen.writeStartObject();
 		jGen.writeStringField("status", vNet.status);
 		
 		jGen.writeArrayFieldStart("subnets");
 			for (Entry<String, String> entry : vNet.subNameToGuid.entrySet()) {
-				jGen.writeString(entry.getKey().toString());
+				jGen.writeString(entry.getKey());
 			}
 		jGen.writeEndArray();
 		

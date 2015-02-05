@@ -53,8 +53,6 @@ public class VirtualPort {
 		this.binding_vnic_type = port.binding_vnic_type;
 		this.binding_vif_type = port.binding_vif_type;
 		this.mac_address = port.mac_address;
-		
-		return;
 	}
 
 	/**
@@ -63,7 +61,6 @@ public class VirtualPort {
 	*/
 	public void setBindingHostId(String binding_host_id) {
 		this.binding_host_id = binding_host_id;
-		return;
 	}
 
 	/**
@@ -72,7 +69,6 @@ public class VirtualPort {
 	*/
 	public void setAllowedAddressPairs(List<String> allowed_address_pairs) {
 		this.allowed_address_pairs = allowed_address_pairs;
-		return;
 	}
 
 	/**
@@ -81,7 +77,6 @@ public class VirtualPort {
 	*/
 	public void setExtraDhcpOpts(List<String> extra_dhcp_opts) {
 		this.extra_dhcp_opts = extra_dhcp_opts;
-		return;
 	}
 
 	/**
@@ -90,7 +85,6 @@ public class VirtualPort {
 	*/
 	public void setDeviceOwner(String device_owner) {
 		this.device_owner = device_owner;
-		return;
 	}
 
 	/**
@@ -99,7 +93,6 @@ public class VirtualPort {
 	*/
 	public void setBindingProfile(Map<String, String> binding_profile) {
 		this.binding_profile = binding_profile;
-		return;
 	}
 
 	/**
@@ -108,7 +101,6 @@ public class VirtualPort {
 	*/
 	public void setSecurityGroups(List<Map<String, Object>> security_groups) {
 		this.security_groups = security_groups;
-		return;
 	}
 
 	/**
@@ -117,7 +109,6 @@ public class VirtualPort {
 	*/
 	public void setDeviceId(String device_id) {
 		this.device_id = device_id;
-		return;
 	}
 
 	/**
@@ -126,7 +117,6 @@ public class VirtualPort {
 	*/
 	public void setPorName(String porName) {
 		this.porName = porName;
-		return;
 	}
 
 	/**
@@ -135,7 +125,6 @@ public class VirtualPort {
 	*/
 	public void setAdminStateUp(String admin_state_up) {
 		this.admin_state_up = admin_state_up;
-		return;
 	}
 
 	/**
@@ -144,7 +133,6 @@ public class VirtualPort {
 	*/
 	public void setBindingVifDetails(Map<String, String> binding_vif_details) {
 		this.binding_vif_details = binding_vif_details;
-		return;
 	}
 	
 	/**
@@ -153,7 +141,6 @@ public class VirtualPort {
 	*/
 	public void setBindingVifDetails(String binding_vif_detail) {
 		this.binding_vif_detail = binding_vif_detail;
-		return;
 	}
 
 	/**
@@ -162,7 +149,6 @@ public class VirtualPort {
 	*/
 	public void setBindingVnicType(String binding_vnic_type) {
 		this.binding_vnic_type = binding_vnic_type;
-		return;
 	}
 
 	/**
@@ -171,7 +157,6 @@ public class VirtualPort {
 	*/
 	public void setBindingVifType(String binding_vif_type) {
 		this.binding_vif_type = binding_vif_type;
-		return;
 	}
 
 }

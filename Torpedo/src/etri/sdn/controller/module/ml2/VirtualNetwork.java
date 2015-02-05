@@ -39,8 +39,6 @@ public class VirtualNetwork {
 		this.shared = network.shared;
 		this.netId = network.netId;
 		this.provider_segmentation_id = network.provider_segmentation_id;
-		
-		return;
 	}
 
 	/**
@@ -49,7 +47,6 @@ public class VirtualNetwork {
 	*/
 	public void setNetName(String netName){
 		this.netName = netName;
-		return;
 	}
 	
 	/**
@@ -58,7 +55,6 @@ public class VirtualNetwork {
 	*/
 	public void setProviderPhysicalNetwork(String provider_physical_network){
 		this.provider_physical_network = provider_physical_network;
-		return;
 	}
 	
 	/**
@@ -67,7 +63,6 @@ public class VirtualNetwork {
 	*/
 	public void setAdminStateUp(String admin_state_up){
 		this.admin_state_up = admin_state_up;
-		return;
 	}
 	
 	/**
@@ -76,7 +71,6 @@ public class VirtualNetwork {
 	*/
 	public void setProviderNetworkType(String provider_network_type){
 		this.provider_network_type = provider_network_type;
-		return;
 	}
 	
 	/**
@@ -85,7 +79,6 @@ public class VirtualNetwork {
 	*/
 	public void setRouterExternal(String router_external){
 		this.router_external = router_external;
-		return;
 	}
 	
 	/**
@@ -94,7 +87,6 @@ public class VirtualNetwork {
 	*/
 	public void setShared(String shared){
 		this.shared = shared;
-		return;
 	}
 	
 	/**
@@ -103,19 +95,14 @@ public class VirtualNetwork {
 	*/
 	public void setProviderSegmentationId(String provider_segmentation_id){
 		this.provider_segmentation_id = provider_segmentation_id;
-		return;
 	}
 	
 	public void addSubnets(String subId, String subName) {
 		this.subNameToGuid.put(subId, subName);
-		
-		return;
 	}
 	
 	public void delSubnets(String subId) {
 		this.subNameToGuid.remove(subId);
-		
-		return;
 	}
 
 }

@@ -288,11 +288,9 @@ public class Device implements IDevice {
 
 		// Prepare the new attachment point list.
 		if (moved) {
-			if ( newMap != null ) {
-				this.attachmentPoints.retainAll( newMap.values() );
-				this.attachmentPoints.addAllAbsent( newMap.values() );
-			}
-		}
+            this.attachmentPoints.retainAll( newMap.values() );
+            this.attachmentPoints.addAllAbsent( newMap.values() );
+        }
 
 		// empty the old ap list.
 		this.oldAPs.clear();

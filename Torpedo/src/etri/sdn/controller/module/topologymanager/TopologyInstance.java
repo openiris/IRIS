@@ -493,8 +493,7 @@ public class TopologyInstance {
 			}
 		}
 
-		BroadcastTree ret = new BroadcastTree(nexthoplinks, cost);
-		return ret;
+        return new BroadcastTree(nexthoplinks, cost);
 	}
 
 	protected void calculateShortestPathTreeInClusters() {

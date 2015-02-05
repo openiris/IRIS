@@ -82,7 +82,7 @@ public class State extends OFModel {
 		this.timeInitiated = Calendar.getInstance().getTimeInMillis();
 		this.totalMemory = Runtime.getRuntime().totalMemory();
 		
-		this.protocol = (OFProtocol) manager.getController().getProtocol();
+		this.protocol = manager.getController().getProtocol();
 		this.features_reply_module = new OFFeaturesReplySerializerModule(this.protocol);
 		
 		initRestApis();

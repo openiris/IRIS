@@ -496,7 +496,7 @@ public class SocketWriteByteChannelBuffer implements ChannelBuffer {
 		}
 
 		for ( int i = 0; i < length; ++i ) {
-			this.outBuf.put(index+i, (byte)src.getByte(srcIndex+i));
+			this.outBuf.put(index+i, src.getByte(srcIndex+i));
 		}
 	}
 

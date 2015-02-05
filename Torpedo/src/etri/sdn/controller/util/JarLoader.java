@@ -53,7 +53,7 @@ public class JarLoader {
 		
 		try { 
 			Constructor<OFController> constructor = 
-				ctrl.getConstructor(new Class[]{ int.class, String.class });
+				ctrl.getConstructor(int.class, String.class);
 			return constructor.newInstance( num_of_instances, role );
 		} catch (NoSuchMethodException e) {
 			logger.error("Cannot find constructor for " + path);

@@ -805,7 +805,7 @@ public class StaticFlowEntry {
 				throw new StaticFlowEntryException("skipping entry " + entryName + " on switch " + switchName + " with bad data: " + e.getMessage());
 			}
 			else {
-				throw new StaticFlowEntryException("skipping entry with bad data: " + e.getMessage() + " :: " + e.getStackTrace());
+				throw new StaticFlowEntryException(String.format("skipping entry with bad data: %s :: %s", e.getMessage(), e.getStackTrace()));
 			}
 		}
 
@@ -960,13 +960,13 @@ public class StaticFlowEntry {
 			Map.Entry<String, JsonNode> field = fields.next();
 
 			if (field.getKey() == "instructions") {
-				entry.put(field.getKey().toString(), jsonToInstructions(field.getValue().toString()));
+				entry.put(field.getKey(), jsonToInstructions(field.getValue().toString()));
 			}
 			else if (field.getKey() == "actions") {
-				entry.put(field.getKey().toString(), jsonToActions(field.getValue().toString()));
+				entry.put(field.getKey(), jsonToActions(field.getValue().toString()));
 			}
 			else {
-				entry.put(field.getKey().toString(), field.getValue().toString().replaceAll("\"", ""));
+				entry.put(field.getKey(), field.getValue().toString().replaceAll("\"", ""));
 			}
 		}
 

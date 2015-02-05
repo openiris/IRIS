@@ -133,7 +133,7 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 				logger.debug("inserted successfully.");
 			} else {
 				logger.info("error occur during inserting procedure.");
-				return isInserted == null;
+				return false;
 			}
 		}
 		return true;
@@ -413,7 +413,8 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 		} catch(Exception e) {
 			logger.error("upsertion erorr ={} ", e);
 		}
-		Object isInserted = result.getField("err");
+        assert result != null;
+        Object isInserted = result.getField("err");
 		if(isInserted == null) { 
 			logger.debug("upserted successful.");
 			return true;
@@ -662,7 +663,7 @@ public class OFMStorageManager extends OFModule implements IStorageService {
 		this.db = this.mongoClient.getDB(dbName);
 
 		Map<String, Object> unique = new HashMap<String, Object>();
-		unique.put("unique", (boolean)true);
+		unique.put("unique", true);
 
 		BasicDBObject dbObject1 = new BasicDBObject(key);
 		BasicDBObject dbObject2 = new BasicDBObject(unique);

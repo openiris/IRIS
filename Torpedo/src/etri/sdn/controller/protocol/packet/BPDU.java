@@ -27,7 +27,7 @@ import java.nio.ByteBuffer;
 public class BPDU extends BasePacket {
     public enum BPDUType {
         CONFIG,
-        TOPOLOGY_CHANGE;
+        TOPOLOGY_CHANGE,
     }
     
     private final long destMac = 0x0180c2000000L; // 01-80-c2-00-00-00

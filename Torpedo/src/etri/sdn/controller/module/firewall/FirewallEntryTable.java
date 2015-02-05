@@ -22,8 +22,7 @@ public class FirewallEntryTable extends TreeMap<String, Map<String, Object>>{
 	 * 
 	 */
 	public Map<String, Object> getFirewallEntry(String ruleid) {
-		Map<String, Object> entry = super.get(ruleid);
-		return entry;
+        return super.get(ruleid);
 	}
 	
 	/**

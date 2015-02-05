@@ -12,7 +12,7 @@ import org.codehaus.jackson.map.SerializerProvider;
 public class VirtualSubnetSerializer extends JsonSerializer<VirtualSubnet> {
 
 	@Override
-	public void serialize(VirtualSubnet vSub, JsonGenerator jGen, SerializerProvider serializer) throws IOException, JsonProcessingException {
+	public void serialize(VirtualSubnet vSub, JsonGenerator jGen, SerializerProvider serializer) throws IOException {
 		jGen.writeStartObject();
 		jGen.writeStringField("name", vSub.subName);
 		jGen.writeStringField("enable_dhcp", vSub.enable_dhcp);
@@ -29,7 +29,7 @@ public class VirtualSubnetSerializer extends JsonSerializer<VirtualSubnet> {
 			for (Map<String, String> apMap : vSub.allocation_pools) {
 				jGen.writeStartObject();
 				for (Entry<String, String> entry : apMap.entrySet()) {
-					jGen.writeStringField(entry.getKey().toString().toLowerCase(), entry.getValue().toString());
+					jGen.writeStringField(entry.getKey().toLowerCase(), entry.getValue());
 				}
 				jGen.writeEndObject();
 			}

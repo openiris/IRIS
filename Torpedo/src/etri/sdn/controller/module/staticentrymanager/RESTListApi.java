@@ -37,10 +37,8 @@ public class RESTListApi extends Restlet {
 		try {
 			String r = om.writeValueAsString(manager.getStaticFlowEntryStorage().getFlowModMap(sw));
 			response.setEntity(r, MediaType.APPLICATION_JSON);
-			return;
 		} catch ( Exception e ) {
 			e.printStackTrace();
-			return;
 		}
 	}
 }

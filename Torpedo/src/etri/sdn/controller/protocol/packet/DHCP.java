@@ -55,9 +55,9 @@ public class DHCP extends BasePacket {
      * 
      */
     // Header + magic without options
-    public static int MIN_HEADER_LENGTH = 240;
-    public static byte OPCODE_REQUEST = 0x1;
-    public static byte OPCODE_REPLY = 0x2;
+    public static final int MIN_HEADER_LENGTH = 240;
+    public static final byte OPCODE_REQUEST = 0x1;
+    public static final byte OPCODE_REPLY = 0x2;
 
     public static byte HWTYPE_ETHERNET = 0x1;
     

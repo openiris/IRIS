@@ -99,18 +99,19 @@ public class DeviceIterator extends FilterIterator<Device> {
 			if (sps == null) return false;
 
 			match = false;
-			for (SwitchPort sp : sps) {
-				if (switchDPID != null) {
-					if (switchDPID.longValue() != sp.getSwitchDPID())
-						return false;
-				}
-				if (switchPort != null) {
-					if (! switchPort.equals(sp.getPort()))
-						return false;
-				}
-				match = true;
-				break;
-			}
+            if (sps.length > 0) {
+                SwitchPort sp = sps[0];
+                if (switchDPID != null) {
+                    if (switchDPID.longValue() != sp.getSwitchDPID())
+                        return false;
+                }
+                if (switchPort != null) {
+                    if (!switchPort.equals(sp.getPort()))
+                        return false;
+                }
+                match = true;
+            }
+
 			if (!match) return false;
 		}
 		return true;

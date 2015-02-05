@@ -45,8 +45,6 @@ public class VirtualSubnet {
 		this.ipv6_ra_mode = subnet.ipv6_ra_mode;
 		this.ipv6_address_mode = subnet.ipv6_address_mode;
 		this.shared = subnet.shared;
-		
-		return;
 	}
 
 	/**
@@ -55,7 +53,6 @@ public class VirtualSubnet {
 	*/
 	public void setSubName(String subName){
 		this.subName = subName;
-		return;
 	}
 	
 	/**
@@ -64,7 +61,6 @@ public class VirtualSubnet {
 	*/
 	public void setEnableDhcp(String enable_dhcp){
 		this.enable_dhcp = enable_dhcp;
-		return;
 	}
 	
 	/**
@@ -73,7 +69,6 @@ public class VirtualSubnet {
 	*/
 	public void setGatewayIp(String gateway_ip){
 		this.gateway_ip = gateway_ip;
-		return;
 	}
 	
 	/**
@@ -82,7 +77,6 @@ public class VirtualSubnet {
 	*/
 	public void setShared(String shared){
 		this.shared = shared;
-		return;
 	}
 	
 	/**
@@ -91,7 +85,6 @@ public class VirtualSubnet {
 	*/
 	public void setDnsNameservers(List<String> dns_nameservers){
 		this.dns_nameservers = dns_nameservers;
-		return;
 	}
 	
 	/**
@@ -100,7 +93,6 @@ public class VirtualSubnet {
 	*/
 	public void setHostRoutes(List<String> host_routes){
 		this.host_routes = host_routes;
-		return;
 	}
 	
 	/**
@@ -109,7 +101,6 @@ public class VirtualSubnet {
 	*/
 	public void setIpv6RaMode(String ipv6_ra_mode){
 		this.ipv6_ra_mode = ipv6_ra_mode;
-		return;
 	}
 	
 	/**
@@ -118,7 +109,6 @@ public class VirtualSubnet {
 	*/
 	public void setIpv6AddressMode(String ipv6_address_mode){
 		this.ipv6_address_mode = ipv6_address_mode;
-		return;
 	}
 
 }

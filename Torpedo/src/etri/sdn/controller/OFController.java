@@ -166,8 +166,7 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 			} catch ( Exception | Error e ) {
 				logger.error(e.getMessage());
 				this.controller.removeSelf();
-				return;					// end this controller thread.
-			} 
+			}
 		}
 		
 		/**
@@ -426,29 +425,27 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 	public final boolean handleDisconnectEvent(Connection conn) {
 		
 		assert( conn.getSwitch() != null );
-		
-		if ( conn.getSwitch() != null ) {
-			
-			try { 
-				conn.getSwitch().getId();
-				
-				for (OFModule m: modules) {
-					m.processDisconnect(conn);
-				}
-			} catch ( RuntimeException e ) {
-				// FEATURES_REPLY is not exchanged.
-			}
-			
-			try { 
-				switches.remove( conn.getSwitch().getId() );
-			} catch ( RuntimeException e ) {
-				// this catch clause is for catching RuntimeException
-				// raised within conn.getSwitch().getId(). 
-				// this exception is raised when the connection is abruptly cut
-				// before FEATURE_REPLY is received from the peer.
-				// So, we do nothing for this exception.
-			}
-		}
+
+
+        try {
+            conn.getSwitch().getId();
+
+            for (OFModule m: modules) {
+                m.processDisconnect(conn);
+            }
+        } catch ( RuntimeException e ) {
+            // FEATURES_REPLY is not exchanged.
+        }
+
+        try {
+            switches.remove( conn.getSwitch().getId() );
+        } catch ( RuntimeException e ) {
+            // this catch clause is for catching RuntimeException
+            // raised within conn.getSwitch().getId().
+            // this exception is raised when the connection is abruptly cut
+            // before FEATURE_REPLY is received from the peer.
+            // So, we do nothing for this exception.
+        }
 		return true;
 	}
 
@@ -488,9 +485,7 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 			if ( models == null ) {
 				continue;
 			}
-			for ( int i = 0; i < models.length; ++i ) {
-				l.add( models[i] );
-			}
+            Collections.addAll(l, models);
 		}
 		
 		return l.toArray(new OFModel[l.size()]);

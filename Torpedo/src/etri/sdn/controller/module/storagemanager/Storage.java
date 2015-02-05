@@ -140,7 +140,7 @@ public class Storage extends OFModel {
 														e.printStackTrace();
 													}
 													
-													storageInstance.insert(dbName, collection, (Map<String, Object>)map);
+													storageInstance.insert(dbName, collection, map);
 													response.setEntity(r, MediaType.APPLICATION_JSON);
 												} catch (StorageException e) {
 													logger.error(INSERTING_ERROR_MESSAGE + e);
@@ -261,10 +261,10 @@ public class Storage extends OFModel {
 																				return;
 																			} 
 
-																			storageInstance.delete(dbName, collection, (Map<String, Object>)map);
+																			storageInstance.delete(dbName, collection, map);
 																			response.setEntity(query, MediaType.APPLICATION_JSON);
 																		} catch (StorageException e) {
-																			logger.error(DELETING_ERROR_MESSAGE + e);;
+																			logger.error(DELETING_ERROR_MESSAGE + e);
 																		}
 																	}
 																}
@@ -328,7 +328,7 @@ public class Storage extends OFModel {
 																								return;
 																							} 
 
-																							List<Map<String, Object>> list = storageInstance.retrieve(dbName, collection, (Map<String, Object>)map);
+																							List<Map<String, Object>> list = storageInstance.retrieve(dbName, collection, map);
 																							ObjectMapper om = new ObjectMapper();
 																							String r = null;
 																							try {

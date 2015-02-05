@@ -77,7 +77,6 @@ public class RESTFeaturesApi extends Restlet {
 			response.setEntity(r, MediaType.APPLICATION_JSON);
 		} catch (Exception e) {
 			OFMStateManager.logger.error("error={}", StackTrace.of(e));
-			return;
 		}
 	}
 	

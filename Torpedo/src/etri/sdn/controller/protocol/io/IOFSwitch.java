@@ -36,7 +36,7 @@ public interface IOFSwitch {
 	
 	public enum SwitchType {
         BASIC_SWITCH, CORE_SWITCH
-    };
+    }
 	
     // Attribute keys
     public static final String SWITCH_DESCRIPTION_FUTURE = "DescriptionFuture";

@@ -15,7 +15,7 @@ import org.openflow.io.OFMessageAsyncStream;
 import org.projectfloodlight.openflow.protocol.OFMessage;
 
 public final class Connection {
-	public enum STATUS { CONNECTED, RUNNING, CLOSED };
+	public enum STATUS { CONNECTED, RUNNING, CLOSED }
 
 	private static int SEQ = 0;
 
@@ -238,7 +238,6 @@ public final class Connection {
 		} catch ( NullPointerException e ) {
 			// this is a truly exceptional case that there is no key
 			// bounded for the client. (connection is already cut.)
-			return;
 		}
 	}
 
@@ -253,7 +252,6 @@ public final class Connection {
 		} catch ( NullPointerException e ) {
 			// this is a truly exceptional case that there is no key
 			// bounded for the client. (connection is already cut.)
-			return;
 		}
 	}
 }

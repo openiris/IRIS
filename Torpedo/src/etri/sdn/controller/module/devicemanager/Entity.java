@@ -44,7 +44,7 @@ public class Entity implements Comparable<Entity> {
      * 
      * @see etri.sdn.controller.module.devicemanager.Entity
      */
-    protected static int ACTIVITY_TIMEOUT = 30000;
+    protected static final int ACTIVITY_TIMEOUT = 30000;
     
     /**
      * The MAC address associated with this entity

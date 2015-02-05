@@ -125,7 +125,6 @@ public final class OFSwitchImpl implements IOFSwitch {
 	@Override
 	public void setAttribute(String name, Object value) {
 		this.attributes.put(name, value);
-		return;
 	}
 
 	@Override

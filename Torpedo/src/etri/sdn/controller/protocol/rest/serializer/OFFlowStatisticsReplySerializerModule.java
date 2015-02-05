@@ -14,7 +14,7 @@ final class OFFlowStatsEntrySerializer extends JsonSerializer<OFFlowStatsEntry> 
 
 	@Override
 	public void serialize(OFFlowStatsEntry entry, JsonGenerator jgen, SerializerProvider provider) 
-			throws IOException,	JsonProcessingException {
+			throws IOException {
 		jgen.writeStartObject();
 		jgen.writeNumberField("tableId", entry.getTableId().getValue());
 		provider.defaultSerializeField("match", entry.getMatch(), jgen);

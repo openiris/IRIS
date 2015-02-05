@@ -496,7 +496,7 @@ public class OFProtocol {
 			if ( sw == null ) return false;
 
 			OFPortStatus ps = (OFPortStatus) m;
-			OFPortDesc phyport = (OFPortDesc) ps.getDesc();
+			OFPortDesc phyport = ps.getDesc();
 			if ( ps.getReason() == OFPortReason.DELETE ) {
 				removePortInformation( sw, phyport );
 			} else if ( ps.getReason() == OFPortReason.MODIFY ) {

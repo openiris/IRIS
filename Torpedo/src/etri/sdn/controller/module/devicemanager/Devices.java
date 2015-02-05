@@ -117,7 +117,7 @@ public class Devices extends OFModel implements IDeviceService {
 		 * The enum set of DeviceUpdate events
 		 */
 		public enum Change {
-			ADD, DELETE, CHANGE;
+			ADD, DELETE, CHANGE,
 		}
 
 		/**
@@ -1389,10 +1389,8 @@ public class Devices extends OFModel implements IDeviceService {
 	 * @return true if suppressedAPs includes switchPort, false otherwise 
 	 */
 	public boolean isSuppressedAP(SwitchPort switchPort) {
-		if ( suppressedAPs.contains(switchPort) )
-			return true;
-		return false;
-	}
+        return suppressedAPs.contains(switchPort);
+    }
 
 	/**
 	 * Returns information of devices that have more than one attachment point.
@@ -1507,7 +1505,6 @@ public class Devices extends OFModel implements IDeviceService {
 						response.setEntity(r, MediaType.APPLICATION_JSON);
 					} catch (Exception e) {
 						e.printStackTrace();
-						return;
 					}
 				}
 			}

@@ -58,9 +58,8 @@ public class StorageConverter {
 	 */
 	@SuppressWarnings("unchecked")
 	public static Map<String, Object> DBObjectToMap(BasicDBObject dbObject) {
-		Map<String, Object> map = (Map<String, Object>) jsonTraverse(dbObject.toMap(), false);
 
-		return map;
+        return (Map<String, Object>) jsonTraverse(dbObject.toMap(), false);
 	}
 
 	/**
