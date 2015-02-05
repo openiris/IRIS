@@ -13,7 +13,7 @@ import etri.sdn.controller.protocol.io.Connection;
 
 /**
  * <p>
- * This controller is only for cbench-based banchmarking. 
+ * This controller is only for cbench-based benchmarking.
  * </p>
  * 
  * @author bjlee

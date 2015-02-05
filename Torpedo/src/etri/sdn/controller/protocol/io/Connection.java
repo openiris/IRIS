@@ -79,7 +79,7 @@ public final class Connection {
 	}
 
 	/**
-	 * Get all controller instances runninng
+	 * Get all controller instances running
 	 * @return	Set<IOFHandler>
 	 */
 	Set<IOFHandler> getHandlers() {
@@ -103,7 +103,7 @@ public final class Connection {
 	}
 
 	/**
-	 * Return the status of corrent connection
+	 * Return the status of current connection
 	 * @return	STATUS value
 	 */
 	STATUS getStatus() {

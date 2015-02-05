@@ -460,7 +460,7 @@ public class Ethernet extends BasePacket {
         else if (pkt instanceof BPDU) {
             sb.append("\nbpdu packet");
         }
-        else sb.append("\nunknwon packet");
+        else sb.append("\nunknown packet");
 
         return sb.toString();
     }

@@ -37,7 +37,7 @@ public final class ClientChannelWatcher extends Thread {
 		controllers.add(controller);
 	}
 	
-	public static void deregisterController(IOFHandler controller) {
+	public static void unregisterController(IOFHandler controller) {
 		controllers.remove(controller);
 	}
 	
@@ -154,7 +154,7 @@ public final class ClientChannelWatcher extends Thread {
 								}
 							}							
 						} catch ( CancelledKeyException e ) {
-							logger.debug("canced={}", e);
+							logger.debug("cancelled={}", e);
 							continue;
 						}
 					}
