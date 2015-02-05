@@ -109,7 +109,7 @@
 				<td><a ng-click="showSwitchDescPopup(switch.id)">{{switch.vendor}}</a></td>
 				<td>{{switch.packets}}</td>
 				<td>{{switch.bytes}}</td>
-				<td> <a ng-click="showFlowsPopup(switch.id)">{{switch.flows}}</td>
+				<td> <a ng-click="showFlowsPopup(switch.id)">{{switch.flows}}</a></td>
 				<td>{{switch.connectedSince}}</td>
 			</tr>
 		</tbody>
@@ -239,11 +239,13 @@
 	<div class="home vNetworks vPort_detail" style="display: none;" title="vPort Description"></div>
 </div> <!-- /hiddens -->
 <footer class="footer">
-Copyright (C) ETRI. 
-Powered by <a href="http://documentcloud.github.com/backbone/">Backbone.js</a>, 
-<a href="http://twitter.github.com/bootstrap/">Bootstrap</a>, 
-<a href="http://jquery.com/">jQuery</a>, 
-<a href="http://mbostock.github.com/d3/">D3.js</a>, etc.</p>
+    <p>
+        Copyright (C) ETRI.
+        Powered by <a href="http://documentcloud.github.com/backbone/">Backbone.js</a>,
+        <a href="http://twitter.github.com/bootstrap/">Bootstrap</a>,
+        <a href="http://jquery.com/">jQuery</a>,
+        <a href="http://mbostock.github.com/d3/">D3.js</a>, etc.
+    </p>
 </footer>
 </div> <!-- page -->
 </body>
