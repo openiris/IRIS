@@ -33,8 +33,8 @@ final class OFMatchSerializer extends JsonSerializer<Match> {
 	 * @param provider	SerializerProvider object. not used.
 	 */
 	@Override
-	public void serialize(Match match, JsonGenerator jgen, SerializerProvider provider) 
-			throws IOException, JsonProcessingException {
+	public void serialize(Match match, JsonGenerator jgen, SerializerProvider provider)
+            throws IOException {
 
 		jgen.writeStartObject();
 		for ( MatchField<?> mf: match.getMatchFields() ) {
@@ -59,7 +59,7 @@ final class OFMatchSerializer extends JsonSerializer<Match> {
 final class OFOxmSerializer extends JsonSerializer<OFOxm> {
 	@Override
 	public void serialize(OFOxm oxm, JsonGenerator jgen, SerializerProvider provider) 
-			throws IOException, JsonProcessingException {
+			throws IOException {
 		jgen.writeStartObject();
 		jgen.writeStringField(oxm.getMatchField().getName(), oxm.getValue().toString());
 		if ( oxm.isMasked() ) {
@@ -78,7 +78,7 @@ final class OFOxmSerializer extends JsonSerializer<OFOxm> {
 final class OFPortSerializer extends JsonSerializer<OFPort> {
 	@Override
 	public void serialize(OFPort reply, JsonGenerator jgen, SerializerProvider provider) 
-	throws IOException, JsonProcessingException {
+	throws IOException {
 		jgen.writeNumber(reply.getPortNumber());
 	}
 }
@@ -86,7 +86,7 @@ final class OFPortSerializer extends JsonSerializer<OFPort> {
 final class U64Serializer extends JsonSerializer<U64> {
 	@Override
 	public void serialize(U64 val, JsonGenerator jgen, SerializerProvider provider)
-			throws IOException, JsonProcessingException {
+			throws IOException {
 		jgen.writeNumber(val.getValue());
 	}
 }
@@ -94,8 +94,7 @@ final class U64Serializer extends JsonSerializer<U64> {
 final class ArpOpcodeSerializer extends JsonSerializer<ArpOpcode> {
 
 	@Override
-	public void serialize(ArpOpcode val, JsonGenerator jgen, SerializerProvider provider) throws IOException,
-			JsonProcessingException {
+	public void serialize(ArpOpcode val, JsonGenerator jgen, SerializerProvider provider) throws IOException {
 		// TODO Auto-generated method stub
 		jgen.writeString(val.toString());
 	}

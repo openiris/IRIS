@@ -11,7 +11,7 @@ import org.codehaus.jackson.map.SerializerProvider;
 public class VirtualNetworkSerializer extends JsonSerializer<VirtualNetwork> {
 
 	@Override
-	public void serialize(VirtualNetwork vNet, JsonGenerator jGen, SerializerProvider serializer) throws IOException, JsonProcessingException {
+	public void serialize(VirtualNetwork vNet, JsonGenerator jGen, SerializerProvider serializer) throws IOException {
 		jGen.writeStartObject();
 		jGen.writeStringField("status", vNet.status);
 		

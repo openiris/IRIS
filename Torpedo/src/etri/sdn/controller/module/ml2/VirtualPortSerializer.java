@@ -13,7 +13,7 @@ public class VirtualPortSerializer extends JsonSerializer<VirtualPort> {
 
 	// REST GET
 	@Override
-	public void serialize(VirtualPort vPor, JsonGenerator jGen, SerializerProvider serializer) throws IOException, JsonProcessingException {
+	public void serialize(VirtualPort vPor, JsonGenerator jGen, SerializerProvider serializer) throws IOException {
 		
 		jGen.writeStartObject();
 		jGen.writeStringField("binding:host_id", vPor.binding_host_id);

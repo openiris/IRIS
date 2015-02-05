@@ -28,7 +28,7 @@ final class OFFeaturesReplySerializer extends JsonSerializer<OFFeaturesReply> {
 	}
 	@Override
 	public void serialize(OFFeaturesReply reply, JsonGenerator jgen, SerializerProvider provider) 
-			throws IOException, JsonProcessingException {
+			throws IOException {
 
 		jgen.writeStartObject();
 		jgen.writeStringField("datapathId", reply.getDatapathId().toString());
@@ -64,7 +64,7 @@ final class OFPhysicalPortSerializer extends JsonSerializer<OFPortDesc> {
 	@Override
 	//	public void serialize(OFPhysicalPort port, JsonGenerator jgen, SerializerProvider provider) 
 	public void serialize(OFPortDesc port, JsonGenerator jgen, SerializerProvider provider) 
-			throws IOException, JsonProcessingException {
+			throws IOException {
 
 		jgen.writeStartObject();
 		jgen.writeNumberField("portNumber", port.getPortNo().getPortNumber());

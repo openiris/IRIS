@@ -19,7 +19,7 @@ final class OFFirewallRuleSerializer extends JsonSerializer<FirewallRule> {
 
 	@Override
 	public void serialize(FirewallRule rule, JsonGenerator jgen, SerializerProvider provider)
-	throws IOException, JsonProcessingException {
+	throws IOException {
 		
 		jgen.writeStartObject();
 		jgen.writeNumberField("ruleid", rule.ruleid);

@@ -27,7 +27,7 @@ import etri.sdn.controller.OFModule;
 class ModuleSerializer extends JsonSerializer<OFModule> {
 	@Override
 	public void serialize(OFModule module, JsonGenerator jgen, SerializerProvider provider) 
-	throws IOException, JsonProcessingException {
+	throws IOException {
 		Collection<OFModule> modules = module.getController().getModules();
 		jgen.writeStartObject();
 			jgen.writeBooleanField("loaded", true);
@@ -78,7 +78,7 @@ class ModuleSerializer extends JsonSerializer<OFModule> {
 class ModuleListSerializer extends JsonSerializer<OFController> {
 	@Override
 	public void serialize(OFController controller, JsonGenerator jgen, SerializerProvider provider) 
-	throws IOException, JsonProcessingException {
+	throws IOException {
 		
 		jgen.writeStartObject();
 		for (OFModule m : controller.getModules()) {
