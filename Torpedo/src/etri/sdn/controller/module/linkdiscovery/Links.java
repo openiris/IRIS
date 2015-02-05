@@ -651,7 +651,6 @@ public class Links extends OFModel {
 						response.setEntity(r, MediaType.APPLICATION_JSON);
 					} catch (Exception e) {
 						e.printStackTrace();
-						return;
 					}
 				}
 			}

@@ -22,7 +22,7 @@ public interface IOFHandler {
 	 * The role of the controller as used by the OF 1.2 and OVS failover and
 	 * load-balancing mechanism.
 	 */
-	public static enum Role { EQUAL, MASTER, SLAVE };
+	public static enum Role { EQUAL, MASTER, SLAVE }
 
 	/**
 	 * Get the current role of the controller

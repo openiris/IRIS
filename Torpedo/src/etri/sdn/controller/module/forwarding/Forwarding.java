@@ -393,7 +393,6 @@ public class Forwarding extends ForwardingBase {
 					sw, pi, po, e);
 		}            
 
-		return;
 	}
 
 	@Override

@@ -166,8 +166,7 @@ public abstract class OFController implements IOFHandler, Comparable<IOFHandler>
 			} catch ( Exception | Error e ) {
 				logger.error(e.getMessage());
 				this.controller.removeSelf();
-				return;					// end this controller thread.
-			} 
+			}
 		}
 		
 		/**

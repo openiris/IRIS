@@ -264,7 +264,7 @@ public class Storage extends OFModel {
 																			storageInstance.delete(dbName, collection, map);
 																			response.setEntity(query, MediaType.APPLICATION_JSON);
 																		} catch (StorageException e) {
-																			logger.error(DELETING_ERROR_MESSAGE + e);;
+																			logger.error(DELETING_ERROR_MESSAGE + e);
 																		}
 																	}
 																}

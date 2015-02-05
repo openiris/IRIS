@@ -107,7 +107,6 @@ public final class TcpServer extends Thread implements IOFProtocolServer {
 		} catch (IOException e) {
 			e.printStackTrace();
 			// cannot do further processing.
-			return;
 		}
 	}
 }

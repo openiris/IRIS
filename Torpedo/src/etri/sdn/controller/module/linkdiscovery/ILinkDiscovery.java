@@ -21,7 +21,7 @@ public interface ILinkDiscovery {
 	 */
     public enum SwitchType {
         BASIC_SWITCH, CORE_SWITCH
-    };
+    }
 
     /**
      * This enum defines the type of each link. 
@@ -55,5 +55,5 @@ public interface ILinkDiscovery {
         		return "tunnel";
         	}
         }
-    };
+    }
 }

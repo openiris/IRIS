@@ -56,7 +56,6 @@ public class Topology extends OFModel {
 						response.setEntity(r, MediaType.APPLICATION_JSON);
 					} catch (Exception e) {
 						OFMTopologyManager.logger.error("error={}", StackTrace.of(e));
-						return;
 					}
 				}
 				
