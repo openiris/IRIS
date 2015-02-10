@@ -3,6 +3,116 @@
 iris.topologyWidth = 1160;
 iris.topologyHeight = 700;
 
+var switchStats = {};
+
+iris.getSwitches = function() {
+	$.get("/wm/core/controller/switches/json")
+	.success(function(data) {
+		_.each(data, function(obj) {
+			var dpid = obj.dpid;
+			switchStats[dpid] = {};
+			iris.getStatistics(dpid);
+		});
+
+		iris.getLinks();
+		iris.getDevices();
+	});
+}
+
+iris.getLinks = function() {
+	$.get("/wm/topology/links/json")
+	.success(function(data) {
+		_.each(data, function(link) {
+			var srcDpid = link['src-switch'];
+			var port = link['src-port'];
+			var dstDpid = link['dst-switch'];
+
+			var sw = switchStats[srcDpid];
+
+			if (sw[port] == undefined) {
+				sw[port] = {};
+			}
+			sw[port].id = dstDpid;
+		});
+	});
+}
+
+iris.getDevices = function() {
+	$.get("/wm/device/all/json")
+	.success(function(data) {
+		_.each(data, function(host) {
+			var id = host.mac[0];
+			_.each(host.attachmentPoint, function(point) {
+				var dpid = point.switchDPID;
+				var port = point.port;
+
+				var sw = switchStats[dpid];
+
+				if (sw[port] == undefined) {
+					sw[port] = {};
+				}
+				sw[port].id = id;
+			});
+		});
+	});
+}
+
+iris.getStatistics = function(dpid) {
+	$.get("/wm/core/switch/" + dpid + "/port/json")
+	.success(function(data) {
+		var stats = data[dpid];
+		var sw = switchStats[dpid];
+
+		_.each(stats, function(stat) {
+			var port = stat.portNumber;
+			var tx = stat.transmitBytes;
+			var rx = stat.receiveBytes;
+
+			try {
+			  if (sw[port] == undefined) {
+			    sw[port] = {};
+			  }
+
+			  sw[port].lastLoad = sw[port].load;
+			  sw[port].load = rx + tx;
+			} catch(e) {}
+		});
+	});
+}
+
+iris.refreshStatistics = function() {
+	_.each(switches, function(sw) {
+		var dpid = sw.id;
+		iris.getStatistics(dpid);
+	});
+};
+
+iris.getLinkLoad = function(src, dst) {
+	var sw;
+	var target;
+
+	if (src.id in switchStats) {
+		sw = switchStats[src.id];
+		target = dst;
+	} else {
+		sw = switchStats[dst.id];
+		target = src;
+	}
+
+	for (var port in sw) {
+		if (sw[port].id == target.id) {
+			if (sw[port].lastLoad != undefined) {
+				return sw[port].load - sw[port].lastLoad;
+			} else {
+				return 0;
+			}
+		}
+	}
+
+	return 0;
+}
+
+
 iris.minimumDistances = function(nodes, links) {
 	var arr = [];
 
@@ -85,7 +195,7 @@ var nDistance = function(node) {
 
 var distance = function(link) {
 	var x = d3.min( [link.source.value, link.target.value] );
-	return 250 / x;
+	return 150 / x;
 };
 
 iris.sortNodesByValue = function(nodes) {
@@ -240,6 +350,7 @@ iris.topology = function(nodes, hosts, links) {
 	var circleSizeScale = d3.scale.linear().domain([0, 32]).range([10, 42]);
 
 	var shiftKey;
+	var ctrlKey;
 
 	nodes.forEach(function (d) {
 		// random enables the fast loading of the topology graph because
@@ -348,14 +459,15 @@ iris.topology = function(nodes, hosts, links) {
 	})
 	.charge(function(node, index) {
 		// charge negatively increases when its far from network center.
-		return -100 * node.value;
+		return -150 * node.value;
 	}) 
-	.friction(0.3)
+	.friction(0.9)
 	.theta(0.1)
-	.gravity(0)
+	.gravity(0.1)
 	.size([iris.topologyWidth, iris.topologyHeight])
 	.nodes(nodes).links(links)
 	.start();
+
 
 	var node = iris.topologyNode.data(nodes).enter().append("g").attr('class', 'node');
 	node.append("text")
@@ -384,16 +496,33 @@ iris.topology = function(nodes, hosts, links) {
 	.attr("x2", function(d) { return d.target.x; })
 	.attr("y2", function(d) { return d.target.y; });
 
+	setInterval(function() {
+		link.style('stroke-width', function(l) {
+			var MIN_THRESHOLD = 200; // Byte per second
+			var load = iris.getLinkLoad(l.source, l.target);
+			if (load != 0) {
+				return Math.max(Math.log10(load - MIN_THRESHOLD), 1);
+			} else {
+				return 1;
+			}
+		});
+	}, 1000);
+
 	node.on("mousedown", function(d) {
-		force.stop();
-		if (!d.selected) { // Don't deselect on shift-drag.
-			if (!shiftKey) 
-				node.classed("selected", function(p) { 
-					return p.selected = d === p; 
-				});
-			else {
-				console.log("shift click");
-				d3.select(this).classed("selected", d.selected = true);
+		if (ctrlKey) {
+			d.selected = false;
+			d.fixed = false;
+		} else {
+			d.fixed = true;
+			if (!d.selected) { // Don't deselect on shift-drag.
+				if (!shiftKey) {
+					node.classed("selected", function(p) { 
+						return p.selected = d === p; 
+					});
+				} else {
+					console.log("shift click");
+					d3.select(this).classed("selected", d.selected = true);
+				}
 			}
 		}
 	})
@@ -405,6 +534,8 @@ iris.topology = function(nodes, hosts, links) {
 	.call(d3.behavior.drag().on("drag", function(d) { 
 		nudge(d3.event.dx, d3.event.dy); 
 	}));
+
+	d3.selectAll('[template=topology] .node .node').call(force.drag);
 
 	iris.topologyBrush.call(d3.svg.brush()
 			.x(d3.scale.identity().domain([0, iris.topologyWidth]))
@@ -470,19 +601,22 @@ iris.topology = function(nodes, hosts, links) {
 	}
 
 	var keydown = function() {
-		if (!d3.event.metaKey) 
+		if (!d3.event.metaKey) {
 			switch (d3.event.keyCode) {
 			case 38: nudge( 0, -1); break; // UP
 			case 40: nudge( 0, +1); break; // DOWN
 			case 37: nudge(-1,  0); break; // LEFT
 			case 39: nudge(+1,  0); break; // RIGHT
 			}
+		}
 		shiftKey = d3.event.shiftKey || d3.event.metaKey;
-//		d3.event.preventDefault();
+		ctrlKey = d3.event.ctrlKey;
+		//		d3.event.preventDefault();
 	}
 
 	var keyup = function() {
 		shiftKey = d3.event.shiftKey || d3.event.metaKey;
+		ctrlKey = d3.event.ctrlKey;
 	}
 
 	// 'body' is important to make these handers called correctly.
@@ -526,8 +660,12 @@ irisApp.controller('CntlTopology',
 					$scope.hosts = [];
 					iris.topology([], [], []);
 				});
+				iris.getSwitches();
 			};
-			
+
+			// Get statistics
+			setInterval(iris.refreshStatistics, 1000);
+
 			angular.element('div.content > div.topology').bind('displayed', function() {
 				$scope.render();
 			});
