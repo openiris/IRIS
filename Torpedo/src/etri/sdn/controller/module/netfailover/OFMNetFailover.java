@@ -191,6 +191,7 @@ implements ITopologyListener {
 		
 		for ( long s : sws ) {
 			Set<OFPort> ports = this.topologyService.getPorts(s);
+			
 			for ( OFPort p: ports ) {
 				// if the switch has an attachment point port, 
 				// then it's used as an access switch.
