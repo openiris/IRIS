@@ -26,8 +26,8 @@ public class RESTDeleteByIDApi extends Restlet {
 
 		String ruleId = (String) request.getAttributes().get("ruleid");
 
-		if ( manager.getFirewallStorage().getFirewallEntryTable().getFirewallEntry(ruleId) != null ) {
-			manager.deleteRule( Integer.parseInt(ruleId) );
+		if (manager.getFirewallStorage().getFirewallEntryTable().getFirewallEntry(ruleId) != null) {
+			manager.deleteRule(Integer.parseInt(ruleId));
 			status = "Rule deleted";
 		} else {
 			logger.error("Error! Can't delete, a rule with ID {} doesn't exist.", ruleId);

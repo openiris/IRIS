@@ -970,8 +970,8 @@ public class StaticFlowEntry {
 			}
 		}
 
-        entry.put("switch", sw);
-        entry.put("name", name);
+		entry.put("switch", sw);
+		entry.put("name", name);
 
 //		if (Main.debug){
 //			System.out.println("input entry    : " + jsontext);

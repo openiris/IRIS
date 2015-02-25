@@ -66,11 +66,11 @@ public class StaticFlowEntryStorage extends OFModel{
 		 * Each objects represent a REST call handler routine bound to a specific URI.
 		 */
 
-        RestSwitchApi restSwitchApi = new RestSwitchApi(manager);
+		RestSwitchApi restSwitchApi = new RestSwitchApi(manager);
 
 		RESTApi[] tmp = {
 				/*
-             * LIST example
+ 			* LIST example
 			 * OF1.0,1.3:	curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/all/json
 			 * 				curl http://{controller_ip}:{rest_api_port}/wm/staticflowentry/00:00:00:00:00:00:00:01/json
 			 *
@@ -94,9 +94,9 @@ public class StaticFlowEntryStorage extends OFModel{
 			 * According to RFC2616, DELETE method cannot have data fields.
 			 */
 				new RESTApi("/wm/staticflowentry/{dpid}/json",
-                        restSwitchApi),
-                new RESTApi("/wm/staticflowentry/{dpid}/{name}/json",
-                        restSwitchApi),
+						restSwitchApi),
+				new RESTApi("/wm/staticflowentry/{dpid}/{name}/json",
+						restSwitchApi),
 
 		};
 
