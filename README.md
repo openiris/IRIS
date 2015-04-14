@@ -41,7 +41,7 @@ Specification
 
 Authors
 -------
-Byungjoon Lee (bjlee@etri.re.kr) 
+Byungjoon Lee (byungjoon.lee@gmail.com) 
 * GitHub ID: bjlee72 
 * Senior Researcher 
 * SDN Technology Research Devision, ETRI 
