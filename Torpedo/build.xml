@@ -3,33 +3,30 @@
     <!--this file was created by Eclipse Runnable JAR Export Wizard-->
     <!--ANT 1.7 is required                                        -->
     <target name="create_run_jar">
-        <jar destfile="/home/kjwon15/git/IRIS/Torpedo/Torpedo.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="Torpedo.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="etri.sdn.controller.Main"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
-            <zipfileset excludes="META-INF/*.SF" src="/home/kjwon15/git/IRIS/Torpedo/lib/org.restlet.ext.jackson.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/kjwon15/git/IRIS/Torpedo/lib/org.restlet.ext.simple.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/kjwon15/git/IRIS/Torpedo/lib/org.restlet.ext.slf4j.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/kjwon15/git/IRIS/Torpedo/lib/org.restlet.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/kjwon15/git/IRIS/Torpedo/lib/org.codehaus.jackson.mapper.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/kjwon15/git/IRIS/Torpedo/lib/org.codehaus.jackson.core.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/kjwon15/git/IRIS/Torpedo/lib/mongo-java-driver-2.11.2.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/kjwon15/git/IRIS/Torpedo/lib/concurrentlinkedhashmap-lru-1.2.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/kjwon15/git/IRIS/Torpedo/lib/joda-time-2.2.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/kjwon15/git/IRIS/Torpedo/lib/org.simpleframework.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/kjwon15/git/IRIS/Torpedo/lib/guava-15.0.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/kjwon15/git/IRIS/Torpedo/lib/netty-3.9.0.Final.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/kjwon15/git/IRIS/Torpedo/lib/slf4j-api-1.7.7.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/kjwon15/git/IRIS/Torpedo/lib/log4j-1.2.17.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/kjwon15/git/IRIS/Torpedo/lib/slf4j-log4j12-1.7.7.jar"/>
-            <fileset dir="/home/kjwon15/git/IRIS/Torpedo/bin"/>
-            <zipfileset excludes="META-INF/*.SF" src="/opt/eclipse/plugins/org.junit_4.11.0.v201303080030/junit.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/opt/eclipse/plugins/org.hamcrest.core_1.3.0.v201303031735.jar"/>
-            <fileset dir="/home/kjwon15/git/IRIS/Torpedo/lib"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/kjwon15/git/IRIS/Torpedo/lib/openflowj-0.9.0-SNAPSHOT-javadoc.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/kjwon15/git/IRIS/Torpedo/lib/openflowj-0.9.0-SNAPSHOT-sources.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/kjwon15/git/IRIS/Torpedo/lib/openflowj-0.9.0-SNAPSHOT.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/org.restlet.ext.jackson.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/org.restlet.ext.simple.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/org.restlet.ext.slf4j.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/org.restlet.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/org.codehaus.jackson.mapper.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/org.codehaus.jackson.core.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/mongo-java-driver-2.11.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/concurrentlinkedhashmap-lru-1.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/joda-time-2.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/org.simpleframework.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/guava-15.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/netty-3.9.0.Final.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/openflowj-0.3.7-SNAPSHOT-javadoc.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/openflowj-0.3.7-SNAPSHOT-sources.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/openflowj-0.3.7-SNAPSHOT.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/slf4j-api-1.7.7.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/log4j-1.2.17.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/slf4j-log4j12-1.7.7.jar"/>
+            <fileset dir="lib"/>
         </jar>
     </target>
 
