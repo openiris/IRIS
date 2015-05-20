@@ -87,7 +87,7 @@ public abstract class ForwardingBase extends OFModule implements IDeviceListener
 	protected static int OFMESSAGE_DAMPER_CAPACITY = 50000; // TODO: find sweet spot
 	protected static int OFMESSAGE_DAMPER_TIMEOUT = 250; 	// ms 
 
-	public static short FLOWMOD_DEFAULT_IDLE_TIMEOUT = 5; 	// in seconds
+	public static short FLOWMOD_DEFAULT_IDLE_TIMEOUT = 30; 	// in seconds
 	public static short FLOWMOD_DEFAULT_HARD_TIMEOUT = 0; 	// infinite
 	public static short FLOWMOD_DEFAULT_PRIORITY = 10;
 
