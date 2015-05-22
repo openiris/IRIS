@@ -30,6 +30,10 @@
         </jar>
     </target>
 
+    <target name="run" depends="create_run_jar">
+    	<java jar="Torpedo.jar" fork="true"/>
+    </target>
+    	
     <target name="clean">
         <delete file="Torpedo.jar" />
     </target>
