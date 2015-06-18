@@ -293,7 +293,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	 * 
 	 * (1) {@link Links#addOrUpdateLink(Link, LinkInfo)}
 	 * (2) {@link Links#timeoutLinks()}
-	 * (3) {@link Links#updatePortStatus(Long, int, OFPortStatus)}
+	 * (3) {@link Links#updatePortStatus(Long, OFPort, OFPortStatus)}
 	 * 
 	 * @param lt Link object
 	 * @param info LinkInfo object
@@ -344,7 +344,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	
 	/**
 	 * This method is called by Links object to make manager to send link discovery messages to peers.
-	 * internally call {@link #sendDiscoveryMessage(IOFSwitch, int, boolean, boolean)}.
+	 * internally call {@link #sendDiscoveryMessage(IOFSwitch, OFPort, boolean, boolean)}.
 	 * 
 	 * @param switchId			ask this switch to send discovery message
 	 * @param destinationPort	to which port to send the discovery message
@@ -914,7 +914,7 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	 * <li> if the message is a non-standard LLDP which is not created by this controller, then return true
 	 *     to allow the further processing. (maybe forwarding?)
 	 * <li> if the remote switch or one of the sides of the link port is not enabled, then drop it. 
-	 * <li> or, call {@link Links#addOrUpdateLink(long, short, OFPhysicalPort, long, int, OFPhysicalPort, boolean, boolean)},
+	 * <li> or, call {@link Links#addOrUpdateLink(long, OFPort, OFPortDesc, long, OFPort, OFPortDesc, boolean, boolean)},
 	 *     remove the node & port pair (both side) from the Quarantine and Maintenance Queue and drop the message.
 	 * </ol>
 	 * 
@@ -1039,10 +1039,10 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	 *      {@link Links#deleteLinksOnPort(NodePortTuple)}.
 	 * <li> or if the PORT_STATUS indicates that the status of a link has been changed,
 	 *      we mark the link has been changed by calling
-	 *      {@link Links#updatePortStatus(Long, int, OFPortStatus)}.
+	 *      {@link Links#updatePortStatus(Long, OFPort, OFPortStatus)}.
 	 * <li> and finally, if a link has NOT been deleted, 
 	 *      we process the PORT_STATUS as an indication that a new port 
-	 *      has been added, by calling {@link #processNewPort(IOFSwitch, int)}.
+	 *      has been added, by calling {@link #processNewPort(IOFSwitch, OFPort)}.
 	 * </ol>
 	 * 
 	 * @param sw			IOFSwitch object

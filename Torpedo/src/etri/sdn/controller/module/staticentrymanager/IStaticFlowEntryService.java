@@ -74,9 +74,7 @@ public interface IStaticFlowEntryService extends IService {
 	/**
 	 * Deletes all flows.
 	 * 
-	 * @return true when successfully deleted, false otherwise
-	 * 
-	 * @throws StaticFlowEntryException 
+	 * @throws StaticFlowEntryException
 	 */
 	public void deleteAllFlows() throws StaticFlowEntryException;
 

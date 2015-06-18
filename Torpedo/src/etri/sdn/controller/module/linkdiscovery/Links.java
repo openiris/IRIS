@@ -210,7 +210,7 @@ public class Links extends OFModel {
 	 * Then, if the {@link LinkInfo} is correctly set, 
 	 * search the {@link LinkInfo} object for the reverse link.
 	 * If none, this method sends out a LLDP discovery for the reverse link 
-	 * by calling {@link OFMLinkDiscovery#sendDiscoveryMessage(long, short, boolean, boolean)}. 
+	 * by calling {@link OFMLinkDiscovery#sendDiscoveryMessage(long, OFPort, boolean, boolean)}.
 	 * 
 	 * For a BDDP packet, this method just tries to enrolls the reverse link information
 	 * by calling {@link #addOrUpdateLink(Link, LinkInfo)}.

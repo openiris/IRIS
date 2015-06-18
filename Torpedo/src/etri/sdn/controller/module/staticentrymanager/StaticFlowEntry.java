@@ -815,7 +815,7 @@ public class StaticFlowEntry {
 	/**
 	 * Verifies the support of input field name. 
 	 * 
-	 * @param names all key fields of input
+	 * @param fields all key fields of input
 	 * 
 	 * @throws StaticFlowEntryException
 	 */

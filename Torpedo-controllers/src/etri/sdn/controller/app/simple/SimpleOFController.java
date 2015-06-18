@@ -79,7 +79,7 @@ public class SimpleOFController extends OFController {
 	 * @param conn		Connection to a switch
 	 * @param context	{@link etri.sdn.controller.MessageContext} object which is 
 	 * 					created per every incoming OFMessage
-	 * @param pi		PACKET_IN message
+	 * @param m		PACKET_IN message
 	 */
 	@Override
 	public boolean handlePacketIn(Connection conn, MessageContext context, OFMessage m) {

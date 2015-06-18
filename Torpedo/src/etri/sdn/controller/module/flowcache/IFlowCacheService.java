@@ -72,7 +72,7 @@ public interface IFlowCacheService extends IService {
      * the response using unique callerOpaqueData which remains unchanged
      * in the request and response callback.
      *
-     * @see  com.bigswitch.floodlight.flowcache#flowQueryRespHandler
+     * @see  {@link com.bigswitch.floodlight.flowcache#flowQueryRespHandler}
      * @param query the flow cache query object as input
      * 
      */

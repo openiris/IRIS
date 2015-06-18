@@ -41,7 +41,7 @@ public final class TcpServer extends Thread implements IOFProtocolServer {
 	
 	@Override
 	public void deregisterConroller(IOFHandler controller) {
-		ClientChannelWatcher.deregisterController( controller );
+		ClientChannelWatcher.unregisterController(controller);
 	}	
 
 	@Override

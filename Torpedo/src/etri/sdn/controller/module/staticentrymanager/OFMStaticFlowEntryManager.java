@@ -65,7 +65,7 @@ public class OFMStaticFlowEntryManager extends OFModule implements IStaticFlowEn
 	/**
 	 * Writes the OF message to the dedicated switch.
 	 * 
-	 * @param sw switch DPID of String format in 00:00:00:00:00:00:00:01 notation
+	 * @param dpid switch DPID of String format in 00:00:00:00:00:00:00:01 notation
 	 * @param message the OFMessage to write
 	 */
 	private boolean writeOFMessageToSwitch(String dpid, OFMessage message) {

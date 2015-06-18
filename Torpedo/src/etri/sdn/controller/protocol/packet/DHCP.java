@@ -69,7 +69,7 @@ public class DHCP extends BasePacket {
         OptionCode_DHCPServerIp         ((byte)54),
         OptionCode_RequestedParameters  ((byte)55),
         OptionCode_RenewalTime          ((byte)58),
-        OPtionCode_RebindingTime        ((byte)59),
+        OptionCode_RebindingTime        ((byte)59),
         OptionCode_ClientID             ((byte)61),
         OptionCode_END                  ((byte)255);
     

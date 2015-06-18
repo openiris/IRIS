@@ -437,7 +437,7 @@ public class Devices extends OFModel implements IDeviceService {
 				// device map, and use the referenced Device below.
 				device = deviceIdToDeviceMap.get(deviceId);
 				if (device == null) {
-					// currupted device id. 
+					// corrupted device id.
 					// first we should remove the device id from the primary Index.
 					primaryIndex.removeEntity(entity);
 					// and we remove it from the alternative index.
@@ -472,7 +472,7 @@ public class Devices extends OFModel implements IDeviceService {
 					return null;
 				}
 
-				// updateIndeces() updates the primaryIndex first.
+				// updateIndexes() updates the primaryIndex first.
 				// and if succeeds, continues to update per-class index.
 				// this does not include secondary index.
 				if ( updateIndices(device, deviceId) ) {  
@@ -515,18 +515,18 @@ public class Devices extends OFModel implements IDeviceService {
 			}
 
 			// first check if the device contains the entity.
-			int entityindex = -1;
-			if ((entityindex = device.entityIndex(entity)) >= 0) {
+			int entityIndex = -1;
+			if ((entityIndex = device.entityIndex(entity)) >= 0) {
 				// if the entity already within the device, 
 				// update timestamp on the found entity
 				Date lastSeen = entity.getLastSeenTimestamp();
 				if (lastSeen == null) lastSeen = new Date();
-				device.entities[entityindex].setLastSeenTimestamp(lastSeen);
+				device.entities[entityIndex].setLastSeenTimestamp(lastSeen);
 				
-				if (device.entities[entityindex].getSwitchDPID() != null &&
-						device.entities[entityindex].getSwitchPort() != null) {
-					long sw = device.entities[entityindex].getSwitchDPID();
-					OFPort port = device.entities[entityindex].getSwitchPort();
+				if (device.entities[entityIndex].getSwitchDPID() != null &&
+						device.entities[entityIndex].getSwitchPort() != null) {
+					long sw = device.entities[entityIndex].getSwitchDPID();
+					OFPort port = device.entities[entityIndex].getSwitchPort();
 
 					// TBD: to analysis
 					boolean moved = device.updateAttachmentPoint(sw, port, lastSeen.getTime());

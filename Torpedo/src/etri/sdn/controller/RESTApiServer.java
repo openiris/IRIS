@@ -48,7 +48,7 @@ class RestApiServerApplication extends Application {
 
 /**
  * A REST API server class. 
- * By creating an object of this class and calling {@link #start()}, 
+ * By creating an object of this class and calling {@link #start},
  * You can start an HTTP server that is able to handle REST requests.
  * 
  * @author bjlee

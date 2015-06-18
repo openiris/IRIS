@@ -45,7 +45,7 @@ public class VirtualNetwork {
 
 	/**
 	* Sets network name
-	* @param name : network name
+	* @param netName : network name
 	*/
 	public void setNetName(String netName){
 		this.netName = netName;

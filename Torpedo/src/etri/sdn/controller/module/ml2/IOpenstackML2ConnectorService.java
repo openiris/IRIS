@@ -63,7 +63,7 @@ public interface IOpenstackML2ConnectorService extends IService {
 	/**
 	 * Return list of all virtual port.
 	 * @param porId The ID exists single port info. The ID not exists all port info.
-	 * @parm porKey
+	 * @param porKey
 	 * @param porValue
 	 * @return String port info jsonStr
 	 */
