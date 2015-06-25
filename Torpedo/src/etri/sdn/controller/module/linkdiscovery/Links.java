@@ -56,6 +56,14 @@ public class Links extends OFModel {
 	 */
 	private Map<Long, Set<Link>> switchLinks = new HashMap<Long, Set<Link>>();
 
+	public Map<Long, Set<Link>> getSwitchLinks() {
+		return switchLinks;
+	}
+
+	public Map<Link, LinkInfo> getLinks() {
+		return links;
+	}
+
 	/**
 	 * Map from a id:port to the set of links containing it as an endpoint
 	 */

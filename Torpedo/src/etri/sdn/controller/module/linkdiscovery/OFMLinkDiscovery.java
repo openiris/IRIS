@@ -191,7 +191,8 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	/**
 	 * Model of this module. initialized within initialize()
 	 */
-	private Links links = null;
+	//null to new Links(this); by labry
+	private Links links = new Links(this);
 	private OFProtocol protocol;
 	
 	/**
@@ -233,7 +234,8 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 	@Override
 	public void initialize() {
 		// initialize Links object with proper manager reference.
-		this.links = new Links(this);
+		//commented out by labry
+//		this.links = new Links(this);
 		
 		this.protocol = getController().getProtocol();
 		
@@ -1136,14 +1138,14 @@ public class OFMLinkDiscovery extends OFModule implements ILinkDiscoveryService 
 
 	@Override
 	public Map<Link, LinkInfo> getLinks() {
-		// TODO Auto-generated method stub
-		return null;
+		// implemented by labry
+		return this.links.getLinks();
 	}
 
 	@Override
 	public Map<Long, Set<Link>> getSwitchLinks() {
-		// TODO Auto-generated method stub
-		return null;
+		// implemented by labry
+		return this.links.getSwitchLinks();
 	}
 
 	@Override
