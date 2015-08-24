@@ -1,8 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="create_run_jar" name="Create Runnable Jar for Project Torpedo">
     <!--this file was created by Eclipse Runnable JAR Export Wizard-->
-    <!--ANT 1.7 is required                                        -->
-    <target name="create_run_jar">
+    <!--ANT 1.7 is required                                        -->	
+    <property name="lib.dir" location="lib"/>
+    <property name="props.dir" location="conf"/>
+    <path id="external.classpath">
+		<fileset dir="${lib.dir}">
+			<include name="*.jar"/>	
+			<include name="../conf/*.properties" />
+		</fileset>
+    </path>
+
+    <target name="compile">
+    	<mkdir dir="bin"/>
+	<javac includeantruntime="false" srcdir="src" destdir="bin">
+		<classpath>
+			<path refid="external.classpath" />
+		</classpath>
+	</javac>	
+    </target>
+
+    <target name="create_run_jar" depends="compile">
         <jar destfile="Torpedo.jar" filesetmanifest="merge">
             <manifest>
                 <attribute name="Main-Class" value="etri.sdn.controller.Main"/>
@@ -31,7 +49,8 @@
     </target>
 
     <target name="run" depends="create_run_jar">
-    	<java jar="Torpedo.jar" fork="true"/>
+    	<java jar="Torpedo.jar" fork="true">
+	</java>
     </target>
     	
     <target name="clean">

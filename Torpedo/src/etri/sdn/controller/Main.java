@@ -11,6 +11,7 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +48,8 @@ public class Main {
 		// suppress all the other debug messages from other components such as restlet.
 		// but if you modify the jdklog.properties, you can make the log messages 
 		// re-appear on the screen again.
+		PropertyConfigurator.configure("./conf/log4j.properties");
+		
 		System.setProperty("java.util.logging.config.file", "./conf/jdklog.properties");
 		
 		Main.parseCommandLine(args);
