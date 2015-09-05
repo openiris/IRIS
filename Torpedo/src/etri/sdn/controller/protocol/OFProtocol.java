@@ -767,7 +767,9 @@ public class OFProtocol {
 			
 			// nw tos (dscp & ecn)
 			scratch = packetDataBB.get();
-			ret.setExact(MatchField.IP_DSCP, IpDscp.of((byte)((0b11111100 & scratch) >> 2)));
+//			ret.setExact(MatchField.IP_DSCP, IpDscp.of((byte)((0b11111100 & scratch) >> 2)));
+			ret.wildcard(MatchField.IP_DSCP);
+			
 			try { 
 				ret.setExact(MatchField.IP_ECN, IpEcn.of((byte)(0b00000011 & scratch)));
 			} catch (UnsupportedOperationException u) {

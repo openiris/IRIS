@@ -69,7 +69,7 @@ public final class OFMLearningMac extends OFModule {
 	private static final int APP_ID_SHIFT = (64 - APP_ID_BITS);
 	private static final long LEARNING_SWITCH_COOKIE = (long) (LEARNING_SWITCH_APP_ID & ((1 << APP_ID_BITS) - 1)) << APP_ID_SHIFT;
 
-	private static final short IDLE_TIMEOUT_DEFAULT = 30;
+	private static final short IDLE_TIMEOUT_DEFAULT = 25;
 	private static final short HARD_TIMEOUT_DEFAULT = 0;
 	private static final short PRIORITY_DEFAULT = 100;
 	// normally, setup reverse flow as well. 
